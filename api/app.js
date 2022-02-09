@@ -10,11 +10,11 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const session = require('express-session');
+const mongoose = require('mongoose');
 const passport = require('passport');
 const nconf = require('./config');
 const routers = require('./routers');
 const { writeError, writeResponse } = require('./helpers/response');
-
 const app = express();
 const api = express();
 
@@ -53,7 +53,7 @@ app.use(morgan('dev'));
 
 app.use(
   session({
-    secret: process.env.COOKIE_SECRET,
+    secret: 'a very dark secret indeed',
     resave: true,
     saveUninitialized: false,
   }),
@@ -61,6 +61,10 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+mongoose.connect('mongodb URI', () => {
+  console.log('connected to mongodb')
+})
 
 // enable CORS
 api.use((_req, res, next) => {
@@ -74,6 +78,7 @@ api.use((_req, res, next) => {
 // api routes
 api.use(routers.userRouter.userRouter);
 api.use(routers.authRouter.authRouter);
+api.use(routers.emailRouter.emailRouter)
 
 // For demo auth purposes only
 api.get('/user-info', (req, res) => {
