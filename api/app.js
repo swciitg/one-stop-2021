@@ -79,6 +79,8 @@ api.use((_req, res, next) => {
 api.use(routers.userRouter.userRouter);
 api.use(routers.authRouter.authRouter);
 api.use(routers.emailRouter.emailRouter)
+api.use(routers.contactRouter.contactRouter)
+api.use(routers.timingRouter.timingRouter)
 
 // For demo auth purposes only
 api.get('/user-info', (req, res) => {

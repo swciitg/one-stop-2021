@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 const send_email = (req, res) => {
-    const output = `<p>${req.body.message}</p>`;
+    const output = `<p>${req.body.emailbody}</p>`;
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
