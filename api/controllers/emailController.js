@@ -1,5 +1,33 @@
 const nodemailer = require('nodemailer');
 
+/**
+ * @swagger
+ * /api/v0/email/send:
+ *   post:
+ *     tags:
+ *     - email
+ *     description: send email
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         type: object
+ *         schema:
+ *           properties:
+ *             receiver_emailid:
+ *               type: string
+ *             subject :
+ *               type: string
+ *             emailbody:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: Email sent
+ *       400:
+ *         description: Error message(s)
+ */
+
 const send_email = (req, res) => {
     const output = `<p>${req.body.emailbody}</p>`;
 
@@ -30,7 +58,7 @@ const send_email = (req, res) => {
         console.log('Message sent: %s', info.messageId);
         console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
-        res.render('emailing_service');
+        //res.render('emailing_service');
         Response.Write("<script>alert('Email sent Successfully')</script>");
     });
 };
