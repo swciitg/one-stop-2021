@@ -1,0 +1,11 @@
+version: "3.3"
+
+services:
+        onestopnode:
+                build:
+                        context: .
+                        dockerfile: Dockerfile.prod
+                ports:
+                        - "9010:9010"
+                env_file:
+                        - .env
