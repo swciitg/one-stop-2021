@@ -1,0 +1,15 @@
+not working =>  
+
+
+FRONT END: 
+contacts : 2 buttons
+food items: csv upload (pop up edit and delete) and show ()
+food outlet : csv upload (pop up edit and delete) and show (not latitude and longitude)
+mess menu : csv upload (show hostel name of which menu is uploaded)
+role : add button (edit and delete) and show
+bus timing : csv upload
+ferry timing : csv upload
+user : show info and should be able to add roles (pop up edit form)
+
+
+
