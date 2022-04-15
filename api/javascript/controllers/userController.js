@@ -1,4 +1,5 @@
-const { writeResponse } = require('../helpers/response');
+const { writeResponse } = require("../helpers/response");
+const User = require("../models/users");
 
 /**
  * @swagger
@@ -21,15 +22,37 @@ const { writeResponse } = require('../helpers/response');
  *       400:
  *         description: Error message(s)
  */
-const getGreetings = (req, res) => {
+exports.getGreetings = (req, res) => {
   const { name } = req.params;
 
   if (!name) {
-    throw new Error({ message: 'name parameter is missing', status: 400 });
+    throw new Error({ message: "name parameter is missing", status: 400 });
   }
 
   const response = { message: `Hello from the other side ${name}!` };
   writeResponse(res, response);
 };
 
-module.exports = { getGreetings };
+exports.getAllUsers = (req, res) => {
+  User.find().then((users) => {
+    res.json(users);
+  });
+};
+
+exports.updateUser = (req, res) => {
+  const id = req.params.id;
+  User.findByIdAndUpdate(id, req.body, { useFindAndModify: false }).then(
+    (data) => {
+      res.json(data);
+    }
+  );
+};
+
+exports.deleteUser = (req, res) => {
+  const id = req.params.id;
+  User.findByIdAndDelete(id).then((data) => {
+    res.send({
+      message: "User was deleted successfully!",
+    });
+  });
+};

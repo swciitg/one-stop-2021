@@ -1,3 +1,9 @@
-// Convenient wrapper around all controllers
+exports.emailController = require('./emailController');
+exports.contactController = require('./contactSubsectionController');
+exports.timingController = require('./timingController');
 exports.userController = require('./userController');
 exports.authController = require('./authController');
+exports.roleController = require('./roleController');
+exports.messMenuController = require('./messMenuController');
+exports.foodItemsController = require('./foodItemsController');
+exports.foodOutletsController = require('./foodOutletsController');
