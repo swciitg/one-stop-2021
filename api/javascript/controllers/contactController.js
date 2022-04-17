@@ -38,6 +38,8 @@ const contactParentModel =  require('../models/contactParent');
  *         description: Error message(s)
  */
 
+console.log("running");
+
 exports.createContact = (req, res) => {
   contactSubsectionModel.findOne({ email: req.body.email }).then((currenUser) => {
     if (currenUser) {
