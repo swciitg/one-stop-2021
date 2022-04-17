@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-const keys = require('../keys');
 
 /**
  * @swagger
@@ -37,8 +36,8 @@ const sendEmail = (req, res) => {
     service: 'gmail',
     secure: false, // true for 465, false for other ports
     auth: {
-      user: keys.email_credentials.email_id, // generated ethereal user
-      pass: keys.email_credentials.pass, // generated ethereal password
+      user: process.env.EMAIL_ID, // generated ethereal user
+      pass: process.env.PASSWORD, // generated ethereal password
     },
 
   });

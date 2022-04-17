@@ -16,8 +16,6 @@ const nconf = require('./config');
 const routers = require('./routers');
 const { writeError, writeResponse } = require('./helpers/response');
 
-const keys = require('./keys');
-
 const app = express();
 
 
@@ -35,7 +33,7 @@ const swaggerDefinition = {
 
 // connect to mongodb
 
-mongoose.connect(keys.mongodb.dbURI, () => {
+mongoose.connect(process.env.DATABASE_URI, () => {
   console.log('connected to mongodb');
 });
 
@@ -62,7 +60,7 @@ app.use(morgan('dev'));
 
 app.use(
   session({
-    secret: 'a very dark secret indeed',
+    secret: process.env.COOKIE_SECRET,
     resave: true,
     saveUninitialized: false,
   }),
