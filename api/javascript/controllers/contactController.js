@@ -1,5 +1,5 @@
 const contactSubsectionModel = require('../models/contactsSubsection');
-const contactParentMdoel =  require('../models/contactParent');
+const contactParentModel =  require('../models/contactParent');
 
 /**
  * @swagger
@@ -38,6 +38,8 @@ const contactParentMdoel =  require('../models/contactParent');
  *         description: Error message(s)
  */
 
+console.log("running");
+
 exports.createContact = (req, res) => {
   contactSubsectionModel.findOne({ email: req.body.email }).then((currenUser) => {
     if (currenUser) {
@@ -68,7 +70,7 @@ exports.getAllSubsectionContacts = (req,res) => {
 }
 //get all subsections
 exports.getAllSubsections = (req,res) => {
-  contactParentMdoel.find()
+  contactParentModel.find()
   .then(data => {
     res.json(data)
   })
@@ -80,7 +82,7 @@ exports.getAllSubsections = (req,res) => {
 
 //get all contacts of a subsection
 exports.getAllContacts = (req,res) => {
-  contactSubsectionModel.find()
+  contactSubsectionModel.find({"subsection":req.body.subsection})
   .then(data => {
     res.json(data)
   })
