@@ -6,6 +6,7 @@ exports.createItem = (req, res) => {
       res.send({ message: "item already exits" });
     } else {
       new foodItemsModel({
+        OutletName : req.body.OutletName,
         name       : req.body.name,
         ingredients: req.body.ingredients,
         veg        : req.body.veg,
@@ -43,4 +44,10 @@ exports.deleteItem = (req, res) => {
       message: "Item was deleted successfully!",
     });
   });
+};
+
+exports.getOutletMenu = (req, res) => {
+  foodItemsModel.find({OutletName : req.body.OutletName}).then(data => {
+      res.json(data);
+  })
 };

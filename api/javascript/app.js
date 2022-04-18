@@ -60,7 +60,7 @@ app.use(morgan('dev'));
 
 app.use(
   session({
-    secret: process.env.COOKIE_SECRET,
+    secret: 'a very dark secret indeed',
     resave: true,
     saveUninitialized: false,
   }),
@@ -107,6 +107,8 @@ app.use((err, _req, res, next) => {
     writeError(res, err);
   } else next(err);
 });
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

@@ -1,23 +1,21 @@
 const foodOutletsModel = require("../models/foodOutlets");
+const getOutletMenu = require("../middlewares/getOutletMenu")
 
-exports.createOutlet = (req, res) => {
+exports.createOutlet = (req, getOutletMenu, res) => {
   foodOutletsModel.findOne({ name: req.body.name }).then((outlet) => {
     if (outlet) {
       res.send({ message: "Outlet already exits" });
     } else {
       new foodOutletsModel({
-        name    : req.body.name,
-        caption : req.body.caption,
+        name: req.body.name,
+        caption: req.body.caption,
         closing_time: req.body.closing_time,
         waiting_time: req.body.waiting_time,
         phone_number: req.body.phone_number,
-        location: [
-          {
-            latitude: req.body.latitude,
-            longitude: req.body.longitude,
-          },
-        ],
-        tags: req.body.tags,   
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+        tags: req.body.tags,
+        //menu: ,
       })
         .save()
         .then((data) => {
@@ -28,7 +26,7 @@ exports.createOutlet = (req, res) => {
 };
 
 exports.getAllOutlets = (req, res) => {
-    foodOutletsModel.find().then((data) => {
+  foodOutletsModel.find().then((data) => {
     res.json(data);
   });
 };
@@ -50,3 +48,4 @@ exports.deleteOutlet = (req, res) => {
     });
   });
 };
+

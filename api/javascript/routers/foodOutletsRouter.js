@@ -4,6 +4,7 @@ const Controller = require('../controllers/foodOutletsController');
 
 const foodOutletsRouter = express.Router();
 
+
 foodOutletsRouter.get('/getAllOutlets', Controller.getAllOutlets);
 foodOutletsRouter.post('/createOutlet', Controller.createOutlet);
 foodOutletsRouter.put('/updateOutlet/:id', Controller.updateOutlet);

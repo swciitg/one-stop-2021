@@ -38,20 +38,16 @@ const contactParentModel =  require('../models/contactParent');
  *         description: Error message(s)
  */
 
-console.log("running");
-
 exports.createContact = (req, res) => {
   contactSubsectionModel.findOne({ email: req.body.email }).then((currenUser) => {
     if (currenUser) {
       res.send({ message: 'Email already exits' });
     } else {
       new contactSubsectionModel({
+        subsection: req.body.subsection,
         name: req.body.name,
-        designation: req.body.designation,
-        service: req.body.service,
         phoneNumber: req.body.phoneNumber,
         email: req.body.email,
-        websiteURL: req.body.websiteURL,
       }).save().then(contact => {
         res.json(contact);
       });
@@ -74,7 +70,7 @@ exports.getAllSubsections = (req,res) => {
 
 //get all contacts of a subsection
 exports.getAllContacts = (req,res) => {
-  contactSubsectionModel.find({"subsection":req.body.subsection})
+  contactSubsectionModel.find()
   .then(data => {
     res.json(data)
   })
