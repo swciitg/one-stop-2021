@@ -46,8 +46,11 @@ exports.createContact = (req, res) => {
       new contactSubsectionModel({
         subsection: req.body.subsection,
         name: req.body.name,
+        subsection: req.body.subsection,
+       
         phoneNumber: req.body.phoneNumber,
         email: req.body.email,
+        
       }).save().then(contact => {
         res.json(contact);
       });
@@ -55,7 +58,15 @@ exports.createContact = (req, res) => {
   });
 };
 
-
+exports.getAllSubsectionContacts = (req,res) => {
+  contactSubsectionModel.find({subsection: req.body.subsection}).then((contacts) =>{
+    if(contacts){
+      res.send(contacts);
+    }else{
+      res.send({message: "does not exist"});
+    }
+  });
+}
 //get all subsections
 exports.getAllSubsections = (req,res) => {
   contactParentModel.find()
@@ -81,7 +92,7 @@ exports.getAllContacts = (req,res) => {
 };
 
 exports.updateContact = (req, res) => {
-  const { id } = req.params.id;
+  const  id  = req.params.id;
   contactSubsectionModel.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       if (!data) {

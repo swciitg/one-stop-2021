@@ -36,8 +36,8 @@ const sendEmail = (req, res) => {
     service: 'gmail',
     secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.EMAIL_ID, // generated ethereal user
-      pass: process.env.PASSWORD, // generated ethereal password
+      user: 'raginiswc21@gmail.com', // generated ethereal user
+      pass: '@Ragini21', // generated ethereal password
     },
 
   });

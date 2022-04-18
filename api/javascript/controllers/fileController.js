@@ -120,3 +120,12 @@ exports.csvToMongo = (req,res) =>{
        
        });
 }
+exports.csvToJSON = (req,res) => {
+    csv()
+    .fromFile(req.file.path)
+    .then((jsonObj) => {
+        res.send(jsonObj);
+    });
+}
+
+

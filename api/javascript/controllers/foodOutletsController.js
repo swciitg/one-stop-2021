@@ -1,9 +1,11 @@
 const foodOutletsModel = require("../models/foodOutlets");
 const getOutletMenu = require("../middlewares/getOutletMenu")
 
-exports.createOutlet = (req, getOutletMenu, res) => {
-  foodOutletsModel.findOne({ name: req.body.name }).then((outlet) => {
+exports.createOutlet = (req, res) => {
+  foodOutletsModel.findOne({ name: req.body.name }).then((outlet)=> {
+    console.log(typeof(outlet));
     if (outlet) {
+      // console.log(outlet);
       res.send({ message: "Outlet already exits" });
     } else {
       new foodOutletsModel({
@@ -12,10 +14,13 @@ exports.createOutlet = (req, getOutletMenu, res) => {
         closing_time: req.body.closing_time,
         waiting_time: req.body.waiting_time,
         phone_number: req.body.phone_number,
+
         latitude: req.body.latitude,
         longitude: req.body.longitude,
+
+
         tags: req.body.tags,
-        //menu: ,
+        menu: req.body.menu,
       })
         .save()
         .then((data) => {
