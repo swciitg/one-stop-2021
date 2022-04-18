@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const lnfDetailsSchema = new mongoose.Schema({
+const lostAndFoundDetailsSchema = new mongoose.Schema({
     title: { type: String, required: true },
     date: { type: Date, required: true },
     category: { type: String, required: true },
@@ -12,4 +12,4 @@ const lnfDetailsSchema = new mongoose.Schema({
     
 });
 
-module.exports = mongoose.model("lnfDetails", lnfDetailsSchema);
+module.exports = mongoose.model("lostAndFoundDetails", lostAndFoundDetailsSchema);

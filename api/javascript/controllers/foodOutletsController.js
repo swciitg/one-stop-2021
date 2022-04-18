@@ -1,23 +1,53 @@
 const foodOutletsModel = require("../models/foodOutlets");
 
+// exports.createOutlet = (req,res) => {
+//   foodOutletsModel.findOne({name: req.body.name}, function(err,outlet){
+//     console.log(req.body.name);
+//   })
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 exports.createOutlet = (req, res) => {
-  foodOutletsModel.findOne({ name: req.body.name }).then((outlet) => {
+  foodOutletsModel.findOne({ name: req.body.name }).then((outlet)=> {
+    console.log(typeof(outlet));
     if (outlet) {
+      // console.log(outlet);
       res.send({ message: "Outlet already exits" });
     } else {
       new foodOutletsModel({
-        name    : req.body.name,
-        caption : req.body.caption,
+        name: req.body.name,
+        caption: req.body.caption,
         closing_time: req.body.closing_time,
         waiting_time: req.body.waiting_time,
         phone_number: req.body.phone_number,
-        location: [
-          {
-            latitude: req.body.latitude,
-            longitude: req.body.longitude,
-          },
-        ],
-        tags: req.body.tags,   
+
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
+
+
+        tags: req.body.tags,
+        menu: req.body.menu,
       })
         .save()
         .then((data) => {
@@ -28,7 +58,7 @@ exports.createOutlet = (req, res) => {
 };
 
 exports.getAllOutlets = (req, res) => {
-    foodOutletsModel.find().then((data) => {
+  foodOutletsModel.find().then((data) => {
     res.json(data);
   });
 };

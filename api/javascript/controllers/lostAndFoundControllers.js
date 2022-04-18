@@ -1,10 +1,10 @@
-const lnfDetails = require("../models/lnfModels");
+const lostAndFoundDetails = require("../models/lostAndFoundModels");
 const foundDetails = require("../models/foundModels");
 const fs = require("fs");
 
-exports.getlnfDetails = async (req, res) => {
+exports.getlostAndFoundDetails = async (req, res) => {
     try {
-    const details = await lnfDetails.find();
+    const details = await lostAndFoundDetails.find();
     
     return res.json({"details" : details});
     } catch (error) {
@@ -13,7 +13,7 @@ exports.getlnfDetails = async (req, res) => {
 };
 
 
-  exports.addlnfForm = async (req, res) => {
+  exports.addlostAndFoundForm = async (req, res) => {
     try {
       return res.render("add_user");
     } catch (error) {
@@ -21,7 +21,7 @@ exports.getlnfDetails = async (req, res) => {
     }
   };
 
-  exports.postlnfDetails = async (req, res) => {
+  exports.postlostAndFoundDetails = async (req, res) => {
      
     try {
       var { title, date, category, location, phonenumber, description,link} = req.body;
@@ -30,10 +30,10 @@ exports.getlnfDetails = async (req, res) => {
      
     //   if (!image) {
     //     console.log("error", "Please attach your pdf!!");
-    //     return res.redirect("/lnf/raise");
+    //     return res.redirect("/lostAndFound/raise");
     //   }
       //console.log(path);
-      const newlnfDetail = await new lnfDetails({
+      const newlostAndFoundDetail = await new lostAndFoundDetails({
         title, 
         date, 
         category, 
@@ -42,9 +42,9 @@ exports.getlnfDetails = async (req, res) => {
         description,
         link, 
       }).save();
-      if (!newlnfDetail) {
+      if (!newlostAndFoundDetail) {
         
-        res.redirect("/lnf/raise");
+        res.redirect("/lostAndFound/raise");
         
       }
      
@@ -55,9 +55,9 @@ exports.getlnfDetails = async (req, res) => {
     }
   };
 
-  exports.deletelnfDetail = async (req, res) => {
+  exports.deletelostAndFoundDetail = async (req, res) => {
     const id = req.params.details_id;
-    lnfDetails.findOneAndDelete(id, (err, result) => {
+    lostAndFoundDetails.findOneAndDelete(id, (err, result) => {
       if (result.link != "") {
         try {
           fs.unlinkSync("./uploads/" + result.link);
@@ -68,7 +68,7 @@ exports.getlnfDetails = async (req, res) => {
       if (err) {
         res.json({ message: err.message });
       } else {
-        res.redirect(`/lnf`);
+        res.redirect(`/lostAndFound`);
       }
     });
   };
@@ -105,7 +105,7 @@ exports.getlnfDetails = async (req, res) => {
      
     //   if (!image) {
     //     console.log("error", "Please attach your pdf!!");
-    //     return res.redirect("/lnf/found");
+    //     return res.redirect("/lostAndFound/found");
     //   }
       //console.log(path);
       const newfoundDetail = await new foundDetails({
@@ -118,7 +118,7 @@ exports.getlnfDetails = async (req, res) => {
       }).save();
       if (!newfoundDetail) {
         
-        res.redirect("/lnf/found");
+        res.redirect("/lostAndFound/found");
         
       }
      
@@ -143,7 +143,7 @@ exports.getlnfDetails = async (req, res) => {
       if (err) {
         res.json({ message: err.message });
       } else {
-        res.redirect(`/lnf`);
+        res.redirect(`/lostAndFound`);
       }
     });
   };

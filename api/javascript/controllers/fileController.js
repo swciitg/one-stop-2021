@@ -65,7 +65,7 @@ exports.csvToMongo = (req,res) =>{
          res.send({
             message: "entries saved successfully",
           });
-        }else if(temp.length == 7 && temp[2]=="closing_time"){
+        }else if(temp.length == 9 && temp[2]=="closing_time"){
             console.log("its foodOutlets model");
             foodOutlets.insertMany(jsonObj,(err,data)=>{
                 if(err){
@@ -120,3 +120,12 @@ exports.csvToMongo = (req,res) =>{
        
        });
 }
+exports.csvToJSON = (req,res) => {
+    csv()
+    .fromFile(req.file.path)
+    .then((jsonObj) => {
+        res.send(jsonObj);
+    });
+}
+
+
