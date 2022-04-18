@@ -47,7 +47,6 @@ exports.createContact = (req, res) => {
         subsection: req.body.subsection,
         name: req.body.name,
         subsection: req.body.subsection,
-       
         phoneNumber: req.body.phoneNumber,
         email: req.body.email,
         
@@ -58,6 +57,7 @@ exports.createContact = (req, res) => {
   });
 };
 
+//get all contacts of a subsection
 exports.getAllSubsectionContacts = (req,res) => {
   contactSubsectionModel.find({subsection: req.body.subsection}).then((contacts) =>{
     if(contacts){
@@ -79,17 +79,6 @@ exports.getAllSubsections = (req,res) => {
 })
 };
 
-//get all contacts of a subsection
-exports.getAllContacts = (req,res) => {
-  contactSubsectionModel.find()
-  .then(data => {
-    res.json(data)
-  })
-  .catch(err => {
-    console.log(err)
-    res.status(500).send({ message : err.message || "Error Occurred while retriving user information" })
-})
-};
 
 exports.updateContact = (req, res) => {
   const  id  = req.params.id;
