@@ -1,33 +1,5 @@
 const foodOutletsModel = require("../models/foodOutlets");
 
-// exports.createOutlet = (req,res) => {
-//   foodOutletsModel.findOne({name: req.body.name}, function(err,outlet){
-//     console.log(req.body.name);
-//   })
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 exports.createOutlet = (req, res) => {
   foodOutletsModel.findOne({ name: req.body.name }).then((outlet)=> {
     console.log(typeof(outlet));

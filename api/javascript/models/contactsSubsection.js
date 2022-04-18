@@ -7,9 +7,7 @@ const contactsSubsectionSchema = new Schema({
   name       : String,
   phoneNumber: Number,
   email      : String,
-  // service    : String,
-  //designation: String,
-  //websiteURL : String,
+ 
 });
 
 const contactsSubsection = mongoose.model('contactsSubsection', contactsSubsectionSchema);
