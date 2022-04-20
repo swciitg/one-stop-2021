@@ -1,5 +1,5 @@
 const foodOutletsModel = require("../models/foodOutlets");
-const getOutletMenu = require("../middlewares/getOutletMenu")
+// const getOutletMenu = require("../middlewares/getOutletMenu")
 
 exports.createOutlet = (req, res) => {
   foodOutletsModel.findOne({ name: req.body.name }).then((outlet)=> {
@@ -53,4 +53,21 @@ exports.deleteOutlet = (req, res) => {
     });
   });
 };
+
+exports.deletemanyOutlets = (req,res) => {
+  const arr= req.body.id;
+
+  if(typeof(arr) != "string"){
+   
+    var arr2 = Object.values(arr);
+     for(const id of arr2){
+        foodOutletsModel.findByIdAndDelete(id).then((data)=>{});
+        console.log(id);
+     }
+     res.send({message: "deleted many"});
+  }else{
+    foodOutletsModel.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+  }
+  
+}
 

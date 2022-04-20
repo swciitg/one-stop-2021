@@ -1,5 +1,7 @@
 const FerryTiming = require('../models/ferryTiming');
 const BusTiming = require('../models/busTiming');
+const busTiming = require('../models/busTiming');
+const ferryTiming = require('../models/ferryTiming');
 
 exports.createferrytiming = (req, res) => {
   if (!req.body) {
@@ -45,7 +47,22 @@ exports.deleteferrytiming = (req, res) => {
       }
     });
 };
+exports.deletemanyferrytiming = (req,res) => {
+  const arr= req.body.id;
 
+  if(typeof(arr) != "string"){
+   
+    var arr2 = Object.values(arr);
+     for(const id of arr2){
+        ferryTiming.findByIdAndDelete(id).then((data)=>{});
+        console.log(id);
+     }
+     res.send({message: "deleted many"});
+  }else{
+    ferryTiming.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+  }
+  
+}
 exports.createbustiming = (req, res) => {
   if (!req.body) {
     res.status(400).send({ message: 'Content can not be empty!' });
@@ -90,3 +107,19 @@ exports.deletebustiming = (req, res) => {
       }
     });
 };
+exports.deletemanybustiming = (req,res) => {
+  const arr= req.body.id;
+
+  if(typeof(arr) != "string"){
+   
+    var arr2 = Object.values(arr);
+     for(const id of arr2){
+        busTiming.findByIdAndDelete(id).then((data)=>{});
+        console.log(id);
+     }
+     res.send({message: "deleted many"});
+  }else{
+    busTiming.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+  }
+  
+}

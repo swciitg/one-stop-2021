@@ -5,7 +5,7 @@ const fs = require("fs");
 exports.getlostAndFoundDetails = async (req, res) => {
     try {
     const details = await lostAndFoundDetails.find();
-    
+    details.sort((a, b) => (a.creation > b.creation ? -1 : 1));
     return res.json({"details" : details});
     } catch (error) {
       console.log(error.message);
@@ -80,6 +80,7 @@ exports.getlostAndFoundDetails = async (req, res) => {
   exports.getfoundDetails = async (req, res) => {
     try {
     const details = await foundDetails.find();
+    details.sort((a, b) => (a.creation > b.creation ? -1 : 1));
     
     return res.json({"details" : details});
     } catch (error) {

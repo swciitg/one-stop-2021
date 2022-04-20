@@ -1,23 +1,39 @@
+// const foodItems = require("../models/foodItems");
 const foodItemsModel = require("../models/foodItems");
+const foodOutlets = require("../models/foodOutlets");
 
 exports.createItem = (req, res) => {
   foodItemsModel.findOne({ name: req.body.name }).then((item) => {
     if (item) {
       res.send({ message: "item already exits" });
     } else {
-      new foodItemsModel({
+      const newfood = new foodItemsModel({
         OutletName : req.body.OutletName,
         name       : req.body.name,
         ingredients: req.body.ingredients,
         veg        : req.body.veg,
         price      : req.body.price,
         //image      : req.body.image
-      })
-        .save()
+      });
+        newfood.save()
         .then((data) => {
-          res.json(data);
+          foodOutlets.findOneAndUpdate({name: req.body.OutletName}, {$push : {menu: newfood}})
+          .then((data)=>{
+            res.send({message: "successfulyy added"});
+          }).catch((err)=>{
+            res.send({message: "error"});
+          });
+        
+          
         });
+    
+      
+        
+        
+    
+    
     }
+
   });
 };
 
@@ -51,3 +67,23 @@ exports.getOutletMenu = (req, res) => {
       res.json(data);
   })
 };
+
+exports.deletemanyItems = (req,res) => {
+  const arr= req.body.id;
+
+  if(typeof(arr) != "string"){
+   
+    var arr2 = Object.values(arr);
+     for(const id of arr2){
+        foodItemsModel.findByIdAndDelete(id).then((data)=>{});
+        console.log(id);
+     }
+     res.send({message: "deleted many"});
+  }else{
+    foodItemsModel.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+  }
+  
+}
+
+
+

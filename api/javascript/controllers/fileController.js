@@ -3,6 +3,7 @@ const foodItems = require("../models/foodItems");
 const foodOutlets = require("../models/foodOutlets");
 const ferryTiming = require("../models/ferryTiming");
 const busTiming = require("../models/busTiming");
+const contactParent = require("../models/contactParent");
 const csv = require("csvtojson");
 
 // var multer      = require('multer');
@@ -96,13 +97,25 @@ exports.csvToMongo = (req,res) =>{
                 if(err){
                     console.log(err);
                 }else{
-                    console.log("saved all")
+                    console.log("saved all");
                 }
          });
          res.send({
             message: "entries saved successfully",
           });
 
+        }else if(temp[0] == "section"){
+            contactParent.insertMany(jsonObj, (err,data) => {
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log("saved all");
+                }
+            });
+            res.send({
+                message: "entries saved successfully",
+            });
+            
         }
         
         

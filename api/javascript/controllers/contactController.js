@@ -107,3 +107,40 @@ exports.deleteContact = (req, res) => {
     });
 };
 
+exports.createsection = (req, res) => {
+  contactParentModel.findOne({ section: req.body.section }).then((section) => {
+    if (section) {
+      res.send({ message: 'Section already exits' });
+    } else {
+      new contactParentModel({
+        section : req.body.section,
+        subsection: req.body.subsection,
+      }).save().then(data => {
+        res.json(data);
+      });
+    }
+  });
+};
+
+exports.deletemanyContacts = (req,res) => {
+  const arr= req.body.id;
+
+  if(typeof(arr) != "string"){
+   
+    var arr2 = Object.values(arr);
+     for(const id of arr2){
+        contactParentModel.findByIdAndDelete(id).then((data)=>{});
+        console.log(id);
+     }
+     res.send({message: "deleted many"});
+  }else{
+    contactParentModel.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+  }
+  
+}
+
+
+
+
+
+
