@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const foodItem = require("../models/foodItems").schema;
 
 const { Schema } = mongoose;
 
@@ -10,8 +11,8 @@ const foodOutletsSchema = new Schema({
   phone_number: Number,
   latitude: Number,
   longitude: Number,
-  tags: [String],
-  menu: [String]
+  tags: [{type: String}],
+  menu: [foodItem],
 });
 
 const foodOutlets = mongoose.model("foodOutlet", foodOutletsSchema);

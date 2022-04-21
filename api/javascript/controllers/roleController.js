@@ -40,3 +40,19 @@ exports.deleteRole = (req, res) => {
     });
   });
 };
+exports.deletemanyRoles = (req,res) => {
+  const arr= req.body.id;
+
+  if(typeof(arr) != "string"){
+   
+    var arr2 = Object.values(arr);
+     for(const id of arr2){
+        roleModel.findByIdAndDelete(id).then((data)=>{});
+        
+     }
+     res.send({message: "deleted many"});
+  }else{
+    roleModel.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+  }
+  
+}
