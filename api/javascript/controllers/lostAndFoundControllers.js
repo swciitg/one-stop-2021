@@ -1,11 +1,11 @@
-const lostAndFoundDetails = require("../models/lostAndFoundModels");
+const LostDetails = require("../models/LostModels");
 const foundDetails = require("../models/foundModels");
 const fs = require("fs");
 
-exports.getlostAndFoundDetails = async (req, res) => {
+exports.getLostDetails = async (req, res) => {
     try {
-    const details = await lostAndFoundDetails.find();
-    details.sort((a, b) => (a.creation > b.creation ? -1 : 1));
+    const details = await LostDetails.find();
+    details.sort(compare);
     return res.json({"details" : details});
     } catch (error) {
       console.log(error.message);
@@ -13,7 +13,7 @@ exports.getlostAndFoundDetails = async (req, res) => {
 };
 
 
-  exports.addlostAndFoundForm = async (req, res) => {
+  exports.addLostForm = async (req, res) => {
     try {
       return res.render("add_user");
     } catch (error) {
@@ -21,30 +21,28 @@ exports.getlostAndFoundDetails = async (req, res) => {
     }
   };
 
-  exports.postlostAndFoundDetails = async (req, res) => {
+  exports.postLostDetails = async (req, res) => {
      
     try {
-      var { title, date, category, location, phonenumber, description,link} = req.body;
+      var { title, location, phonenumber, description,link} = req.body;
   
     //   const image = req.file ? req.file.filename : link;
      
     //   if (!image) {
     //     console.log("error", "Please attach your pdf!!");
-    //     return res.redirect("/lostAndFound/raise");
+    //     return res.redirect("/Lost/raise");
     //   }
       //console.log(path);
-      const newlostAndFoundDetail = await new lostAndFoundDetails({
+      const newLostDetail = await new LostDetails({
         title, 
-        date, 
-        category, 
         location, 
         phonenumber, 
         description,
         link, 
       }).save();
-      if (!newlostAndFoundDetail) {
+      if (!newLostDetail) {
         
-        res.redirect("/lostAndFound/raise");
+        res.redirect("/Lost/raise");
         
       }
      
@@ -55,9 +53,9 @@ exports.getlostAndFoundDetails = async (req, res) => {
     }
   };
 
-  exports.deletelostAndFoundDetail = async (req, res) => {
+  exports.deleteLostDetail = async (req, res) => {
     const id = req.params.details_id;
-    lostAndFoundDetails.findOneAndDelete(id, (err, result) => {
+    LostDetails.findOneAndDelete(id, (err, result) => {
       if (result.link != "") {
         try {
           fs.unlinkSync("./uploads/" + result.link);
@@ -68,7 +66,7 @@ exports.getlostAndFoundDetails = async (req, res) => {
       if (err) {
         res.json({ message: err.message });
       } else {
-        res.redirect(`/lostAndFound`);
+        res.redirect(`/Lost`);
       }
     });
   };
@@ -80,7 +78,6 @@ exports.getlostAndFoundDetails = async (req, res) => {
   exports.getfoundDetails = async (req, res) => {
     try {
     const details = await foundDetails.find();
-    details.sort((a, b) => (a.creation > b.creation ? -1 : 1));
     
     return res.json({"details" : details});
     } catch (error) {
@@ -100,18 +97,17 @@ exports.getlostAndFoundDetails = async (req, res) => {
   exports.postfoundDetails = async (req, res) => {
     // console.log(req.body);
     try {
-      var { title, date, location,submittedat, description,link} = req.body;
+      var { title,location,submittedat, description,link} = req.body;
       
     //   const image = req.file ? req.file.filename : link;
      
     //   if (!image) {
     //     console.log("error", "Please attach your pdf!!");
-    //     return res.redirect("/lostAndFound/found");
+    //     return res.redirect("/Lost/found");
     //   }
       //console.log(path);
       const newfoundDetail = await new foundDetails({
         title, 
-        date, 
         location, 
         submittedat, 
         description,
@@ -119,7 +115,7 @@ exports.getlostAndFoundDetails = async (req, res) => {
       }).save();
       if (!newfoundDetail) {
         
-        res.redirect("/lostAndFound/found");
+        res.redirect("/Lost/found");
         
       }
      
@@ -144,8 +140,13 @@ exports.getlostAndFoundDetails = async (req, res) => {
       if (err) {
         res.json({ message: err.message });
       } else {
-        res.redirect(`/lostAndFound`);
+        res.redirect(`/Lost`);
       }
     });
+  };
+
+
+  const compare = (a, b) => {
+    return b.date - a.date;
   };
 

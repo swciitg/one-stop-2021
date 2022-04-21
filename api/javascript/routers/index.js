@@ -9,4 +9,4 @@ exports.roleRouter = require('./roleRouter');
 exports.foodItemsRouter = require('./foodItemsRouter');
 exports.fileRouter = require('./fileRouter');
 exports.foodOutletsRouter = require('./foodOutletsRouter');
-exports.lostAndFoundRouters = require('./lostAndFoundRouter');
+exports.LostAndFoundRouters = require('./LostAndFoundRouter');

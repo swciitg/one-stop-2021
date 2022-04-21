@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
 
-const lostAndFoundDetailsSchema = new mongoose.Schema({
+const LostandFoundDetailsSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    date: { type: Date, required: true },
-    category: { type: String, required: true },
+    date: { type: Date, default: Date.now},
     location: { type: String, required: true },
     phonenumber: { type: String, required: true },
     description: { type: String, required: true },
     link: { type: String, required: true },
-    creation: { type: Date, default: Date.now },
+ 
     
 });
 
-module.exports = mongoose.model("lostAndFoundDetails", lostAndFoundDetailsSchema);
+module.exports = mongoose.model("LostandFoundDetails", LostandFoundDetailsSchema);

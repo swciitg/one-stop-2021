@@ -1,10 +1,10 @@
 const express = require("express");
 // const { routes } = require('../routes');
 const { routes } = require('../routes');
-const lostAndFoundControllers = require("../controllers/lostAndFoundcontrollers");
-const lostAndFoundRouter = express.Router();
+const LostAndFoundControllers = require("../controllers/LostAndFoundcontrollers");
+const LostAndFoundRouter = express.Router();
 const multer = require("multer");
-const lostAndFoundDetails = require("../models/lostAndFoundModels");
+const LostDetails = require("../models/LostModels");
 const fs = require("fs");
 // const { render } = require("express/lib/response");
 
@@ -22,34 +22,34 @@ const fs = require("fs");
 //     storage: storage,
 //   });
 
-lostAndFoundRouter.get("/all_lost", lostAndFoundControllers.getlostAndFoundDetails);
+LostAndFoundRouter.get("/all_lost", LostAndFoundControllers.getLostDetails);
 
 // router.get("/raise",(req,res)=>{
 //     res.render("add_user");
 // });
 
-lostAndFoundRouter.post("/raisepost",
-    lostAndFoundControllers.postlostAndFoundDetails
+LostAndFoundRouter.post("/raisepost",
+    LostAndFoundControllers.postLostDetails
 )
 
-// lostAndFoundRouter.get(
+// LostAndFoundRouter.get(
 //   "/delete/:id",
-//   lostAndFoundControllers.deletelostAndFoundDetail
+//   LostAndFoundControllers.deletelnfDetail
 // );
 
-lostAndFoundRouter.get("/all_found", lostAndFoundControllers.getfoundDetails);
+LostAndFoundRouter.get("/all_found", LostAndFoundControllers.getfoundDetails);
 
-// lostAndFoundRouter.get("/found",(req,res)=>{
+// LostAndFoundRouter.get("/found",(req,res)=>{
 //   res.render("addfound");
 // });
 
-lostAndFoundRouter.post("/foundpost",
-    lostAndFoundControllers.postfoundDetails
+LostAndFoundRouter.post("/foundpost",
+    LostAndFoundControllers.postfoundDetails
 )
 
 // router.get(
 //   "/deletefound/:id",
-//   lostAndFoundControllers.deletefoundDetail
+//   LostAndFoundControllers.deletefoundDetail
 // );
 
-module.exports = { lostAndFoundRouter: lostAndFoundRouter };
+module.exports = { LostAndFoundRouter: LostAndFoundRouter };
