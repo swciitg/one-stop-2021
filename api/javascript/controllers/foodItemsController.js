@@ -1,31 +1,47 @@
 // const foodItems = require("../models/foodItems");
 const foodItemsModel = require("../models/foodItems");
 const foodOutlets = require("../models/foodOutlets");
+var Scraper = require('images-scraper');
+
 
 exports.createItem = (req, res) => {
   foodItemsModel.findOne({ name: req.body.name }).then((item) => {
     if (item) {
       res.send({ message: "item already exits" });
     } else {
-      const newfood = new foodItemsModel({
-        OutletName : req.body.OutletName,
-        name       : req.body.name,
-        ingredients: req.body.ingredients,
-        veg        : req.body.veg,
-        price      : req.body.price,
-        //image      : req.body.image
+      const google = new Scraper({
+        puppeteer: {
+          headless: true,
+        },
       });
-        newfood.save()
-        .then((data) => {
-          foodOutlets.findOneAndUpdate({name: req.body.OutletName}, {$push : {menu: newfood}})
-          .then((data)=>{
-            res.send({message: "successfulyy added"});
-          }).catch((err)=>{
-            res.send({message: "error"});
-          });
+
+      
+      (async () => {
+       const results = await google.scrape(req.body.name, 10);
         
-          
+        const newfood = new foodItemsModel({
+          OutletName : req.body.OutletName,
+          name       : req.body.name,
+          ingredients: req.body.ingredients,
+          veg        : req.body.veg,
+          price      : req.body.price,
+          image      : results[Math.floor(Math.random() * 10)].url,
         });
+          newfood.save()
+          .then((data) => {
+            foodOutlets.findOneAndUpdate({name: req.body.OutletName}, {$push : {menu: newfood}})
+            .then((data)=>{
+              res.send({message: "successfulyy added"});
+            }).catch((err)=>{
+              res.send({message: "error"});
+            });
+          
+            
+          });
+      })();
+      
+      
+     
     
       
         

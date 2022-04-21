@@ -141,4 +141,14 @@ exports.csvToJSON = (req,res) => {
     });
 }
 
+// exports.scrapingRoute = (req,res) => {
+//     const google = new Scraper({
+//         puppeteer: {
+//           headless: false,
+//         },
+//       });
+//     const results = google.scrape(req.body.name, 1);
+
+
+// }
 
