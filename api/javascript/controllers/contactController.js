@@ -69,12 +69,10 @@ exports.getAllSubsections = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res
-        .status(500)
-        .send({
-          message:
-            err.message || "Error Occurred while retriving user information",
-        });
+      res.status(500).send({
+        message:
+          err.message || "Error Occurred while retriving user information",
+      });
     });
 };
 
@@ -84,31 +82,13 @@ exports.updateContact = (req, res) => {
     .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       if (!data) {
-        res
-          .status(404)
-          .send({
-            message: `Cannot Update user with ${id}. Maybe user not found!`,
-          });
+        res.status(404).send({
+          message: `Cannot Update user with ${id}. Maybe user not found!`,
+        });
       } else {
         res.send(data);
       }
     });
-};
-
-exports.deleteContact = (req, res) => {
-  const { id } = req.params;
-
-  contactSubsectionModel.findByIdAndDelete(id).then((data) => {
-    if (!data) {
-      res
-        .status(404)
-        .send({ message: `Cannot Delete with id ${id}. Maybe id is wrong` });
-    } else {
-      res.send({
-        message: "User was deleted successfully!",
-      });
-    }
-  });
 };
 
 exports.createsection = (req, res) => {
@@ -143,4 +123,16 @@ exports.deletemanyContacts = (req, res) => {
       res.send({ message: "deleted one of one" });
     });
   }
+};
+
+exports.getAllSubsectionContacts = (req, res) => {
+  contactSubsectionModel
+    .find({ subsection: req.body.subsection })
+    .then((contacts) => {
+      if (contacts) {
+        res.send(contacts);
+      } else {
+        res.send({ message: "does not exist" });
+      }
+    });
 };

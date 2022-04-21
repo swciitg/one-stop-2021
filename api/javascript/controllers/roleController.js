@@ -26,33 +26,25 @@ exports.getAllRoles = (req, res) => {
 
 exports.updateRole = (req, res) => {
   const id = req.params.id;
-  roleModel.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+  roleModel
+    .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       res.json(data);
     });
 };
 
-exports.deleteRole = (req, res) => {
-  const id = req.params.id;
-  roleModel.findByIdAndDelete(id).then((data) => {
-    res.send({
-      message: "Role was deleted successfully!",
-    });
-  });
-};
-exports.deletemanyRoles = (req,res) => {
-  const arr= req.body.id;
+exports.deletemanyRoles = (req, res) => {
+  const arr = req.body.id;
 
-  if(typeof(arr) != "string"){
-   
+  if (typeof arr != "string") {
     var arr2 = Object.values(arr);
-     for(const id of arr2){
-        roleModel.findByIdAndDelete(id).then((data)=>{});
-        
-     }
-     res.send({message: "deleted many"});
-  }else{
-    roleModel.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+    for (const id of arr2) {
+      roleModel.findByIdAndDelete(id).then((data) => {});
+    }
+    res.send({ message: "deleted many" });
+  } else {
+    roleModel.findByIdAndDelete(arr).then((data) => {
+      res.send({ message: "deleted one of one" });
+    });
   }
-  
-}
+};

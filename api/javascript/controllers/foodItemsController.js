@@ -8,41 +8,35 @@ exports.createItem = (req, res) => {
       res.send({ message: "item already exits" });
     } else {
       const newfood = new foodItemsModel({
-        OutletName : req.body.OutletName,
-        name       : req.body.name,
+        OutletName: req.body.OutletName,
+        name: req.body.name,
         ingredients: req.body.ingredients,
-        veg        : req.body.veg,
-        price      : req.body.price,
+        veg: req.body.veg,
+        price: req.body.price,
         //image      : req.body.image
       });
-        newfood.save()
-        .then((data) => {
-          foodOutlets.findOneAndUpdate({name: req.body.OutletName}, {$push : {menu: newfood}})
-          .then((data)=>{
-            res.send({message: "successfulyy added"});
-          }).catch((err)=>{
-            res.send({message: "error"});
+      newfood.save().then((data) => {
+        foodOutlets
+          .findOneAndUpdate(
+            { name: req.body.OutletName },
+            { $push: { menu: newfood } }
+          )
+          .then((data) => {
+            res.send({ message: "successfulyy added" });
+          })
+          .catch((err) => {
+            res.send({ message: "error" });
           });
-        
-          
-        });
-    
-      
-        
-        
-    
-    
+      });
     }
-
   });
 };
 
 exports.getAllItems = (req, res) => {
-    foodItemsModel.find().then((data) => {
+  foodItemsModel.find().then((data) => {
     res.json(data);
   });
 };
-
 
 exports.updateItem = (req, res) => {
   const id = req.params.id;
@@ -53,37 +47,25 @@ exports.updateItem = (req, res) => {
     });
 };
 
-exports.deleteItem = (req, res) => {
-  const id = req.params.id;
-  foodItemsModel.findByIdAndDelete(id).then((data) => {
-    res.send({
-      message: "Item was deleted successfully!",
-    });
+exports.getOutletMenu = (req, res) => {
+  foodItemsModel.find({ OutletName: req.body.OutletName }).then((data) => {
+    res.json(data);
   });
 };
 
-exports.getOutletMenu = (req, res) => {
-  foodItemsModel.find({OutletName : req.body.OutletName}).then(data => {
-      res.json(data);
-  })
-};
+exports.deletemanyItems = (req, res) => {
+  const arr = req.body.id;
 
-exports.deletemanyItems = (req,res) => {
-  const arr= req.body.id;
-
-  if(typeof(arr) != "string"){
-   
+  if (typeof arr != "string") {
     var arr2 = Object.values(arr);
-     for(const id of arr2){
-        foodItemsModel.findByIdAndDelete(id).then((data)=>{});
-        console.log(id);
-     }
-     res.send({message: "deleted many"});
-  }else{
-    foodItemsModel.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+    for (const id of arr2) {
+      foodItemsModel.findByIdAndDelete(id).then((data) => {});
+      console.log(id);
+    }
+    res.send({ message: "deleted many" });
+  } else {
+    foodItemsModel.findByIdAndDelete(arr).then((data) => {
+      res.send({ message: "deleted one of one" });
+    });
   }
-  
-}
-
-
-
+};

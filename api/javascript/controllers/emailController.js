@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 /**
  * @swagger
@@ -33,13 +33,12 @@ const sendEmail = (req, res) => {
 
   // create reusable transporter object using the default SMTP transport
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     secure: false, // true for 465, false for other ports
     auth: {
-      user: 'raginiswc21@gmail.com', // generated ethereal user
-      pass: '@Ragini21', // generated ethereal password
+      user: "raginiswc21@gmail.com", // generated ethereal user
+      pass: "@Ragini21", // generated ethereal password
     },
-
   });
 
   // setup email data with unicode symbols
@@ -47,7 +46,7 @@ const sendEmail = (req, res) => {
     from: '"Nodemailer Contact" raginiswc21@gmail.com', // sender address
     to: `${req.body.receiver_emailid}`, // list of receivers
     subject: `${req.body.subject}`, // Subject line
-    text: 'Hello world?', // plain text body
+    text: "Hello world?", // plain text body
     html: output, // html body
   };
 
@@ -56,7 +55,7 @@ const sendEmail = (req, res) => {
     if (error) {
       return console.log(error);
     }
-    console.log('Message sent: %s', info.messageId);
+    console.log("Message sent: %s", info.messageId);
     // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
   });
 };

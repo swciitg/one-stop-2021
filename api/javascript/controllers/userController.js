@@ -48,28 +48,19 @@ exports.updateUser = (req, res) => {
   );
 };
 
-exports.deleteUser = (req, res) => {
-  const id = req.params.id;
-  User.findByIdAndDelete(id).then((data) => {
-    res.send({
-      message: "User was deleted successfully!",
-    });
-  });
-};
+exports.deletemanyUsers = (req, res) => {
+  const arr = req.body.id;
 
-exports.deletemanyUsers = (req,res) => {
-  const arr= req.body.id;
-
-  if(typeof(arr) != "string"){
-   
+  if (typeof arr != "string") {
     var arr2 = Object.values(arr);
      for(const id of arr2){
         User.findByIdAndDelete(id).then((data)=>{});
         console.log(id);
      }
-     res.send({message: "deleted many"});
-  }else{
-    User.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+    res.send({ message: "deleted many" });
+  } else {
+    User.findByIdAndDelete(arr).then((data) => {
+      res.send({ message: "deleted one of one" });
+    });
   }
-  
-}
+};
