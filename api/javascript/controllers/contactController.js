@@ -57,16 +57,7 @@ exports.createContact = (req, res) => {
   });
 };
 
-//get all contacts of a subsection
-exports.getAllSubsectionContacts = (req,res) => {
-  contactSubsectionModel.find({subsection: req.body.subsection}).then((contacts) =>{
-    if(contacts){
-      res.send(contacts);
-    }else{
-      res.send({message: "does not exist"});
-    }
-  });
-}
+
 //get all subsections
 exports.getAllSubsections = (req,res) => {
   contactParentModel.find()
@@ -105,5 +96,31 @@ exports.deleteContact = (req, res) => {
         });
       }
     });
+};
+
+//get all contacts of a subsection
+exports.getAllSubsectionContacts = (req,res) => {
+  contactSubsectionModel.find({subsection: req.body.subsection}).then((contacts) =>{
+    if(contacts){
+      res.send(contacts);
+    }else{
+      res.send({message: "does not exist"});
+    }
+  });
+}
+
+exports.createsection = (req, res) => {
+  contactParentModel.findOne({ section: req.body.section }).then((section) => {
+    if (section) {
+      res.send({ message: 'Section already exits' });
+    } else {
+      new contactParentModel({
+        section : req.body.section,
+        subsection: req.body.subsection,
+      }).save().then(data => {
+        res.json(data);
+      });
+    }
+  });
 };
 

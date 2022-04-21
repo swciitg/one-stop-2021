@@ -13,7 +13,8 @@ user : show info and should be able to add roles (pop up edit form)
 
 
 
-put food item images
-mess menu
-outlet menu
-mutiple delete (provide array)
+put food item images  - 
+mess menu - kunal 
+outlet menu  - done 
+mutiple delete (provide array)  - done
+contact crud  - post done
