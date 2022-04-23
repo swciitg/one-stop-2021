@@ -10,4 +10,4 @@ const messMenuItemModelSchema = new mongoose.Schema({
     
 });
 
-module.exports = mongoose.model("messMenuItemModelDetails", messMenuItemModelDetailsSchema);
+module.exports = mongoose.model("messMenuItemModelDetails", messMenuItemModelSchema);

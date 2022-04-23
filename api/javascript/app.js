@@ -91,6 +91,7 @@ app.use(BASEURL,routers.roleRouter.roleRouter);
 app.use(BASEURL,routers.fileRouter.fileRouter);
 app.use(BASEURL,routers.foodOutletsRouter.foodOutletsRouter);
 app.use(BASEURL,routers.foodItemsRouter.foodItemsRouter);
+app.use(BASEURL,routers.messMenuRouter.messMenuRouter);
 app.use(BASEURL,routers.LostAndFoundRouters.LostAndFoundRouter);
 
 // For demo auth purposes only

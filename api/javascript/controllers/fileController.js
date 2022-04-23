@@ -1,4 +1,4 @@
-const Menu = require("../models/messMenu");
+const Menu = require("../models/messMenuItem");
 const foodItems = require("../models/foodItems");
 const foodOutlets = require("../models/foodOutlets");
 const ferryTiming = require("../models/ferryTiming");
@@ -66,7 +66,7 @@ exports.csvToMongo = (req,res) =>{
          res.send({
             message: "entries saved successfully",
           });
-        }else if(temp.length == 9 && temp[2]=="closing_time"){
+        }else if(temp.length == 10 && temp[2]=="closing_time"){
             console.log("its foodOutlets model");
             foodOutlets.insertMany(jsonObj,(err,data)=>{
                 if(err){

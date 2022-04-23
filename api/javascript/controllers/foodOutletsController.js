@@ -3,7 +3,7 @@ const foodOutletsModel = require("../models/foodOutlets");
 
 exports.createOutlet = (req, res) => {
   foodOutletsModel.findOne({ name: req.body.name }).then((outlet)=> {
-    console.log(typeof(outlet));
+   
     if (outlet) {
       // console.log(outlet);
       res.send({ message: "Outlet already exits" });
@@ -14,7 +14,7 @@ exports.createOutlet = (req, res) => {
         closing_time: req.body.closing_time,
         waiting_time: req.body.waiting_time,
         phone_number: req.body.phone_number,
-
+        address: req.body.address,
         latitude: req.body.latitude,
         longitude: req.body.longitude,
 

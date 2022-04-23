@@ -10,3 +10,4 @@ exports.foodItemsRouter = require('./foodItemsRouter');
 exports.fileRouter = require('./fileRouter');
 exports.foodOutletsRouter = require('./foodOutletsRouter');
 exports.LostAndFoundRouters = require('./LostAndFoundRouter');
+exports.messMenuRouter = require('./messMenuRouter');

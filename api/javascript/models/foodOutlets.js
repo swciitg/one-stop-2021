@@ -11,6 +11,7 @@ const foodOutletsSchema = new Schema({
   phone_number: Number,
   latitude: Number,
   longitude: Number,
+  address: String,
   tags: [{type: String}],
   menu: [foodItem],
 });
