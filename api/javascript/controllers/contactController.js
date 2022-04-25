@@ -1,5 +1,5 @@
-const contactSubsectionModel = require('../models/contactsSubsection');
-const contactParentModel =  require('../models/contactParent');
+const contactSubsectionModel = require("../models/contactsSubsection");
+const contactParentModel = require("../models/contactParent");
 
 /**
  * @swagger
@@ -39,70 +39,70 @@ const contactParentModel =  require('../models/contactParent');
  */
 
 exports.createContact = (req, res) => {
-  contactSubsectionModel.findOne({ email: req.body.email }).then((currenUser) => {
-    if (currenUser) {
-      res.send({ message: 'Email already exits' });
-    } else {
-      new contactSubsectionModel({
-        subsection: req.body.subsection,
-        name: req.body.name,
-        subsection: req.body.subsection,
-        phoneNumber: req.body.phoneNumber,
-        email: req.body.email,
-        
-      }).save().then(contact => {
-        res.json(contact);
-      });
-    }
-  });
-};
-
-//get all contacts of a subsection
-exports.getAllSubsectionContacts = (req,res) => {
-  contactSubsectionModel.find({subsection: req.body.subsection}).then((contacts) =>{
-    if(contacts){
-      res.send(contacts);
-    }else{
-      res.send({message: "does not exist"});
-    }
-  });
-}
-//get all subsections
-exports.getAllSubsections = (req,res) => {
-  contactParentModel.find()
-  .then(data => {
-    res.json(data)
-  })
-  .catch(err => {
-    console.log(err)
-    res.status(500).send({ message : err.message || "Error Occurred while retriving user information" })
-})
-};
-
-
-exports.updateContact = (req, res) => {
-  const  id  = req.params.id;
-  contactSubsectionModel.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({ message: `Cannot Update user with ${id}. Maybe user not found!` });
+  contactSubsectionModel
+    .findOne({ email: req.body.email })
+    .then((currenUser) => {
+      if (currenUser) {
+        res.send({ message: "Email already exits" });
       } else {
-        res.send(data);
+        new contactSubsectionModel({
+          subsection: req.body.subsection,
+          name: req.body.name,
+          subsection: req.body.subsection,
+          phoneNumber: req.body.phoneNumber,
+          email: req.body.email,
+        })
+          .save()
+          .then((contact) => {
+            res.json(contact);
+          });
       }
     });
 };
 
-exports.deleteContact = (req, res) => {
-  const { id } = req.params;
+//get all contacts of a subsection
+exports.getAllSubsectionContacts = (req, res) => {
+  contactSubsectionModel
+    .find({ subsection: req.body.subsection })
+    .then((contacts) => {
+      if (contacts) {
+        res.send(contacts);
+      } else {
+        res.send({ message: "does not exist" });
+      }
+    });
+};
+//get all subsections
+exports.getAllSubsections = (req, res) => {
+  contactParentModel
+    .find()
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      console.log(err);
+      res
+        .status(500)
+        .send({
+          message:
+            err.message || "Error Occurred while retriving user information",
+        });
+    });
+};
 
-  contactSubsectionModel.findByIdAndDelete(id)
+exports.updateContact = (req, res) => {
+  const id = req.params.id;
+  contactSubsectionModel
+    .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       if (!data) {
-        res.status(404).send({ message: `Cannot Delete with id ${id}. Maybe id is wrong` });
+        res
+          .status(404)
+          .send({
+            message: `Cannot Update user with ${id}. Maybe user not found!`,
+          });
       } else {
-        res.send({
-          message: 'User was deleted successfully!',
-        });
+        res.send(data);
       }
     });
 };
@@ -110,37 +110,33 @@ exports.deleteContact = (req, res) => {
 exports.createsection = (req, res) => {
   contactParentModel.findOne({ section: req.body.section }).then((section) => {
     if (section) {
-      res.send({ message: 'Section already exits' });
+      res.send({ message: "Section already exits" });
     } else {
       new contactParentModel({
-        section : req.body.section,
+        section: req.body.section,
         subsection: req.body.subsection,
-      }).save().then(data => {
-        res.json(data);
-      });
+      })
+        .save()
+        .then((data) => {
+          res.json(data);
+        });
     }
   });
 };
 
-exports.deletemanyContacts = (req,res) => {
-  const arr= req.body.id;
+exports.deletemanyContacts = (req, res) => {
+  const arr = req.body.id;
 
-  if(typeof(arr) != "string"){
-   
+  if (typeof arr != "string") {
     var arr2 = Object.values(arr);
-     for(const id of arr2){
-        contactParentModel.findByIdAndDelete(id).then((data)=>{});
-        console.log(id);
-     }
-     res.send({message: "deleted many"});
-  }else{
-    contactParentModel.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+    for (const id of arr2) {
+      contactParentModel.findByIdAndDelete(id).then((data) => {});
+      console.log(id);
+    }
+    res.send({ message: "deleted many" });
+  } else {
+    contactParentModel.findByIdAndDelete(arr).then((data) => {
+      res.send({ message: "deleted one of one" });
+    });
   }
-  
-}
-
-
-
-
-
-
+};

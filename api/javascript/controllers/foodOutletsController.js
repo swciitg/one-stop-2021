@@ -2,8 +2,7 @@ const foodOutletsModel = require("../models/foodOutlets");
 // const getOutletMenu = require("../middlewares/getOutletMenu")
 
 exports.createOutlet = (req, res) => {
-  foodOutletsModel.findOne({ name: req.body.name }).then((outlet)=> {
-   
+  foodOutletsModel.findOne({ name: req.body.name }).then((outlet) => {
     if (outlet) {
       // console.log(outlet);
       res.send({ message: "Outlet already exits" });
@@ -17,8 +16,6 @@ exports.createOutlet = (req, res) => {
         address: req.body.address,
         latitude: req.body.latitude,
         longitude: req.body.longitude,
-
-
         tags: req.body.tags,
         menu: req.body.menu,
       })
@@ -45,29 +42,20 @@ exports.updateOutlet = (req, res) => {
     });
 };
 
-exports.deleteOutlet = (req, res) => {
-  const id = req.params.id;
-  foodOutletsModel.findByIdAndDelete(id).then((data) => {
-    res.send({
-      message: "Outlet was deleted successfully!",
-    });
-  });
-};
 
-exports.deletemanyOutlets = (req,res) => {
-  const arr= req.body.id;
+exports.deletemanyOutlets = (req, res) => {
+  const arr = req.body.id;
 
-  if(typeof(arr) != "string"){
-   
+  if (typeof arr != "string") {
     var arr2 = Object.values(arr);
-     for(const id of arr2){
-        foodOutletsModel.findByIdAndDelete(id).then((data)=>{});
-        console.log(id);
-     }
-     res.send({message: "deleted many"});
-  }else{
-    foodOutletsModel.findByIdAndDelete(arr).then((data)=>{res.send({message: "deleted one of one"})});
+    for (const id of arr2) {
+      foodOutletsModel.findByIdAndDelete(id).then((data) => {});
+      console.log(id);
+    }
+    res.send({ message: "deleted many" });
+  } else {
+    foodOutletsModel.findByIdAndDelete(arr).then((data) => {
+      res.send({ message: "deleted one of one" });
+    });
   }
-  
-}
-
+};

@@ -48,14 +48,6 @@ exports.updateUser = (req, res) => {
   );
 };
 
-exports.deleteUser = (req, res) => {
-  const id = req.params.id;
-  User.findByIdAndDelete(id).then((data) => {
-    res.send({
-      message: "User was deleted successfully!",
-    });
-  });
-};
 
 exports.deletemanyUsers = (req,res) => {
   const arr= req.body.id;

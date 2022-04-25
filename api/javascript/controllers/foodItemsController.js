@@ -58,14 +58,6 @@ exports.updateItem = (req, res) => {
     });
 };
 
-exports.deleteItem = (req, res) => {
-  const id = req.params.id;
-  foodItemsModel.findByIdAndDelete(id).then((data) => {
-    res.send({
-      message: "Item was deleted successfully!",
-    });
-  });
-};
 
 exports.getOutletMenu = (req, res) => {
   foodItemsModel.find({ OutletName: req.body.OutletName }).then((data) => {

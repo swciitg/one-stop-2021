@@ -32,14 +32,6 @@ exports.updateRole = (req, res) => {
     });
 };
 
-exports.deleteRole = (req, res) => {
-  const id = req.params.id;
-  roleModel.findByIdAndDelete(id).then((data) => {
-    res.send({
-      message: "Role was deleted successfully!",
-    });
-  });
-};
 exports.deletemanyRoles = (req,res) => {
   const arr= req.body.id;
 
