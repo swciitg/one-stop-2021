@@ -5,6 +5,8 @@ services:
                 build:
                         context: .
                         dockerfile: Dockerfile.prod
+                extra_hosts:
+                        - "host.docker.internal:host-gateway"
                 ports:
                         - "9010:9010"
                 env_file:

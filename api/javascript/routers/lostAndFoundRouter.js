@@ -1,7 +1,7 @@
 const express = require("express");
 // const { routes } = require('../routes');
 const { routes } = require('../routes');
-const LostAndFoundControllers = require("../controllers/LostAndFoundcontrollers");
+const LostAndFoundControllers = require("../controllers/lostAndFoundControllers");
 const LostAndFoundRouter = express.Router();
 const multer = require("multer");
 const LostDetails = require("../models/LostModels");

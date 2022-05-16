@@ -33,10 +33,11 @@ exports.getGreetings = (req, res) => {
   writeResponse(res, response);
 };
 
-exports.getAllUsers = (req, res) => {
-  User.find().then((users) => {
-    res.json(users);
-  });
+exports.getAllUsers = async (req, res) => {
+  console.log("Users");
+  const users = await User.find();
+  console.log(users);
+  res.json(users)
 };
 
 exports.updateUser = (req, res) => {
