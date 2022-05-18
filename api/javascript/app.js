@@ -51,12 +51,12 @@ const swaggerSpec = swaggerJSDoc(options);
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // app.set('port', nconf.get('PORT'));
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 app.use(helmet());
 app.use(methodOverride());
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 app.use(
