@@ -1,10 +1,16 @@
-const LostDetails = require("../models/LostModels");
-const foundDetails = require("../models/foundModels");
+const LostModel = require("../models/LostModel");
+const foundModel = require("../models/foundModel");
 const fs = require("fs");
+const { ImgurClient } = require('imgur');
+const client = new ImgurClient({ clientId: process.env.IMGUR_CLIENT_ID });
+const path = require("path");
+const deepai = require('deepai');
+const uuid = require("uuid");
+deepai.setApiKey(process.env.NSFW_API_KEY.toString());
 
 exports.getLostDetails = async (req, res) => {
   try {
-    const details = await LostDetails.find();
+    const details = await LostModel.find();
     details.sort(compare);
     return res.json({ details: details });
   } catch (error) {
@@ -21,9 +27,20 @@ exports.addLostForm = async (req, res) => {
 };
 
 exports.postLostDetails = async (req, res) => {
+  // if (!req.files) {
+  //   return res.json({ saved_successfully: false ,status : "No file recieved"});
+  //   return;
+  // }
+  // const file = req.files.imageToUpload;
   try {
-    var { title, location, phonenumber, description, link } = req.body;
-
+    var { title, location, phonenumber, description, imageString} = req.body;
+    // console.log(title);
+    // console.log(location);
+    // console.log(phonenumber);
+    // console.log(description);
+    // console.log(link);
+    //console.log(uuid.v4());
+    
     //   const image = req.file ? req.file.filename : link;
 
     //   if (!image) {
@@ -31,21 +48,48 @@ exports.postLostDetails = async (req, res) => {
     //     return res.redirect("/Lost/raise");
     //   }
     //console.log(path);
-    const newLostDetail = await new LostDetails({
+    const imageName = uuid.v4();
+    const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName+".jpg");
+    console.log(imagePath);
+
+    fs.writeFileSync(imagePath,Buffer.from(imageString,"base64"));
+    const response = await client.upload({
+      image: fs.createReadStream(imagePath),
+      type: 'stream',
+    });
+    console.log(response.data);
+    const photo_id = response.data.id;
+    const imageURL = response.data.link;
+    //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
+
+    var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
+      image: imageURL,
+    });
+    if(safeToUseResp.output.nsfw_score > 0.1){
+      res.json({"saved_successfully" : false, "image_safe" : false});
+      return;
+    }
+    //res.json({recieved_data : true, saved_image : true});
+
+    const newLostDetail = await new LostModel({
       title,
       location,
       phonenumber,
       description,
-      link,
-    }).save();
-    if (!newLostDetail) {
-      res.redirect("/Lost/raise");
-    }
+      photo_id,
+      imageURL
+    }).save().then((result) => {
+      console.log(result);
+    });
+    fs.unlinkSync(imagePath);
+    // if (!newLostDetail) {
+    //   res.redirect("/Lost/raise");
+    // }
 
-    return res.json({ saved_successfully: true });
+    return res.json({ saved_successfully: true, "image_safe" : true});
   } catch (error) {
     console.log(error.message);
-    return res.json({ saved_successfully: false });
+    return res.json({ saved_successfully: false,"image_safe" : true });
   }
 };
 
@@ -71,7 +115,7 @@ exports.deleteLostDetail = async (req, res) => {
 
 exports.getfoundDetails = async (req, res) => {
   try {
-    const details = await foundDetails.find();
+    const details = await foundModel.find();
 
     return res.json({ details: details });
   } catch (error) {
@@ -90,7 +134,7 @@ exports.addfoundForm = async (req, res) => {
 exports.postfoundDetails = async (req, res) => {
   // console.log(req.body);
   try {
-    var { title, location, submittedat, description, link } = req.body;
+    var { title, location, submittedat, description, imageString } = req.body;
 
     //   const image = req.file ? req.file.filename : link;
 
@@ -99,21 +143,46 @@ exports.postfoundDetails = async (req, res) => {
     //     return res.redirect("/Lost/found");
     //   }
     //console.log(path);
-    const newfoundDetail = await new foundDetails({
+
+    const imageName = uuid.v4();
+    const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName+".jpg");
+    console.log(imagePath);
+
+    fs.writeFileSync(imagePath,Buffer.from(imageString,"base64"));
+    const response = await client.upload({
+      image: fs.createReadStream(imagePath),
+      type: 'stream',
+    });
+    console.log(response.data);
+    const photo_id = response.data.id;
+    const imageURL = response.data.link;
+    //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
+
+    var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
+      image: imageURL,
+    });
+    if(safeToUseResp.output.nsfw_score > 0.1){
+      res.json({"saved_successfully" : false, "image_safe" : false});
+      return;
+    }
+
+    const newfoundDetail = await new foundModel({
       title,
       location,
       submittedat,
       description,
-      link,
+      photo_id,
+      imageURL
     }).save();
-    if (!newfoundDetail) {
-      res.redirect("/Lost/found");
-    }
+    fs.unlinkSync(imagePath);
+    // if (!newfoundDetail) {
+    //   res.redirect("/Lost/found");
+    // }
 
-    return res.json({ saved_successfully: true });
+    return res.json({ saved_successfully: true,"image_safe" : true });
   } catch (error) {
     console.log(error.message);
-    return res.json({ saved_successfully: false });
+    return res.json({ saved_successfully: false,"image_safe" : false });
   }
 };
 

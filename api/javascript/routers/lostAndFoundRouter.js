@@ -4,7 +4,7 @@ const { routes } = require('../routes');
 const LostAndFoundControllers = require("../controllers/lostAndFoundControllers");
 const LostAndFoundRouter = express.Router();
 const multer = require("multer");
-const LostDetails = require("../models/LostModels");
+const LostDetails = require("../models/LostModel");
 const fs = require("fs");
 // const { render } = require("express/lib/response");
 
@@ -28,7 +28,7 @@ LostAndFoundRouter.get("/all_lost", LostAndFoundControllers.getLostDetails);
 //     res.render("add_user");
 // });
 
-LostAndFoundRouter.post("/raisepost",
+LostAndFoundRouter.post("/post_lost",
     LostAndFoundControllers.postLostDetails
 )
 
@@ -43,7 +43,7 @@ LostAndFoundRouter.get("/all_found", LostAndFoundControllers.getfoundDetails);
 //   res.render("addfound");
 // });
 
-LostAndFoundRouter.post("/foundpost",
+LostAndFoundRouter.post("/post_found",
     LostAndFoundControllers.postfoundDetails
 )
 
