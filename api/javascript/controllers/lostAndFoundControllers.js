@@ -35,7 +35,7 @@ exports.postLostDetails = async (req, res) => {
   try {
     // console.log(req);
     console.log("HERE 1");
-    var { title, location, phonenumber, description, imageString} = req.body;
+    var { title, location, phonenumber, description, imageString, email, username} = req.body;
     console.log("HERE 2");
     console.log(title);
     console.log(location);
@@ -90,7 +90,9 @@ exports.postLostDetails = async (req, res) => {
       phonenumber,
       description,
       photo_id,
-      imageURL
+      imageURL,
+      email,
+      username
     }).save().then((result) => {
       console.log(result);
     });
@@ -148,7 +150,7 @@ exports.addfoundForm = async (req, res) => {
 exports.postfoundDetails = async (req, res) => {
   // console.log(req.body);
   try {
-    var { title, location, submittedat, description, imageString } = req.body;
+    var { title, location, submittedat, description, imageString, email, username } = req.body;
 
     //   const image = req.file ? req.file.filename : link;
 
@@ -186,7 +188,9 @@ exports.postfoundDetails = async (req, res) => {
       submittedat,
       description,
       photo_id,
-      imageURL
+      imageURL,
+      email,
+      username
     }).save().then((result) => console.log(result));
     fs.unlinkSync(imagePath);
     // if (!newfoundDetail) {

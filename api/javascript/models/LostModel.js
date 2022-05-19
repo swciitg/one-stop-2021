@@ -8,6 +8,8 @@ const LostandFoundDetailsSchema = new mongoose.Schema({
     description: { type: String, required: true },
     photo_id: { type: String, required: true },
     imageURL: { type: String, required: true },
+    email: { type: String, required: true },
+    username: { type: String, required: true },
 });
 
 module.exports = mongoose.model("LostItem", LostandFoundDetailsSchema);
