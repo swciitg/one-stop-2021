@@ -7,7 +7,14 @@ services:
                         dockerfile: Dockerfile.prod
                 extra_hosts:
                         - "host.docker.internal:host-gateway"
+                volumes:
+                        - onestoppublic:/home/node/app/public
+                        - onestopimages:/home/node/app/image_save_folder
                 ports:
                         - "9010:9010"
                 env_file:
                         - .env
+
+volumes:
+        onestoppublic:
+        onestopimages:
