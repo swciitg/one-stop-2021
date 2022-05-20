@@ -128,7 +128,7 @@ exports.deleteLostDetail = async (req, res) => {
 exports.getfoundDetails = async (req, res) => {
   try {
     const details = await foundModel.find();
-
+    details.sort(compare);
     return res.json({ details: details });
   } catch (error) {
     console.log(error.message);
