@@ -22,6 +22,8 @@ const fs = require("fs");
 //     storage: storage,
 //   });
 
+LostAndFoundRouter.get("/getImage", LostAndFoundControllers.getImage);
+
 LostAndFoundRouter.get("/all_lost", LostAndFoundControllers.getLostDetails);
 
 // router.get("/raise",(req,res)=>{

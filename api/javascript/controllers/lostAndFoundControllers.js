@@ -1,12 +1,17 @@
 const LostModel = require("../models/LostModel");
 const foundModel = require("../models/foundModel");
 const fs = require("fs");
-const { ImgurClient } = require('imgur');
-const client = new ImgurClient({ clientId: process.env.IMGUR_CLIENT_ID });
 const path = require("path");
 const deepai = require('deepai');
 const uuid = require("uuid");
 deepai.setApiKey(process.env.NSFW_API_KEY.toString());
+
+exports.getImage = async (req,res) => {
+  console.log("Get image par");
+  const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + req.query.photo_id+".jpg");
+  console.log(imagePath);
+  res.sendFile(imagePath);
+}
 
 exports.getLostDetails = async (req, res) => {
   try {
@@ -34,15 +39,12 @@ exports.postLostDetails = async (req, res) => {
   // const file = req.files.imageToUpload;
   try {
     // console.log(req);
-    console.log("HERE 1");
     var { title, location, phonenumber, description, imageString, email, username} = req.body;
-    console.log("HERE 2");
     console.log(title);
     console.log(location);
     console.log(phonenumber);
     console.log(description);
     // console.log(imageString);
-    console.log("HERE 3");
     //console.log(uuid.v4());
     
     //   const image = req.file ? req.file.filename : link;
@@ -52,10 +54,8 @@ exports.postLostDetails = async (req, res) => {
     //     return res.redirect("/Lost/raise");
     //   }
     const imageName = uuid.v4();
-    console.log("HERE 4");
     const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName+".jpg");
     console.log(imagePath);
-    console.log("HERE 5");
     fs.writeFileSync(imagePath,Buffer.from(imageString,"base64"),(err) => {
       if (err)
       console.log(err);
@@ -63,27 +63,23 @@ exports.postLostDetails = async (req, res) => {
       console.log("File written successfully\n");
       }
     });
-    console.log("HERE 6");
-    const response = await client.upload({
-      image: fs.createReadStream(imagePath),
-      type: 'stream',
-    });
-    console.log("HERE 7");
-    console.log(response.data);
-    const photo_id = response.data.id;
-    const imageURL = response.data.link;
+    // const response = await client.upload({
+    //   image: fs.createReadStream(imagePath),
+    //   type: 'stream',
+    // });
+    // console.log(response.data);
+    const photo_id = imageName;
+    const imageURL = "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
     //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
 
     var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
       image: imageURL,
     });
-    console.log("HERE 8");
     if(safeToUseResp.output.nsfw_score > 0.1){
       res.json({"saved_successfully" : false, "image_safe" : false});
       return;
     }
     //res.json({recieved_data : true, saved_image : true});
-    console.log("HERE 9");
     const newLostDetail = await new LostModel({
       title,
       location,
@@ -96,8 +92,8 @@ exports.postLostDetails = async (req, res) => {
     }).save().then((result) => {
       console.log(result);
     });
-    console.log("HERE 10");
-    fs.unlinkSync(imagePath);
+    // console.log("HERE 10");
+    //fs.unlinkSync(imagePath);
     // if (!newLostDetail) {
     //   res.redirect("/Lost/raise");
     // }
@@ -165,15 +161,16 @@ exports.postfoundDetails = async (req, res) => {
     console.log(imagePath);
 
     fs.writeFileSync(imagePath,Buffer.from(imageString,"base64"));
-    const response = await client.upload({
-      image: fs.createReadStream(imagePath),
-      type: 'stream',
-    });
-    console.log(response.data);
-    const photo_id = response.data.id;
-    const imageURL = response.data.link;
+    // const response = await client.upload({
+    //   image: fs.createReadStream(imagePath),
+    //   type: 'stream',
+    // });
+    // console.log(response.data);
+    const photo_id = imageName;
+    // const imageURL = response.data.link;
     //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
-
+    // console.log("Here 1");
+    const imageURL = "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
     var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
       image: imageURL,
     });
@@ -192,7 +189,7 @@ exports.postfoundDetails = async (req, res) => {
       email,
       username
     }).save().then((result) => console.log(result));
-    fs.unlinkSync(imagePath);
+    // fs.unlinkSync(imagePath);
     // if (!newfoundDetail) {
     //   res.redirect("/Lost/found");
     // }
