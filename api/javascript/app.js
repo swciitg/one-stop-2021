@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('./passport');
+// require('./passport');
 
 const express = require('express');
 const swaggerJSDoc = require('swagger-jsdoc');
@@ -10,7 +10,7 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const session = require('express-session');
-const passport = require('passport');
+// const passport = require('passport');
 const mongoose = require('mongoose');
 const nconf = require('./config');
 const routers = require('./routers');
@@ -18,6 +18,12 @@ const { writeError, writeResponse } = require('./helpers/response');
 
 const app = express();
 
+// setting ejs as view engine
+
+app.set('view engine','ejs');
+
+//for serving static files
+app.use(express.static(__dirname + '/public'));
 
 // app.use(nconf.get('app_path'));
 
@@ -67,8 +73,8 @@ app.use(
   }),
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // enable CORS
 app.use((_req, res, next) => {
