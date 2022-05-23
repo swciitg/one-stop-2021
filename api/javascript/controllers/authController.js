@@ -1,4 +1,5 @@
 const msal = require('@azure/msal-node');
+const request = require('request');
 const REDIRECT_URI = "https://swc.iitg.ac.in/onestopapi/auth/microsoft/redirect";
 const clientID = process.env.MICROSOFT_GRAPH_CLIENT_ID.toString();
 const tenantID = "https://login.microsoftonline.com/" + process.env.MICROSOFT_GRAPH_TENANT_ID.toString();
@@ -45,8 +46,18 @@ exports.microsoftLoginRedirect = (req,res) => {
   };
 
   pca.acquireTokenByCode(tokenRequest).then( async (response) => {
-      console.log("\nResponse: \n:", response.accessToken);
-      res.render('authSuccessView.ejs',{accessToken : response.accessToken});
+      // console.log("\nResponse: \n:", response.accessToken);
+      request.get({
+        url:"https://graph.microsoft.com/v1.0/me",
+        headers: {
+          "Authorization": "Bearer " + response.accessToken
+        }
+    },function(err, resp, body) {
+      if(err){
+        res.render('authSuccessView.ejs',{userInfo : "ERROR OCCURED"});
+      }
+      res.render('authSuccessView.ejs',{userInfo : body});
+    });
   }).catch((error) => {
       console.log(error);
       res.status(500).send(error);
