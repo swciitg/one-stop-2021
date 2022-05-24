@@ -18,7 +18,7 @@ const config = {
                 console.log(message);
             },
             piiLoggingEnabled: false,
-            logLevel: msal.LogLevel.Verbose,
+            logLevel: msal.LogLevel.Warning,
         }
     }
 };
@@ -56,7 +56,11 @@ exports.microsoftLoginRedirect = (req,res) => {
       if(err){
         res.render('authSuccessView.ejs',{userInfo : "ERROR OCCURED"});
       }
-      res.render('authSuccessView.ejs',{userInfo : body});
+      const userInfo = JSON.parse(body);
+      console.log(userInfo);
+      const userInfoString = `${userInfo["displayName"]}/${userInfo["mail"]}/${userInfo["surname"]}/${userInfo["id"]}`;
+      console.log(userInfoString);
+      res.render('authSuccessView.ejs',{userInfo : userInfoString});
     });
   }).catch((error) => {
       console.log(error);
