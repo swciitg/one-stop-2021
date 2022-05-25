@@ -132,10 +132,10 @@ exports.postLostDetails = async (req, res) => {
   } catch (error){return errorFxn(res,error)};
 };
 
-exports.deleteLosts = async (req, res) => {
-  await LostModel.remove();
-  res.send("Deleted Successfully");
-};
+// exports.deleteLosts = async (req, res) => {
+//   await LostModel.remove();
+//   res.send("Deleted Successfully");
+// };
 
 // found details
 
@@ -228,25 +228,10 @@ exports.postfoundDetails = async (req, res) => {
   } catch (error){return errorFxn(res,error)};
 };
 
-exports.deleteFounds = async (req, res) => {
-  await foundModel.remove();
-  res.send("Deleted Successfully");
-  // const id = req.params.details_id;
-  // foundDetails.findOneAndDelete(id, (err, result) => {
-  //   if (result.link != "") {
-  //     try {
-  //       fs.unlinkSync("./uploads/" + result.link);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  //   if (err) {
-  //     res.json({ message: err.message });
-  //   } else {
-  //     res.redirect(`/Lost`);
-  //   }
-  // });
-};
+// exports.deleteFounds = async (req, res) => {
+//   await foundModel.remove();
+//   res.send("Deleted Successfully");
+// };
 
 const compare = (a, b) => {
   return b.date - a.date;

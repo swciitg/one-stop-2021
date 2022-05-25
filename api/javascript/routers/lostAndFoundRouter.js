@@ -36,7 +36,7 @@ LostAndFoundRouter.post("/post_lost",
     LostAndFoundControllers.postLostDetails
 )
 
-LostAndFoundRouter.delete("/deleteLost",LostAndFoundControllers.deleteLosts);
+// LostAndFoundRouter.delete("/deleteLost",LostAndFoundControllers.deleteLosts);
 
 // LostAndFoundRouter.get(
 //   "/delete/:id",
@@ -53,7 +53,7 @@ LostAndFoundRouter.post("/post_found",
     LostAndFoundControllers.postfoundDetails
 )
 
-LostAndFoundRouter.delete("/deleteFound",LostAndFoundControllers.deleteFounds);
+// LostAndFoundRouter.delete("/deleteFound",LostAndFoundControllers.deleteFounds);
 
 // router.get(
 //   "/deletefound/:id",
