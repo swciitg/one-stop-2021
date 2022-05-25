@@ -1,6 +1,6 @@
 const msal = require('@azure/msal-node');
 const request = require('request');
-const REDIRECT_URI = "http://localhost:3000/auth/microsoft/redirect";
+const REDIRECT_URI = "https://swc.iitg.ac.in/onestopapi/auth/microsoft/redirect";
 const clientID = process.env.MICROSOFT_GRAPH_CLIENT_ID.toString();
 const tenantID = "https://login.microsoftonline.com/" + process.env.MICROSOFT_GRAPH_TENANT_ID.toString();
 const clientSecret = process.env.MICROSOFT_GRAPH_CLIENT_SECRET.toString();
