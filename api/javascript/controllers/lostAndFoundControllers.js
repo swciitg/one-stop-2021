@@ -4,11 +4,18 @@ const fs = require("fs");
 const path = require("path");
 const deepai = require('deepai');
 const uuid = require("uuid");
+const sharp = require("sharp");
+const { Z_FIXED } = require("zlib");
 deepai.setApiKey(process.env.NSFW_API_KEY.toString());
 
-exports.getImage = async (req,res) => {
+function errorFxn (res,err){
+  console.log(err);
+  return res.json({ saved_successfully: false, "image_safe": true });
+}
+
+exports.getImage = async (req, res) => {
   console.log("Get image par");
-  const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + req.query.photo_id+".jpg");
+  const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + req.query.photo_id + "-compressed.jpg");
   console.log(imagePath);
   res.sendFile(imagePath);
 }
@@ -39,14 +46,14 @@ exports.postLostDetails = async (req, res) => {
   // const file = req.files.imageToUpload;
   try {
     // console.log(req);
-    var { title, location, phonenumber, description, imageString, email, username} = req.body;
+    var { title, location, phonenumber, description, imageString, email, username } = req.body;
     console.log(title);
     console.log(location);
     console.log(phonenumber);
     console.log(description);
     // console.log(imageString);
     //console.log(uuid.v4());
-    
+
     //   const image = req.file ? req.file.filename : link;
 
     //   if (!image) {
@@ -54,55 +61,57 @@ exports.postLostDetails = async (req, res) => {
     //     return res.redirect("/Lost/raise");
     //   }
     const imageName = uuid.v4();
-    const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName+".jpg");
+    const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName + ".jpg");
     console.log(imagePath);
-    fs.writeFileSync(imagePath,Buffer.from(imageString,"base64"),(err) => {
+    fs.writeFileSync(imagePath, Buffer.from(imageString, "base64"), (err) => {
       if (err)
-      console.log(err);
+        console.log(err);
       else {
-      console.log("File written successfully\n");
+        console.log("File written successfully\n");
       }
     });
-    // const response = await client.upload({
-    //   image: fs.createReadStream(imagePath),
-    //   type: 'stream',
-    // });
-    // console.log(response.data);
-    const photo_id = imageName;
-    const imageURL = "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
-    //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
-
-    var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-      image: imageURL,
-    });
-    if(safeToUseResp.output.nsfw_score > 0.1){
-      res.json({"saved_successfully" : false, "image_safe" : false});
-      return;
-    }
-    //res.json({recieved_data : true, saved_image : true});
-    const newLostDetail = await new LostModel({
-      title,
-      location,
-      phonenumber,
-      description,
-      photo_id,
-      imageURL,
-      email,
-      username
-    }).save().then((result) => {
-      console.log(result);
-    });
-    // console.log("HERE 10");
-    //fs.unlinkSync(imagePath);
-    // if (!newLostDetail) {
-    //   res.redirect("/Lost/raise");
-    // }
-
-    return res.json({ saved_successfully: true, "image_safe" : true});
-  } catch (error) {
-    console.log(error.message);
-    return res.json({ saved_successfully: false,"image_safe" : true });
-  }
+    try {
+      const metadata = await sharp(imagePath).metadata();
+      console.log(metadata);
+      const photo_id = imageName;
+      const imageURL = "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
+      const newImagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName + "-compressed.jpg");
+      //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
+      try {
+        await sharp(imagePath)
+          .resize({
+            width: Math.floor(metadata.width/2),
+            height: Math.floor(metadata.height/2)
+          })
+          .withMetadata()
+          .toFormat("jpg", { mozjpeg: true })
+          .toFile(newImagePath);
+        console.log("Here 1");
+        fs.unlinkSync(imagePath);
+        console.log("Here 2");
+        // var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
+        //   image: imageURL,
+        // });
+        // if (safeToUseResp.output.nsfw_score > 0.1) {
+        //   res.json({ "saved_successfully": false, "image_safe": false });
+        //   return;
+        // }
+        const newLostDetail = await new LostModel({
+          title,
+          location,
+          phonenumber,
+          description,
+          photo_id,
+          imageURL,
+          email,
+          username
+        }).save().then((result) => {
+          console.log(result);
+        });
+        return res.json({ saved_successfully: true, "image_safe": true });
+      } catch (error){return errorFxn(res,error)};
+    } catch (error){return errorFxn(res,error)};
+  } catch (error){return errorFxn(res,error)};
 };
 
 exports.deleteLostDetail = async (req, res) => {
@@ -157,48 +166,97 @@ exports.postfoundDetails = async (req, res) => {
     //console.log(path);
 
     const imageName = uuid.v4();
-    const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName+".jpg");
+    const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName + ".jpg");
     console.log(imagePath);
 
-    fs.writeFileSync(imagePath,Buffer.from(imageString,"base64"));
-    // const response = await client.upload({
-    //   image: fs.createReadStream(imagePath),
-    //   type: 'stream',
-    // });
-    // console.log(response.data);
-    const photo_id = imageName;
-    // const imageURL = response.data.link;
-    //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
-    // console.log("Here 1");
-    const imageURL = "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
-    var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-      image: imageURL,
+    fs.writeFileSync(imagePath, Buffer.from(imageString, "base64"), (err) => {
+      if (err)
+        console.log(err);
+      else {
+        console.log("File written successfully\n");
+      }
     });
-    if(safeToUseResp.output.nsfw_score > 0.1){
-      res.json({"saved_successfully" : false, "image_safe" : false});
-      return;
-    }
+    
+    try {
+      const metadata = await sharp(imagePath).metadata();
+      console.log(metadata);
+      const photo_id = imageName;
+      const imageURL = "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
+      const newImagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName + "-compressed.jpg");
+      //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
+      try {
+        await sharp(imagePath)
+          .resize({
+            width: Math.floor(metadata.width/2),
+            height: Math.floor(metadata.height/2)
+          })
+          .withMetadata()
+          .toFormat("jpg", { mozjpeg: true })
+          .toFile(newImagePath);
+        console.log("Here 1");
+        fs.unlinkSync(imagePath);
+        console.log("Here 2");
+        // var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
+        //   image: imageURL,
+        // });
+        // if (safeToUseResp.output.nsfw_score > 0.1) {
+        //   res.json({ "saved_successfully": false, "image_safe": false });
+        //   return;
+        // }
+        const newfoundDetail = await new foundModel({
+          title,
+          location,
+          submittedat,
+          description,
+          photo_id,
+          imageURL,
+          email,
+          username
+        }).save().then((result) => {
+          console.log(result);
+        });
+        return res.json({ saved_successfully: true, "image_safe": true });
+      } catch (error){return errorFxn(res,error)};
+    } catch (error){return errorFxn(res,error)};
+  } catch (error){return errorFxn(res,error)};
+  //   // const response = await client.upload({
+  //   //   image: fs.createReadStream(imagePath),
+  //   //   type: 'stream',
+  //   // });
+  //   // console.log(response.data);
+  //   const photo_id = imageName;
+  //   // const imageURL = response.data.link;
+  //   //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
+  //   // console.log("Here 1");
+  //   const imageURL = "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
+  //   var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
+  //     image: imageURL,
+  //   });
+  //   if (safeToUseResp.output.nsfw_score > 0.1) {
+  //     res.json({ "saved_successfully": false, "image_safe": false });
+  //     return;
+  //   }
 
-    const newfoundDetail = await new foundModel({
-      title,
-      location,
-      submittedat,
-      description,
-      photo_id,
-      imageURL,
-      email,
-      username
-    }).save().then((result) => console.log(result));
-    // fs.unlinkSync(imagePath);
-    // if (!newfoundDetail) {
-    //   res.redirect("/Lost/found");
-    // }
+  //   const newfoundDetail = await new foundModel({
+  //     title,
+  //     location,
+  //     submittedat,
+  //     description,
+  //     photo_id,
+  //     imageURL,
+  //     email,
+  //     username
+  //   }).save().then((result) => console.log(result));
+  //   // fs.unlinkSync(imagePath);
+  //   // if (!newfoundDetail) {
+  //   //   res.redirect("/Lost/found");
+  //   // }
 
-    return res.json({ saved_successfully: true,"image_safe" : true });
-  } catch (error) {
-    console.log(error.message);
-    return res.json({ saved_successfully: false,"image_safe" : false });
-  }
+  //   return res.json({ saved_successfully: true, "image_safe": true });
+  // } catch (error) {
+  //   console.log(error.message);
+  //   return res.json({ saved_successfully: false, "image_safe": false });
+  // }
 };
 
 exports.deletefoundDetail = async (req, res) => {
