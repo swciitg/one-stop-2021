@@ -20,6 +20,13 @@ exports.getImage = async (req, res) => {
   res.sendFile(imagePath);
 }
 
+exports.getCompressedImage = async (req, res) => {
+  console.log("Get image par");
+  const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + req.query.photo_id + "-ultracompressed.jpg");
+  console.log(imagePath);
+  res.sendFile(imagePath);
+}
+
 exports.getLostDetails = async (req, res) => {
   try {
     const details = await LostModel.find();
@@ -75,7 +82,9 @@ exports.postLostDetails = async (req, res) => {
       console.log(metadata);
       const photo_id = imageName;
       const imageURL = "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
+      const compressedImageURL = "https://swc.iitg.ac.in/onestopapi/getCompressedImage?photo_id=" + imageName;
       const newImagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName + "-compressed.jpg");
+      const compressedImagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName + "-ultracompressed.jpg");
       //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
       try {
         await sharp(imagePath)
@@ -86,16 +95,24 @@ exports.postLostDetails = async (req, res) => {
           .withMetadata()
           .toFormat("jpg", { mozjpeg: true })
           .toFile(newImagePath);
+        await sharp(imagePath)
+          .resize({
+            width: Math.floor(metadata.width>5 ? metadata.width/5 : metadata.width),
+            height: Math.floor(metadata.height>5 ? metadata.height/5 : metadata.height)
+          })
+          .withMetadata()
+          .toFormat("jpg", { mozjpeg: true })
+          .toFile(compressedImagePath);
         console.log("Here 1");
         fs.unlinkSync(imagePath);
         console.log("Here 2");
-        // var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-        //   image: imageURL,
-        // });
-        // if (safeToUseResp.output.nsfw_score > 0.1) {
-        //   res.json({ "saved_successfully": false, "image_safe": false });
-        //   return;
-        // }
+        var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
+          image: imageURL,
+        });
+        if (safeToUseResp.output.nsfw_score > 0.1) {
+          res.json({ "saved_successfully": false, "image_safe": false });
+          return;
+        }
         const newLostDetail = await new LostModel({
           title,
           location,
@@ -103,6 +120,7 @@ exports.postLostDetails = async (req, res) => {
           description,
           photo_id,
           imageURL,
+          compressedImageURL,
           email,
           username
         }).save().then((result) => {
@@ -114,22 +132,9 @@ exports.postLostDetails = async (req, res) => {
   } catch (error){return errorFxn(res,error)};
 };
 
-exports.deleteLostDetail = async (req, res) => {
-  const id = req.params.details_id;
-  LostDetails.findOneAndDelete(id, (err, result) => {
-    if (result.link != "") {
-      try {
-        fs.unlinkSync("./uploads/" + result.link);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    if (err) {
-      res.json({ message: err.message });
-    } else {
-      res.redirect(`/Lost`);
-    }
-  });
+exports.deleteLosts = async (req, res) => {
+  await LostModel.remove();
+  res.send("Deleted Successfully");
 };
 
 // found details
@@ -156,15 +161,6 @@ exports.postfoundDetails = async (req, res) => {
   // console.log(req.body);
   try {
     var { title, location, submittedat, description, imageString, email, username } = req.body;
-
-    //   const image = req.file ? req.file.filename : link;
-
-    //   if (!image) {
-    //     console.log("error", "Please attach your pdf!!");
-    //     return res.redirect("/Lost/found");
-    //   }
-    //console.log(path);
-
     const imageName = uuid.v4();
     const imagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName + ".jpg");
     console.log(imagePath);
@@ -182,7 +178,9 @@ exports.postfoundDetails = async (req, res) => {
       console.log(metadata);
       const photo_id = imageName;
       const imageURL = "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
+      const compressedImageURL = "https://swc.iitg.ac.in/onestopapi/getCompressedImage?photo_id=" + imageName;
       const newImagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName + "-compressed.jpg");
+      const compressedImagePath = path.resolve(__dirname + "/../" + "image_save_folder" + "/" + imageName + "-ultracompressed.jpg");
       //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
       try {
         await sharp(imagePath)
@@ -193,23 +191,32 @@ exports.postfoundDetails = async (req, res) => {
           .withMetadata()
           .toFormat("jpg", { mozjpeg: true })
           .toFile(newImagePath);
+        await sharp(imagePath)
+          .resize({
+            width: Math.floor(metadata.width>5 ? metadata.width/5 : metadata.width),
+            height: Math.floor(metadata.height>5 ? metadata.height/5 : metadata.height)
+          })
+          .withMetadata()
+          .toFormat("jpg", { mozjpeg: true })
+          .toFile(compressedImagePath);
         console.log("Here 1");
         fs.unlinkSync(imagePath);
         console.log("Here 2");
-        // var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-        //   image: imageURL,
-        // });
-        // if (safeToUseResp.output.nsfw_score > 0.1) {
-        //   res.json({ "saved_successfully": false, "image_safe": false });
-        //   return;
-        // }
-        const newfoundDetail = await new foundModel({
+        var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
+          image: imageURL,
+        });
+        if (safeToUseResp.output.nsfw_score > 0.1) {
+          res.json({ "saved_successfully": false, "image_safe": false });
+          return;
+        }
+        const newFoundDetail = await new foundModel({
           title,
           location,
           submittedat,
           description,
           photo_id,
           imageURL,
+          compressedImageURL,
           email,
           username
         }).save().then((result) => {
@@ -219,62 +226,26 @@ exports.postfoundDetails = async (req, res) => {
       } catch (error){return errorFxn(res,error)};
     } catch (error){return errorFxn(res,error)};
   } catch (error){return errorFxn(res,error)};
-  //   // const response = await client.upload({
-  //   //   image: fs.createReadStream(imagePath),
-  //   //   type: 'stream',
-  //   // });
-  //   // console.log(response.data);
-  //   const photo_id = imageName;
-  //   // const imageURL = response.data.link;
-  //   //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
-  //   // console.log("Here 1");
-  //   const imageURL = "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
-  //   var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-  //     image: imageURL,
-  //   });
-  //   if (safeToUseResp.output.nsfw_score > 0.1) {
-  //     res.json({ "saved_successfully": false, "image_safe": false });
-  //     return;
-  //   }
-
-  //   const newfoundDetail = await new foundModel({
-  //     title,
-  //     location,
-  //     submittedat,
-  //     description,
-  //     photo_id,
-  //     imageURL,
-  //     email,
-  //     username
-  //   }).save().then((result) => console.log(result));
-  //   // fs.unlinkSync(imagePath);
-  //   // if (!newfoundDetail) {
-  //   //   res.redirect("/Lost/found");
-  //   // }
-
-  //   return res.json({ saved_successfully: true, "image_safe": true });
-  // } catch (error) {
-  //   console.log(error.message);
-  //   return res.json({ saved_successfully: false, "image_safe": false });
-  // }
 };
 
-exports.deletefoundDetail = async (req, res) => {
-  const id = req.params.details_id;
-  foundDetails.findOneAndDelete(id, (err, result) => {
-    if (result.link != "") {
-      try {
-        fs.unlinkSync("./uploads/" + result.link);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    if (err) {
-      res.json({ message: err.message });
-    } else {
-      res.redirect(`/Lost`);
-    }
-  });
+exports.deleteFounds = async (req, res) => {
+  await foundModel.remove();
+  res.send("Deleted Successfully");
+  // const id = req.params.details_id;
+  // foundDetails.findOneAndDelete(id, (err, result) => {
+  //   if (result.link != "") {
+  //     try {
+  //       fs.unlinkSync("./uploads/" + result.link);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  //   if (err) {
+  //     res.json({ message: err.message });
+  //   } else {
+  //     res.redirect(`/Lost`);
+  //   }
+  // });
 };
 
 const compare = (a, b) => {
