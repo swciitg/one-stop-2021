@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const deepai = require('deepai');
 const uuid = require("uuid");
-deepai.setApiKey(process.env.NSFW_API_KEY.toString());
+// deepai.setApiKey(process.env.NSFW_API_KEY.toString());
 
 exports.getImage = async (req,res) => {
   console.log("Get image par");
