@@ -24,6 +24,8 @@ const fs = require("fs");
 
 LostAndFoundRouter.get("/getImage", LostAndFoundControllers.getImage);
 
+LostAndFoundRouter.get("/getCompressedImage", LostAndFoundControllers.getCompressedImage);
+
 LostAndFoundRouter.get("/all_lost", LostAndFoundControllers.getLostDetails);
 
 // router.get("/raise",(req,res)=>{
@@ -33,6 +35,8 @@ LostAndFoundRouter.get("/all_lost", LostAndFoundControllers.getLostDetails);
 LostAndFoundRouter.post("/post_lost",
     LostAndFoundControllers.postLostDetails
 )
+
+// LostAndFoundRouter.delete("/deleteLost",LostAndFoundControllers.deleteLosts);
 
 // LostAndFoundRouter.get(
 //   "/delete/:id",
@@ -48,6 +52,8 @@ LostAndFoundRouter.get("/all_found", LostAndFoundControllers.getfoundDetails);
 LostAndFoundRouter.post("/post_found",
     LostAndFoundControllers.postfoundDetails
 )
+
+// LostAndFoundRouter.delete("/deleteFound",LostAndFoundControllers.deleteFounds);
 
 // router.get(
 //   "/deletefound/:id",
