@@ -13,7 +13,6 @@ exports.createItem = (req, res) => {
           headless: true,
         },
       });
-
       (async () => {
         const results = await google.scrape(req.body.name, 10);
 
