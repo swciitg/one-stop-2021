@@ -24,3 +24,29 @@ exports.createMessMenu = (req, res) => {
       }
     });
   };
+
+  exports.updateMessMenu = (req, res) => {
+    const id = req.params.id;
+    Menu
+      .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+      .then((data) => {
+        res.json(data);
+      });
+  };
+  
+  exports.deletemanyMessMenu = (req, res) => {
+    const arr = req.body.id;
+  
+    if (typeof arr != "string") {
+      var arr2 = Object.values(arr);
+      for (const id of arr2) {
+        Menu.findByIdAndDelete(id).then((data) => {});
+        console.log(id);
+      }
+      res.send({ message: "deleted many" });
+    } else {
+      Menu.findByIdAndDelete(arr).then((data) => {
+        res.send({ message: "deleted one of one" });
+      });
+    }
+  };
