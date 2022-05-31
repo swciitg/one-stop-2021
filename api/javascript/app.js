@@ -85,7 +85,7 @@ app.use((_req, res, next) => {
   next();
 });
 
-const BASEURL = process.env.BASE_URL || "/"
+const BASEURL = process.env.BASE_URL || "/v1/"
 console.log(BASEURL)
 
 // app routes
