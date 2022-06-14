@@ -157,6 +157,17 @@ exports.addfoundForm = async (req, res) => {
   }
 };
 
+exports.claimFoundItem = async (req,res) => {
+  const {imageURL, claimerEmail, claimerName} = req.body;
+  try{
+    let foundModel = await foundModel.findOneAndUpdate({imageURL:imageURL},{$set: {claimed: true, claimerEmail: claimerEmail,claimerName}});
+    res.json({"saved" : true});
+  }
+  catch(err){
+    res.json({"saved" : false});
+  }
+}
+
 exports.postfoundDetails = async (req, res) => {
   // console.log(req.body);
   try {
