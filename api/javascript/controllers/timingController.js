@@ -2,6 +2,7 @@ const FerryTiming = require('../models/ferryTiming');
 const BusTiming = require('../models/busTiming');
 const busTiming = require('../models/busTiming');
 const ferryTiming = require('../models/ferryTiming');
+const timeModel = require('../models/timeModel');
 
 exports.createferrytiming = (req, res) => {
   if (!req.body) {
@@ -28,7 +29,10 @@ exports.updateferrytiming = (req, res) => {
       if (!data) {
         res.status(404).send({ message: `Cannot Update data with ${id}. Maybe data not found!` });
       } else {
-        res.send(data);
+        timeModel.findByIdAndUpdate(id_,{ferryUpdateTime: Date.now()},function(err,docs){
+          res.send(data);
+        })
+        
       }
     });
 };
@@ -88,7 +92,9 @@ exports.updatebustiming = (req, res) => {
       if (!data) {
         res.status(404).send({ message: `Cannot Update data with ${id}. Maybe data not found!` });
       } else {
-        res.send(data);
+        timeModel.findByIdAndUpdate(id_,{busUpdateTime: Date.now()},function(err,docs){
+          res.send(data);
+        })
       }
     });
 };
@@ -123,3 +129,13 @@ exports.deletemanybustiming = (req,res) => {
   }
   
 }
+
+exports.getupdatetiming = (req, res) => {
+  timeModel.find().then((data) => {
+    res.json(data);
+  });
+};
+
+
+
+

@@ -1,5 +1,6 @@
 const contactSubsectionModel = require("../models/contactsSubsection");
 const contactParentModel = require("../models/contactParent");
+const timeModel = require("../models/timeModel");
 
 /**
  * @swagger
@@ -102,7 +103,9 @@ exports.updateContact = (req, res) => {
             message: `Cannot Update user with ${id}. Maybe user not found!`,
           });
       } else {
-        res.send(data);
+        timeModel.findByIdAndUpdate(id_,{contactUpdateTime: Date.now()},function(err,docs){
+          res.send(data);
+        })
       }
     });
 };

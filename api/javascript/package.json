@@ -14,13 +14,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/swciitg/one-stop-2021"
+    "url": "git+https://github.com/swciitg/one-stop-2021.git"
   },
-  "author": {
-    "name": "Student's Web Committee, IIT Guwahati",
-    "email": "swciitg@gmail.com",
-    "url": "https://docs.swciitg.in/"
-  },
+  "author": "Student's Web Committee, IIT Guwahati <swciitg@gmail.com> (https://docs.swciitg.in/)",
   "keywords": [
     "node",
     "express",
@@ -94,5 +90,9 @@
     "*.js": [
       "./node_modules/.bin/eslint . --fix"
     ]
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/swciitg/one-stop-2021/issues"
+  },
+  "homepage": "https://github.com/swciitg/one-stop-2021#readme"
 }
