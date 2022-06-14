@@ -5,7 +5,6 @@ const path = require("path");
 const deepai = require('deepai');
 const uuid = require("uuid");
 const sharp = require("sharp");
-const { Z_FIXED } = require("zlib");
 deepai.setApiKey(process.env.NSFW_API_KEY.toString());
 
 
@@ -133,10 +132,10 @@ exports.postLostDetails = async (req, res) => {
   } catch (error){return errorFxn(res,error)};
 };
 
-// exports.deleteLosts = async (req, res) => {
-//   await LostModel.remove();
-//   res.send("Deleted Successfully");
-// };
+exports.deleteLosts = async (req, res) => {
+  await LostModel.remove();
+  res.send("Deleted Successfully");
+};
 
 // found details
 
@@ -157,6 +156,17 @@ exports.addfoundForm = async (req, res) => {
     console.log(error.message);
   }
 };
+
+exports.claimFoundItem = async (req,res) => {
+  const {id, claimerEmail, claimerName} = req.body;
+  try{
+    let foundItem = await foundModel.findByIdAndUpdate(id,{claimed: true, claimerEmail: claimerEmail,claimerName});
+    res.json({"saved" : true,message : ""});
+  }
+  catch(err){
+    res.json({"saved" : false,message : err.toString()});
+  }
+}
 
 exports.postfoundDetails = async (req, res) => {
   // console.log(req.body);
@@ -229,10 +239,10 @@ exports.postfoundDetails = async (req, res) => {
   } catch (error){return errorFxn(res,error)};
 };
 
-// exports.deleteFounds = async (req, res) => {
-//   await foundModel.remove();
-//   res.send("Deleted Successfully");
-// };
+exports.deleteFounds = async (req, res) => {
+  await foundModel.remove();
+  res.send("Deleted Successfully");
+};
 
 const compare = (a, b) => {
   return b.date - a.date;
