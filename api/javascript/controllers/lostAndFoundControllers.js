@@ -160,7 +160,7 @@ exports.addfoundForm = async (req, res) => {
 exports.claimFoundItem = async (req,res) => {
   const {id, claimerEmail, claimerName} = req.body;
   try{
-    let foundModel = await foundModel.findByIdAndUpdate(id,{claimed: true, claimerEmail: claimerEmail,claimerName});
+    let foundItem = await foundModel.findByIdAndUpdate(id,{claimed: true, claimerEmail: claimerEmail,claimerName});
     res.json({"saved" : true,message : ""});
   }
   catch(err){
