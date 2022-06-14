@@ -1,11 +1,10 @@
-const LostModel = require("../models/lostModel");
+const LostModel = require("../models/LostModel");
 const foundModel = require("../models/foundModel");
 const fs = require("fs");
 const path = require("path");
 const deepai = require('deepai');
 const uuid = require("uuid");
 const sharp = require("sharp");
-const { Z_FIXED } = require("zlib");
 deepai.setApiKey(process.env.NSFW_API_KEY.toString());
 
 
