@@ -4,7 +4,6 @@ const { routes } = require('../routes');
 const LostAndFoundControllers = require("../controllers/lostAndFoundControllers");
 const LostAndFoundRouter = express.Router();
 const multer = require("multer");
-const LostDetails = require("../models/lostModel");
 const fs = require("fs");
 // const { render } = require("express/lib/response");
 
