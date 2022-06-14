@@ -161,10 +161,10 @@ exports.claimFoundItem = async (req,res) => {
   const {id, claimerEmail, claimerName} = req.body;
   try{
     let foundModel = await foundModel.findByIdAndUpdate(id,{claimed: true, claimerEmail: claimerEmail,claimerName});
-    res.json({"saved" : true});
+    res.json({"saved" : true,message : ""});
   }
   catch(err){
-    res.json({"saved" : false});
+    res.json({"saved" : false,message : err.toString()});
   }
 }
 
