@@ -1,4 +1,4 @@
-const LostModel = require("../models/LostModel");
+const LostModel = require("../models/lostModel");
 const foundModel = require("../models/foundModel");
 const fs = require("fs");
 const path = require("path");
@@ -133,10 +133,10 @@ exports.postLostDetails = async (req, res) => {
   } catch (error){return errorFxn(res,error)};
 };
 
-// exports.deleteLosts = async (req, res) => {
-//   await LostModel.remove();
-//   res.send("Deleted Successfully");
-// };
+exports.deleteLosts = async (req, res) => {
+  await LostModel.remove();
+  res.send("Deleted Successfully");
+};
 
 // found details
 
@@ -229,10 +229,10 @@ exports.postfoundDetails = async (req, res) => {
   } catch (error){return errorFxn(res,error)};
 };
 
-// exports.deleteFounds = async (req, res) => {
-//   await foundModel.remove();
-//   res.send("Deleted Successfully");
-// };
+exports.deleteFounds = async (req, res) => {
+  await foundModel.remove();
+  res.send("Deleted Successfully");
+};
 
 const compare = (a, b) => {
   return b.date - a.date;
