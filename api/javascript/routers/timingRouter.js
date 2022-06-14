@@ -15,4 +15,6 @@ timingRouter.put('/updatebustiming/:id', Controller.updatebustiming);
 timingRouter.delete('/deletebustiming/:id', Controller.deleteferrytiming);
 timingRouter.delete('/deletemanybustimings', Controller.deletemanybustiming);
 
+timingRouter.get('/getupdatetiming',Controller.getupdatetiming);
+
 module.exports = { timingRouter };
