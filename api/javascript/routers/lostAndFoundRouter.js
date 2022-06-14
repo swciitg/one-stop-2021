@@ -52,6 +52,8 @@ LostAndFoundRouter.post("/found",
     LostAndFoundControllers.postfoundDetails
 )
 
+LostAndFoundRouter.post("/found/claim", LostAndFoundControllers.claimFoundItem);
+
 LostAndFoundRouter.delete("/found",LostAndFoundControllers.deleteFounds);
 
 // router.get(
