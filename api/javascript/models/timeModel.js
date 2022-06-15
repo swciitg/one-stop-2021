@@ -3,17 +3,20 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const timeSchema = new Schema({
-  busUpdateTime: Time(),
+  busUpdateTime: {
+    type: Date,
+    required: true,
+  },
   ferryUpdateTime: {
     type: Date,
     required: true,
   },
   foodUpdateTime: {
-    type: Date(),
+    type: Date,
     required: true,
   },
   contactUpdateTime: {
-    type: Date(),
+    type: Date,
     required: true,
   },
 });
