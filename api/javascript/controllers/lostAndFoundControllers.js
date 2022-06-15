@@ -5,6 +5,7 @@ const path = require("path");
 const deepai = require('deepai');
 const uuid = require("uuid");
 const sharp = require("sharp");
+const mongoose = require("mongoose");
 deepai.setApiKey(process.env.NSFW_API_KEY.toString());
 
 
