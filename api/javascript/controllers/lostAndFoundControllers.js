@@ -159,13 +159,45 @@ exports.addfoundForm = async (req, res) => {
 
 exports.claimFoundItem = async (req,res) => {
   const {id, claimerEmail, claimerName} = req.body;
-  try{
-    let foundItem = await foundModel.findByIdAndUpdate(id,{claimed: true, claimerEmail: claimerEmail,claimerName});
-    res.json({"saved" : true,message : ""});
-  }
-  catch(err){
-    res.json({"saved" : false,message : err.toString()});
-  }
+    let foundItem = await foundModel.findById(id);
+    if(foundItem["claimed"]==true){
+      res.json({saved : false, message : "This item already got claimed"});
+      return;
+    }
+    const session = await mongoose.startSession();
+    await session.startTransaction();
+    try{
+      console.log("here 1");
+      let foundItem = await foundModel.findById(id).session(session);
+      console.log("here 2");
+      if(foundItem["claimed"] == true){
+        res.json({saved : false, message : "This item already got claimed"});
+      }
+      else{
+        console.log("here 3");
+        foundItem["claimed"] = true;
+        foundItem["claimerEmail"] = claimerEmail;
+        foundItem["claimerName"] = claimerName;
+        console.log("here 4");
+        await foundItem.save();
+        console.log("here 5");
+        res.json({saved : true,message : "Saved successfully"});
+        console.log("here 6");
+      }
+      await session.commitTransaction();
+      console.log("here 7");
+    }
+    catch(err){
+      console.log(err);
+      console.log("here 8");
+      await session.abortTransaction();
+      console.log("here 9");
+      res.json({saved : false,message : err.toString()});
+    }
+    finally{
+      console.log("here 10");
+      await session.endSession();
+    }
 }
 
 exports.postfoundDetails = async (req, res) => {
