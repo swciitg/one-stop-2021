@@ -1,6 +1,7 @@
 // const foodItems = require("../models/foodItems");
 const foodItemsModel = require("../models/foodItems");
 const foodOutlets = require("../models/foodOutlets");
+const timeModel = require("../models/timeModel");
 var Scraper = require("images-scraper");
 
 exports.createItem = (req, res) => {
@@ -53,7 +54,9 @@ exports.updateItem = (req, res) => {
   foodItemsModel
     .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
-      res.json(data);
+      timeModel.findByIdAndUpdate(id_,{foodUpdateTime: Date.now()},function(err,docs){
+        res.json(data);
+      })
     });
 };
 
