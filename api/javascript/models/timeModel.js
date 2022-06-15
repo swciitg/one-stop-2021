@@ -4,9 +4,18 @@ const { Schema } = mongoose;
 
 const timeSchema = new Schema({
   busUpdateTime: Time(),
-  ferryUpdateTime: Time(),
-  foodUpdateTime: Time(),
-  contactUpdateTime: Time(),
+  ferryUpdateTime: {
+    type: Date,
+    required: true,
+  },
+  foodUpdateTime: {
+    type: Date(),
+    required: true,
+  },
+  contactUpdateTime: {
+    type: Date(),
+    required: true,
+  },
 });
 
 const Time = mongoose.model('time', timeSchema);
