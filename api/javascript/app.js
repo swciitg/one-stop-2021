@@ -122,3 +122,13 @@ app.listen(PORT, () => {
   console.log(`Express server listening on port ${PORT} see docs at /docs`);
 });
 
+
+// "eslint": "^8.7.0",
+// "eslint-config-airbnb-base": "^15.0.0",
+// "eslint-config-google": "^0.14.0",
+// "eslint-config-prettier": "^8.3.0",
+// "eslint-config-standard": "^16.0.3",
+// "eslint-plugin-import": "^2.25.4",
+// "eslint-plugin-node": "^11.1.0",
+// "eslint-plugin-prettier": "^4.0.0",
+// "eslint-plugin-promise": "^5.2.0",
