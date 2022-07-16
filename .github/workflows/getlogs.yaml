@@ -1,11 +1,6 @@
-name: JS Api
+name: JS logs
 on:
     workflow_dispatch:
-    push:
-        paths:
-            - "api/javascript/**"
-        branches:
-            - "main"
 
 jobs:
 
@@ -23,8 +18,6 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         script: |
             cd /webapps/one-stop-2021
-            git pull
-            git status
             cd api/javascript
-            docker-compose -f docker-compose.prod.yaml up -d --build
+            docker-compose -f docker-compose.prod.yaml logs --tail=500
 
