@@ -16,6 +16,7 @@ jobs:
 
   build:
     name: Deploy
+    timeout-minutes: 300
     runs-on: ubuntu-latest
     steps:
     - name: Establish connection and deploy
