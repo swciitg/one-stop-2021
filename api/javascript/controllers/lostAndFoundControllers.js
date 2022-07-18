@@ -105,11 +105,11 @@ exports.postLostDetails = async (req, res) => {
           .toFormat("jpg", { mozjpeg: true })
           .toFile(compressedImagePath);
         console.log("Here 1");
-        fs.unlinkSync(imagePath);
         console.log("Here 2");
         var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-          image: imageURL,
+          image: fs.createReadStream(imagePath),
         });
+        fs.unlinkSync(imagePath);
         if (safeToUseResp.output.nsfw_score > 0.1) {
           res.json({ "saved_successfully": false, "image_safe": false });
           return;
@@ -244,11 +244,11 @@ exports.postfoundDetails = async (req, res) => {
           .toFormat("jpg", { mozjpeg: true })
           .toFile(compressedImagePath);
         console.log("Here 1");
-        fs.unlinkSync(imagePath);
         console.log("Here 2");
         var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-          image: imageURL,
+          image: fs.createReadStream(imagePath),
         });
+        fs.unlinkSync(imagePath);
         if (safeToUseResp.output.nsfw_score > 0.1) {
           res.json({ "saved_successfully": false, "image_safe": false });
           return;
