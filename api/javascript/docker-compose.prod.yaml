@@ -9,7 +9,7 @@ services:
                         - "host.docker.internal:host-gateway"
                 volumes:
                         - onestoppublic:/home/node/app/public
-                        - onestopimages:/home/node/app/image_save_folder
+                        - onestopimages:/home/node/app/images_folder
                 ports:
                         - "9010:9010"
                 env_file:
