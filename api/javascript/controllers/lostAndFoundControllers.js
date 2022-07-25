@@ -287,10 +287,12 @@ exports.postfoundDetails = async (req, res) => {
         "https://swc.iitg.ac.in/onestopapi/getCompressedImage?photo_id=" +
         imageName;
       const newImagePath = path.resolve(
-        __dirname + "/" + imageName + "-compressed.jpg"
+        __dirname + "/../" +
+        "images_folder" + "/" + imageName + "-compressed.jpg"
       );
       const compressedImagePath = path.resolve(
-        __dirname + "/" + imageName + "-ultracompressed.jpg"
+        __dirname + "/../" +
+        "images_folder" + "/" + imageName + "-ultracompressed.jpg"
       );
       //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
       try {
