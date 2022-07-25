@@ -266,7 +266,8 @@ exports.postfoundDetails = async (req, res) => {
       username
     } = req.body;
     const imageName = uuid.v4();
-    const imagePath = path.resolve(__dirname + "/" + imageName + ".jpg");
+    const imagePath = path.resolve(__dirname + "/../" +
+    "images_folder" + "/" + imageName + ".jpg");
     console.log(imagePath);
 
     fs.writeFileSync(imagePath, Buffer.from(imageString, "base64"), (err) => {
