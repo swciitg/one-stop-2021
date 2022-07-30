@@ -1,6 +1,6 @@
 # Final stage
 
-FROM node:18-alpine
+FROM node:14.17.0-alpine
 
 ARG PORT=9010
 

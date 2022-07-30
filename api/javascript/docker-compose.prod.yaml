@@ -12,6 +12,7 @@ services:
                         - onestopimages:/home/node/app/images_folder
                 ports:
                         - "9010:9010"
+                network_mode:  "common-net"
                 env_file:
                         - .env
 
