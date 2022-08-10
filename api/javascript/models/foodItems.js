@@ -10,7 +10,6 @@ const foodItemsSchema = new Schema({
     price: Number,
     veg: Boolean,
     image : String,
-
 });
 
 const foodItems = mongoose.model('foodItem', foodItemsSchema);
