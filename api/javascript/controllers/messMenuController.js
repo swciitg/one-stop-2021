@@ -1,6 +1,6 @@
 const Menu = require("../models/messMenuItem");
-const LastUpdate = require("../models/lastUpdate");
 
+const { csvToMongo } = require("./fileController");
 
 exports.getAllMenuItems = (req, res) => {
   Menu.find()
@@ -11,31 +11,33 @@ exports.getAllMenuItems = (req, res) => {
 };
 
 exports.createMessMenu = (req, res) => {
-  Menu.findOne({ hostel: req.body.hostel }).then((hostel) => {
-    if (hostel) {
-      res.send({ message: "Hostel Mess menu already exits" });
-    } else {
-      new Menu({
-        hostel: req.body.hostel,
-        day: req.body.day,
-        meal: req.body.meal,
-        menu: req.body.menu,
-        timing: req.body.timing,
-      })
-        .save()
-        .then((data) => {
-          LastUpdate.deleteMany({}).then((da) => {
-            new LastUpdate({
-              update: new Date(),
-            })
-              .save()
-              .then((dat) => {
-                res.json(data);
-              });
-          });
-        });
-    }
-  });
+  console.log(req.body);
+  csvToMongo(req, res);
+  // Menu.findOne({ hostel: req.body.hostel }).then((hostel) => {
+  //   if (hostel) {
+  //     res.send({ message: "Hostel Mess menu already exits" });
+  //   } else {
+  //     new Menu({
+  //       hostel: req.body.hostel,
+  //       day: req.body.day,
+  //       meal: req.body.meal,
+  //       menu: req.body.menu,
+  //       timing: req.body.timing,
+  //     })
+  //       .save()
+  //       .then((data) => {
+  //         LastUpdate.deleteMany({}).then((da) => {
+  //           new LastUpdate({
+  //             update: new Date(),
+  //           })
+  //             .save()
+  //             .then((dat) => {
+  //               res.json(data);
+  //             });
+  //         });
+  //       });
+  //   }
+  // });
 };
 
 exports.updateMessMenu = (req, res) => {
