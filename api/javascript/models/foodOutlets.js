@@ -12,8 +12,9 @@ const foodOutletsSchema = new Schema({
   latitude: Number,
   longitude: Number,
   address: String,
-  tags: [{type: String}],
+  tags: [{ type: String }],
   menu: [foodItem],
+  last_update: Date,
 });
 
 const foodOutlets = mongoose.model("foodOutlet", foodOutletsSchema);

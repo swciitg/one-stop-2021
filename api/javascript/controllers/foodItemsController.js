@@ -1,7 +1,9 @@
 // const foodItems = require("../models/foodItems");
 const foodItemsModel = require("../models/foodItems");
 const foodOutlets = require("../models/foodOutlets");
-const timeModel = require("../models/timeModel");
+// const timeModel = require("../models/timeModel");
+const LastUpadte = require("../models/lastUpdate");
+
 var Scraper = require("images-scraper");
 
 exports.createItem = (req, res) => {
@@ -32,7 +34,15 @@ exports.createItem = (req, res) => {
               { $push: { menu: newfood } }
             )
             .then((data) => {
-              res.send({ message: "successfulyy added" });
+              LastUpadte.deleteMany({}).then((da) => {
+                new LastUpadte({
+                  update: new Date(),
+                })
+                  .save()
+                  .then((dat) => {
+                    res.send({ message: "successfulyy added" });
+                  });
+              });
             })
             .catch((err) => {
               res.send({ message: "error" });
@@ -54,12 +64,17 @@ exports.updateItem = (req, res) => {
   foodItemsModel
     .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
-      timeModel.findByIdAndUpdate(id_,{foodUpdateTime: Date.now()},function(err,docs){
-        res.json(data);
-      })
+      LastUpadte.deleteMany({}).then((da) => {
+        new LastUpadte({
+          update: new Date(),
+        })
+          .save()
+          .then((dat) => {
+            res.json(data);
+          });
+      });
     });
 };
-
 
 exports.getOutletMenu = (req, res) => {
   foodItemsModel.find({ OutletName: req.body.OutletName }).then((data) => {
@@ -76,10 +91,26 @@ exports.deletemanyItems = (req, res) => {
       foodItemsModel.findByIdAndDelete(id).then((data) => {});
       console.log(id);
     }
-    res.send({ message: "deleted many" });
+    LastUpadte.deleteMany({}).then((da) => {
+      new LastUpadte({
+        update: new Date(),
+      })
+        .save()
+        .then((dat) => {
+          res.send({ message: "deleted many" });
+        });
+    });
   } else {
     foodItemsModel.findByIdAndDelete(arr).then((data) => {
-      res.send({ message: "deleted one of one" });
+      LastUpadte.deleteMany({}).then((da) => {
+        new LastUpadte({
+          update: new Date(),
+        })
+          .save()
+          .then((dat) => {
+            res.send({ message: "deleted one of one" });
+          });
+      });
     });
   }
 };

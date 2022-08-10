@@ -1,5 +1,5 @@
 const express = require('express');
-
+   
 const timingRouter = express.Router();
 const Controller = require('../controllers/timingController');
 

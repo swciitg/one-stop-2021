@@ -1,5 +1,6 @@
 const foodOutletsModel = require("../models/foodOutlets");
 // const getOutletMenu = require("../middlewares/getOutletMenu")
+const LastUpdate = require("../models/lastUpdate");
 
 exports.createOutlet = (req, res) => {
   foodOutletsModel.findOne({ name: req.body.name }).then((outlet) => {
@@ -21,7 +22,15 @@ exports.createOutlet = (req, res) => {
       })
         .save()
         .then((data) => {
-          res.json(data);
+          LastUpdate.deleteMany({}).then((da) => {
+            new LastUpdate({
+              update: new Date(),
+            })
+              .save()
+              .then((dat) => {
+                res.json(data);
+              });
+          });
         });
     }
   });
@@ -38,10 +47,17 @@ exports.updateOutlet = (req, res) => {
   foodOutletsModel
     .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
-      res.json(data);
+      LastUpdate.deleteMany({}).then((da) => {
+        new LastUpdate({
+          update: new Date(),
+        })
+          .save()
+          .then((dat) => {
+            res.json(data);
+          });
+      });
     });
 };
-
 
 exports.deletemanyOutlets = (req, res) => {
   const arr = req.body.id;
@@ -51,11 +67,27 @@ exports.deletemanyOutlets = (req, res) => {
     for (const id of arr2) {
       foodOutletsModel.findByIdAndDelete(id).then((data) => {});
       console.log(id);
+      LastUpdate.deleteMany({}).then((da) => {
+        new LastUpdate({
+          update: new Date(),
+        })
+          .save()
+          .then((dat) => {
+            res.send({ message: "deleted many" });
+          });
+      });
     }
-    res.send({ message: "deleted many" });
   } else {
     foodOutletsModel.findByIdAndDelete(arr).then((data) => {
-      res.send({ message: "deleted one of one" });
+      LastUpdate.deleteMany({}).then((da) => {
+        new LastUpdate({
+          update: new Date(),
+        })
+          .save()
+          .then((dat) => {
+            res.send({ message: "deleted one of one" });
+          });
+      });
     });
   }
 };
