@@ -9,4 +9,4 @@ const lastUpdateSchema = new Schema({
 const lastUpdate = mongoose.model("last_update", lastUpdateSchema);
 
 module.exports = lastUpdate;
-  
+    

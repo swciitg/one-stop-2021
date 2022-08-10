@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const contactsSubsectionSchema = new Schema({
-  subsection : String,
+  group : String,
   name       : String,
-  phoneNumber: Number,
   email      : String,
- 
+  contact: Number,
+  
 });
 
 const contactsSubsection = mongoose.model('contactsSubsection', contactsSubsectionSchema);
