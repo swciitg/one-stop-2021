@@ -1,5 +1,5 @@
 const Menu = require("../models/messMenuItem");
-const LastUpadte = require("../models/lastUpdate");
+const LastUpdate = require("../models/lastUpdate");
 
 
 exports.getAllMenuItems = (req, res) => {
@@ -24,8 +24,8 @@ exports.createMessMenu = (req, res) => {
       })
         .save()
         .then((data) => {
-          LastUpadte.deleteMany({}).then((da) => {
-            new LastUpadte({
+          LastUpdate.deleteMany({}).then((da) => {
+            new LastUpdate({
               update: new Date(),
             })
               .save()
@@ -42,8 +42,8 @@ exports.updateMessMenu = (req, res) => {
   const id = req.params.id;
   Menu.findByIdAndUpdate(id, req.body, { useFindAndModify: false }).then(
     (data) => {
-      LastUpadte.deleteMany({}).then((da) => {
-        new LastUpadte({
+      LastUpdate.deleteMany({}).then((da) => {
+        new LastUpdate({
           update: new Date(),
         })
           .save()
@@ -64,8 +64,8 @@ exports.deletemanyMessMenu = (req, res) => {
       Menu.findByIdAndDelete(id).then((data) => {});
       console.log(id);
     }
-    LastUpadte.deleteMany({}).then((da) => {
-      new LastUpadte({
+    LastUpdate.deleteMany({}).then((da) => {
+      new LastUpdate({
         update: new Date(),
       })
         .save()
@@ -75,8 +75,8 @@ exports.deletemanyMessMenu = (req, res) => {
     });
   } else {
     Menu.findByIdAndDelete(arr).then((data) => {
-      LastUpadte.deleteMany({}).then((da) => {
-        new LastUpadte({
+      LastUpdate.deleteMany({}).then((da) => {
+        new LastUpdate({
           update: new Date(),
         })
           .save()

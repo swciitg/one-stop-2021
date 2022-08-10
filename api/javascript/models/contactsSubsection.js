@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const contactsSubsectionSchema = new Schema({
-  group : String,
+  groupName : String,
   name       : String,
   email      : String,
   contact: Number,

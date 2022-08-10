@@ -11,4 +11,4 @@ exports.fileRouter = require("./fileRouter");
 exports.foodOutletsRouter = require("./foodOutletsRouter");
 exports.LostAndFoundRouters = require("./lostAndFoundRouter");
 exports.messMenuRouter = require("./messMenuRouter");
-exports.updateRouter = require("./updateRouter");
+exports.updateRouter = require("./updateRouter");                       

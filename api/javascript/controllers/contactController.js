@@ -10,7 +10,7 @@ exports.createContact = (req, res) => {
         res.send({ message: "Email already exits" });
       } else {
         const newcontact = new contactSubsectionModel({
-          group: req.body.group,
+          groupName: req.body.group,
           name: req.body.name,
           email: req.body.email,
           contact: req.body.contact,
@@ -18,7 +18,7 @@ exports.createContact = (req, res) => {
         newcontact.save().then((data) => {
           contactParentModel
             .findOneAndUpdate(
-              { name: req.body.group },
+              { name: req.body.groupName },
               { $push: { contacts: newcontact } }
             )
             .then((data) => {
@@ -77,10 +77,10 @@ exports.getAllSubsections = (req, res) => {
 //         })
 //       }
 //     });
-// };
+// };name
 
 exports.createsection = (req, res) => {
-  contactParentModel.findOne({ section: req.body.section }).then((section) => {
+  contactParentModel.findOne({ name: req.body.name }).then((section) => {
     if (section) {
       res.send({ message: "Section already exits" });
     } else {

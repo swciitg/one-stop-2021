@@ -1,6 +1,6 @@
 const foodOutletsModel = require("../models/foodOutlets");
 // const getOutletMenu = require("../middlewares/getOutletMenu")
-const LastUpadte = require("../models/lastUpdate");
+const LastUpdate = require("../models/lastUpdate");
 
 exports.createOutlet = (req, res) => {
   foodOutletsModel.findOne({ name: req.body.name }).then((outlet) => {
@@ -22,8 +22,8 @@ exports.createOutlet = (req, res) => {
       })
         .save()
         .then((data) => {
-          LastUpadte.deleteMany({}).then((da) => {
-            new LastUpadte({
+          LastUpdate.deleteMany({}).then((da) => {
+            new LastUpdate({
               update: new Date(),
             })
               .save()
@@ -47,8 +47,8 @@ exports.updateOutlet = (req, res) => {
   foodOutletsModel
     .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
-      LastUpadte.deleteMany({}).then((da) => {
-        new LastUpadte({
+      LastUpdate.deleteMany({}).then((da) => {
+        new LastUpdate({
           update: new Date(),
         })
           .save()
@@ -67,8 +67,8 @@ exports.deletemanyOutlets = (req, res) => {
     for (const id of arr2) {
       foodOutletsModel.findByIdAndDelete(id).then((data) => {});
       console.log(id);
-      LastUpadte.deleteMany({}).then((da) => {
-        new LastUpadte({
+      LastUpdate.deleteMany({}).then((da) => {
+        new LastUpdate({
           update: new Date(),
         })
           .save()
@@ -79,8 +79,8 @@ exports.deletemanyOutlets = (req, res) => {
     }
   } else {
     foodOutletsModel.findByIdAndDelete(arr).then((data) => {
-      LastUpadte.deleteMany({}).then((da) => {
-        new LastUpadte({
+      LastUpdate.deleteMany({}).then((da) => {
+        new LastUpdate({
           update: new Date(),
         })
           .save()
