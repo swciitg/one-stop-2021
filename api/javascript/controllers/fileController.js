@@ -20,7 +20,7 @@ exports.retAllFoodItems = (req, res) => {
     });
 };
 exports.retAllFoodOutlets = (req, res) => {
-  foodItems
+  foodOutlets
     .find()
     .lean()
     .exec(function (err, users) {
@@ -43,6 +43,7 @@ exports.deleteFoodItems = (req, res) => {
 exports.csvToMongo = (req, res) => {
   try {
     form.parse(req, function (err, fields, files) {
+      console.log(files);
       let hostel = Object.keys(files)[0];
       csv()
         .fromFile(files[hostel][0].path)
@@ -53,11 +54,13 @@ exports.csvToMongo = (req, res) => {
           for (const x in myJayson) {
             temp.push(x);
           }
+          console.log(temp);
           if (temp[0] == "hostel") {
             console.log("its messMenu model");
             console.log(jsonObj[0]["hostel"]);
             Menu.find().then((oldList) => {
               if (oldList.length !== 0) {
+                console.log("inside oldlist");
                 Menu.deleteMany({ hostel: jsonObj[0]["hostel"] }).then(
                   (result) => {
                     Menu.insertMany(jsonObj, (err, data) => {
@@ -73,12 +76,11 @@ exports.csvToMongo = (req, res) => {
                         })
                           .save()
                           .then((dat) => {
-                            res.send({ message: "deleted many" });
+                            res.send({
+                              jsonObj,
+                              message: "entries saved successfully",
+                            });
                           });
-                      });
-                      res.send({
-                        jsonObj,
-                        message: "entries saved successfully",
                       });
                     });
                   }
@@ -97,17 +99,15 @@ exports.csvToMongo = (req, res) => {
                     })
                       .save()
                       .then((dat) => {
-                        res.send({ message: "deleted many" });
+                        res.send({
+                          jsonObj,
+                          message: "entries saved successfully",
+                        });
                       });
-                  });
-                  res.send({
-                    jsonObj,
-                    message: "entries saved successfully",
                   });
                 });
               }
             });
-            console.log(typeof jsonObj[0]);
           } else if (
             temp.length == 6 &&
             temp[0] == "name" &&
@@ -124,7 +124,8 @@ exports.csvToMongo = (req, res) => {
             res.send({
               message: "entries saved successfully",
             });
-          } else if (temp.length == 10 && temp[2] == "closing_time") {
+          } else if (temp.length == 9 && temp[2] == "closing_time") {
+            console.log(temp);
             console.log("its foodOutlets model");
             foodOutlets.insertMany(jsonObj, (err, data) => {
               if (err) {

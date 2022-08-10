@@ -18,36 +18,109 @@ exports.createItem = (req, res) => {
       });
       (async () => {
         const results = await google.scrape(req.body.name, 10);
-
-        const newfood = new foodItemsModel({
-          OutletName: req.body.OutletName,
-          name: req.body.name,
-          ingredients: req.body.ingredients,
-          veg: req.body.veg,
-          price: req.body.price,
-          image: results[Math.floor(Math.random() * 10)].url,
-        });
-        newfood.save().then((data) => {
-          foodOutlets
-            .findOneAndUpdate(
-              { name: req.body.OutletName },
-              { $push: { menu: newfood } }
-            )
-            .then((data) => {
-              LastUpadte.deleteMany({}).then((da) => {
-                new LastUpadte({
-                  update: new Date(),
-                })
-                  .save()
-                  .then((dat) => {
-                    res.send({ message: "successfulyy added" });
-                  });
+        try {
+          form.parse(req, function (err, fields, files) {
+            console.log(files);
+            let OutletName = Object.keys(files)[0];
+            console.log(hostel);
+            csv()
+              .fromFile(files[hostel][0].path)
+              .then((jsonObj) => {
+                console.log("its foodOutlets model");
+                foodItemsModel.find().then((oldList) => {
+                  if (oldList.length !== 0) {
+                    console.log("inside oldlist");
+                    foodItemsModel
+                      .deleteMany({ hostel: jsonObj[0]["name"] })
+                      .then((result) => {
+                        foodItemsModel.insertMany(jsonObj, (err, data) => {
+                          console.log(jsonObj);
+                          if (err) {
+                            console.log(err);
+                          } else {
+                            console.log("saved all");
+                          }
+                          LastUpdate.deleteMany({}).then((da) => {
+                            new LastUpdate({
+                              update: new Date(),
+                            })
+                              .save()
+                              .then((dat) => {
+                                res.send({
+                                  jsonObj,
+                                  message: "entries saved successfully",
+                                });
+                              });
+                          });
+                        });
+                      });
+                  } else {
+                    foodItemsModel.insertMany(jsonObj, (err, data) => {
+                      console.log(jsonObj);
+                      if (err) {
+                        console.log(err);
+                      } else {
+                        console.log("saved all");
+                      }
+                      LastUpdate.deleteMany({}).then((da) => {
+                        new LastUpdate({
+                          update: new Date(),
+                        })
+                          .save()
+                          .then((dat) => {
+                            res.send({
+                              jsonObj,
+                              message: "entries saved successfully",
+                            });
+                          });
+                      });
+                    });
+                  }
+                });
+                // foodItemsModel.insertMany(jsonObj, (err, data) => {
+                //   if (err) {
+                //     console.log(err);
+                //   } else {
+                //     console.log("saved all");
+                //   }
+                // });
+                // res.send({
+                //   message: "entries saved successfully",
+                // });
               });
-            })
-            .catch((err) => {
-              res.send({ message: "error" });
-            });
-        });
+          });
+        } catch (err) {
+          console.log(err);
+        }
+        // const newfood = new foodItemsModel({
+        //   OutletName: req.body.OutletName,
+        //   name: req.body.name,
+        //   ingredients: req.body.ingredients,
+        //   veg: req.body.veg,
+        //   price: req.body.price,
+        //   image: results[Math.floor(Math.random() * 10)].url,
+        // });
+        // newfood.save().then((data) => {
+        //   foodOutlets
+        //     .findOneAndUpdate(
+        //       { name: req.body.OutletName },
+        //       { $push: { menu: newfood } }
+        //     )
+        //     .then((data) => {
+        //       LastUpadte.deleteMany({}).then((da) => {
+        //         new LastUpadte({
+        //           update: new Date(),
+        //         })
+        //           .save()
+        //           .then((dat) => {
+        //             res.send({ message: "successfulyy added" });
+        //           });
+        //       });
+        //     })
+        //     .catch((err) => {
+        //       res.send({ message: "error" });
+        //     });
+        // });
       })();
     }
   });
