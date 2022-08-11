@@ -136,8 +136,7 @@ exports.createsection = (req, res) => {
                 name: ele.section,
                 contacts : []
               });
-  
-              newParent.save();
+
             }
             sectionDetails.contacts.push({
               groupName: ele.section,
