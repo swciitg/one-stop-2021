@@ -130,8 +130,15 @@ exports.createsection = (req, res) => {
         .then((sectionList) => {
           console.log("ele", sectionList);
           sectionList.forEach(async (ele) => {
-            const sectionDetails = await contactParentModel.findOne({name: ele.subsection});
-            
+            let sectionDetails = await contactParentModel.findOne({name: ele.subsection});
+            if (!sectionDetails) {
+              sectionDetails = new contactParentModel({
+                name: ele.section,
+                contacts : []
+              });
+  
+              newParent.save();
+            }
             sectionDetails.contacts.push({
               groupName: ele.section,
               name: ele.name,
@@ -140,10 +147,7 @@ exports.createsection = (req, res) => {
             });
 
             sectionDetails.save();
-             
-            
-
-          })
+          });
    
           res.status(200).json('success');
         });
