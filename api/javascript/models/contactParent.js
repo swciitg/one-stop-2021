@@ -5,7 +5,7 @@ const contactsSubsection = require("../models/contactsSubsection").schema;
 
 const contactParentSchema = new Schema({
   name: String,
-  group: String,
+  // group: String,
   contacts: [contactsSubsection],
 });
 

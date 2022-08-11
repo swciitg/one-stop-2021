@@ -1,20 +1,12 @@
-const express = require('express');
-   
+const express = require("express");
+
 const timingRouter = express.Router();
-const Controller = require('../controllers/timingController');
+const Controller = require("../controllers/timingController");
 
-timingRouter.get('/getferrytiming', Controller.getferrytiming);
-timingRouter.post('/createferrytiming', Controller.createferrytiming);
-timingRouter.put('/updateferrytiming/:id', Controller.updateferrytiming);
-timingRouter.delete('/deleteferrytiming/:id', Controller.deleteferrytiming);
-timingRouter.delete('/deletemanyferrytimings', Controller.deletemanyferrytiming);
+timingRouter.get("/getferrytiming", Controller.getferrytiming);
+timingRouter.post("/createferrytiming", Controller.createferrytiming);
 
-timingRouter.get('/getbustiming', Controller.getbustiming);
-timingRouter.post('/createbustiming', Controller.createbustiming);
-timingRouter.put('/updatebustiming/:id', Controller.updatebustiming);
-timingRouter.delete('/deletebustiming/:id', Controller.deleteferrytiming);
-timingRouter.delete('/deletemanybustimings', Controller.deletemanybustiming);
-
-timingRouter.get('/getupdatetiming',Controller.getupdatetiming);
+timingRouter.get("/getbustiming", Controller.getbustiming);
+timingRouter.post("/createbustiming", Controller.createbustiming);
 
 module.exports = { timingRouter };

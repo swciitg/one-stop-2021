@@ -61,8 +61,8 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(helmet());
 app.use(methodOverride());
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(morgan("dev"));
 
 app.use(
@@ -107,6 +107,7 @@ app.use(BASEURL, routers.foodItemsRouter.foodItemsRouter);
 app.use(BASEURL, routers.messMenuRouter.messMenuRouter);
 app.use(BASEURL, routers.LostAndFoundRouters.LostAndFoundRouter);
 app.use(BASEURL, routers.updateRouter.updateRouter);
+app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
 
 // For demo auth purposes only
 app.get(`${BASEURL}user-info`, (req, res) => {

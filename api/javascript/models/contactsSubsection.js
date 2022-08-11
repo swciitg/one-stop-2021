@@ -6,12 +6,12 @@ const contactsSubsectionSchema = new Schema({
   groupName: String,
   name: String,
   email: String,
-  contact: Number,
+  contact: String,
 });
 
 const contactsSubsection = mongoose.model(
   "contactsSubsection",
   contactsSubsectionSchema
 );
-
+ 
 module.exports = contactsSubsection;

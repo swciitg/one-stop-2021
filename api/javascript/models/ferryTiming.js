@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const ferrytimingSchema = new Schema({
+  name: String,
   MonToFri_GuwahatiToNorthGuwahati: [String],
   MonToFri_NorthGuwahatiToGuwahati: [String],
   Sunday_GuwahatiToNorthGuwahati: [String],

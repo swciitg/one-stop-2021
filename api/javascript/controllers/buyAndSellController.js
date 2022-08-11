@@ -1,5 +1,5 @@
-const LostModel = require("../models/LostModel");
-const foundModel = require("../models/foundModel");
+const buyModel = require("../models/buyModel");
+const sellModel = require("../models/sellModel");
 const fs = require("fs");
 const path = require("path");
 const deepai = require("deepai");
@@ -10,7 +10,7 @@ deepai.setApiKey(process.env.NSFW_API_KEY.toString());
 
 function errorFxn(res, err) {
   console.log(err);
-  return res.json({ saved_successfully: false, image_safe: true, error: err });
+  return res.json({ saved_successfully: false, image_safe: true });
 }
 
 exports.getImage = async (req, res) => {
@@ -41,9 +41,10 @@ exports.getCompressedImage = async (req, res) => {
   res.sendFile(imagePath);
 };
 
-exports.getLostDetails = async (req, res) => {
+exports.getSellDetails = async (req, res) => {
   try {
-    const details = await LostModel.find();
+    console.log(req);
+    const details = await sellModel.find();
     details.sort(compare);
     return res.json({ details: details });
   } catch (error) {
@@ -51,25 +52,11 @@ exports.getLostDetails = async (req, res) => {
   }
 };
 
-exports.addLostForm = async (req, res) => {
+exports.postSellDetails = async (req, res) => {
   try {
-    return res.render("add_user");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-exports.postLostDetails = async (req, res) => {
-  // if (!req.files) {
-  //   return res.json({ saved_successfully: false ,status : "No file recieved"});
-  //   return;
-  // }
-  // const file = req.files.imageToUpload;
-  try {
-    // console.log(req);
     var {
       title,
-      location,
+      price,
       phonenumber,
       description,
       imageString,
@@ -77,24 +64,17 @@ exports.postLostDetails = async (req, res) => {
       username,
     } = req.body;
     console.log(title);
-    console.log(location);
+    console.log(price);
     console.log(phonenumber);
     console.log(description);
     console.log(imageString);
-    // console.log(imageString);
-    //console.log(uuid.v4());
 
-    //   const image = req.file ? req.file.filename : link;
-
-    //   if (!image) {
-    //     console.log("error", "Please attach your pdf!!");
-    //     return res.redirect("/Lost/raise");
-    //   }
     const imageName = uuid.v4();
     const imagePath = path.resolve(
       __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
     );
-    console.log(imagePath);
+    console.log("image path is: " + imagePath);
+    console.log(Buffer.from(imageString, "base64").toString("ascii"));
     fs.writeFileSync(imagePath, Buffer.from(imageString, "base64"), (err) => {
       if (err) console.log(err);
       else {
@@ -126,6 +106,7 @@ exports.postLostDetails = async (req, res) => {
           imageName +
           "-ultracompressed.jpg"
       );
+      console.log(newImagePath);
       //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
       try {
         await sharp(imagePath)
@@ -149,24 +130,21 @@ exports.postLostDetails = async (req, res) => {
           .toFormat("jpg", { mozjpeg: true })
           .toFile(compressedImagePath);
         console.log("Here 1");
-        console.log(imageURL);
         console.log("Here 2");
-        console.log(process.env.NSFW_API_KEY);
-        console.log(imagePath);
         var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
           image: fs.createReadStream(imagePath),
         });
         fs.unlinkSync(imagePath);
+        //fs.unlinkSync(imagePath);
         if (safeToUseResp.output.nsfw_score > 0.1) {
           res.json({ saved_successfully: false, image_safe: false });
           return;
         }
-        const newLostDetail = await new LostModel({
+        const newSellDetail = await new sellModel({
           title,
-          location,
+          price,
           phonenumber,
           description,
-          photo_id,
           imageURL,
           compressedImageURL,
           email,
@@ -184,20 +162,34 @@ exports.postLostDetails = async (req, res) => {
       return errorFxn(res, error);
     }
   } catch (error) {
+    console.log(error);
     return errorFxn(res, error);
   }
 };
 
-exports.deleteLosts = async (req, res) => {
-  await LostModel.remove();
-  res.send("Deleted Successfully");
+exports.postSellRemoveDetails = async (req, res) => {
+  console.log("lkkjklj" + req.body);
+  try {
+    const { id, email } = req.body;
+    console.log(id, email);
+    const foundItem = await sellModel.findById(id);
+    console.log(foundItem);
+
+    if (foundItem.email == email) {
+      await sellModel.findByIdAndDelete(id);
+      res.json({ deleted_successfully: true });
+    }
+    res.json({ message: "This item does not belong to the entered ID" });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
-// found details
+// buy details
 
-exports.getfoundDetails = async (req, res) => {
+exports.getBuyDetails = async (req, res) => {
   try {
-    const details = await foundModel.find();
+    const details = await buyModel.find();
     details.sort(compare);
     return res.json({ details: details });
   } catch (error) {
@@ -205,49 +197,11 @@ exports.getfoundDetails = async (req, res) => {
   }
 };
 
-exports.addfoundForm = async (req, res) => {
+exports.postBuyDetails = async (req, res) => {
+  console.log(req.body);
   try {
-    return res.render("addfound");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-exports.claimFoundItem = async (req, res) => {
-  try {
-    const { id, claimerEmail, claimerName } = req.body;
-    let foundItem = await foundModel.findById(id);
-    if (foundItem["claimed"] == true) {
-      res.json({ saved: false, message: "This item already got claimed" });
-    }
-
-    await foundModel
-      .findByIdAndUpdate({
-        claimed: true,
-        claimerEmail: claimerEmail,
-        claimerName: claimerName,
-      })
-      .then((ele) => {
-        console.log(ele);
-        res.json({ saved: true, message: "Saved successfully" });
-      });
-  } catch (err) {
-    res.json({ saved: false, message: err.toString() });
-  }
-};
-
-exports.postfoundDetails = async (req, res) => {
-  // console.log(req.body);
-  try {
-    var {
-      title,
-      location,
-      submittedat,
-      description,
-      imageString,
-      email,
-      username,
-    } = req.body;
+    var { title, phonenumber, description, imageString, email, username } =
+      req.body;
     const imageName = uuid.v4();
     const imagePath = path.resolve(
       __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
@@ -311,19 +265,25 @@ exports.postfoundDetails = async (req, res) => {
         console.log("Here 1");
         console.log("Here 2");
         var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-          image: imageURL,
+          image: fs.createReadStream(imagePath),
         });
         fs.unlinkSync(imagePath);
+        //fs.unlinkSync(imagePath);
         if (safeToUseResp.output.nsfw_score > 0.1) {
           res.json({ saved_successfully: false, image_safe: false });
           return;
         }
-        const newFoundDetail = await new foundModel({
+        // var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
+        //   image: imageURL,
+        // });
+        // if (safeToUseResp.output.nsfw_score > 0.1) {
+        //   res.json({ saved_successfully: false, image_safe: false });
+        //   return;
+        // }
+        const newBuyDetail = await new buyModel({
           title,
-          location,
-          submittedat,
+          phonenumber,
           description,
-          photo_id,
           imageURL,
           compressedImageURL,
           email,
@@ -345,9 +305,43 @@ exports.postfoundDetails = async (req, res) => {
   }
 };
 
-exports.deleteFounds = async (req, res) => {
-  await foundModel.remove();
-  res.send("Deleted Successfully");
+exports.postBuyRemoveDetails = async (req, res) => {
+  try {
+    const { id, email } = req.body;
+    console.log(id, email);
+    const foundItem = await buyModel.findById(id);
+    console.log(foundItem.email);
+    if (foundItem.email == email) {
+      await buyModel.findByIdAndDelete(id);
+      res.json({ deleted_successfully: true });
+    } else {
+      res.json({ message: "This item does not belong to the entered ID" });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.getMyEntries = async (req, res) => {
+  console.log(req.body);
+  try {
+    const { email } = req.body;
+    console.log(email);
+
+    const buyDetails = await buyModel.find({ email: email });
+    buyDetails.sort(compare);
+
+    const sellDetails = await sellModel.find({ email: email });
+    sellDetails.sort(compare);
+
+    const allDetails = {
+      sellList: sellDetails,
+      buyList: buyDetails,
+    };
+    return res.json({ details: allDetails });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 const compare = (a, b) => {

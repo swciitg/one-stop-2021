@@ -3,127 +3,63 @@ const foodItemsModel = require("../models/foodItems");
 const foodOutlets = require("../models/foodOutlets");
 // const timeModel = require("../models/timeModel");
 const LastUpadte = require("../models/lastUpdate");
+var multiparty = require("multiparty");
+var form = new multiparty.Form();
+const csv = require("csvtojson");
 
 var Scraper = require("images-scraper");
 
-exports.createItem = (req, res) => {
-  foodItemsModel.findOne({ name: req.body.name }).then((item) => {
-    if (item) {
-      res.send({ message: "item already exits" });
-    } else {
-      const google = new Scraper({
-        puppeteer: {
-          headless: true,
-        },
-      });
-      (async () => {
-        const results = await google.scrape(req.body.name, 10);
-        try {
-          form.parse(req, function (err, fields, files) {
-            console.log(files);
-            let OutletName = Object.keys(files)[0];
-            console.log(hostel);
-            csv()
-              .fromFile(files[hostel][0].path)
-              .then((jsonObj) => {
-                console.log("its foodOutlets model");
-                foodItemsModel.find().then((oldList) => {
-                  if (oldList.length !== 0) {
-                    console.log("inside oldlist");
-                    foodItemsModel
-                      .deleteMany({ hostel: jsonObj[0]["name"] })
-                      .then((result) => {
-                        foodItemsModel.insertMany(jsonObj, (err, data) => {
-                          console.log(jsonObj);
-                          if (err) {
-                            console.log(err);
-                          } else {
-                            console.log("saved all");
-                          }
-                          LastUpdate.deleteMany({}).then((da) => {
-                            new LastUpdate({
-                              update: new Date(),
-                            })
-                              .save()
-                              .then((dat) => {
-                                res.send({
-                                  jsonObj,
-                                  message: "entries saved successfully",
-                                });
-                              });
-                          });
-                        });
-                      });
-                  } else {
-                    foodItemsModel.insertMany(jsonObj, (err, data) => {
-                      console.log(jsonObj);
-                      if (err) {
-                        console.log(err);
-                      } else {
-                        console.log("saved all");
-                      }
-                      LastUpdate.deleteMany({}).then((da) => {
-                        new LastUpdate({
-                          update: new Date(),
-                        })
-                          .save()
-                          .then((dat) => {
-                            res.send({
-                              jsonObj,
-                              message: "entries saved successfully",
-                            });
-                          });
-                      });
-                    });
-                  }
-                });
-                // foodItemsModel.insertMany(jsonObj, (err, data) => {
-                //   if (err) {
-                //     console.log(err);
-                //   } else {
-                //     console.log("saved all");
-                //   }
-                // });
-                // res.send({
-                //   message: "entries saved successfully",
-                // });
-              });
+exports.createItem = async (req, res) => {
+  try {
+    form.parse(req, function (err, fields, files) {
+      console.log(files);
+      let file = Object.keys(files)[0];
+      csv()
+        .fromFile(files[file][0].path)
+        .then(async (itemsList) => {
+          console.log(itemsList);
+          let outletsSet = new Set();
+          itemsList.forEach((incomingItem) => {
+            outletsSet.add(incomingItem["OutletName"]);
           });
-        } catch (err) {
-          console.log(err);
-        }
-        // const newfood = new foodItemsModel({
-        //   OutletName: req.body.OutletName,
-        //   name: req.body.name,
-        //   ingredients: req.body.ingredients,
-        //   veg: req.body.veg,
-        //   price: req.body.price,
-        //   image: results[Math.floor(Math.random() * 10)].url,
-        // });
-        // newfood.save().then((data) => {
-        //   foodOutlets
-        //     .findOneAndUpdate(
-        //       { name: req.body.OutletName },
-        //       { $push: { menu: newfood } }
-        //     )
-        //     .then((data) => {
-        //       LastUpadte.deleteMany({}).then((da) => {
-        //         new LastUpadte({
-        //           update: new Date(),
-        //         })
-        //           .save()
-        //           .then((dat) => {
-        //             res.send({ message: "successfulyy added" });
-        //           });
-        //       });
-        //     })
-        //     .catch((err) => {
-        //       res.send({ message: "error" });
-        //     });
-        // });
-      })();
-    }
-  });
+          for (const outletName of outletsSet) {
+            await foodItemsModel
+              .deleteMany({ OutletName: outletName })
+              .then((result) => console.log(result));
+          }
+          itemsList.forEach(async (incomingItem) => {
+            console.log("fhhksd");
+            console.log(incomingItem);
+            incomingItem["ingredients"] =
+              incomingItem["ingredients"].split(",");
+            const google = new Scraper({
+              puppeteer: {
+                headless: true,
+              },
+            });
+            const imageResults = await google.scrape(incomingItem["name"], 1);
+            console.log(imageResults);
+            incomingItem["image"] = imageResults[0]["url"];
+            if (incomingItem["veg"] === "TRUE") {
+              incomingItem["veg"] = true;
+            } else {
+              incomingItem["veg"] = false;
+            }
+            let newFoodItem = new foodItemsModel(incomingItem);
+            console.log(newFoodItem);
+            await newFoodItem
+              .save()
+              .then((updatedItem) => console.log(updatedItem));
+          });
+          
+          res.json({
+            message: "entries saved successfully",
+          });
+        });
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 exports.getAllItems = (req, res) => {
