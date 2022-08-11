@@ -159,7 +159,7 @@ exports.csvToMongo = (req, res) => {
               }
             });
             res.send({
-              message: "entries saved successfully",
+              message: "entries saved successfully", 
             });
           } else if (temp[0] == "section") {
             contactParent.insertMany(jsonObj, (err, data) => {
