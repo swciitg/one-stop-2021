@@ -20,8 +20,8 @@ var storage = multer.diskStorage({
 });
 var uploads = multer({storage:storage});
 
-fileRouter.post('/csvtomongo', uploads.single(''),Controller.csvToMongo);
-fileRouter.post('/csvtojson', uploads.single(''), Controller.csvToJSON);
+// fileRouter.post('/csvtomongo', uploads.single(''),Controller.csvToMongo);
+// fileRouter.post('/csvtojson', uploads.single(''), Controller.csvToJSON);
 fileRouter.get('/getallfooditems', Controller.retAllFoodItems);
 fileRouter.get('/getallfoodoutlets', Controller.retAllFoodOutlets);
 

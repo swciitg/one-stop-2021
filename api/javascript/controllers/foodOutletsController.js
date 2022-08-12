@@ -12,54 +12,50 @@ exports.createOutlet = (req, res) => {
       console.log(hostel);
       csv()
         .fromFile(files[hostel][0].path)
-        .then((jsonObj) => {
+        .then(async (jsonObj) => {
           console.log("its foodOutlets model");
           foodOutletsModel.find().then((oldList) => {
             if (oldList.length !== 0) {
               console.log("inside oldlist");
               foodOutletsModel
-                .deleteMany({ hostel: jsonObj[0]["name"] })
-                .then((result) => {
-                  foodOutletsModel.insertMany(jsonObj, (err, data) => {
+                .deleteMany({
+                  hostel: jsonObj[0]["name"],
+                })
+                .then(async (result) => {
+                  foodOutletsModel.insertMany(jsonObj, async (err, data) => {
                     console.log(jsonObj);
                     if (err) {
                       console.log(err);
                     } else {
                       console.log("saved all");
                     }
-                    LastUpdate.deleteMany({}).then((da) => {
-                      new LastUpdate({
-                        update: new Date(),
-                      })
-                        .save()
-                        .then((dat) => {
-                          res.send({
-                            jsonObj,
-                            message: "entries saved successfully",
-                          });
-                        });
+                    let updatesList = await LastUpdate.find();
+                    console.log(updatesList);
+                    await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+                      food: new Date(),
+                    });
+                    res.send({
+                      jsonObj,
+                      message: "entries saved successfully",
                     });
                   });
                 });
             } else {
-              foodOutletsModel.insertMany(jsonObj, (err, data) => {
+              foodOutletsModel.insertMany(jsonObj, async (err, data) => {
                 console.log(jsonObj);
                 if (err) {
                   console.log(err);
                 } else {
                   console.log("saved all");
                 }
-                LastUpdate.deleteMany({}).then((da) => {
-                  new LastUpdate({
-                    update: new Date(),
-                  })
-                    .save()
-                    .then((dat) => {
-                      res.send({
-                        jsonObj,
-                        message: "entries saved successfully",
-                      });
-                    });
+                let updatesList = await LastUpdate.find();
+                console.log(updatesList);
+                await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+                  food: new Date(),
+                });
+                res.send({
+                  jsonObj,
+                  message: "entries saved successfully",
                 });
               });
             }
@@ -122,7 +118,9 @@ exports.getAllOutlets = (req, res) => {
 exports.updateOutlet = (req, res) => {
   const id = req.params.id;
   foodOutletsModel
-    .findByIdAndUpdate(id, req.body, { useFindAndModify: false })
+    .findByIdAndUpdate(id, req.body, {
+      useFindAndModify: false,
+    })
     .then((data) => {
       LastUpdate.deleteMany({}).then((da) => {
         new LastUpdate({
@@ -150,7 +148,9 @@ exports.deletemanyOutlets = (req, res) => {
         })
           .save()
           .then((dat) => {
-            res.send({ message: "deleted many" });
+            res.send({
+              message: "deleted many",
+            });
           });
       });
     }
@@ -162,7 +162,9 @@ exports.deletemanyOutlets = (req, res) => {
         })
           .save()
           .then((dat) => {
-            res.send({ message: "deleted one of one" });
+            res.send({
+              message: "deleted one of one",
+            });
           });
       });
     });

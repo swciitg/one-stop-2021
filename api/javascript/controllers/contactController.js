@@ -4,32 +4,25 @@ const timeModel = require("../models/timeModel");
 const csv = require("csvtojson");
 var multiparty = require("multiparty");
 var form = new multiparty.Form();
+const LastUpdate = require("../models/lastUpdate");
 
-exports.createContact = async (req, res) => {
+
+exports.createsection = async (req, res) => {
+  console.log("hjkhsd");
   try {
-    form.parse(req, function (err, fields, files) {
+    form.parse(req, async function (err, fields, files) {
       console.log(files);
       let hostel = Object.keys(files)[0];
+      await contactParentModel.deleteMany();
       csv()
         .fromFile(files[hostel][0].path)
         .then((sectionList) => {
-          console.log("ele", sectionList);
+          console.log("ele", sectionList[0]);
           sectionList.forEach(async (ele) => {
-            const sectionDetails = await contactParentModel.findOne({
+            const newParent = new contactParentModel({
               name: ele.section,
             });
-            if (sectionDetails) {
-              const delData = await contactParentModel.findOneAndUpdate(
-                { name: ele.section },
-                { name: ele.section, contacts: [] }
-              );
-            } else {
-              const newParent = new contactParentModel({
-                name: ele.section,
-              });
-
-              newParent.save();
-            }
+            newParent.save();
           });
 
           res.status(200).json("success");
@@ -41,6 +34,7 @@ exports.createContact = async (req, res) => {
       error: err,
     });
   }
+
   // contactSubsectionModel
   //   .findOne({ email: req.body.email })
   //   .then((currenUser) => {
@@ -92,12 +86,10 @@ exports.getAllSubsections = (req, res) => {
     .catch((err) => {
       console.log(err);
       res.status(500).send({
-        message:
-          err.message || "Error Occurred while retriving user information",
+        message: err.message || "Error Occurred while retriving user information",
       });
     });
 };
-
 // exports.updateContact = (req, res) => {
 //   const id = req.params.id;
 //   contactSubsectionModel
@@ -117,35 +109,56 @@ exports.getAllSubsections = (req, res) => {
 //     });
 // };name
 
-exports.createsection = (req, res) => {
+exports.createContact = (req, res) => {
+  console.log("hgifd");
   try {
     form.parse(req, function (err, fields, files) {
       console.log(files);
-      let hostel = Object.keys(files)[0];
+      let file = Object.keys(files)[0];
       csv()
-        .fromFile(files[hostel][0].path)
-        .then((sectionList) => {
+        .fromFile(files[file][0].path)
+        .then(async (sectionList) => {
           console.log("ele", sectionList);
-          sectionList.forEach(async (ele) => {
-            let sectionDetails = await contactParentModel.findOne({
-              name: ele.subsection,
+          let contactsParentList = await contactParentModel.find();
+          console.log(contactsParentList);
+          sectionList.forEach((listItem) => {
+            console.log(listItem.subsection);
+            let corresSectionIndex = -1;
+            contactsParentList.find((ele, idx) => {
+              if (ele.name === listItem.subsection) corresSectionIndex = idx;
+              return ele.name === listItem.subsection;
             });
-            if (!sectionDetails) {
-              sectionDetails = new contactParentModel({
-                name: ele.section,
-                contacts: [],
+            console.log(corresSectionIndex);
+            if (corresSectionIndex >= 0) {
+              console.log("here fjksd");
+              let contactIndex = -1;
+              console.log(contactsParentList[corresSectionIndex]);
+              contactsParentList[corresSectionIndex].contacts.find((ele, idx) => {
+                console.log(ele);
+                if (ele.name === listItem.name) {
+                  console.log("I am");
+                  contactIndex = idx;
+                }
+                return ele.name === listItem.name;
               });
+              console.log("jmgldkf", contactIndex);
+              if (contactIndex >= 0) {
+                console.log("here", contactIndex);
+                contactsParentList[corresSectionIndex].contacts[contactIndex] = listItem;
+              } else {
+                contactsParentList[corresSectionIndex].contacts.push(listItem);
+              }
             }
-            sectionDetails.contacts.push({
-              groupName: ele.section,
-              name: ele.name,
-              contact: ele.phoneNumber,
-              email: ele.email,
-            });
-
-            sectionDetails.save();
           });
-
+          console.log(contactsParentList);
+          contactsParentList.forEach(async (section) => {
+            await section.save();
+          });
+          let updatesList = await LastUpdate.find();
+          console.log(updatesList);
+          await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+            contact: new Date(),
+          });
           res.status(200).json("success");
         });
     });
@@ -183,10 +196,14 @@ exports.deletemanyContacts = (req, res) => {
       contactParentModel.findByIdAndDelete(id).then((data) => {});
       console.log(id);
     }
-    res.send({ message: "deleted many" });
+    res.send({
+      message: "deleted many"
+    });
   } else {
     contactParentModel.findByIdAndDelete(arr).then((data) => {
-      res.send({ message: "deleted one of one" });
+      res.send({
+        message: "deleted one of one"
+      });
     });
   }
 };

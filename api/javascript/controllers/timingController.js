@@ -3,27 +3,37 @@ const BusTiming = require("../models/busTiming");
 const busTiming = require("../models/busTiming");
 const ferryTiming = require("../models/ferryTiming");
 const timeModel = require("../models/timeModel");
+const LastUpdate = require("../models/lastUpdate");
 
 exports.createferrytiming = async (req, res) => {
   try {
     console.log(req.body);
-    const record = await ferryTiming.find({ name: req.body.name });
+    const record = await ferryTiming.find({
+      name: req.body.name
+    });
     if (record) {
-      await ferryTiming.deleteMany({ name: req.body.name });
+      await ferryTiming.deleteMany({
+        name: req.body.name
+      });
     }
     if (!req.body) {
-      res.status(400).send({ message: "Content can not be empty!" });
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });
       return;
     }
     new FerryTiming({
-      MonToFri_GuwahatiToNorthGuwahati:
-        req.body.MonToFri_GuwahatiToNorthGuwahati,
-      MonToFri_NorthGuwahatiToGuwahati:
-        req.body.MonToFri_NorthGuwahatiToGuwahati,
+      MonToFri_GuwahatiToNorthGuwahati: req.body.MonToFri_GuwahatiToNorthGuwahati,
+      MonToFri_NorthGuwahatiToGuwahati: req.body.MonToFri_NorthGuwahatiToGuwahati,
       Sunday_GuwahatiToNorthGuwahati: req.body.Sunday_GuwahatiToNorthGuwahati,
       Sunday_NorthGuwahatiToGuwahati: req.body.Sunday_NorthGuwahatiToGuwahati,
       name: req.body.name,
     }).save();
+    let updatesList = await LastUpdate.find();
+    console.log(updatesList);
+    await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+      travel: new Date(),
+    });
     console.log("gelo");
     return res.status(200).json({
       success: true,
@@ -50,7 +60,9 @@ exports.createbustiming = async (req, res) => {
       await busTiming.deleteMany({});
     }
     if (!req.body) {
-      res.status(400).send({ message: "Content can not be empty!" });
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });
       return;
     }
     new BusTiming({
@@ -60,11 +72,17 @@ exports.createbustiming = async (req, res) => {
       CityToCollege_Holiday: req.body.CityToCollege_Holiday,
       name: req.body.name,
     }).save();
+    let updatesList = await LastUpdate.find();
+    console.log(updatesList);
+    await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+      travel: new Date(),
+    });
     console.log("gelo");
     return res.status(200).json({
       success: true,
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       success: false,
     });

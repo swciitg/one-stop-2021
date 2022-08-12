@@ -11,4 +11,6 @@ contactRouter.post('/createcontact', Controller.createContact);
 contactRouter.post('/createsection', Controller.createsection);
 contactRouter.delete('/deletemanycontacts', Controller.deletemanyContacts);
 
-module.exports = { contactRouter: contactRouter };
+module.exports = {
+    contactRouter: contactRouter
+};

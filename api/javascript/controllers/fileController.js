@@ -16,7 +16,7 @@ exports.retAllFoodItems = (req, res) => {
     .find()
     .lean()
     .exec(function (err, users) {
-      res.send(JSON.stringify(users));
+      res.send(JSON.stringify(users)); 
     });
 };
 exports.retAllFoodOutlets = (req, res) => {
