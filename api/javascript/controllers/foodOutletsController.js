@@ -8,10 +8,10 @@ exports.createOutlet = (req, res) => {
   try {
     form.parse(req, function (err, fields, files) {
       console.log(files);
-      let hostel = Object.keys(files)[0];
+      let file = Object.keys(files)[0];
       console.log(hostel);
       csv()
-        .fromFile(files[hostel][0].path)
+        .fromFile(files[file][0].path)
         .then(async (jsonObj) => {
           console.log("its foodOutlets model");
           foodOutletsModel.find().then((oldList) => {
@@ -113,60 +113,4 @@ exports.getAllOutlets = (req, res) => {
   foodOutletsModel.find().then((data) => {
     res.json(data);
   });
-};
-
-exports.updateOutlet = (req, res) => {
-  const id = req.params.id;
-  foodOutletsModel
-    .findByIdAndUpdate(id, req.body, {
-      useFindAndModify: false,
-    })
-    .then((data) => {
-      LastUpdate.deleteMany({}).then((da) => {
-        new LastUpdate({
-          update: new Date(),
-        })
-          .save()
-          .then((dat) => {
-            res.json(data);
-          });
-      });
-    });
-};
-
-exports.deletemanyOutlets = (req, res) => {
-  const arr = req.body.id;
-
-  if (typeof arr != "string") {
-    var arr2 = Object.values(arr);
-    for (const id of arr2) {
-      foodOutletsModel.findByIdAndDelete(id).then((data) => {});
-      console.log(id);
-      LastUpdate.deleteMany({}).then((da) => {
-        new LastUpdate({
-          update: new Date(),
-        })
-          .save()
-          .then((dat) => {
-            res.send({
-              message: "deleted many",
-            });
-          });
-      });
-    }
-  } else {
-    foodOutletsModel.findByIdAndDelete(arr).then((data) => {
-      LastUpdate.deleteMany({}).then((da) => {
-        new LastUpdate({
-          update: new Date(),
-        })
-          .save()
-          .then((dat) => {
-            res.send({
-              message: "deleted one of one",
-            });
-          });
-      });
-    });
-  }
 };

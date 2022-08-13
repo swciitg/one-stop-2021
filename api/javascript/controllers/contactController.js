@@ -77,7 +77,7 @@ exports.createsection = async (req, res) => {
 //     });
 // };
 //get all contacts
-exports.getAllSubsections = (req, res) => {
+exports.getAllContacts = (req, res) => {
   contactParentModel
     .find()
     .then((data) => {
@@ -186,24 +186,3 @@ exports.createContact = (req, res) => {
 //     }
 //   });
 // };
-
-exports.deletemanyContacts = (req, res) => {
-  const arr = req.body.id;
-
-  if (typeof arr != "string") {
-    var arr2 = Object.values(arr);
-    for (const id of arr2) {
-      contactParentModel.findByIdAndDelete(id).then((data) => {});
-      console.log(id);
-    }
-    res.send({
-      message: "deleted many"
-    });
-  } else {
-    contactParentModel.findByIdAndDelete(arr).then((data) => {
-      res.send({
-        message: "deleted one of one"
-      });
-    });
-  }
-};

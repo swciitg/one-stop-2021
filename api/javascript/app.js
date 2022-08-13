@@ -101,7 +101,6 @@ app.use(BASEURL, routers.contactRouter.contactRouter);
 app.use(BASEURL, routers.timingRouter.timingRouter);
 app.use(BASEURL, routers.emailRouter.emailRouter);
 app.use(BASEURL, routers.roleRouter.roleRouter);
-app.use(BASEURL, routers.fileRouter.fileRouter);
 app.use(BASEURL, routers.foodOutletsRouter.foodOutletsRouter);
 app.use(BASEURL, routers.foodItemsRouter.foodItemsRouter);
 app.use(BASEURL, routers.messMenuRouter.messMenuRouter);

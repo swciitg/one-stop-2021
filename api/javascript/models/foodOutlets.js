@@ -14,6 +14,7 @@ const foodOutletsSchema = new Schema({
   address: String,
   tags: [{ type: String }],
   menu: [foodItem],
+  imageURL: String
   // last_update: Date,
 });
 

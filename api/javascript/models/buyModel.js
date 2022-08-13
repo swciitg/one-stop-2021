@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const BuyDetailsSchema = new mongoose.Schema({
   title: { type: String, required: true },
+  price: { type: String, required: true },
   phonenumber: { type: String, required: true },
   date: { type: Date, default: Date.now },
   description: { type: String, required: true },

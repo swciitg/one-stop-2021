@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const foodItemsSchema = new Schema({
-  OutletName: String,
+  outletName: String,
   name: String,
   ingredients: [String],
   waiting_time: Number,

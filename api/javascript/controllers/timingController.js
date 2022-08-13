@@ -7,6 +7,12 @@ const LastUpdate = require("../models/lastUpdate");
 
 exports.createferrytiming = async (req, res) => {
   try {
+    if (!req.body) {
+      res.status(400).send({
+        message: "Content can not be empty!"
+      });
+      return;
+    }
     console.log(req.body);
     const record = await ferryTiming.find({
       name: req.body.name
@@ -15,12 +21,6 @@ exports.createferrytiming = async (req, res) => {
       await ferryTiming.deleteMany({
         name: req.body.name
       });
-    }
-    if (!req.body) {
-      res.status(400).send({
-        message: "Content can not be empty!"
-      });
-      return;
     }
     new FerryTiming({
       MonToFri_GuwahatiToNorthGuwahati: req.body.MonToFri_GuwahatiToNorthGuwahati,
@@ -91,6 +91,6 @@ exports.createbustiming = async (req, res) => {
 
 exports.getbustiming = (req, res) => {
   BusTiming.find().then((data) => {
-    res.json(data);
+    res.json(data[0]);
   });
 };
