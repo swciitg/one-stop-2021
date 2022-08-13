@@ -1,15 +1,19 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const { Schema } = mongoose;
+const {
+  Schema
+} = mongoose;
 
 const contactsSubsectionSchema = new Schema({
-  subsection : String,
-  name       : String,
-  phoneNumber: Number,
-  email      : String,
- 
+  groupName: String,
+  name: String,
+  email: String,
+  contact: String,
 });
 
-const contactsSubsection = mongoose.model('contactsSubsection', contactsSubsectionSchema);
+const contactsSubsection = mongoose.model(
+  "contactsSubsection",
+  contactsSubsectionSchema
+);
 
-module.exports = contactsSubsection ;
+module.exports = contactsSubsection;
