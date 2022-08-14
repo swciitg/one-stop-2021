@@ -12,78 +12,77 @@ var Scraper = require("images-scraper");
 
 exports.createItem = async (req, res) => {
   try {
-    form.parse(req, async function (err, fields, files) {
-      console.log(files);
-      let file = Object.keys(files)[0];
-      csv()
-        .fromFile(files[file][0].path)
-        .then(async (itemsList) => {
-          // console.log(itemsList);
-          let outletsSet = new Set();
-          itemsList.forEach((incomingItem) => {
-            outletsSet.add(incomingItem["outletName"]);
-          });
-          let foodOutletsList = await foodOutletsModel.find();
-          for (const outletName of outletsSet) {
-            // await foodItemsModel
-            //   .deleteMany({ outletName: outletName })
-            //   .then((result) => console.log(result));
-            foodOutletsList.forEach((outlet) => {
-              if (outlet.name === outletName) {
-                outlet.menu = [];
-              }
-              return outlet.outletName === outletName;
-            });
-          }
-          itemsList.forEach((incomingItem) => {
-            console.log("fhhksd");
-            console.log(incomingItem);
-            incomingItem["ingredients"] =
-              incomingItem["ingredients"].split(",");
-            incomingItem["image"] = ""; // will get image later in code
-            if (incomingItem["veg"] === "TRUE") {
-              incomingItem["veg"] = true;
-            } else {
-              incomingItem["veg"] = false;
-            }
-            foodOutletsList.forEach((outlet) => {
-              console.log("jflsd", outlet, incomingItem.outletName);
-              if (outlet.name === incomingItem.outletName) {
-                console.log("I am here");
-                outlet.menu.push(incomingItem);
-              }
-            });
-            // let newFoodItem = new foodItemsModel(incomingItem);
-            // console.log(newFoodItem);
-            // await newFoodItem
-            //   .save()
-            //   .then((updatedItem) => console.log(updatedItem));
-          });
-          // console.log(foodOutletsList)
-          foodOutletsList.forEach(async (newFoodOutlet) => {
-            console.log("fjklsd", newFoodOutlet.menu.length);
-            for (let i = 0; i < newFoodOutlet.menu.length; i++) {
-              const google = new Scraper({
-                puppeteer: {
-                  headless: true,
-                },
-              });
-              const imageResults = await google.scrape(newFoodOutlet.menu[i]["name"], 1);
-              console.log(imageResults);
-              newFoodOutlet.menu[i]["image"] = imageResults[0]["url"];
-            }
-            await newFoodOutlet.save().then((result) => console.log(result));
-          });
-          let updatesList = await LastUpdate.find();
-          console.log(updatesList);
-          await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
-            food: new Date(),
-          });
-          res.json({
-            message: "entries saved successfully",
-          });
+    const files = req.files;
+    let file = Object.keys(files)[0];
+    csv()
+      .fromFile(files[file].path)
+      .then(async (itemsList) => {
+        // console.log(itemsList);
+        let outletsSet = new Set();
+        itemsList.forEach((incomingItem) => {
+          outletsSet.add(incomingItem["outletName"]);
         });
-    });
+        let foodOutletsList = await foodOutletsModel.find();
+        for (const outletName of outletsSet) {
+          // await foodItemsModel
+          //   .deleteMany({ outletName: outletName })
+          //   .then((result) => console.log(result));
+          foodOutletsList.forEach((outlet) => {
+            if (outlet.name === outletName) {
+              outlet.menu = [];
+            }
+            return outlet.outletName === outletName;
+          });
+        }
+        itemsList.forEach((incomingItem) => {
+          console.log("fhhksd");
+          console.log(incomingItem);
+          incomingItem["ingredients"] =
+            incomingItem["ingredients"].split(",");
+          incomingItem["image"] = ""; // will get image later in code
+          if (incomingItem["veg"] === "TRUE") {
+            incomingItem["veg"] = true;
+          } else {
+            incomingItem["veg"] = false;
+          }
+          foodOutletsList.forEach((outlet) => {
+            console.log("jflsd", outlet, incomingItem.outletName);
+            if (outlet.name === incomingItem.outletName) {
+              console.log("I am here");
+              outlet.menu.push(incomingItem);
+            }
+          });
+          // let newFoodItem = new foodItemsModel(incomingItem);
+          // console.log(newFoodItem);
+          // await newFoodItem
+          //   .save()
+          //   .then((updatedItem) => console.log(updatedItem));
+        });
+        // console.log(foodOutletsList)
+        foodOutletsList.forEach(async (newFoodOutlet) => {
+          console.log("fjklsd", newFoodOutlet.menu.length);
+          for (let i = 0; i < newFoodOutlet.menu.length; i++) {
+            const google = new Scraper({
+              puppeteer: {
+                headless: true,
+              },
+            });
+            const imageResults = await google.scrape(newFoodOutlet.menu[i]["name"], 1);
+            console.log(imageResults);
+            newFoodOutlet.menu[i]["image"] = imageResults[0]["url"];
+          }
+          await newFoodOutlet.save().then((result) => console.log(result));
+        });
+        let updatesList = await LastUpdate.find();
+        console.log(updatesList);
+        await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+          food: new Date(),
+        });
+        res.json({
+          message: "entries saved successfully",
+        });
+      });
+
   } catch (err) {
     console.log(err);
   }
