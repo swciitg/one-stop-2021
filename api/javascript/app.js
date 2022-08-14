@@ -10,11 +10,15 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const session = require("express-session");
+const formidable = require("express-formidable")
 // const passport = require('passport');
 const mongoose = require("mongoose");
 const nconf = require("./config");
 const routers = require("./routers");
-const { writeError, writeResponse } = require("./helpers/response");
+const {
+  writeError,
+  writeResponse
+} = require("./helpers/response");
 
 const app = express();
 
@@ -40,7 +44,7 @@ const swaggerDefinition = {
 // connect to mongodb
 
 mongoose.connect(process.env.DATABASE_URI, (err, res) => {
-  console.log(err, res);
+  //console.log(err, res);
   console.log("connected to mongodb");
 });
 
@@ -61,10 +65,15 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(helmet());
 app.use(methodOverride());
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  limit: "50mb",
+  extended: true
+}));
+app.use(bodyParser.json({
+  limit: "50mb"
+}));
 app.use(morgan("dev"));
-
+app.use(formidable())
 app.use(
   session({
     secret: "a very dark secret indeed",
@@ -101,17 +110,19 @@ app.use(BASEURL, routers.contactRouter.contactRouter);
 app.use(BASEURL, routers.timingRouter.timingRouter);
 app.use(BASEURL, routers.emailRouter.emailRouter);
 app.use(BASEURL, routers.roleRouter.roleRouter);
-app.use(BASEURL, routers.fileRouter.fileRouter);
 app.use(BASEURL, routers.foodOutletsRouter.foodOutletsRouter);
 app.use(BASEURL, routers.foodItemsRouter.foodItemsRouter);
 app.use(BASEURL, routers.messMenuRouter.messMenuRouter);
 app.use(BASEURL, routers.LostAndFoundRouters.LostAndFoundRouter);
 app.use(BASEURL, routers.updateRouter.updateRouter);
+app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
 
 // For demo auth purposes only
 app.get(`${BASEURL}user-info`, (req, res) => {
   // console.log("user info");
-  const response = { message: "User not authenticated" };
+  const response = {
+    message: "User not authenticated"
+  };
   writeResponse(res, response);
 });
 

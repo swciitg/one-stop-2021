@@ -1,5 +1,5 @@
-const LostModel = require("../models/LostModel");
-const foundModel = require("../models/foundModel");
+const buyModel = require("../models/buyModel");
+const sellModel = require("../models/sellModel");
 const fs = require("fs");
 const path = require("path");
 const deepai = require("deepai");
@@ -10,18 +10,21 @@ deepai.setApiKey(process.env.NSFW_API_KEY.toString());
 
 function errorFxn(res, err) {
   console.log(err);
-  return res.json({ saved_successfully: false, image_safe: true, error: err });
+  return res.json({
+    saved_successfully: false,
+    image_safe: true
+  });
 }
 
 exports.getImage = async (req, res) => {
   console.log("Get image par");
   const imagePath = path.resolve(
     __dirname +
-      "/../" +
-      "images_folder" +
-      "/" +
-      req.query.photo_id +
-      "-compressed.jpg"
+    "/../" +
+    "images_folder" +
+    "/" +
+    req.query.photo_id +
+    "-compressed.jpg"
   );
   console.log(imagePath);
   res.sendFile(imagePath);
@@ -31,45 +34,34 @@ exports.getCompressedImage = async (req, res) => {
   console.log("Get image par");
   const imagePath = path.resolve(
     __dirname +
-      "/../" +
-      "images_folder" +
-      "/" +
-      req.query.photo_id +
-      "-ultracompressed.jpg"
+    "/../" +
+    "images_folder" +
+    "/" +
+    req.query.photo_id +
+    "-ultracompressed.jpg"
   );
   console.log(imagePath);
   res.sendFile(imagePath);
 };
 
-exports.getLostDetails = async (req, res) => {
+exports.getSellDetails = async (req, res) => {
   try {
-    const details = await LostModel.find();
+    console.log(req);
+    const details = await sellModel.find();
     details.sort(compare);
-    return res.json({ details: details });
+    return res.json({
+      details: details
+    });
   } catch (error) {
     console.log(error.message);
   }
 };
 
-exports.addLostForm = async (req, res) => {
+exports.postSellDetails = async (req, res) => {
   try {
-    return res.render("add_user");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-exports.postLostDetails = async (req, res) => {
-  // if (!req.files) {
-  //   return res.json({ saved_successfully: false ,status : "No file recieved"});
-  //   return;
-  // }
-  // const file = req.files.imageToUpload;
-  try {
-    // console.log(req);
     var {
       title,
-      location,
+      price,
       phonenumber,
       description,
       imageString,
@@ -77,24 +69,17 @@ exports.postLostDetails = async (req, res) => {
       username,
     } = req.body;
     console.log(title);
-    console.log(location);
+    console.log(price);
     console.log(phonenumber);
     console.log(description);
     console.log(imageString);
-    // console.log(imageString);
-    //console.log(uuid.v4());
 
-    //   const image = req.file ? req.file.filename : link;
-
-    //   if (!image) {
-    //     console.log("error", "Please attach your pdf!!");
-    //     return res.redirect("/Lost/raise");
-    //   }
     const imageName = uuid.v4();
     const imagePath = path.resolve(
       __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
     );
-    console.log(imagePath);
+    console.log("image path is: " + imagePath);
+    console.log(Buffer.from(imageString, "base64").toString("ascii"));
     fs.writeFileSync(imagePath, Buffer.from(imageString, "base64"), (err) => {
       if (err) console.log(err);
       else {
@@ -112,20 +97,21 @@ exports.postLostDetails = async (req, res) => {
         imageName;
       const newImagePath = path.resolve(
         __dirname +
-          "/../" +
-          "images_folder" +
-          "/" +
-          imageName +
-          "-compressed.jpg"
+        "/../" +
+        "images_folder" +
+        "/" +
+        imageName +
+        "-compressed.jpg"
       );
       const compressedImagePath = path.resolve(
         __dirname +
-          "/../" +
-          "images_folder" +
-          "/" +
-          imageName +
-          "-ultracompressed.jpg"
+        "/../" +
+        "images_folder" +
+        "/" +
+        imageName +
+        "-ultracompressed.jpg"
       );
+      console.log(newImagePath);
       //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
       try {
         await sharp(imagePath)
@@ -134,7 +120,9 @@ exports.postLostDetails = async (req, res) => {
             height: Math.floor(metadata.height / 2),
           })
           .withMetadata()
-          .toFormat("jpg", { mozjpeg: true })
+          .toFormat("jpg", {
+            mozjpeg: true
+          })
           .toFile(newImagePath);
         await sharp(imagePath)
           .resize({
@@ -146,37 +134,43 @@ exports.postLostDetails = async (req, res) => {
             ),
           })
           .withMetadata()
-          .toFormat("jpg", { mozjpeg: true })
+          .toFormat("jpg", {
+            mozjpeg: true
+          })
           .toFile(compressedImagePath);
         console.log("Here 1");
-        console.log(imageURL);
         console.log("Here 2");
-        console.log(process.env.NSFW_API_KEY);
-        console.log(imagePath);
+        console.log("fjklsdghjkdfhgjkdfhgjkdhgjfkdhgukjdf");
         var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
           image: fs.createReadStream(imagePath),
         });
         fs.unlinkSync(imagePath);
+        //fs.unlinkSync(imagePath);
         if (safeToUseResp.output.nsfw_score > 0.1) {
-          res.json({ saved_successfully: false, image_safe: false });
+          res.json({
+            saved_successfully: false,
+            image_safe: false
+          });
           return;
         }
-        const newLostDetail = await new LostModel({
-          title,
-          location,
-          phonenumber,
-          description,
-          photo_id,
-          imageURL,
-          compressedImageURL,
-          email,
-          username,
-        })
+        const newSellDetail = await new sellModel({
+            title,
+            price,
+            phonenumber,
+            description,
+            imageURL,
+            compressedImageURL,
+            email,
+            username,
+          })
           .save()
           .then((result) => {
             console.log(result);
           });
-        return res.json({ saved_successfully: true, image_safe: true });
+        return res.json({
+          saved_successfully: true,
+          image_safe: true
+        });
       } catch (error) {
         return errorFxn(res, error);
       }
@@ -184,70 +178,69 @@ exports.postLostDetails = async (req, res) => {
       return errorFxn(res, error);
     }
   } catch (error) {
+    console.log(error);
     return errorFxn(res, error);
   }
 };
 
-exports.deleteLosts = async (req, res) => {
-  await LostModel.remove();
-  res.send("Deleted Successfully");
-};
-
-// found details
-
-exports.getfoundDetails = async (req, res) => {
+exports.postSellRemoveDetails = async (req, res) => {
+  console.log("lkkjklj" + req.body);
   try {
-    const details = await foundModel.find();
-    details.sort(compare);
-    return res.json({ details: details });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-exports.addfoundForm = async (req, res) => {
-  try {
-    return res.render("addfound");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-exports.claimFoundItem = async (req, res) => {
-  try {
-    const { id, claimerEmail, claimerName } = req.body;
-    let foundItem = await foundModel.findById(id);
-    if (foundItem["claimed"] == true) {
-      res.json({ saved: false, message: "This item already got claimed" });
-    }
-
-    await foundModel
-      .findByIdAndUpdate({
-        claimed: true,
-        claimerEmail: claimerEmail,
-        claimerName: claimerName,
-      })
-      .then((ele) => {
-        console.log(ele);
-        res.json({ saved: true, message: "Saved successfully" });
+    const {
+      id,
+      email
+    } = req.body;
+    console.log(id, email);
+    const foundItem = await sellModel.findById(id);
+    if (!foundItem) {
+      res.json({
+        deleted_successfully: false,
+        "message": "looks something wrong"
       });
-  } catch (err) {
-    res.json({ saved: false, message: err.toString() });
+      return;
+    }
+    console.log(foundItem);
+    if (foundItem.email == email) {
+      await sellModel.findByIdAndDelete(id);
+      res.json({
+        deleted_successfully: true
+      });
+    }
+    res.json({
+      message: "This item does not belong to the entered ID"
+    });
+  } catch (error) {
+    console.log(error.message);
   }
 };
 
-exports.postfoundDetails = async (req, res) => {
-  // console.log(req.body);
+// buy details
+
+exports.getBuyDetails = async (req, res) => {
+  try {
+    const details = await buyModel.find();
+    details.sort(compare);
+    return res.json({
+      details: details
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.postBuyDetails = async (req, res) => {
+  console.log(req.body);
   try {
     var {
       title,
-      location,
-      submittedat,
+      phonenumber,
+      price,
       description,
       imageString,
       email,
-      username,
-    } = req.body;
+      username
+    } =
+    req.body;
     const imageName = uuid.v4();
     const imagePath = path.resolve(
       __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
@@ -272,19 +265,19 @@ exports.postfoundDetails = async (req, res) => {
         imageName;
       const newImagePath = path.resolve(
         __dirname +
-          "/../" +
-          "images_folder" +
-          "/" +
-          imageName +
-          "-compressed.jpg"
+        "/../" +
+        "images_folder" +
+        "/" +
+        imageName +
+        "-compressed.jpg"
       );
       const compressedImagePath = path.resolve(
         __dirname +
-          "/../" +
-          "images_folder" +
-          "/" +
-          imageName +
-          "-ultracompressed.jpg"
+        "/../" +
+        "images_folder" +
+        "/" +
+        imageName +
+        "-ultracompressed.jpg"
       );
       //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
       try {
@@ -294,7 +287,9 @@ exports.postfoundDetails = async (req, res) => {
             height: Math.floor(metadata.height / 2),
           })
           .withMetadata()
-          .toFormat("jpg", { mozjpeg: true })
+          .toFormat("jpg", {
+            mozjpeg: true
+          })
           .toFile(newImagePath);
         await sharp(imagePath)
           .resize({
@@ -306,34 +301,44 @@ exports.postfoundDetails = async (req, res) => {
             ),
           })
           .withMetadata()
-          .toFormat("jpg", { mozjpeg: true })
+          .toFormat("jpg", {
+            mozjpeg: true
+          })
           .toFile(compressedImagePath);
         console.log("Here 1");
         console.log("Here 2");
+        console.log(imagePath);
+        console.log("fjklsdghjkdfhgjkdfhgjkdhgjfkdhgukjdf");
         var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-          image: imageURL,
+          image: fs.createReadStream(imagePath),
         });
+        // fs.unlinkSync(imagePath);
         fs.unlinkSync(imagePath);
         if (safeToUseResp.output.nsfw_score > 0.1) {
-          res.json({ saved_successfully: false, image_safe: false });
+          res.json({
+            saved_successfully: false,
+            image_safe: false
+          });
           return;
         }
-        const newFoundDetail = await new foundModel({
-          title,
-          location,
-          submittedat,
-          description,
-          photo_id,
-          imageURL,
-          compressedImageURL,
-          email,
-          username,
-        })
+        const newBuyDetail = await new buyModel({
+            title,
+            price,
+            phonenumber,
+            description,
+            imageURL,
+            compressedImageURL,
+            email,
+            username,
+          })
           .save()
           .then((result) => {
             console.log(result);
           });
-        return res.json({ saved_successfully: true, image_safe: true });
+        return res.json({
+          saved_successfully: true,
+          image_safe: true
+        });
       } catch (error) {
         return errorFxn(res, error);
       }
@@ -345,9 +350,65 @@ exports.postfoundDetails = async (req, res) => {
   }
 };
 
-exports.deleteFounds = async (req, res) => {
-  await foundModel.remove();
-  res.send("Deleted Successfully");
+exports.postBuyRemoveDetails = async (req, res) => {
+  try {
+    const {
+      id,
+      email
+    } = req.body;
+    console.log(id, email);
+    const foundItem = await buyModel.findById(id);
+    if (!foundItem) {
+      res.json({
+        deleted_successfully: false,
+        "message": "looks something wrong"
+      });
+      return;
+    }
+    console.log(foundItem.email);
+    if (foundItem.email == email) {
+      await buyModel.findByIdAndDelete(id);
+      res.json({
+        deleted_successfully: true
+      });
+    } else {
+      res.json({
+        message: "This item does not belong to the entered ID"
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.getMyAds = async (req, res) => {
+  console.log(req.body);
+  try {
+    const {
+      email
+    } = req.body;
+    console.log(email);
+
+    const buyDetails = await buyModel.find({
+      email: email
+    });
+    buyDetails.sort(compare);
+
+    const sellDetails = await sellModel.find({
+      email: email
+    });
+    sellDetails.sort(compare);
+
+    const allDetails = {
+      sellList: sellDetails,
+      buyList: buyDetails,
+    };
+    return res.json({
+      details: allDetails
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 const compare = (a, b) => {

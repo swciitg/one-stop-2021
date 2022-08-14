@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
 
-const { Schema } = mongoose;
+const {
+  Schema
+} = mongoose;
 
 const contactsSubsectionSchema = new Schema({
   groupName: String,
   name: String,
   email: String,
-  contact: Number,
+  contact: String,
 });
 
 const contactsSubsection = mongoose.model(

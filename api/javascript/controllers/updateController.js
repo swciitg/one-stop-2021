@@ -6,14 +6,3 @@ exports.getLastUpdate = (req, res) => {
   });
 };
 
-exports.update = (req, res) => {
-  LastUpadte.deleteMany({}).then((data) => {
-    new LastUpadte({
-      update: new Date(),
-    })
-      .save()
-      .then((data) => {
-        res.json(data);
-      });
-  });
-};

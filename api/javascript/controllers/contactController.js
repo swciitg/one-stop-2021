@@ -1,35 +1,68 @@
 const contactSubsectionModel = require("../models/contactsSubsection");
 const contactParentModel = require("../models/contactParent");
 const timeModel = require("../models/timeModel");
+const csv = require("csvtojson");
+var multiparty = require("multiparty");
+var form = new multiparty.Form();
+const LastUpdate = require("../models/lastUpdate");
 
-exports.createContact = (req, res) => {
-  contactSubsectionModel
-    .findOne({ email: req.body.email })
-    .then((currenUser) => {
-      if (currenUser) {
-        res.send({ message: "Email already exits" });
-      } else {
-        const newcontact = new contactSubsectionModel({
-          group: req.body.group,
-          name: req.body.name,
-          email: req.body.email,
-          contact: req.body.contact,
+
+exports.createsection = async (req, res) => {
+  console.log("hjkhsd");
+  try {
+    const files = req.files;
+
+    console.log(files);
+    let hostel = Object.keys(files)[0];
+    await contactParentModel.deleteMany();
+    csv()
+      .fromFile(files[hostel].path)
+      .then((sectionList) => {
+        console.log("ele", sectionList[0]);
+        sectionList.forEach(async (ele) => {
+          const newParent = new contactParentModel({
+            name: ele.section,
+          });
+          newParent.save();
         });
-        newcontact.save().then((data) => {
-          contactParentModel
-            .findOneAndUpdate(
-              { name: req.body.group },
-              { $push: { contacts: newcontact } }
-            )
-            .then((data) => {
-              res.send({ message: "successfulyy added" });
-            })
-            .catch((err) => {
-              res.send({ message: "error" });
-            });
-        });
-      }
+
+        res.status(200).json("success");
+      });
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: err,
     });
+  }
+
+  // contactSubsectionModel
+  //   .findOne({ email: req.body.email })
+  //   .then((currenUser) => {
+  //     if (currenUser) {
+  //       res.send({ message: "Email already exits" });
+  //     } else {
+  //       const newcontact = new contactSubsectionModel({
+  //         group: req.body.group,
+  //         name: req.body.name,
+  //         email: req.body.email,
+  //         contact: req.body.contact,
+  //       });
+  //       newcontact.save().then((data) => {
+  //         contactParentModel
+  //           .findOneAndUpdate(
+  //             { name: req.body.group },
+  //             { $push: { contacts: newcontact } }
+  //           )
+  //           .then((data) => {
+  //             res.send({ message: "successfulyy added" });
+  //           })
+  //           .catch((err) => {
+  //             res.send({ message: "error" });
+  //           });
+  //       });
+  //     }
+  //   });
 };
 
 //get all contacts of a subsection
@@ -45,7 +78,7 @@ exports.createContact = (req, res) => {
 //     });
 // };
 //get all contacts
-exports.getAllSubsections = (req, res) => {
+exports.getAllContacts = (req, res) => {
   contactParentModel
     .find()
     .then((data) => {
@@ -54,12 +87,10 @@ exports.getAllSubsections = (req, res) => {
     .catch((err) => {
       console.log(err);
       res.status(500).send({
-        message:
-          err.message || "Error Occurred while retriving user information",
+        message: err.message || "Error Occurred while retriving user information",
       });
     });
 };
-
 // exports.updateContact = (req, res) => {
 //   const id = req.params.id;
 //   contactSubsectionModel
@@ -79,38 +110,80 @@ exports.getAllSubsections = (req, res) => {
 //     });
 // };name
 
-exports.createsection = (req, res) => {
-  contactParentModel.findOne({ name: req.body.name }).then((section) => {
-    if (section) {
-      res.send({ message: "Section already exits" });
-    } else {
-      console.log(req.body);
-      new contactParentModel({
-        name: req.body.name,
-        group: req.body.group,
-        contacts: req.body.contacts,
-      })
-        .save()
-        .then((data) => {
-          res.json(data);
+exports.createContact = (req, res) => {
+  console.log("hgifd");
+  try {
+    const files = req.files
+    console.log(files);
+    let file = Object.keys(files)[0];
+    csv()
+      .fromFile(files[file].path)
+      .then(async (sectionList) => {
+        console.log("ele", sectionList);
+        let contactsParentList = await contactParentModel.find();
+        console.log(contactsParentList);
+        sectionList.forEach((listItem) => {
+          console.log(listItem.subsection);
+          let corresSectionIndex = -1;
+          contactsParentList.find((ele, idx) => {
+            if (ele.name === listItem.subsection) corresSectionIndex = idx;
+            return ele.name === listItem.subsection;
+          });
+          console.log(corresSectionIndex);
+          if (corresSectionIndex >= 0) {
+            console.log("here fjksd");
+            let contactIndex = -1;
+            console.log(contactsParentList[corresSectionIndex]);
+            contactsParentList[corresSectionIndex].contacts.find((ele, idx) => {
+              console.log(ele);
+              if (ele.name === listItem.name) {
+                console.log("I am");
+                contactIndex = idx;
+              }
+              return ele.name === listItem.name;
+            });
+            console.log("jmgldkf", contactIndex);
+            if (contactIndex >= 0) {
+              console.log("here", contactIndex);
+              contactsParentList[corresSectionIndex].contacts[contactIndex] = listItem;
+            } else {
+              contactsParentList[corresSectionIndex].contacts.push(listItem);
+            }
+          }
         });
-    }
-  });
-};
+        console.log(contactsParentList);
+        contactsParentList.forEach(async (section) => {
+          await section.save();
+        });
+        let updatesList = await LastUpdate.find();
+        console.log(updatesList);
+        await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+          contact: new Date(),
+        });
+        res.status(200).json("success");
+      });
 
-exports.deletemanyContacts = (req, res) => {
-  const arr = req.body.id;
-
-  if (typeof arr != "string") {
-    var arr2 = Object.values(arr);
-    for (const id of arr2) {
-      contactParentModel.findByIdAndDelete(id).then((data) => {});
-      console.log(id);
-    }
-    res.send({ message: "deleted many" });
-  } else {
-    contactParentModel.findByIdAndDelete(arr).then((data) => {
-      res.send({ message: "deleted one of one" });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: err,
     });
   }
 };
+//   contactParentModel.findOne({ name: req.body.name }).then((section) => {
+//     if (section) {
+//       res.send({ message: "Section already exits" });
+//     } else {
+//       console.log(req.body);
+//       new contactParentModel({
+//         name: req.body.name,
+//         group: req.body.group,
+//         contacts: req.body.contacts,
+//       })
+//         .save()
+//         .then((data) => {
+//           res.json(data);
+//         });
+//     }
+//   });
+// };
