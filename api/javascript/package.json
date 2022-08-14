@@ -37,6 +37,7 @@
     "ejs": "^3.1.8",
     "errorhandler": "^1.5.1",
     "express": "^4.17.3",
+    "express-formidable": "^1.2.0",
     "express-session": "^1.17.2",
     "hat": "0.0.3",
     "helmet": "^5.0.1",

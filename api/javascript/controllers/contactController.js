@@ -10,24 +10,25 @@ const LastUpdate = require("../models/lastUpdate");
 exports.createsection = async (req, res) => {
   console.log("hjkhsd");
   try {
-    form.parse(req, async function (err, fields, files) {
-      console.log(files);
-      let hostel = Object.keys(files)[0];
-      await contactParentModel.deleteMany();
-      csv()
-        .fromFile(files[hostel][0].path)
-        .then((sectionList) => {
-          console.log("ele", sectionList[0]);
-          sectionList.forEach(async (ele) => {
-            const newParent = new contactParentModel({
-              name: ele.section,
-            });
-            newParent.save();
-          });
+    const files = req.files;
 
-          res.status(200).json("success");
+    console.log(files);
+    let hostel = Object.keys(files)[0];
+    await contactParentModel.deleteMany();
+    csv()
+      .fromFile(files[hostel].path)
+      .then((sectionList) => {
+        console.log("ele", sectionList[0]);
+        sectionList.forEach(async (ele) => {
+          const newParent = new contactParentModel({
+            name: ele.section,
+          });
+          newParent.save();
         });
-    });
+
+        res.status(200).json("success");
+      });
+
   } catch (err) {
     return res.status(500).json({
       success: false,
@@ -112,56 +113,56 @@ exports.getAllContacts = (req, res) => {
 exports.createContact = (req, res) => {
   console.log("hgifd");
   try {
-    form.parse(req, function (err, fields, files) {
-      console.log(files);
-      let file = Object.keys(files)[0];
-      csv()
-        .fromFile(files[file][0].path)
-        .then(async (sectionList) => {
-          console.log("ele", sectionList);
-          let contactsParentList = await contactParentModel.find();
-          console.log(contactsParentList);
-          sectionList.forEach((listItem) => {
-            console.log(listItem.subsection);
-            let corresSectionIndex = -1;
-            contactsParentList.find((ele, idx) => {
-              if (ele.name === listItem.subsection) corresSectionIndex = idx;
-              return ele.name === listItem.subsection;
-            });
-            console.log(corresSectionIndex);
-            if (corresSectionIndex >= 0) {
-              console.log("here fjksd");
-              let contactIndex = -1;
-              console.log(contactsParentList[corresSectionIndex]);
-              contactsParentList[corresSectionIndex].contacts.find((ele, idx) => {
-                console.log(ele);
-                if (ele.name === listItem.name) {
-                  console.log("I am");
-                  contactIndex = idx;
-                }
-                return ele.name === listItem.name;
-              });
-              console.log("jmgldkf", contactIndex);
-              if (contactIndex >= 0) {
-                console.log("here", contactIndex);
-                contactsParentList[corresSectionIndex].contacts[contactIndex] = listItem;
-              } else {
-                contactsParentList[corresSectionIndex].contacts.push(listItem);
+    const files = req.files
+    console.log(files);
+    let file = Object.keys(files)[0];
+    csv()
+      .fromFile(files[file].path)
+      .then(async (sectionList) => {
+        console.log("ele", sectionList);
+        let contactsParentList = await contactParentModel.find();
+        console.log(contactsParentList);
+        sectionList.forEach((listItem) => {
+          console.log(listItem.subsection);
+          let corresSectionIndex = -1;
+          contactsParentList.find((ele, idx) => {
+            if (ele.name === listItem.subsection) corresSectionIndex = idx;
+            return ele.name === listItem.subsection;
+          });
+          console.log(corresSectionIndex);
+          if (corresSectionIndex >= 0) {
+            console.log("here fjksd");
+            let contactIndex = -1;
+            console.log(contactsParentList[corresSectionIndex]);
+            contactsParentList[corresSectionIndex].contacts.find((ele, idx) => {
+              console.log(ele);
+              if (ele.name === listItem.name) {
+                console.log("I am");
+                contactIndex = idx;
               }
+              return ele.name === listItem.name;
+            });
+            console.log("jmgldkf", contactIndex);
+            if (contactIndex >= 0) {
+              console.log("here", contactIndex);
+              contactsParentList[corresSectionIndex].contacts[contactIndex] = listItem;
+            } else {
+              contactsParentList[corresSectionIndex].contacts.push(listItem);
             }
-          });
-          console.log(contactsParentList);
-          contactsParentList.forEach(async (section) => {
-            await section.save();
-          });
-          let updatesList = await LastUpdate.find();
-          console.log(updatesList);
-          await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
-            contact: new Date(),
-          });
-          res.status(200).json("success");
+          }
         });
-    });
+        console.log(contactsParentList);
+        contactsParentList.forEach(async (section) => {
+          await section.save();
+        });
+        let updatesList = await LastUpdate.find();
+        console.log(updatesList);
+        await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+          contact: new Date(),
+        });
+        res.status(200).json("success");
+      });
+
   } catch (err) {
     return res.status(500).json({
       success: false,
