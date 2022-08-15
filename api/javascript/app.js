@@ -5,7 +5,6 @@ const express = require("express");
 const swaggerJSDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const methodOverride = require("method-override");
-const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
@@ -65,12 +64,9 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(helmet());
 app.use(methodOverride());
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({
+app.use(express.json({
   limit: "50mb",
-  extended: true
-}));
-app.use(bodyParser.json({
-  limit: "50mb"
+  extended:true
 }));
 app.use(morgan("dev"));
 app.use(formidable())
