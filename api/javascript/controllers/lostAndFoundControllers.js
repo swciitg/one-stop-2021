@@ -237,7 +237,7 @@ exports.claimFoundItem = async (req, res) => {
 };
 
 exports.postfoundDetails = async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   try {
     var {
       title,
