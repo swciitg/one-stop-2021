@@ -214,24 +214,30 @@ exports.addfoundForm = async (req, res) => {
 };
 
 exports.claimFoundItem = async (req, res) => {
+  console.log("fjkdfgh");
   try {
+    
     const { id, claimerEmail, claimerName } = req.body;
+    // console.log(req.body);
     let foundItem = await foundModel.findById(id);
-    if (foundItem["claimed"] == true) {
+    console.log("fsdf");
+    console.log(foundItem);
+    if (foundItem!=null && foundItem["claimed"]===true) {
       res.json({ saved: false, message: "This item already got claimed" });
+      return;
     }
-
     await foundModel
-      .findByIdAndUpdate({
+      .findByIdAndUpdate(id,{
         claimed: true,
         claimerEmail: claimerEmail,
-        claimerName: claimerName,
+        claimerName: claimerName
       })
       .then((ele) => {
         console.log(ele);
         res.json({ saved: true, message: "Saved successfully" });
       });
   } catch (err) {
+    console.log(err);
     res.json({ saved: false, message: err.toString() });
   }
 };
