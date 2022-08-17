@@ -1,1 +1,1 @@
-exports.uploadFilePath = __dirname + "\\files_folder\\file.csv";
+exports.uploadFilePath = __dirname + "/files_folder/file.csv";
