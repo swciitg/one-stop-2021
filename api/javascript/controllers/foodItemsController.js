@@ -3,19 +3,19 @@ const foodItemsModel = require("../models/foodItems");
 const foodOutletsModel = require("../models/foodOutlets");
 // const timeModel = require("../models/timeModel");
 const LastUpadte = require("../models/lastUpdate");
-var multiparty = require("multiparty");
-var form = new multiparty.Form();
+// var multiparty = require("multiparty");
+// var form = new multiparty.Form();
 const csv = require("csvtojson");
 const LastUpdate = require("../models/lastUpdate");
-
+const {uploadFilePath} = require("../constants");
 var Scraper = require("images-scraper");
 
 exports.createItem = async (req, res) => {
   try {
-    const files = req.files;
-    let file = Object.keys(files)[0];
+    // const files = req.files;
+    // let file = Object.keys(files)[0];
     csv()
-      .fromFile(files[file].path)
+      .fromFile(uploadFilePath)
       .then(async (itemsList) => {
         // console.log(itemsList);
         let outletsSet = new Set();

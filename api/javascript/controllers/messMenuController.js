@@ -1,10 +1,10 @@
 const Menu = require("../models/messMenuItem");
-var multiparty = require("multiparty");
-var form = new multiparty.Form();
+// var multiparty = require("multiparty");
+// var form = new multiparty.Form();
 const csv = require("csvtojson");
 const LastUpdate = require("../models/lastUpdate");
 // const { csvToMongo } = require("./fileController");
-
+const {uploadFilePath} = require("../constants");
 exports.getAllMenuItems = (req, res) => {
   Menu.find()
     .lean()
@@ -15,16 +15,16 @@ exports.getAllMenuItems = (req, res) => {
 
 exports.createMessMenu = (req, res) => {
   try {
-    console.log("test1")
-    const files = req.files;
-    const fields = req.fields
-    console.log("Files", req.files);
+    // console.log("test1")
+    // const files = req.files;
+    // const fields = req.fields
+    // console.log("Files", req.files);
 
-    console.log("fields", req.fields);
-    console.log("parse");
-    let hostel = Object.keys(files)[0];
+    // console.log("fields", req.fields);
+    // console.log("parse");
+    // let hostel = Object.keys(files)[0];
     csv()
-      .fromFile(files[hostel].path)
+      .fromFile(uploadFilePath)
       .then(async (jsonObj) => {
         console.log("its messMenu model");
         console.log(jsonObj[0]["hostel"]);

@@ -9,11 +9,11 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const session = require("express-session");
-const formidable = require("express-formidable")
 // const passport = require('passport');
 const mongoose = require("mongoose");
 const nconf = require("./config");
 const routers = require("./routers");
+const LastUpdate = require("./models/lastUpdate");
 const {
   writeError,
   writeResponse
@@ -69,7 +69,6 @@ app.use(express.json({
   extended:true
 }));
 app.use(morgan("dev"));
-app.use(formidable())
 app.use(
   session({
     secret: "a very dark secret indeed",
@@ -130,9 +129,14 @@ app.use((err, _req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT,async () => {
+  console.log(`Express server listening on port ${PORT} see docs at /docs`);
+  let updatesList = await LastUpdate.find();
+  if(updatesList.length==0){
+    let addUpdate = new LastUpdate({"food" : Date(), "menu" : Date(), "travel" : Date(), "contact" : Date()});
+    await addUpdate.save();
+  }
   // eslint-disable-next-line no-console
-  // console.log(`Express server listening on port ${PORT} see docs at /docs`);
 });
 
 // "eslint": "^8.7.0",

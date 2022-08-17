@@ -6,7 +6,7 @@ const deepai = require("deepai");
 const uuid = require("uuid");
 const sharp = require("sharp");
 const mongoose = require("mongoose");
-deepai.setApiKey(process.env.NSFW_API_KEY.toString());
+deepai.setApiKey(process.env.NSFW_API_KEY);
 
 function errorFxn(res, err) {
   console.log(err);
@@ -311,7 +311,7 @@ exports.postfoundDetails = async (req, res) => {
         console.log("Here 1");
         console.log("Here 2");
         var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-          image: imageURL,
+          image: fs.createReadStream(imagePath),
         });
         fs.unlinkSync(imagePath);
         if (safeToUseResp.output.nsfw_score > 0.1) {

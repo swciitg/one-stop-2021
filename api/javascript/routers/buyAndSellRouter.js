@@ -1,18 +1,28 @@
 const express = require("express");
-const {
-  routes
-} = require("../routes");
+const {routes} = require("../routes");
 const buyAndSellControllers = require("../controllers/buyAndSellController");
 const buyAndSellRouter = express.Router();
-const multer = require("multer");
 const fs = require("fs");
-
+const multer = require("multer");
+const {uploadFilePath} = require("../constants");
+const fileStorageEngine = multer.diskStorage({
+    destination: (req,file,cb) => {
+        cb(null,__dirname + "/../files_folder/");
+    },
+    filename: (req,file,cb) => {
+      console.log(file);
+        let parts = file.originalname.split(".");
+        let fileExtension = parts[parts.length-1];
+        cb(null, "file." +  fileExtension);
+    }
+});
+const upload = multer({storage: fileStorageEngine});
 buyAndSellRouter.post(
   "/sell/remove",
   buyAndSellControllers.postSellRemoveDetails
 );
 
-buyAndSellRouter.get("/sell", buyAndSellControllers.getSellDetails);
+buyAndSellRouter.get("/sell", upload.single("file"),buyAndSellControllers.getSellDetails);
 
 buyAndSellRouter.post("/sell", buyAndSellControllers.postSellDetails);
 

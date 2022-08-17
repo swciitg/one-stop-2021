@@ -2,16 +2,17 @@ const foodOutletsModel = require("../models/foodOutlets");
 // const getOutletMenu = require("../middlewares/getOutletMenu")
 const LastUpdate = require("../models/lastUpdate");
 const csv = require("csvtojson");
-var multiparty = require("multiparty");
-var form = new multiparty.Form();
+// var multiparty = require("multiparty");
+// var form = new multiparty.Form();
+const {uploadFilePath} = require("../constants");
 exports.createOutlet = (req, res) => {
   try {
-    const files = req.files;
-    console.log(files);
-    let file = Object.keys(files)[0];
-
+    // const files = req.files;
+    // console.log(files);
+    // let file = Object.keys(files)[0];
+    console.log(uploadFilePath);
     csv()
-      .fromFile(files[file].path)
+      .fromFile(uploadFilePath)
       .then(async (jsonObj) => {
         console.log("its foodOutlets model");
         foodOutletsModel.find().then((oldList) => {

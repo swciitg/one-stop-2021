@@ -4,7 +4,6 @@ const busTiming = require("../models/busTiming");
 const ferryTiming = require("../models/ferryTiming");
 const timeModel = require("../models/timeModel");
 const LastUpdate = require("../models/lastUpdate");
-
 exports.createferrytiming = async (req, res) => {
   try {
     if (!req.body) {
