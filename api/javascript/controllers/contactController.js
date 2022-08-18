@@ -222,21 +222,3 @@ exports.deleteContacts = (req,res) => {
     });
   }
 }
-
-//   contactParentModel.findOne({ name: req.body.name }).then((section) => {
-//     if (section) {
-//       res.send({ message: "Section already exits" });
-//     } else {
-//       console.log(req.body);
-//       new contactParentModel({
-//         name: req.body.name,
-//         group: req.body.group,
-//         contacts: req.body.contacts,
-//       })
-//         .save()
-//         .then((data) => {
-//           res.json(data);
-//         });
-//     }
-//   });
-// };
