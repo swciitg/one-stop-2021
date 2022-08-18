@@ -65,6 +65,7 @@ exports.createItem = async (req, res) => {
             const google = new Scraper({
               puppeteer: {
                 headless: true,
+                executablePath: "/usr/bin/google-chrome"
               },
             });
             const imageResults = await google.scrape(newFoodOutlet.menu[i]["name"], 1);
