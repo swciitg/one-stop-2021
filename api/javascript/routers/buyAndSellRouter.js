@@ -34,7 +34,7 @@ buyAndSellRouter.get("/buy", buyAndSellControllers.getBuyDetails);
 
 buyAndSellRouter.post("/buy", buyAndSellControllers.postBuyDetails);
 
-buyAndSellRouter.get("/myads", buyAndSellControllers.getMyAds);
+buyAndSellRouter.post("/myads", buyAndSellControllers.getMyAds);
 
 module.exports = {
   buyAndSellRouter: buyAndSellRouter
