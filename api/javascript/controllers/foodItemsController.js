@@ -72,7 +72,7 @@ exports.createItem = async (req, res) => {
                   "--disable-setuid-sandbox",
                   "--no-sandbox",
                 ]
-              },
+              }
             });
             const imageResults = await google.scrape(newFoodOutlet.menu[i]["name"], 1);
             console.log(imageResults);

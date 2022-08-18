@@ -207,7 +207,7 @@ exports.postSellRemoveDetails = async (req, res) => {
       });
     }
     res.json({
-      message: "This item does not belong to the entered ID"
+      message: "This item does not belong to the entered email"
     });
   } catch (error) {
     console.log(error.message);
@@ -373,7 +373,7 @@ exports.postBuyRemoveDetails = async (req, res) => {
       });
     } else {
       res.json({
-        message: "This item does not belong to the entered ID"
+        message: "This item does not belong to the entered email"
       });
     }
   } catch (error) {

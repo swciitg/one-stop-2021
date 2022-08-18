@@ -3,10 +3,10 @@ const express = require("express");
 const timingRouter = express.Router();
 const Controller = require("../controllers/timingController");
 
-timingRouter.get("/getferrytiming", Controller.getferrytiming);
-timingRouter.post("/createferrytiming", Controller.createferrytiming);
+timingRouter.get("/ferrytimings", Controller.getferrytiming);
+timingRouter.post("/ferrytimings", Controller.createferrytiming);
 
-timingRouter.get("/getbustiming", Controller.getbustiming);
-timingRouter.post("/createbustiming", Controller.createbustiming);
+timingRouter.get("/bustimings", Controller.getbustiming);
+timingRouter.post("/bustimings", Controller.createbustiming);
 
 module.exports = { timingRouter };
