@@ -4,7 +4,7 @@ const Menu = require("../models/messMenuItem");
 const csv = require("csvtojson");
 const LastUpdate = require("../models/lastUpdate");
 // const { csvToMongo } = require("./fileController");
-const {uploadFilePath} = require("../constants");
+const { uploadFilePath } = require("../constants");
 exports.getAllMenuItems = (req, res) => {
   Menu.find()
     .lean()
@@ -27,52 +27,24 @@ exports.createMessMenu = (req, res) => {
       .fromFile(uploadFilePath)
       .then(async (jsonObj) => {
         console.log("its messMenu model");
-        console.log(jsonObj[0]["hostel"]);
-        Menu.find().then((oldList) => {
-          if (oldList.length !== 0) {
-            console.log("inside oldlist");
-            Menu.deleteMany({
-              hostel: jsonObj[0]["hostel"]
-            }).then(
-              (result) => {
-                Menu.insertMany(jsonObj, async (err, data) => {
-                  // console.log(jsonObj);
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    console.log("saved all");
-                  }
-                  let updatesList = await LastUpdate.find();
-                  // console.log(updatesList);
-                  await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
-                    menu: new Date(),
-                  });
-                  res.send({
-                    jsonObj,
-                    message: "entries saved successfully",
-                  });
-                });
-              }
-            );
+        console.log(jsonObj);
+        await Menu.deleteMany({});
+        Menu.insertMany(jsonObj, async (err, data) => {
+          // console.log(jsonObj);
+          if (err) {
+            console.log(err);
           } else {
-            Menu.insertMany(jsonObj, async (err, data) => {
-              // console.log(jsonObj);
-              if (err) {
-                console.log(err);
-              } else {
-                console.log("saved all");
-              }
-              let updatesList = await LastUpdate.find();
-              // console.log(updatesList);
-              await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
-                menu: new Date(),
-              });
-              res.send({
-                jsonObj,
-                message: "entries saved successfully",
-              });
-            });
+            console.log("saved all");
           }
+          let updatesList = await LastUpdate.find();
+        // console.log(updatesList);
+        await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+          menu: new Date(),
+        });
+        res.json({
+          jsonObj,
+          message: "entries saved successfully",
+        });
         });
       });
 

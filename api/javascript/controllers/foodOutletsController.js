@@ -15,52 +15,25 @@ exports.createOutlet = (req, res) => {
       .fromFile(uploadFilePath)
       .then(async (jsonObj) => {
         console.log("its foodOutlets model");
-        foodOutletsModel.find().then((oldList) => {
-          if (oldList.length !== 0) {
-            console.log("inside oldlist");
-            foodOutletsModel
-              .deleteMany({
-                hostel: jsonObj[0]["name"],
-              })
-              .then(async (result) => {
-                foodOutletsModel.insertMany(jsonObj, async (err, data) => {
-                  console.log(jsonObj);
-                  if (err) {
-                    console.log(err);
-                  } else {
-                    console.log("saved all");
-                  }
-                  let updatesList = await LastUpdate.find();
-                  console.log(updatesList);
-                  await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
-                    food: new Date(),
-                  });
-                  res.send({
-                    jsonObj,
-                    message: "entries saved successfully",
-                  });
-                });
-              });
-          } else {
-            foodOutletsModel.insertMany(jsonObj, async (err, data) => {
-              console.log(jsonObj);
-              if (err) {
-                console.log(err);
-              } else {
-                console.log("saved all");
-              }
-              let updatesList = await LastUpdate.find();
-              console.log(updatesList);
-              await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
-                food: new Date(),
-              });
-              res.send({
-                jsonObj,
-                message: "entries saved successfully",
-              });
+        await foodOutletsModel
+              .deleteMany({});
+          foodOutletsModel.insertMany(jsonObj, async (err, data) => {
+            console.log(jsonObj);
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("saved all");
+            }
+            let updatesList = await LastUpdate.find();
+            console.log(updatesList);
+            await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+              food: new Date(),
             });
-          }
-        });
+            res.send({
+              jsonObj,
+              message: "entries saved successfully",
+            });
+          });
         // foodOutletsModel.insertMany(jsonObj, (err, data) => {
         //   if (err) {
         //     console.log(err);
