@@ -10,6 +10,10 @@ const LastUpdate = require("../models/lastUpdate");
 const {uploadFilePath} = require("../constants");
 var Scraper = require("images-scraper");
 
+function isImage(url) {
+  return /\.(jpg|jpeg|png)$/.test(url);
+}
+
 exports.createItem = async (req, res) => {
   try {
     // const files = req.files;
@@ -74,9 +78,19 @@ exports.createItem = async (req, res) => {
                 ]
               }
             });
-            const imageResults = await google.scrape(newFoodOutlet.menu[i]["name"], 1);
+            const imageResults = await google.scrape(newFoodOutlet.menu[i]["name"], 5);
+            console.log(newFoodOutlet.menu[i]["name"]);
             console.log(imageResults);
             newFoodOutlet.menu[i]["image"] = imageResults[0]["url"];
+            for(let j=0;j<imageResults.length;j++){
+              let checkImage = isImage(imageResults[j]["url"]);
+              if(checkImage===true){
+                console.log("here");
+                console.log(newFoodOutlet.menu[i]["name"],imageResults[j]["url"]);
+                newFoodOutlet.menu[i]["image"]=imageResults[j]["url"];
+                break;
+              }
+            }
           }
           await newFoodOutlet.save().then((result) => console.log(result));
         });
