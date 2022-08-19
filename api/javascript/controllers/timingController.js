@@ -17,17 +17,15 @@ exports.createferrytiming = async (req, res) => {
       name: req.body.name
     });
     if (record) {
-      await ferryTiming.deleteMany({
-        name: req.body.name
-      });
+      await ferryTiming.deleteMany({});
     }
-    new FerryTiming({
-      MonToFri_GuwahatiToNorthGuwahati: req.body.MonToFri_GuwahatiToNorthGuwahati,
-      MonToFri_NorthGuwahatiToGuwahati: req.body.MonToFri_NorthGuwahatiToGuwahati,
-      Sunday_GuwahatiToNorthGuwahati: req.body.Sunday_GuwahatiToNorthGuwahati,
-      Sunday_NorthGuwahatiToGuwahati: req.body.Sunday_NorthGuwahatiToGuwahati,
-      name: req.body.name,
-    }).save();
+    // new FerryTiming({
+    //   MonToFri_GuwahatiToNorthGuwahati: req.body.MonToFri_GuwahatiToNorthGuwahati,
+    //   MonToFri_NorthGuwahatiToGuwahati: req.body.MonToFri_NorthGuwahatiToGuwahati,
+    //   Sunday_GuwahatiToNorthGuwahati: req.body.Sunday_GuwahatiToNorthGuwahati,
+    //   Sunday_NorthGuwahatiToGuwahati: req.body.Sunday_NorthGuwahatiToGuwahati,
+    //   name: req.body.name,
+    // }).save();
     let updatesList = await LastUpdate.find();
     console.log(updatesList);
     await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
