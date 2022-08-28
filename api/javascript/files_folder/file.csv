@@ -1,14 +1,2 @@
-outletName,name,ingredients,waiting_time,price,veg,image
-baskins,Vanilla ice cream,"Chicken,Cheese,Spices,Egg,Onions",45,250,TRUE,
-baskins,Blueberry icecream,"fhjskd,fsdjkfh,hfdksu",30,100,TRUE,
-baskins,Pralines N Cream icecream,"fhjskd,fsdjkfh,hfdksu",30,100,TRUE,
-baskins,Cotton Candy icecream,"fhjskd,fsdjkfh,hfdksu",30,100,TRUE,
-baskins,Strawberry Cheese Cake icecream,"fhjskd,fsdjkfh,hfdksu",30,100,TRUE,
-baskins,Maui Brownie Madness icecream,"fhjskd,fsdjkfh,hfdksu",30,100,TRUE,
-baskins,No Sugar Added Caramel Turtle icecream,"fhjskd,fsdjkfh,hfdksu",30,100,TRUE,
-baskins,My mother is an alien icecream,"fhjskd,fsdjkfh,hfdksu",30,100,TRUE,
-foodies,pepsi medium,fd,432,4324,FALSE,
-foodies,cheese garlic bread,fd,432,4324,FALSE,
-foodies,maharaja veg burger,fd,432,4324,FALSE,
-foodies,veg platter combo,fd,432,4324,FALSE,
-foodies,medium chicken cheese pizza,fd,432,4324,FALSE,
+name,imageURL,caption,closing_time,waiting_time,phone_number,latitude,longitude,address,tags
+Baskin Robbins,https://content3.jdmagicbox.com/comp/guwahati/w5/9999px361.x361.180918122000.w1w5/catalogue/baskin-robbins-hatigaon-guwahati-restaurants-s1rwhpc8e5.jpg,31 flavors,10:00pm,10 mins,7577057561,26.192382035444105,91.69950906631442,IIT Guwahati Food Court,"icecream,chocolate,cakes,desserts,milkshakes"

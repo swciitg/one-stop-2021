@@ -15,6 +15,12 @@ exports.createOutlet = (req, res) => {
       .fromFile(uploadFilePath)
       .then(async (jsonObj) => {
         console.log("its foodOutlets model");
+        console.log(jsonObj);
+        jsonObj.forEach((item,index) => {
+          // splitting all tags
+          let tagsArray = item["tags"].split(",");
+          jsonObj[index]["tags"]=tagsArray;
+        });
         await foodOutletsModel
               .deleteMany({});
           foodOutletsModel.insertMany(jsonObj, async (err, data) => {
