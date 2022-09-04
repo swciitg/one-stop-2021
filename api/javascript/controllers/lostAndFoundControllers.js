@@ -1,5 +1,5 @@
 const LostModel = require("../models/LostModel");
-const FoundModel = require("../models/FoundModel");
+const FoundModel = require("../models/foundModel");
 const fs = require("fs");
 const path = require("path");
 const deepai = require("deepai");

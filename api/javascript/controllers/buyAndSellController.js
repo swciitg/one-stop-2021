@@ -57,6 +57,18 @@ exports.getSellDetails = async (req, res) => {
   }
 };
 
+exports.getSellPageDetails = async (req, res) => {
+  let page = req.query.page;
+  const toSkip = (page - 1) * 5;
+  const docsCount = await sellModel.countDocuments();
+  if (toSkip > docsCount) {
+    res.json({ result: false, details: [] });
+    return;
+  }
+  const sellItems = await sellModel.find().sort({ "date": -1 }).skip(toSkip).limit(5);
+  res.json({ result: true, details: sellItems });
+}
+
 exports.postSellDetails = async (req, res) => {
   try {
     var {
@@ -215,6 +227,18 @@ exports.postSellRemoveDetails = async (req, res) => {
 };
 
 // buy details
+
+exports.getBuyPageDetails = async (req, res) => {
+  let page = req.query.page;
+  const toSkip = (page - 1) * 5;
+  const docsCount = await buyModel.countDocuments();
+  if (toSkip > docsCount) {
+    res.json({ result: false, details: [] });
+    return;
+  }
+  const buyItems = await buyModel.find().sort({ "date": -1 }).skip(toSkip).limit(5);
+  res.json({ result: true, details: buyItems });
+}
 
 exports.getBuyDetails = async (req, res) => {
   try {

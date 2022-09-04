@@ -24,6 +24,8 @@ buyAndSellRouter.post(
 
 buyAndSellRouter.get("/sell", upload.single("file"),buyAndSellControllers.getSellDetails);
 
+buyAndSellRouter.get("/sellPage", buyAndSellControllers.getSellPageDetails);
+
 buyAndSellRouter.post("/sell", buyAndSellControllers.postSellDetails);
 
 buyAndSellRouter.post(
@@ -31,6 +33,7 @@ buyAndSellRouter.post(
   buyAndSellControllers.postBuyRemoveDetails
 );
 buyAndSellRouter.get("/buy", buyAndSellControllers.getBuyDetails);
+buyAndSellRouter.get("/buyPage", buyAndSellControllers.getBuyPageDetails);
 
 buyAndSellRouter.post("/buy", buyAndSellControllers.postBuyDetails);
 
