@@ -17,7 +17,7 @@ LostAndFoundRouter.post("/lost",
     LostAndFoundControllers.postLostDetails
 )
 
-LostAndFoundRouter.delete("/lost",LostAndFoundControllers.deleteLosts);
+LostAndFoundRouter.delete("/lost", LostAndFoundControllers.deleteLosts);
 
 LostAndFoundRouter.get("/found", LostAndFoundControllers.getfoundDetails);
 
@@ -29,6 +29,6 @@ LostAndFoundRouter.post("/found",
 
 LostAndFoundRouter.post("/found/claim", LostAndFoundControllers.claimFoundItem);
 
-LostAndFoundRouter.delete("/found",LostAndFoundControllers.deleteFounds);
+LostAndFoundRouter.delete("/found", LostAndFoundControllers.deleteFounds);
 
 module.exports = { LostAndFoundRouter: LostAndFoundRouter };
