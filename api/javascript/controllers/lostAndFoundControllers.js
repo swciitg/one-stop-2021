@@ -1,5 +1,5 @@
 const LostModel = require("../models/LostModel");
-const foundModel = require("../models/foundModel");
+const FoundModel = require("../models/FoundModel");
 const fs = require("fs");
 const path = require("path");
 const deepai = require("deepai");
@@ -41,11 +41,24 @@ exports.getCompressedImage = async (req, res) => {
   res.sendFile(imagePath);
 };
 
+exports.getLostPageDetails = async (req,res) => {
+  let page = req.query.page;
+  const toSkip = (page-1)*5;
+  const docsCount = await LostModel.countDocuments();
+  if(toSkip>docsCount){
+      res.json({result : false, details : []});
+      return;
+  }
+  const lostItems = await LostModel.find().sort({"date" : -1}).skip(toSkip).limit(5);
+  res.json({result: true,details : lostItems});
+}
+
 exports.getLostDetails = async (req, res) => {
   try {
     const details = await LostModel.find();
     details.sort(compare);
-    return res.json({ details: details });
+    res.json({ details: details });
+    return;
   } catch (error) {
     console.log(error.message);
   }
@@ -195,11 +208,23 @@ exports.deleteLosts = async (req, res) => {
 
 // found details
 
+exports.getFoundPageDetails = async (req,res) => {
+  let page = req.query.page;
+  const toSkip = (page-1)*5;
+  const docsCount = await FoundModel.countDocuments();
+  if(toSkip>docsCount){
+      res.json({result : false, details : []});
+      return;
+  }
+  const foundItems = await FoundModel.find().sort({"date" : -1}).skip(toSkip).limit(5);
+  res.json({result: true,details : foundItems});
+}
+
 exports.getfoundDetails = async (req, res) => {
   try {
-    const details = await foundModel.find();
+    const details = await FoundModel.find();
     details.sort(compare);
-    return res.json({ details: details });
+    res.json({ details: details });
   } catch (error) {
     console.log(error.message);
   }
@@ -219,14 +244,14 @@ exports.claimFoundItem = async (req, res) => {
     
     const { id, claimerEmail, claimerName } = req.body;
     // console.log(req.body);
-    let foundItem = await foundModel.findById(id);
+    let foundItem = await FoundModel.findById(id);
     console.log("fsdf");
     console.log(foundItem);
     if (foundItem!=null && foundItem["claimed"]===true) {
       res.json({ saved: false, message: "This item already got claimed" });
       return;
     }
-    await foundModel
+    await FoundModel
       .findByIdAndUpdate(id,{
         claimed: true,
         claimerEmail: claimerEmail,
@@ -324,7 +349,7 @@ exports.postfoundDetails = async (req, res) => {
           res.json({ saved_successfully: false, image_safe: false });
           return;
         }
-        const newFoundDetail = await new foundModel({
+        const newFoundDetail = await new FoundModel({
           title,
           location,
           submittedat,
@@ -352,7 +377,7 @@ exports.postfoundDetails = async (req, res) => {
 };
 
 exports.deleteFounds = async (req, res) => {
-  await foundModel.remove();
+  await FoundModel.remove();
   res.send("Deleted Successfully");
 };
 

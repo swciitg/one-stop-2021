@@ -11,6 +11,8 @@ LostAndFoundRouter.get("/getCompressedImage", LostAndFoundControllers.getCompres
 
 LostAndFoundRouter.get("/lost", LostAndFoundControllers.getLostDetails);
 
+LostAndFoundRouter.get("/lostPage", LostAndFoundControllers.getLostPageDetails);
+
 LostAndFoundRouter.post("/lost",
     LostAndFoundControllers.postLostDetails
 )
@@ -18,6 +20,8 @@ LostAndFoundRouter.post("/lost",
 LostAndFoundRouter.delete("/lost",LostAndFoundControllers.deleteLosts);
 
 LostAndFoundRouter.get("/found", LostAndFoundControllers.getfoundDetails);
+
+LostAndFoundRouter.get("/foundPage", LostAndFoundControllers.getFoundPageDetails);
 
 LostAndFoundRouter.post("/found",
     LostAndFoundControllers.postfoundDetails
