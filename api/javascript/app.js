@@ -81,7 +81,7 @@ app.use(
 // app.use(passport.session());
 
 // enable CORS
-app.use((_req, res, next) => {
+app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header(
@@ -95,10 +95,23 @@ app.use((_req, res, next) => {
   next();
 });
 
-const BASEURL = process.env.BASE_URL || "/v1/";
-// console.log(BASEURL);
+// new API routes
 
-// app routes
+let BASEURL = "/onestopapi/v2";
+
+// Validate API Call
+
+if(req.originalUrl.split("/").contains("v2")){
+  app.use((req,res,next) => {
+    console.log(req.headers);
+    if(req.headers["security-key"]!==process.env.SECURITY_KEY){
+      res.json({"message":"You are not authorized"});
+      return;
+    }
+    next();
+  });
+}
+
 app.use(BASEURL, routers.userRouter.userRouter);
 app.use(BASEURL, routers.authRouter.authRouter);
 app.use(BASEURL, routers.contactRouter.contactRouter);
@@ -111,6 +124,23 @@ app.use(BASEURL, routers.messMenuRouter.messMenuRouter);
 app.use(BASEURL, routers.LostAndFoundRouters.LostAndFoundRouter);
 app.use(BASEURL, routers.updateRouter.updateRouter);
 app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
+
+// API routes
+BASEURL = process.env.BASE_URL || "/v1/";
+
+app.use(BASEURL, routers.userRouter.userRouter);
+app.use(BASEURL, routers.authRouter.authRouter);
+app.use(BASEURL, routers.contactRouter.contactRouter);
+app.use(BASEURL, routers.timingRouter.timingRouter);
+app.use(BASEURL, routers.emailRouter.emailRouter);
+app.use(BASEURL, routers.roleRouter.roleRouter);
+app.use(BASEURL, routers.foodOutletsRouter.foodOutletsRouter);
+app.use(BASEURL, routers.foodItemsRouter.foodItemsRouter);
+app.use(BASEURL, routers.messMenuRouter.messMenuRouter);
+app.use(BASEURL, routers.LostAndFoundRouters.LostAndFoundRouter);
+app.use(BASEURL, routers.updateRouter.updateRouter);
+app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
+
 
 // For demo auth purposes only
 app.get(`${BASEURL}user-info`, (req, res) => {
