@@ -101,16 +101,15 @@ let BASEURL = "/onestopapi/v2";
 
 // Validate API Call
 
-if(req.originalUrl.split("/").contains("v2")){
-  app.use((req,res,next) => {
-    console.log(req.headers);
-    if(req.headers["security-key"]!==process.env.SECURITY_KEY){
-      res.json({"message":"You are not authorized"});
-      return;
-    }
-    next();
-  });
-}
+app.use((req,res,next) => {
+  console.log(req.headers);
+  if(req.originalUrl.split("/").includes("v2") && req.headers["security-key"]!==process.env.SECURITY_KEY){
+    res.json({"message":"You are not authorized"});
+    return;
+  }
+  next();
+});
+
 
 app.use(BASEURL, routers.userRouter.userRouter);
 app.use(BASEURL, routers.authRouter.authRouter);
