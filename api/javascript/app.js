@@ -103,7 +103,8 @@ let BASEURL = "/onestopapi/v2";
 
 app.use((req,res,next) => {
   console.log(req.headers);
-  if(req.originalUrl.split("/").includes("v2") && req.headers["security-key"]!==process.env.SECURITY_KEY){
+  console.log(req);
+  if(req.originalMethod!=="GET" && req.originalUrl.split("/").includes("v2") && req.headers["security-key"]!==process.env.SECURITY_KEY){
     res.json({"message":"You are not authorized"});
     return;
   }
