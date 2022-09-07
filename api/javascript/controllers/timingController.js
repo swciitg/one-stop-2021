@@ -38,14 +38,14 @@ exports.createferrytiming = async (req, res) => {
 };
 
 exports.deleteFerryStop = async (req,res) => {
-  if (!req.body) {
-    res.status(400).send({
-      message: "Content can not be empty!"
-    });
-    return;
-  }
   console.log(req.body);
   await ferryTiming.deleteMany({name: req.body.name});
+  res.json({success : true});
+}
+
+exports.deleteAllFerryStop = async (req,res) => {
+  console.log(req.body);
+  await busTiming.deleteMany({});
   res.json({success : true});
 }
 
@@ -85,6 +85,12 @@ exports.createbustiming = async (req, res) => {
 exports.deleteBusStop = async (req,res) => {
   console.log(req.body);
   await busTiming.deleteMany({BusStop: req.body.name});
+  res.json({success : true});
+}
+
+exports.deleteAllBusStop = async (req,res) => {
+  console.log(req.body);
+  await busTiming.deleteMany({});
   res.json({success : true});
 }
 
