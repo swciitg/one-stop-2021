@@ -7,6 +7,7 @@ const busTimingSchema = new Schema({
   CityToCollege_WorkingDay: [String],
   CollegeToCity_Holiday: [String],
   CityToCollege_Holiday: [String],
+  BusStop: String
 });
 
 const busTiming = mongoose.model('bus_timing', busTimingSchema);

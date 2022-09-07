@@ -37,32 +37,34 @@ exports.createferrytiming = async (req, res) => {
   }
 };
 
+exports.deleteFerryStop = async (req,res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+    return;
+  }
+  console.log(req.body);
+  await ferryTiming.deleteMany({name: req.body.name});
+  res.json({success : true});
+}
+
 exports.getferrytiming = (req, res) => {
-  console.log("gkjdklfgj");
   FerryTiming.find().then((data) => {
     res.json(data);
   });
 };
 
 exports.createbustiming = async (req, res) => {
+
   try {
-    console.log(req.body);
-    const record = await busTiming.find();
-    if (record) {
-      await busTiming.deleteMany({});
-    }
-    if (!req.body) {
-      res.status(400).send({
-        message: "Content can not be empty!"
-      });
-      return;
-    }
+    await busTiming.deleteMany({name: req.body.name});
     new BusTiming({
       CollegeToCity_WorkingDay: req.body.CollegeToCity_WorkingDay,
       CityToCollege_WorkingDay: req.body.CityToCollege_WorkingDay,
       CollegeToCity_Holiday: req.body.CollegeToCity_Holiday,
       CityToCollege_Holiday: req.body.CityToCollege_Holiday,
-      name: req.body.name,
+      BusStop: req.body.name,
     }).save();
     let updatesList = await LastUpdate.find();
     console.log(updatesList);
@@ -74,15 +76,25 @@ exports.createbustiming = async (req, res) => {
       success: true,
     });
   } catch (err) {
-    console.log(err);
     return res.status(500).json({
       success: false,
     });
   }
 };
 
+exports.deleteBusStop = async (req,res) => {
+  console.log(req.body);
+  await busTiming.deleteMany({BusStop: req.body.name});
+  res.json({success : true});
+}
+
 exports.getbustiming = (req, res) => {
   BusTiming.find().then((data) => {
-    res.json(data[0]);
+    console.log(data);
+    let jsonData = {};
+    data.forEach((element) => {
+      jsonData[element["BusStop"]]={"CollegeToCity_WorkingDay" : element["CollegeToCity_WorkingDay"],"CityToCollege_WorkingDay" : element["CityToCollege_WorkingDay"],"CollegeToCity_Holiday":element["CollegeToCity_Holiday"],"CityToCollege_Holiday":element["CityToCollege_Holiday"]}
+    })
+    res.json(jsonData);
   });
 };
