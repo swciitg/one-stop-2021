@@ -97,13 +97,13 @@ app.use((req, res, next) => {
 
 // new API routes
 
-let BASEURL = "/onestopapi/v2";
+let BASEURL = process.env.BASE_URL + "v2/";
 
 // Validate API Call
 
 app.use((req,res,next) => {
   console.log(req.headers);
-  console.log(req);
+  // console.log(req);
   if(req.originalMethod!=="GET" && req.originalUrl.split("/").includes("v2") && req.headers["security-key"]!==process.env.SECURITY_KEY){
     res.json({"message":"You are not authorized"});
     return;
@@ -111,22 +111,6 @@ app.use((req,res,next) => {
   next();
 });
 
-
-app.use(BASEURL, routers.userRouter.userRouter);
-app.use(BASEURL, routers.authRouter.authRouter);
-app.use(BASEURL, routers.contactRouter.contactRouter);
-app.use(BASEURL, routers.timingRouter.timingRouter);
-app.use(BASEURL, routers.emailRouter.emailRouter);
-app.use(BASEURL, routers.roleRouter.roleRouter);
-app.use(BASEURL, routers.foodOutletsRouter.foodOutletsRouter);
-app.use(BASEURL, routers.foodItemsRouter.foodItemsRouter);
-app.use(BASEURL, routers.messMenuRouter.messMenuRouter);
-app.use(BASEURL, routers.LostAndFoundRouters.LostAndFoundRouter);
-app.use(BASEURL, routers.updateRouter.updateRouter);
-app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
-
-// API routes
-BASEURL = process.env.BASE_URL || "/v1/";
 
 app.use(BASEURL, routers.userRouter.userRouter);
 app.use(BASEURL, routers.authRouter.authRouter);

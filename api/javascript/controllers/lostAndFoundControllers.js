@@ -119,9 +119,9 @@ exports.postLostDetails = async (req, res) => {
       console.log(metadata);
       const photo_id = imageName;
       const imageURL =
-        "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
+        "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
       const compressedImageURL =
-        "https://swc.iitg.ac.in/onestopapi/getCompressedImage?photo_id=" +
+        "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
         imageName;
       const newImagePath = path.resolve(
         __dirname +
@@ -297,9 +297,9 @@ exports.postfoundDetails = async (req, res) => {
       console.log(metadata);
       const photo_id = imageName;
       const imageURL =
-        "https://swc.iitg.ac.in/onestopapi/getImage?photo_id=" + imageName;
+        "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
       const compressedImageURL =
-        "https://swc.iitg.ac.in/onestopapi/getCompressedImage?photo_id=" +
+        "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
         imageName;
       const newImagePath = path.resolve(
         __dirname +
