@@ -72,6 +72,11 @@ exports.addLostForm = async (req, res) => {
   }
 };
 
+exports.deleteLostAll = async (req,res) => {
+  await LostModel.deleteMany({});
+  res.json({success : true});
+}
+
 exports.postLostDetails = async (req, res) => {
   // if (!req.files) {
   //   return res.json({ saved_successfully: false ,status : "No file recieved"});
@@ -199,11 +204,6 @@ exports.postLostDetails = async (req, res) => {
   } catch (error) {
     return errorFxn(res, error);
   }
-};
-
-exports.deleteLosts = async (req, res) => {
-  await LostModel.remove();
-  res.send("Deleted Successfully");
 };
 
 // found details
@@ -376,10 +376,10 @@ exports.postfoundDetails = async (req, res) => {
   }
 };
 
-exports.deleteFounds = async (req, res) => {
-  await FoundModel.remove();
-  res.send("Deleted Successfully");
-};
+exports.deleteFoundAll = async (req,res) => {
+  await FoundModel.deleteMany({});
+  res.json({success : true});
+}
 
 const compare = (a, b) => {
   return b.date - a.date;

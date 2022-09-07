@@ -27,6 +27,7 @@ buyAndSellRouter.get("/sell", upload.single("file"),buyAndSellControllers.getSel
 buyAndSellRouter.get("/sellPage", buyAndSellControllers.getSellPageDetails);
 
 buyAndSellRouter.post("/sell", buyAndSellControllers.postSellDetails);
+buyAndSellRouter.delete("/sell", buyAndSellControllers.deleteSellAll);
 
 buyAndSellRouter.post(
   "/buy/remove",
@@ -36,6 +37,7 @@ buyAndSellRouter.get("/buy", buyAndSellControllers.getBuyDetails);
 buyAndSellRouter.get("/buyPage", buyAndSellControllers.getBuyPageDetails);
 
 buyAndSellRouter.post("/buy", buyAndSellControllers.postBuyDetails);
+buyAndSellRouter.delete("/buy", buyAndSellControllers.deleteBuyAll);
 
 buyAndSellRouter.post("/myads", buyAndSellControllers.getMyAds);
 

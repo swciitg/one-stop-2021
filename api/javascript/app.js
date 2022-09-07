@@ -103,7 +103,6 @@ let BASEURL = process.env.BASE_URL + "v2/";
 
 app.use((req,res,next) => {
   console.log(req.headers);
-  // console.log(req);
   if(req.originalMethod!=="GET" && req.originalUrl.split("/").includes("v2") && req.headers["security-key"]!==process.env.SECURITY_KEY){
     res.json({"message":"You are not authorized"});
     return;
@@ -128,7 +127,6 @@ app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
 
 // For demo auth purposes only
 app.get(`${BASEURL}user-info`, (req, res) => {
-  // console.log("user info");
   const response = {
     message: "User not authenticated"
   };

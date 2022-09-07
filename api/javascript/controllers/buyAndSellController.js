@@ -69,6 +69,11 @@ exports.getSellPageDetails = async (req, res) => {
   res.json({ result: true, details: sellItems });
 }
 
+exports.deleteSellAll = async (req,res) => {
+  await sellModel.deleteMany({});
+  res.json({success : true});
+}
+
 exports.postSellDetails = async (req, res) => {
   try {
     var {
@@ -251,6 +256,11 @@ exports.getBuyDetails = async (req, res) => {
     console.log(error.message);
   }
 };
+
+exports.deleteBuyAll = async (req,res) => {
+  await buyModel.deleteMany({});
+  res.json({success : true});
+}
 
 exports.postBuyDetails = async (req, res) => {
   console.log(req.body);
