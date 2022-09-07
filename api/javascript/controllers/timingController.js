@@ -58,7 +58,7 @@ exports.getferrytiming = (req, res) => {
 exports.createbustiming = async (req, res) => {
 
   try {
-    await busTiming.deleteMany({name: req.body.name});
+    await busTiming.deleteMany({BusStop: req.body.name});
     new BusTiming({
       CollegeToCity_WorkingDay: req.body.CollegeToCity_WorkingDay,
       CityToCollege_WorkingDay: req.body.CityToCollege_WorkingDay,
@@ -71,7 +71,6 @@ exports.createbustiming = async (req, res) => {
     await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
       travel: new Date(),
     });
-    console.log("gelo");
     return res.status(200).json({
       success: true,
     });
