@@ -46,4 +46,4 @@ COPY  . .
 EXPOSE ${PORT}
 
 # Use PM2 to run the application as stated in config file
-ENTRYPOINT ["pm2-runtime", "./process.yml"] 
+ENTRYPOINT ["pm2","start", "./process.yml","--no-daemon"] 

@@ -8,16 +8,14 @@ services:
                 extra_hosts:
                         - "host.docker.internal:host-gateway"
                 volumes:
-                        - onestoppublic:/home/node/app/public
+                        - ./public:/home/node/app/public
                         - onestopimages:/home/node/app/images_folder
                         - onestopfiles:/home/node/app/files_folder
                 ports:
-                        - "9010:9010"
-                network_mode:  "common-net"
+                        - "9015:9010"
                 env_file:
                         - .env
 
 volumes:
-        onestoppublic:
         onestopimages:
         onestopfiles:
