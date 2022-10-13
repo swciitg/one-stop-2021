@@ -1,19 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <!-- <link rel="stylesheet" href="/style.css"> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1B1B1D;
+        }
+
+        .mainDiv {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px;
+            justify-content: flex-start;
+            text-align: center;
+        }
+
         p#userInfo {
-            color: white;
+            color: #1B1B1D;
+        }
+
+        #appLogo {
+            margin-bottom: 6px;
+        }
+
+        #confirmText {
+            color: #767676;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 28px;
         }
     </style>
 </head>
+
 <body>
-    <h1>Successfully signed in</h1>
+    <div class="mainDiv">
+        <img src="../public/images/appLogo.svg" id="appLogo">
+        <p id="confirmText">Successfully signed in</p>
+        <img src="../public/images/confirm.svg" id="confirmIcon">
+    </div>
     <p id="userInfo"><%= userInfo %></p>
 </body>
+
 </html>
