@@ -26,7 +26,7 @@ const app = express();
 app.set("view engine", "ejs");
 
 //for serving static files
-app.use(express.static(__dirname + "/public"));
+app.use(express.static("public"));
 
 // app.use(nconf.get('app_path'));
 
@@ -123,7 +123,7 @@ app.use(BASEURL, routers.messMenuRouter.messMenuRouter);
 app.use(BASEURL, routers.LostAndFoundRouters.LostAndFoundRouter);
 app.use(BASEURL, routers.updateRouter.updateRouter);
 app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
-
+app.use(BASEURL, routers.imageRouter.imageRouter);
 
 // For demo auth purposes only
 app.get(`${BASEURL}user-info`, (req, res) => {

@@ -1,9 +1,6 @@
 const express = require('express');
-const {
-    routes
-} = require('../routes');
+const {routes} = require('../routes');
 const Controller = require('../controllers/foodOutletsController');
-
 const foodOutletsRouter = express.Router();
 const multer = require("multer");
 const fileStorageEngine = multer.diskStorage({

@@ -12,3 +12,4 @@ exports.LostAndFoundRouters = require("./lostAndFoundRouter");
 exports.messMenuRouter = require("./messMenuRouter");
 exports.updateRouter = require("./updateRouter");
 exports.buyAndSellRouter = require("./buyAndSellRouter");
+exports.imageRouter = require("./imageRouter");
