@@ -206,6 +206,37 @@ exports.postLostDetails = async (req, res) => {
   }
 };
 
+exports.postLostRemoveDetails = async (req, res) => {
+  try {
+    const {
+      id,
+      email
+    } = req.body;
+    console.log(id, email);
+    const foundItem = await LostModel.findById(id);
+    if (!foundItem) {
+      res.json({
+        deleted_successfully: false,
+        "message": "looks something wrong"
+      });
+      return;
+    }
+    console.log(foundItem.email);
+    if (foundItem.email == email) {
+      await LostModel.findByIdAndDelete(id);
+      res.json({
+        deleted_successfully: true
+      });
+    } else {
+      res.json({
+        message: "This item does not belong to the entered email"
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 // found details
 
 exports.getFoundPageDetails = async (req, res) => {
@@ -373,6 +404,67 @@ exports.postfoundDetails = async (req, res) => {
     }
   } catch (error) {
     return errorFxn(res, error);
+  }
+};
+
+exports.postFoundRemoveDetails = async (req, res) => {
+  try {
+    const {
+      id,
+      email
+    } = req.body;
+    console.log(id, email);
+    const foundItem = await FoundModel.findById(id);
+    if (!foundItem) {
+      res.json({
+        deleted_successfully: false,
+        "message": "looks something wrong"
+      });
+      return;
+    }
+    console.log(foundItem.email);
+    if (foundItem.email == email) {
+      await FoundModel.findByIdAndDelete(id);
+      res.json({
+        deleted_successfully: true
+      });
+    } else {
+      res.json({
+        message: "This item does not belong to the entered email"
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.getMyAds = async (req, res) => {
+  console.log(req.body);
+  try {
+    const {
+      email
+    } = req.body;
+    console.log(email);
+
+    const lostDetails = await LostModel.find({
+      email: email
+    });
+    lostDetails.sort(compare);
+
+    const foundDetails = await FoundModel.find({
+      email: email
+    });
+    foundDetails.sort(compare);
+
+    const allDetails = {
+      foundList: foundDetails,
+      lostList: lostDetails,
+    };
+    return res.json({
+      details: allDetails
+    });
+  } catch (error) {
+    console.log(error.message);
   }
 };
 
