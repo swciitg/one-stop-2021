@@ -58,8 +58,7 @@
 <body>
     <div class="mainDiv">
         <img src="../../appLogo" id="appLogo">
-        <% if(userInfo==="ERROR OCCURED"){ %> <p class="confirmText"> Oops!! Something went wrong :( </p> <% } else {%> <p class="confirmText"> Successfully signed in </p> <%}%>
-        <img src="../../confirmicon" id="confirmIcon">
+        <% if(userInfo==="ERROR OCCURED"){ %> <p class="confirmText"> Oops!! Something went wrong :( </p> <% } else {%> <p class="confirmText"> Successfully signed in </p> <img src="../../confirmicon" id="confirmIcon"><%}%>
     </div>
     <p id="userInfo"><%= userInfo %></p>
 </body>
