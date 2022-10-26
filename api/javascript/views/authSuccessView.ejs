@@ -38,7 +38,7 @@
             max-width: 160px;
         }
 
-        #confirmText {
+        .confirmText {
             margin-top: 6px;
             display: inline;
             color: #767676;
@@ -58,7 +58,7 @@
 <body>
     <div class="mainDiv">
         <img src="../../appLogo" id="appLogo">
-        <p id="confirmText"> <% if(userInfo==="ERROR OCCURED"){%> Oops!! Something went wrong :( <%}%> <%else{%>Successfully signed in<%}%></p>
+        <% if(userInfo==="ERROR OCCURED"){ %> <p class="confirmText"> Oops!! Something went wrong :( </p> <% } else {%> <p class="confirmText"> Successfully signed in </p> <%}%>
         <img src="../../confirmicon" id="confirmIcon">
     </div>
     <p id="userInfo"><%= userInfo %></p>
