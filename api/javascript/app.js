@@ -124,6 +124,7 @@ app.use(BASEURL, routers.LostAndFoundRouters.LostAndFoundRouter);
 app.use(BASEURL, routers.updateRouter.updateRouter);
 app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
 app.use(BASEURL, routers.imageRouter.imageRouter);
+app.use(BASEURL, routers.newsRouter.newsRouter);
 
 // For demo auth purposes only
 app.get(`${BASEURL}user-info`, (req, res) => {
