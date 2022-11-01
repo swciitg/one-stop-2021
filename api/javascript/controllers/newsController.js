@@ -1,5 +1,5 @@
 const NewsModel = require("../models/newsModel");
-const password = "ONE-STOP-IITG"
+
 exports.getNewsItems = async (req, res) => {
     try {
       const getevents = await NewsModel.find({}).sort({ dateCreated: 1 });
@@ -12,7 +12,7 @@ exports.getNewsItems = async (req, res) => {
 
 exports.createNewsItem = async (req,res)=>{
   try {
-    if (req.body.password !== password) {
+    if (req.body.password !== process.env.passKey) {
       res.status(400).send("Invalid Password");
     }
     else{
