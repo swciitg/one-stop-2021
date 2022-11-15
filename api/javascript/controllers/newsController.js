@@ -1,4 +1,5 @@
 const NewsModel = require("../models/newsModel");
+
 exports.getNewsItems = async (req, res) => {
     try {
       const getevents = await NewsModel.find({}).sort({ dateCreated: 1 });
@@ -8,6 +9,20 @@ exports.getNewsItems = async (req, res) => {
       res.status(400).send(e);
     }
   }
+
+exports.createNewsItem = async (req,res)=>{
+  try {
+    if (req.body.password !== process.env.passKey) {
+      res.status(400).send("Invalid Password");
+    }
+    else{
+      const newsEvent = await NewsModel.create(req.body);
+      res.status(201).send(newsEvent);
+    } 
+  } catch (e) {
+    res.status(400).send(e);
+  }
+}
 
 exports.updateNewsItem = async (req, res) => {
     try {
