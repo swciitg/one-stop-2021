@@ -43,7 +43,6 @@ exports.createItem = async (req, res) => {
           console.log(incomingItem);
           incomingItem["ingredients"] =
             incomingItem["ingredients"].split(",");
-          incomingItem["image"] = ""; // will get image later in code
           if (incomingItem["veg"] === "TRUE") {
             incomingItem["veg"] = true;
           } else {
@@ -64,19 +63,14 @@ exports.createItem = async (req, res) => {
         });
         // console.log(foodOutletsList)
         foodOutletsList.forEach(async (newFoodOutlet) => {
-          console.log("fjklsd", newFoodOutlet.menu.length);
           for (let i = 0; i < newFoodOutlet.menu.length; i++) {
+            console.log("fjklsd", newFoodOutlet.menu[i]["image"].length);
+            console.log(newFoodOutlet.menu[i]["image"]);
             if(newFoodOutlet.menu[i]["image"].length!=0) continue;
             const google = new Scraper({
               puppeteer: {
                 headless: true,
-                executablePath: "/usr/bin/google-chrome",
-                args: [
-                  "--disable-gpu",
-                  "--disable-dev-shm-usage",
-                  "--disable-setuid-sandbox",
-                  "--no-sandbox",
-                ]
+                
               }
             });
             const imageResults = await google.scrape(newFoodOutlet.menu[i]["name"], 5);
