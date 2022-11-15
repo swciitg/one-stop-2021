@@ -41,6 +41,6 @@ LostAndFoundRouter.post("/found/claim", LostAndFoundControllers.claimFoundItem);
 
 LostAndFoundRouter.delete("/found", LostAndFoundControllers.deleteFoundAll);
 
-LostAndFoundRouter.post("/myads", LostAndFoundControllers.getMyAds);
+LostAndFoundRouter.post("/lnf/myads", LostAndFoundControllers.getMyAds);
 
 module.exports = { LostAndFoundRouter: LostAndFoundRouter };

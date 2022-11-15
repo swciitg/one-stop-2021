@@ -41,6 +41,8 @@ buyAndSellRouter.delete("/buy", buyAndSellControllers.deleteBuyAll);
 
 buyAndSellRouter.post("/myads", buyAndSellControllers.getMyAds);
 
+buyAndSellRouter.post("/bns/myads", buyAndSellControllers.getMyAds);
+
 module.exports = {
   buyAndSellRouter: buyAndSellRouter
 };
