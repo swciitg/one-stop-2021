@@ -66,6 +66,7 @@ exports.createItem = async (req, res) => {
         foodOutletsList.forEach(async (newFoodOutlet) => {
           console.log("fjklsd", newFoodOutlet.menu.length);
           for (let i = 0; i < newFoodOutlet.menu.length; i++) {
+            if(newFoodOutlet.menu[i]["image"].length!=0) continue;
             const google = new Scraper({
               puppeteer: {
                 headless: true,
