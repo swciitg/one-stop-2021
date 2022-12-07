@@ -8,6 +8,16 @@ const sharp = require("sharp");
 const mongoose = require("mongoose");
 deepai.setApiKey(process.env.NSFW_API_KEY);
 
+
+exports.getAllImages = async (req,res) => {
+  let files = fs.readdirSync("../images_folder/");
+  let filenames=[];
+  files.forEach((file) => {
+    filenames.push(file.split(".")[0]);
+  });
+  res.json({"details" : filenames});
+}
+
 function errorFxn(res, err) {
   console.log(err);
   return res.json({ saved_successfully: false, image_safe: true, error: err });

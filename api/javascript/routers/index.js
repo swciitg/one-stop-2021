@@ -14,3 +14,4 @@ exports.updateRouter = require("./updateRouter");
 exports.buyAndSellRouter = require("./buyAndSellRouter");
 exports.imageRouter = require("./imageRouter");
 exports.newsRouter = require("./newsRouter");
+exports.campusTravelRouter = require("./campusTravel");
