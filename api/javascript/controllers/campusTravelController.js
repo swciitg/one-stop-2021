@@ -1,10 +1,10 @@
-const { TravelPostModel, TravelChatModel } = require("../models/campusTravelModel");
+const { TravelPostModel, TravelChatModel, ReplyPostModel } = require("../models/campusTravelModel");
 exports.postTravel = async (req, res) => {
     try {
         let datetime = new Date(req.body.travelDateTime);
         let chatModel = new TravelChatModel();
         chatModel = await chatModel.save();
-        let data = { "email": req.body.email, "travelDateTime": datetime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id };
+        let data = { "email": req.body.email, "name" : req.body.name, "travelDateTime": datetime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id };
         if("phonenumber" in req.body) data["phonenumber"] = req.body.phonenumber;
         let travelModel = new TravelPostModel(data);
         await travelModel.save();
@@ -48,7 +48,6 @@ function getFormattedDate(datetime) {
 exports.getTravelPosts = async (req, res) => {
     try {
         if (req.body.datetime == null) {
-            console.log("gfg");
             let travelPosts = await TravelPostModel.find();
             let datewiseTravelPost = {};
             travelPosts.forEach((element) => {
@@ -92,12 +91,68 @@ exports.getTravelPosts = async (req, res) => {
     }
 }
 
+exports.deleteTravelPost = async (req,res) => {
+    try {
+        const id = req.query.travelPostId;
+        let travelPost = await TravelPostModel.findById(id);
+        if(travelPost["email"]!==req.body.email){
+            res.json({ "success": false, "message": "Email doesn't match"});
+            return;
+        }
+        await TravelChatModel.findByIdAndDelete(travelPost["chatId"]);
+        await TravelPostModel.findByIdAndDelete(id);
+        res.json({ "success": true });
+    }
+    catch (err) {
+        res.json({ "success": false, "message": err.toString() });
+    }
+}
+
 exports.deleteAllTravelPosts = async (req, res) => {
     try {
         await TravelPostModel.deleteMany();
         res.json({ "success": true });
     }
     catch (err) {
+        res.json({ "success": false, "message": err.toString() });
+    }
+}
+
+exports.getMyAds = async (req,res) => {
+    try {
+        const email = req.body.email;
+        let myTravelPosts = await TravelPostModel.find({"email" : email});
+        res.json({ "success": true, "details" : myTravelPosts });
+    }
+    catch (err) {
+        res.json({ "success": false, "message": err.toString() });
+    }
+}
+
+exports.getTravelPostChatReplies = async (req,res) => {
+    try{
+        const id = req.query.chatId;
+        console.log(id);
+        let travelChat = await TravelChatModel.findById(id);
+        res.json({ "success": true, "replies" : travelChat["replies"] });
+    }
+    catch (err){
+        res.json({ "success": false, "message": err.toString() });
+    }
+}
+
+exports.postReplyChat = async (req,res) => {
+    try{
+        const id = req.query.chatId;
+        const data = req.body;
+        let travelChatReply = new ReplyPostModel(data);
+        let travelChat = await TravelChatModel.findById(id);
+        travelChat["replies"].push(travelChatReply);
+        travelChat = await travelChat.save();
+        console.log(travelChat);
+        res.json({ "success": true });
+    }
+    catch (err){
         res.json({ "success": false, "message": err.toString() });
     }
 }
