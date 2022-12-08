@@ -4,7 +4,9 @@ exports.postTravel = async (req, res) => {
         let datetime = new Date(req.body.travelDateTime);
         let chatModel = new TravelChatModel();
         chatModel = await chatModel.save();
-        let travelModel = new TravelPostModel({ "email": req.body.email, "travelDateTime": datetime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id });
+        let data = { "email": req.body.email, "travelDateTime": datetime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id };
+        if("phonenumber" in req.body) data["phonenumber"] = req.body.phonenumber;
+        let travelModel = new TravelPostModel(data);
         await travelModel.save();
         console.log(travelModel);
         res.json({ "success": true });
