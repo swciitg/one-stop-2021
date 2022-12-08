@@ -30,7 +30,11 @@ LostAndFoundRouter.get("/foundPage", LostAndFoundControllers.getFoundPageDetails
 
 LostAndFoundRouter.post("/found",
     LostAndFoundControllers.postfoundDetails
-)
+);
+
+LostAndFoundRouter.put("/found",
+    LostAndFoundControllers.updateFoundDetails
+);
 
 LostAndFoundRouter.post(
     "/found/remove",

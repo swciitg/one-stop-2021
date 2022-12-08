@@ -417,6 +417,28 @@ exports.postfoundDetails = async (req, res) => {
   }
 };
 
+exports.updateFoundDetails = async (req,res) => {
+  try{
+    const id=req.query.id;
+    let updateData = req.body;
+    const foundItem = await FoundModel.findById(id);
+    if (!foundItem) {
+      res.json({
+        deleted_successfully: false,
+        "message": "looks something wrong"
+      });
+      return;
+    }
+    await FoundModel.findByIdAndUpdate(id,updateData);
+    res.json({
+      "updated_successfully": true
+    });
+  }
+  catch (err){
+    res.json({ "updated_successfully": false, "message": err.toString() });
+  }
+}
+
 exports.postFoundRemoveDetails = async (req, res) => {
   try {
     const {
