@@ -1,10 +1,10 @@
 const { TravelPostModel, TravelChatModel, ReplyPostModel } = require("../models/campusTravelModel");
 exports.postTravel = async (req, res) => {
     try {
-        let datetime = new Date(req.body.travelDateTime);
+        let travelDateTime = new Date(req.body.travelDateTime);
         let chatModel = new TravelChatModel();
         chatModel = await chatModel.save();
-        let data = { "email": req.body.email, "name" : req.body.name, "travelDateTime": datetime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id };
+        let data = { "email": req.body.email, "name" : req.body.name, "travelDateTime": travelDateTime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id };
         if("phonenumber" in req.body) data["phonenumber"] = req.body.phonenumber;
         let travelModel = new TravelPostModel(data);
         await travelModel.save();
@@ -17,9 +17,9 @@ exports.postTravel = async (req, res) => {
 }
 
 
-function getFormattedDate(datetime) {
+function getFormattedDate(travelDateTime) {
     var options = { year: 'numeric', month: 'short', day: 'numeric' };
-    let date = datetime.toLocaleDateString("en-US", options);
+    let date = travelDateTime.toLocaleDateString("en-US", options);
     console.log(date);
     let d = date[5] == ',' ? parseInt(date[4]) : parseInt(date.substring(4, 6));
     let suff;
@@ -47,7 +47,7 @@ function getFormattedDate(datetime) {
 
 exports.getTravelPosts = async (req, res) => {
     try {
-        if (req.body.datetime == null) {
+        if (req.query.travelDateTime == null) {
             let travelPosts = await TravelPostModel.find();
             let datewiseTravelPost = {};
             travelPosts.forEach((element) => {
@@ -61,9 +61,9 @@ exports.getTravelPosts = async (req, res) => {
             res.json({ "success": true, "details": datewiseTravelPost });
         }
         else {
-            console.log("here", req.body.datetime);
-            let lowerDate = new Date(req.body.datetime);
-            let upperDate = new Date(req.body.datetime);
+            console.log("here", req.query.travelDateTime);
+            let lowerDate = new Date(req.query.travelDateTime);
+            let upperDate = new Date(req.query.travelDateTime);
             upperDate.setDate(upperDate.getDate() + 1);
             console.log(req.body);
             console.log(lowerDate, upperDate);
@@ -71,7 +71,7 @@ exports.getTravelPosts = async (req, res) => {
                 travelDateTime: {
                     $gte: lowerDate,
                     $lt: upperDate
-                }, to: req.body.to, from: req.body.from
+                }, to: req.query.to, from: req.query.from
             });
             console.log(travelPosts);
             let datewiseTravelPost = {};
@@ -120,7 +120,7 @@ exports.deleteAllTravelPosts = async (req, res) => {
 
 exports.getMyAds = async (req,res) => {
     try {
-        const email = req.body.email;
+        const email = req.query.email;
         let myTravelPosts = await TravelPostModel.find({"email" : email});
         res.json({ "success": true, "details" : myTravelPosts });
     }
