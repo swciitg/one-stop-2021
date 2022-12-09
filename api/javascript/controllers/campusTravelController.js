@@ -48,7 +48,7 @@ function getFormattedDate(travelDateTime) {
 exports.getTravelPosts = async (req, res) => {
     try {
         if (req.query.travelDateTime == null) {
-            let travelPosts = await TravelPostModel.find();
+            let travelPosts = await TravelPostModel.find().sort({"travelDateTime": 1});
             let datewiseTravelPost = {};
             travelPosts.forEach((element) => {
                 let date = getFormattedDate(element["travelDateTime"]);
@@ -72,7 +72,7 @@ exports.getTravelPosts = async (req, res) => {
                     $gte: lowerDate,
                     $lt: upperDate
                 }, to: req.query.to, from: req.query.from
-            });
+            }).sort({"travelDateTime": 1});
             console.log(travelPosts);
             let datewiseTravelPost = {};
             travelPosts.forEach((element) => {
