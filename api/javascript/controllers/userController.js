@@ -1,5 +1,5 @@
 const { writeResponse } = require("../helpers/response");
-const User = require("../models/users");
+const User = require("../models/user");
 
 /**
  * @swagger

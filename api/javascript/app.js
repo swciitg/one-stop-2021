@@ -126,6 +126,7 @@ app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
 app.use(BASEURL, routers.imageRouter.imageRouter);
 app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
+app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
 
 // For demo auth purposes only
 app.get(`${BASEURL}user-info`, (req, res) => {
