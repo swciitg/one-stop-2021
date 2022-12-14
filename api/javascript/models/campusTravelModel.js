@@ -14,7 +14,8 @@ const TravelPostSchema = new mongoose.Schema({
 
 const ReplyPostSchema = new mongoose.Schema({
     "name" : {type: String, required: true},
-    "message" : {type: String, required: true}
+    "message" : {type: String, required: true},
+    "email" : {type: String, required: true}
 });
 
 const ChatSchema = new mongoose.Schema({
