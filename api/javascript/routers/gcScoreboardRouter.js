@@ -6,6 +6,7 @@ const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 const spardhaadmins = process.env.SPARDHA_ADMINS.split(',');
 const kritiadmins = process.env.KRITI_ADMINS.split(',');
 const manthanadmins = process.env.MANTHAN_ADMINS.split(',');
+console.log(accessjwtsecret,refreshjwtsecret);
 
 function checkAdmin(email) {
     let authEvents = [];
@@ -50,7 +51,7 @@ gcScoreboardRouter.post("/gc/login", (req, res) => {
         if (email === undefined) {
             throw new Error("Not Valid parameters in body");
         }
-        const accessToken = jwt.sign({ "email": email }, accessjwtsecret, { expiresIn: "1s" });
+        const accessToken = jwt.sign({ "email": email }, accessjwtsecret, { expiresIn: "1 days" });
         console.log(jwt.verify(accessToken, accessjwtsecret));
         const refreshToken = jwt.sign({ "email": email }, refreshjwtsecret, { expiresIn: "7 days" });
         const authEvents = checkAdmin(email);
