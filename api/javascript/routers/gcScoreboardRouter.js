@@ -12,7 +12,7 @@ function checkAdmin(email) {
     let authEvents = [];
     if (spardhaadmins.includes(email)) authEvents.push("spardha");
     if (kritiadmins.includes(email)) authEvents.push("kriti");
-    if (manthanadmins.includes(email)) authEvents.push("spardha");
+    if (manthanadmins.includes(email)) authEvents.push("manthan");
     return authEvents;
 }
 
