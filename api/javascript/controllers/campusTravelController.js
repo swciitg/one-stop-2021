@@ -1,4 +1,20 @@
 const { TravelPostModel, TravelChatModel, ReplyPostModel } = require("../models/campusTravelModel");
+const nodeoutlook = require('nodejs-nodemailer-outlook');
+
+const sendMailForTravelPostReply = async (replier_name, reciever_email,reciever_name,from,to,travelDateTime) => {
+    console.log(reciever_name,replier_name,travelDateTime);
+    nodeoutlook.sendEmail({
+        auth: {
+            user: process.env.SWC_EMAIL,
+            pass: process.env.SWC_EMAIL_PASSWORD
+        },
+        from: process.env.SWC_EMAIL,
+        to: reciever_email,
+        subject: 'New Reply on your travel post, Cab sharing : OneStop IITG',
+        html: `Hello 👋, <br><b>${reciever_name}</b>. you have got a new reply on your upcoming travel post from ${from} to ${to}, Travel Date & Time : ${travelDateTime.toLocaleString("en-US")}. Replier name : ${replier_name}<br><br>Regards,<br>Team SWC`
+    });
+}
+
 exports.postTravel = async (req, res) => {
     try {
         let travelDateTime = new Date(req.body.travelDateTime);
@@ -47,7 +63,7 @@ function getFormattedDate(travelDateTime) {
 
 exports.getTravelPosts = async (req, res) => {
     try {
-        if (req.query.travelDateTime === undefined) {
+        if (req.query.travelDateTime === undefined) { // default when no filter selected
             let date = new Date();
             // date.toDateString();
             date = new Date(date.toISOString().split("T")[0]);
@@ -61,16 +77,16 @@ exports.getTravelPosts = async (req, res) => {
         console.log(lowerDate, upperDate);
         // console.log(req.query.to===undefined);
         let travelPosts = await TravelPostModel.find(
-            req.query.to===undefined ? {
-            travelDateTime: {
-                $gte: lowerDate
-            }
-        } : {
-            travelDateTime: {
-                $gte: lowerDate,
-                $lt: upperDate
-            }, to: req.query.to, from: req.query.from
-        }).sort({ "travelDateTime": 1 });
+            req.query.to === undefined ? {
+                travelDateTime: {
+                    $gte: lowerDate
+                }
+            } : {
+                travelDateTime: {
+                    $gte: lowerDate,
+                    $lt: upperDate
+                }, to: req.query.to, from: req.query.from
+            }).sort({ "travelDateTime": 1 });
         console.log(travelPosts);
         let datewiseTravelPost = {};
         travelPosts.forEach((element) => {
@@ -146,7 +162,11 @@ exports.postReplyChat = async (req, res) => {
         let travelChat = await TravelChatModel.findById(id);
         travelChat["replies"].push(travelChatReply);
         travelChat = await travelChat.save();
-        console.log(travelChat);
+        // console.log(travelChat);
+        TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
+            console.log(travelPost["travelDateTime"]);
+            sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
+        });
         res.json({ "success": true });
     }
     catch (err) {

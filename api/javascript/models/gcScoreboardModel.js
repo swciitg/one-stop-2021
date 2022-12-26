@@ -20,18 +20,33 @@ const hostelPointsSchema = new mongoose.Schema({
 });
 
 const gcCompetitionsSchema = new mongoose.Schema({
-    // store all the event names in the array for each competition
+    // store all the event names in the array for each competition and admins
     "spardha_events" : {
-        type: Array,
-        required: true
+        type: Array
     },
     "kriti_events" : {
-        type: Array,
-        required: true
+        type: Array
     },
     "manthan_events" : {
-        type: Array,
-        required: true
+        type: Array
+    },
+    "spardha_admins": {
+        type: Array
+    },
+    "kriti_admins": {
+        type: Array
+    },
+    "manthan_admins": {
+        type: Array
+    },
+    "spardha_board_admins": {
+        type: Array
+    },
+    "kriti_board_admins": {
+        type: Array
+    },
+    "manthan_board_admins": {
+        type: Array
     }
 });
 
