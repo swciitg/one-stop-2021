@@ -4,8 +4,8 @@ exports.postTravel = async (req, res) => {
         let travelDateTime = new Date(req.body.travelDateTime);
         let chatModel = new TravelChatModel();
         chatModel = await chatModel.save();
-        let data = { "email": req.body.email, "name" : req.body.name, "travelDateTime": travelDateTime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id };
-        if("phonenumber" in req.body) data["phonenumber"] = req.body.phonenumber;
+        let data = { "email": req.body.email, "name": req.body.name, "travelDateTime": travelDateTime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id };
+        if ("phonenumber" in req.body) data["phonenumber"] = req.body.phonenumber;
         let travelModel = new TravelPostModel(data);
         await travelModel.save();
         console.log(travelModel);
@@ -47,56 +47,53 @@ function getFormattedDate(travelDateTime) {
 
 exports.getTravelPosts = async (req, res) => {
     try {
-        if (req.query.travelDateTime == null) {
-            let travelPosts = await TravelPostModel.find().sort({"travelDateTime": 1});
-            let datewiseTravelPost = {};
-            travelPosts.forEach((element) => {
-                let date = getFormattedDate(element["travelDateTime"]);
-                console.log(typeof (date), date);
-                if (date in datewiseTravelPost) {
-                    datewiseTravelPost[date].push(element);
-                }
-                else datewiseTravelPost[date] = [element];
-            });
-            res.json({ "success": true, "details": datewiseTravelPost });
+        if (req.query.travelDateTime === undefined) {
+            let date = new Date();
+            // date.toDateString();
+            date = new Date(date.toISOString().split("T")[0]);
+            req.query.travelDateTime = date.toISOString();
         }
-        else {
-            console.log("here", req.query.travelDateTime);
-            let lowerDate = new Date(req.query.travelDateTime);
-            let upperDate = new Date(req.query.travelDateTime);
-            upperDate.setDate(upperDate.getDate() + 1);
-            console.log(req.body);
-            console.log(lowerDate, upperDate);
-            let travelPosts = await TravelPostModel.find({
-                travelDateTime: {
-                    $gte: lowerDate,
-                    $lt: upperDate
-                }, to: req.query.to, from: req.query.from
-            }).sort({"travelDateTime": 1});
-            console.log(travelPosts);
-            let datewiseTravelPost = {};
-            travelPosts.forEach((element) => {
-                let date = getFormattedDate(element["travelDateTime"]);
-                console.log(typeof (date), date);
-                if (date in datewiseTravelPost) {
-                    datewiseTravelPost[date].push(element);
-                }
-                else datewiseTravelPost[date] = [element];
-            });
-            res.json({ "success": true, "details": datewiseTravelPost });
-        }
+        let lowerDate = new Date(req.query.travelDateTime);
+        let upperDate = new Date(req.query.travelDateTime);
+        console.log("here", req.query.travelDateTime);
+        upperDate.setDate(upperDate.getDate() + 1);
+        console.log(req.body);
+        console.log(lowerDate, upperDate);
+        // console.log(req.query.to===undefined);
+        let travelPosts = await TravelPostModel.find(
+            req.query.to===undefined ? {
+            travelDateTime: {
+                $gte: lowerDate
+            }
+        } : {
+            travelDateTime: {
+                $gte: lowerDate,
+                $lt: upperDate
+            }, to: req.query.to, from: req.query.from
+        }).sort({ "travelDateTime": 1 });
+        console.log(travelPosts);
+        let datewiseTravelPost = {};
+        travelPosts.forEach((element) => {
+            let date = getFormattedDate(element["travelDateTime"]);
+            console.log(typeof (date), date);
+            if (date in datewiseTravelPost) {
+                datewiseTravelPost[date].push(element);
+            }
+            else datewiseTravelPost[date] = [element];
+        });
+        res.json({ "success": true, "details": datewiseTravelPost });
     }
     catch (err) {
         res.json({ "success": false, "message": err.toString() });
     }
 }
 
-exports.deleteTravelPost = async (req,res) => {
+exports.deleteTravelPost = async (req, res) => {
     try {
         const id = req.query.travelPostId;
         let travelPost = await TravelPostModel.findById(id);
-        if(travelPost["email"]!==req.body.email){
-            res.json({ "success": false, "message": "Email doesn't match"});
+        if (travelPost["email"] !== req.body.email) {
+            res.json({ "success": false, "message": "Email doesn't match" });
             return;
         }
         await TravelChatModel.findByIdAndDelete(travelPost["chatId"]);
@@ -118,31 +115,31 @@ exports.deleteAllTravelPosts = async (req, res) => {
     }
 }
 
-exports.getMyAds = async (req,res) => {
+exports.getMyAds = async (req, res) => {
     try {
         const email = req.query.email;
-        let myTravelPosts = await TravelPostModel.find({"email" : email});
-        res.json({ "success": true, "details" : myTravelPosts });
+        let myTravelPosts = await TravelPostModel.find({ "email": email });
+        res.json({ "success": true, "details": myTravelPosts });
     }
     catch (err) {
         res.json({ "success": false, "message": err.toString() });
     }
 }
 
-exports.getTravelPostChatReplies = async (req,res) => {
-    try{
+exports.getTravelPostChatReplies = async (req, res) => {
+    try {
         const id = req.query.chatId;
         console.log(id);
         let travelChat = await TravelChatModel.findById(id);
-        res.json({ "success": true, "replies" : travelChat["replies"] });
+        res.json({ "success": true, "replies": travelChat["replies"] });
     }
-    catch (err){
+    catch (err) {
         res.json({ "success": false, "message": err.toString() });
     }
 }
 
-exports.postReplyChat = async (req,res) => {
-    try{
+exports.postReplyChat = async (req, res) => {
+    try {
         const id = req.query.chatId;
         const data = req.body;
         let travelChatReply = new ReplyPostModel(data);
@@ -152,7 +149,7 @@ exports.postReplyChat = async (req,res) => {
         console.log(travelChat);
         res.json({ "success": true });
     }
-    catch (err){
+    catch (err) {
         res.json({ "success": false, "message": err.toString() });
     }
 }

@@ -1,10 +1,6 @@
-// const foodItems = require("../models/foodItems");
 const foodItemsModel = require("../models/foodItems");
 const foodOutletsModel = require("../models/foodOutlets");
-// const timeModel = require("../models/timeModel");
 const LastUpadte = require("../models/lastUpdate");
-// var multiparty = require("multiparty");
-// var form = new multiparty.Form();
 const csv = require("csvtojson");
 const LastUpdate = require("../models/lastUpdate");
 const {uploadFilePath} = require("../constants");
@@ -70,7 +66,6 @@ exports.createItem = async (req, res) => {
             const google = new Scraper({
               puppeteer: {
                 headless: true,
-                
               }
             });
             const imageResults = await google.scrape(newFoodOutlet.menu[i]["name"], 5);
