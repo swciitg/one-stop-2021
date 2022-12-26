@@ -1,6 +1,8 @@
 
 const {spardhaScoreModel} = require("../models/gcScoreboardModel")
+// Spardha
 
+// Spardha - user
 exports.createSpardhaEvent = async (req,res) => {
     try{
         let spardhaEvent = new spardhaScoreModel(req.body);
@@ -11,7 +13,7 @@ exports.createSpardhaEvent = async (req,res) => {
         res.status(400).json({"success" : false,"message" : err.toString()});
     }
 };
-
+// Spardha - admin
 exports.addResultSpardha = async (req,res) => {
     try{
         let spardhaEvent = new spardhaScoreModel(req.body);

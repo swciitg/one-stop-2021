@@ -1,5 +1,40 @@
 const mongoose = require("mongoose");
 
+const hostelPointsSchema = new mongoose.Schema({
+    "name" : {
+        type: String,
+        required: true
+    },
+    "spardha_points": {
+        type: Number,
+        required: true
+    },
+    "kriti_points": {
+        type: Number,
+        required: true
+    },
+    "manthan_points": {
+        type: Number,
+        required: true
+    }
+});
+
+const gcCompetitionsSchema = new mongoose.Schema({
+    // store all the event names in the array for each competition
+    "spardha_events" : {
+        type: Array,
+        required: true
+    },
+    "kriti_events" : {
+        type: Array,
+        required: true
+    },
+    "manthan_events" : {
+        type: Array,
+        required: true
+    }
+});
+
 const spardhaModelSchema = new mongoose.Schema({
     "event" : {
         type: String,
@@ -18,26 +53,23 @@ const spardhaModelSchema = new mongoose.Schema({
         required: true
     },
     "date": {
-        type: String,
+        type: Date,
         required: true
     },
-    "time": {
+    "status": {
         type: String,
-        required: true
+        required: true,
+        enum: ["ok","cancelled","postponed"]
     },
     "venue": {
         type: String,
         required: true
     },
-    "matchType": {
-        type: String,
-        enum: ["One-One","Many-One"]
-    },
-    "participatingHostels" : {
+    "hostels" : {
         type: Array,
         required: true
     },
-    "result_added" : {
+    "resultAdded" : {
         type: Boolean,
         default: false
     },
@@ -65,5 +97,5 @@ const spardhaWinnerSchema = new mongoose.Schema({
 });
 
 
-module.exports = {"spardhaScoreModel" : mongoose.model(spardhaModelSchema)}
+module.exports = {"spardhaScoreModel" : mongoose.model(spardhaModelSchema),"gcEventsModel" : mongoose.model(gcCompetitionsSchema),"hostelPointsModel":mongoose.model(hostelPointsSchema)};
 

@@ -27,6 +27,7 @@ gcScoreboardRouter.use((req, res, next) => {
             let decoded = jwt.verify(token, accessjwtsecret);
             if (subPoints.includes('admin')) {
                 if (decoded["email"] !== undefined && checkAdmin(decoded["email"]).length !== 0) {
+                    req.body["email"] = decoded["email"];
                     next();
                 }
                 else {
