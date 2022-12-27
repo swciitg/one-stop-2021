@@ -165,7 +165,9 @@ exports.postReplyChat = async (req, res) => {
         // console.log(travelChat);
         TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
             console.log(travelPost["travelDateTime"]);
-            sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
+            if(travelPost["email"]!==data["email"]){ // when other people writes a message
+                sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
+            }
         });
         res.json({ "success": true });
     }
@@ -173,4 +175,3 @@ exports.postReplyChat = async (req, res) => {
         res.json({ "success": false, "message": err.toString() });
     }
 }
-
