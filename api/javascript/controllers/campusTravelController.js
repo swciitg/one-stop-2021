@@ -11,7 +11,7 @@ const sendMailForTravelPostReply = async (replier_name, reciever_email,reciever_
         from: process.env.SWC_EMAIL,
         to: reciever_email,
         subject: 'New Reply on your travel post, Cab sharing : OneStop IITG',
-        html: `Hello 👋, <br><b>${reciever_name}</b>. you have got a new reply on your upcoming travel post from ${from} to ${to}, Travel Date & Time : ${travelDateTime.toLocaleString("en-US")}. Replier name : ${replier_name}<br><br>Regards,<br>Team SWC`
+        html: `Hello 👋, <b>${reciever_name}</b>. You have got a new reply on your upcoming travel post.<br>Travelling from ${from} to ${to} <br>Travel Date & Time : ${travelDateTime.toLocaleString("en-US")}<br>Replier name : ${replier_name}<br><br>Regards,<br>Team SWC`
     });
 }
 
@@ -165,7 +165,9 @@ exports.postReplyChat = async (req, res) => {
         // console.log(travelChat);
         TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
             console.log(travelPost["travelDateTime"]);
-            sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
+            if(travelPost["email"]!==data["email"]){ // when other people writes a message
+                sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
+            }
         });
         res.json({ "success": true });
     }
@@ -173,4 +175,3 @@ exports.postReplyChat = async (req, res) => {
         res.json({ "success": false, "message": err.toString() });
     }
 }
-
