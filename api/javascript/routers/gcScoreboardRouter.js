@@ -93,6 +93,7 @@ gcScoreboardRouter.post("/gc/spardha/admin/event-schedule/:id",spardhaMiddleware
 gcScoreboardRouter.get("/gc/spardha/event-schedules",getEventsScheduled)
 
 gcScoreboardRouter.get("/gc/spardha/event-results",getEventsResult);
+
 // gcScoreboardRouter.post("/gc/spardha/admin/event-result/:id",spardhaMiddleware,)
 
 module.exports = { gcScoreboardRouter };
