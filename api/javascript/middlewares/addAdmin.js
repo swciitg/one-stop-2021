@@ -6,23 +6,23 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
-
-const super_admins = process.env.SUPER_ADMINS.split(',');
 // console.log({super_admins})
 
-const isSuperAdmin = (email) => {
-    if (super_admins.includes(email)) {
-        return true;
+exports.checkIfModeratorMiddleware = (req,res,next) => {
+    if(req.headers["moderator-key"]===process.env.MODERATOR_KEY){
+        next();
     }
-    return false;
+    else{
+        res.status(401).json({"success" : false,"message" : "You are not authorized moderator"});
+    }
 }
 
 
 exports.checkSuperAdmin = async (req, res, next) => {
     try {
-        const email = req.body.login_email;
+        const email = req.body.email;
         console.log("email = ", email);
-        const is_allowed = isSuperAdmin(email);
+        const is_allowed = postAdminsMiddleware(email);
         if(is_allowed){
             next();
         }else{

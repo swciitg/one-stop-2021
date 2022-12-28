@@ -1,66 +1,97 @@
-const dotenv = require("dotenv");
-dotenv.config();
-const { spardhaScoreModel } = require("../models/gcScoreboardModel")
-const jwt = require("jsonwebtoken");
-const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
-const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
-const { gcCompetitionsModel, spardhaEventModel } = require("../models/gcScoreboardModel");
-console.log(accessjwtsecret, refreshjwtsecret);
-const { gcScoreboard } = require("../middlewares/gcBoradAuthAndAccess");
-const { checkSuperAdmin } = require("../middlewares/addAdmin");
-// const {spardhaEventModel} = require("../models/gcScoreboardModel");
+const { getGcScoreboardStore, checkIfAdmin, checkIfBoardAdmin } = require("../helpers/gcScorebaordHelpers");
+const { gcCompetitionsStoreModel, spardhaEventModel } = require("../models/gcScoreboardModel");
 
-
-async function checkAdmin(email) {
-    let authEvents = [];
-
-    const array = await gcCompetitionsModel.find();
-    const spardha_admins = array[0].spardha_admins;
-    const kriti_admins = array[0].kriti_admins;
-    const manthan_admins = array[0].manthan_admins;
-
-
-    if (spardha_admins.includes(email)) authEvents.push("spardha");
-    if (kriti_admins.includes(email)) authEvents.push("kriti");
-    if (manthan_admins.includes(email)) authEvents.push("manthan");
-
-    return authEvents;
-}
-
-
-async function checkBoardAdmin(email) {
-    let authEvents = [];
-
-    const array = await gcCompetitionsModel.find();
-    const spardha_board_admins = array[0].spardha_board_admins;
-    const kriti_board_admins = array[0].kriti_board_admins;
-    const manthan_board_admins = array[0].manthan_board_admins;
-
-    if (spardha_board_admins.includes(email)) authEvents.push("spardha_board");
-    if (kriti_board_admins.includes(email)) authEvents.push("kriti_board");
-    if (manthan_board_admins.includes(email)) authEvents.push("manthan_board");
-
-    return authEvents;
-}
-
-const super_admins = process.env.SUPER_ADMINS.split(',');
-// console.log({super_admins})
-
-const isSuperAdmin = (email) => {
-    if (super_admins.includes(email)) {
-        return true;
-    }
+async function ifValidEvent(event,competition){
+    let gcCompetitionsStore = await getGcScoreboardStore();
+    if(competition==="spardha" && gcCompetitionsStore.spardha_events.includes(event) ||
+    competition==="manthan" && gcCompetitionsStore.manthan_events.includes(event) ||
+    competition==="kriti" && gcCompetitionsStore.kriti_events.includes(event)
+    ) return true;
     return false;
 }
 
-
-
-// Spardha
-
 // Spardha - user
-exports.createSpardhaEvent = async (req, res) => {
+
+exports.getEventsScheduled = async (req, res) => {
     try {
-        let spardhaEvent = new spardhaScoreModel(req.body);
+        const query_email = req.query.email;
+        if (query_email) {
+            const events = await spardhaEventModel.find({ posterEmail: query_email, resultAdded: false });
+            res.status(200).json({ "success": true, "details": events });
+        }
+        else {
+            const events = await spardhaEventModel.find({ resultAdded: false });
+            res.status(200).json({ "success": true, "details": events });
+        }
+    } catch (err) {
+        res.status(401).json({ "success": false, "message": err.toString() });
+    }
+}
+
+exports.getEventsResult = async (req, res) => {
+    try {
+        const query_email = req.query.email;
+        if (query_email) {
+            const events = await spardhaEventModel.find({ posterEmail: query_email, resultAdded: true });
+            res.status(200).json({ "success": true, "details": events });
+        }
+        else {
+            const events = await spardhaEventModel.find({ resultAdded: true });
+            res.status(200).json({ "success": true, "details": events });
+        }
+    } catch (err) {
+        res.status(401).json({ "success": false, "message": err.toString() });
+    }
+}
+
+exports.postSpardhaEvents= async (req, res) => {
+    try {
+        let spardhaEvents = req.body.events;
+        if(spardhaEvents===undefined){
+            throw new Error("Not valid parameters in request");
+        }
+        const gcScoreboardStore = await getGcScoreboardStore();
+        gcScoreboardStore.spardha_events = spardhaEvents;
+        await gcScoreboardStore.save();
+        res.json({"success" : true, "message" : "Spardha events posted successfully","details" : gcScoreboardStore.spardha_events});
+    } catch (err) {
+        res.status(400).json({ "success": false, "message": err.toString() });
+    }
+}
+
+exports.getSpardhaEvents = async (req,res) => {
+    try{
+        let gcCompetitionsStore = await getGcScoreboardStore();
+        res.json({"success" : true, "details" : gcCompetitionsStore.spardha_events});
+    }
+    catch(err){
+        res.status(500).json({"success" : false,"message" : err.toString()});
+    }
+}
+
+exports.getSpardhaEventsSchdedules = async (req, res) => {
+    try{
+        // console.log(typeof(req.query.forAdmin));
+        // console.log(req.body.email);
+        console.log(await checkIfAdmin(req.body.email,"spardha"), await checkIfBoardAdmin(req.body.email,"spardha"));
+        const events = await spardhaEventModel.find(
+            req.query.forAdmin!=="true" ? {} :  (await checkIfAdmin(req.body.email,"spardha") || await checkIfBoardAdmin(req.body.email,"spardha") ? {} : {"posterEmail" : req.query.email})
+        ).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
+        res.status(200).json({ "success": true, "details": events });
+    }
+    catch(err){
+        res.status(500).json({ "success": true, "message" : err.toString() });
+    }
+};
+
+exports.postSpardhaEventSchedule = async (req, res) => {
+    try {
+        if(await ifValidEvent(req.body.event,"spardha")===false){
+            throw new Error("Event not in list of spardha events");
+        }
+        req.body.date = new Date(req.body.date);
+        req.body.posterEmail = req.body.email;
+        let spardhaEvent = new spardhaEventModel(req.body);
         await spardhaEvent.save();
         res.json({ "success": true });
     }
@@ -68,50 +99,11 @@ exports.createSpardhaEvent = async (req, res) => {
         res.status(400).json({ "success": false, "message": err.toString() });
     }
 };
-
-
-exports.getEventsScheduled = async (req,res)=>{
-    try{
-        const query_email = req.query.email;
-        if(query_email){
-            const events = await spardhaEventModel.find({posterEmail:query_email, resultAdded:false});
-            res.status(200).json({ "success": true, "details": events });
-        }
-        else{
-            const events = await spardhaEventModel.find({resultAdded:false});
-            res.status(200).json({ "success": true, "details": events });
-        }
-    }catch(err){
-        res.status(401).json({ "success": false, "message": err.toString() });
-    }
-}
-
-exports.getEventsResult = async (req,res)=>{
-    try{
-        const query_email = req.query.email;
-        if(query_email){
-            const events = await spardhaEventModel.find({posterEmail:query_email, resultAdded:true});
-            res.status(200).json({ "success": true, "details": events });
-        }
-        else{
-            const events = await spardhaEventModel.find({resultAdded:true});
-            res.status(200).json({ "success": true, "details": events });
-        }
-    }catch(err){
-        res.status(401).json({ "success": false, "message": err.toString() });
-    }
-}
-
-
-exports.getAllEvents = async (req, res) => {
-    const events = await spardhaEventModel.find();
-    res.status(200).json({ "success": true, "details": events });
-}
 
 // Spardha - admin
 exports.addResultSpardha = async (req, res) => {
     try {
-        let spardhaEvent = new spardhaScoreModel(req.body);
+        let spardhaEvent = new spardhaEventSchedule(req.body);
         await spardhaEvent.save();
         res.json({ "success": true });
     }
@@ -120,90 +112,39 @@ exports.addResultSpardha = async (req, res) => {
     }
 };
 
-exports.newEvent = async (req, res) => {
+
+exports.addEventSchedule = async (req, res) => {
     try {
-        const email = req.body.login_email;
-        let eventDateTime = new Date(req.body.date);
-
-        const arr = req.body;
-        const newEvent = await spardhaEventModel.create({
-            event: arr.event,
-            stage: arr.stage,
-            category: arr.category,
-            posterEmail: email,
-            eventDateTime: eventDateTime,
-            status: arr.status,
-            venue: arr.venue,
-            hostels: arr.hostels
-        })
-
-        if (newEvent) {
-            let gcEvents = await gcCompetitionsModel.find();
-            let arr = gcEvents[0];
-            arr.spardha_events.push(newEvent._id);
-            const addToGcEvents = await gcCompetitionsModel.findByIdAndUpdate(arr._id, gcEvents[0]);
-            console.log(addToGcEvents);
-            if (addToGcEvents) {
-                res.status(200).json({ "success": true, "details": newEvent });
-            }
-            else {
-                console.log("error");
-            }
-        }
+        req.body.posterEmail = req.body.email;
+        let spardhaEventSchedule = new spardhaEventSchedule(req.body);
+        console.log(spardhaEventSchedule);
+        res.json({});
     } catch (err) {
         res.status(401).json({ "success": false, "message": err.toString() });
     }
 }
 
-
-exports.addEventDetail = async (req, res) => {
+exports.addEventResult = async (req, res) => {
     try {
-        const event_id = req.params.id;
-        let spardha_event = await spardhaEventModel.findById(event_id);
-
-        if (spardha_event) {
-            if (spardha_event.resultAdded === false) {
-                let eventDateTime = new Date(req.body.date);
-                spardha_event.eventDateTime = eventDateTime;
-                console.log(spardha_event)
-                const updatingTheEvent = await spardhaEventModel.findByIdAndUpdate(event_id, spardha_event);
-
-                res.status(200).json({ "success": true, "details": updatingTheEvent });
-            }
-            else {
-                throw new Error("Event already completed");
-            }
-        }
-        else {
-            throw new Error("Event Not Found");
-        }
-
-    } catch (err) {
-        res.status(401).json({ "success": false, "message": err.toString() });
-    }
-}
-
-exports.addEventResult = async(req,res)=>{
-    try{
         const id = req.params.id;
-        const login_email = req.body.login_email;
+        const email = req.body.email;
 
         const event = await spardhaEventModel.findById(id);
 
-        if(!event){
+        if (!event) {
             throw new Error("Event Not Found")
         }
 
-        else if(event.resultAdded){
+        else if (event.resultAdded) {
             throw new Error("Result Already Added");
         }
-        else{
+        else {
             const details = req.body;
-            for(var i = 0; i<details.length; i++){
-                
+            for (var i = 0; i < details.length; i++) {
+
             }
         }
-    }catch(err){
+    } catch (err) {
         res.status(401).json({ "success": false, "message": err.toString() });
     }
 }
@@ -235,123 +176,51 @@ exports.deleteAnEventSchedule = async (req, res) => {
 }
 
 
-//Super Admin
+//Add admins
 
-exports.addEventAdmin = async (req, res) => {
+exports.postCompetitionAdmins = async (req, res) => {
     try {
-        const event = req.query.competition;
+        const competition = req.query.competition;
         const emails = req.body.emails;
-
-        let array = await gcCompetitionsModel.find();
-        let spardha_admins = array[0].spardha_admins;
-        let kriti_admins = array[0].kriti_admins;
-        let manthan_admins = array[0].manthan_admins;
-        let spardha_board_admins = array[0].spardha_board_admins;
-        let kriti_board_admins = array[0].kriti_board_admins;
-        let manthan_board_admins = array[0].manthan_board_admins;
-
-        for (var i = 0; i < emails.length; i++) {
-            let email = emails[i];
-
-            let adminArr = spardha_admins.includes(email) || kriti_admins.includes(email) || manthan_admins.includes(email);
-
-            let board_adminArr = spardha_board_admins.includes(email) || kriti_board_admins.includes(email) || manthan_board_admins.includes(email);
-
-            if ((adminArr || board_adminArr || isSuperAdmin(email))) {
-                res.status(401).json({ "success": false, "message": `${email} already existed` });
-                return;
-            }
-            else {
-
-                if (event === "spardha") {
-                    spardha_admins.push(email);
-                }
-                else if (event === "kriti") {
-                    kriti_admins.push(email);
-                }
-                else if (event == "manthan") {
-                    manthan_admins.push(email);
-                }
-            }
+        if(emails===undefined || competition===undefined){
+            throw new Error("Not valid parameters in request");
         }
+        const gcScoreboardStore = await getGcScoreboardStore();
+        if (competition == "spardha") gcScoreboardStore.spardha_admins = emails;
+        else if (competition == "manthan") gcScoreboardStore.manthan_admins = emails;
+        else if(competition=="kriti") gcScoreboardStore.kriti_admins = emails;
+        console.log(gcScoreboardStore);
 
-        array[0].spardha_admins = spardha_admins;
-        array[0].kriti_admins = kriti_admins;
-        array[0].manthan_admins = manthan_admins;
+        await gcCompetitionsStoreModel.findByIdAndUpdate(gcScoreboardStore._id, gcScoreboardStore);
 
-        const process = await gcCompetitionsModel.findByIdAndUpdate(array[0]._id, array[0]);
-
-        if (process) {
-            res.status(200).json({ "success": true, "message": `users added successfully to ${event} admin` });
-            return;
-        }
+        res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} admin list` });
 
     } catch (err) {
-        res.status(401).json({ "success": false, "message": err.toString() });
+        res.status(400).json({ "success": false, "message": err.toString() });
         return;
     }
 }
 
 
 
-exports.addBoardAdmin = async (req, res) => {
-
-
+exports.postCompetitionBoardAdmins = async (req, res) => {
     try {
-        const event = req.query.competition;
+        const competition = req.query.competition;
         const emails = req.body.emails;
-
-        let array = await gcCompetitionsModel.find();
-        let spardha_admins = array[0].spardha_admins;
-        let kriti_admins = array[0].kriti_admins;
-        let manthan_admins = array[0].manthan_admins;
-        let spardha_board_admins = array[0].spardha_board_admins;
-        let kriti_board_admins = array[0].kriti_board_admins;
-        let manthan_board_admins = array[0].manthan_board_admins;
-
-        for (var i = 0; i < emails.length; i++) {
-            let email = emails[i];
-
-            let adminArr = spardha_admins.includes(email) || kriti_admins.includes(email) || manthan_admins.includes(email);
-
-            let board_adminArr = spardha_board_admins.includes(email) || kriti_board_admins.includes(email) || manthan_board_admins.includes(email);
-
-            if ((adminArr || board_adminArr || isSuperAdmin(email))) {
-                res.status(401).json({ "success": false, "message": `${email} already existed` });
-                return;
-            }
-            else {
-
-                if (event === "spardha") {
-                    spardha_board_admins.push(email);
-
-                }
-
-                else if (event === "kriti") {
-                    kriti_board_admins.push(email);
-
-                }
-                else if (event == "manthan") {
-                    manthan_board_admins.push(email);
-
-                }
-            }
-
+        if(emails===undefined || competition===undefined){
+            throw new Error("Not valid parameters in request");
         }
+        const gcScoreboardStore = await getGcScoreboardStore();
+        if (competition == "spardha") gcScoreboardStore.spardha_board_admins = emails;
+        else if (competition == "manthan") gcScoreboardStore.manthan_board_admins = emails;
+        else if(competition=="kriti") gcScoreboardStore.kriti_board_admins = emails;
+        console.log(gcScoreboardStore);
+        await gcCompetitionsStoreModel.findByIdAndUpdate(gcScoreboardStore._id, gcScoreboardStore);
 
-        array[0].spardha_board_admins = spardha_board_admins;
-        array[0].kriti_board_admins = kriti_board_admins;
-        array[0].manthan_board_admins = manthan_board_admins;
-
-        const process = await gcCompetitionsModel.findByIdAndUpdate(array[0]._id, array[0]);
-
-        if (process) {
-            res.status(200).json({ "success": true, "message": `users added successfully to ${event} board admin` });
-            return;
-        }
+        res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} board admin list` });
 
     } catch (err) {
-        res.status(401).json({ "success": false, "message": err.toString() });
+        res.status(400).json({ "success": false, "message": err.toString() });
         return;
     }
 }
