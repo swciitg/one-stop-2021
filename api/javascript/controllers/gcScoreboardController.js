@@ -12,22 +12,6 @@ async function ifValidEvent(event,competition){
 
 // Spardha - user
 
-exports.getEventsScheduled = async (req, res) => {
-    try {
-        const query_email = req.query.email;
-        if (query_email) {
-            const events = await spardhaEventModel.find({ posterEmail: query_email, resultAdded: false });
-            res.status(200).json({ "success": true, "details": events });
-        }
-        else {
-            const events = await spardhaEventModel.find({ resultAdded: false });
-            res.status(200).json({ "success": true, "details": events });
-        }
-    } catch (err) {
-        res.status(401).json({ "success": false, "message": err.toString() });
-    }
-}
-
 exports.getEventsResult = async (req, res) => {
     try {
         const query_email = req.query.email;
