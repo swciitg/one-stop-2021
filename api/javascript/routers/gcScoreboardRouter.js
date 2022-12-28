@@ -74,8 +74,6 @@ gcScoreboardRouter.post("/gc/spardha/event-schedule",gcRequestsMiddleware,postSp
 
 gcScoreboardRouter.delete("/gc/spardha/event-schedule/:id",gcRequestsMiddleware,deleteAnEventSchedule);
 
-gcScoreboardRouter.get("/gc/spardha/event-schedules",getEventsScheduled);
-
 gcScoreboardRouter.get("/gc/spardha/event-results",getEventsResult);
 
 // gcScoreboardRouter.post("/gc/spardha/admin/event-result/:id",spardhaMiddleware,)
