@@ -3,50 +3,32 @@ const gcScoreboardRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
-const spardhaadmins = process.env.SPARDHA_ADMINS.split(',');
-const kritiadmins = process.env.KRITI_ADMINS.split(',');
-const manthanadmins = process.env.MANTHAN_ADMINS.split(',');
-console.log(accessjwtsecret,refreshjwtsecret);
+console.log(accessjwtsecret, refreshjwtsecret);
+const { gcScoreboardAuthMiddleware } = require("../middlewares/gcScoreboardAuth");
+const {checkIfModeratorMiddleware} = require("../middlewares/addAdmin");
+const { deleteAnEventSchedule, getEventsScheduled, getEventsResult, postCompetitionAdmins, postCompetitionBoardAdmins,  postSpardhaEvents, getSpardhaEvents, postSpardhaEventSchedule, getSpardhaEventsSchdedules} = require("../controllers/gcScoreboardController");
+const { gcRequestsMiddleware } = require("../middlewares/gcChampionshipMiddlewares");
+const { getGcScoreboardStore } = require("../helpers/gcScorebaordHelpers");
 
-function checkAdmin(email) {
+async function getAuthEvents(email){
+    let gcCompetitionsStore = await getGcScoreboardStore();
     let authEvents = [];
-    if (spardhaadmins.includes(email)) authEvents.push("spardha");
-    if (kritiadmins.includes(email)) authEvents.push("kriti");
-    if (manthanadmins.includes(email)) authEvents.push("manthan");
+    if(gcCompetitionsStore.spardha_admins.includes(email) || gcCompetitionsStore.spardha_board_admins.includes(email)){
+        authEvents.push("spardha");
+    }
+    if(gcCompetitionsStore.manthan_admins.includes(email) || gcCompetitionsStore.manthan_board_admins.includes(email)){
+        authEvents.push("manthan");
+    }
+    if(gcCompetitionsStore.kriti_admins.includes(email) || gcCompetitionsStore.kriti_board_admins.includes(email)){
+        authEvents.push("kriti");
+    }
+    console.log(authEvents);
     return authEvents;
 }
 
-gcScoreboardRouter.use((req, res, next) => {
-    try {
-        let subPoints = req.originalUrl.split('/');
-        if (subPoints.includes('login') === false && subPoints.includes('gen-accesstoken') === false) {
-            if (!req.headers.authorization) {
-                throw new Error("No Token Found");
-            }
-            let token = req.headers.authorization.split(' ').slice(-1)[0];
-            let decoded = jwt.verify(token, accessjwtsecret);
-            if (subPoints.includes('admin')) {
-                if (decoded["email"] !== undefined && checkAdmin(decoded["email"]).length !== 0) {
-                    req.body["email"] = decoded["email"];
-                    next();
-                }
-                else {
-                    throw new Error("You are not authorized admin");
-                }
-            }
-            else if (decoded["email"] !== undefined) {
-                req.body["email"] = decoded["email"];
-                next();
-            }
-        }
-        else next();
-    }
-    catch (err) {
-        res.status(401).json({ "success" : false,"message":  err.toString()});
-    }
-});
 
-gcScoreboardRouter.post("/gc/login", (req, res) => {
+
+gcScoreboardRouter.post("/gc/login", async (req, res) => {
     try {
         let email = req.body.email;
         if (email === undefined) {
@@ -55,8 +37,8 @@ gcScoreboardRouter.post("/gc/login", (req, res) => {
         const accessToken = jwt.sign({ "email": email }, accessjwtsecret, { expiresIn: "1 days" });
         console.log(jwt.verify(accessToken, accessjwtsecret));
         const refreshToken = jwt.sign({ "email": email }, refreshjwtsecret, { expiresIn: "7 days" });
-        const authEvents = checkAdmin(email);
-        const isAdmin = authEvents.length === 0 ? false : true;
+        const authEvents = await getAuthEvents(email);
+        const isAdmin = authEvents.length===0 ? false : true;
         res.json({ "success": true, accessToken, refreshToken, isAdmin, authEvents });
     }
     catch (err) {
@@ -75,5 +57,27 @@ gcScoreboardRouter.post("/gc/gen-accesstoken", (req, res) => {
         res.status(401).json({ "success": false, "message": "Invalid Token or Token Expired" });
     }
 });
+
+gcScoreboardRouter.post("/gc/competition-admins", checkIfModeratorMiddleware, postCompetitionAdmins);
+
+gcScoreboardRouter.post("/gc/competition-board-admins", checkIfModeratorMiddleware, postCompetitionBoardAdmins);
+
+gcScoreboardRouter.get("/gc/spardha/all-events",getSpardhaEvents);
+
+gcScoreboardRouter.post("/gc/spardha/all-events",checkIfModeratorMiddleware, postSpardhaEvents);
+
+gcScoreboardRouter.use(gcScoreboardAuthMiddleware); // check tokens for all below routes with this middleware
+
+gcScoreboardRouter.get("/gc/spardha/event-schedule",getSpardhaEventsSchdedules);
+
+gcScoreboardRouter.post("/gc/spardha/event-schedule",gcRequestsMiddleware,postSpardhaEventSchedule);
+
+gcScoreboardRouter.delete("/gc/spardha/event-schedule/:id",gcRequestsMiddleware,deleteAnEventSchedule);
+
+gcScoreboardRouter.get("/gc/spardha/event-schedules",getEventsScheduled);
+
+gcScoreboardRouter.get("/gc/spardha/event-results",getEventsResult);
+
+// gcScoreboardRouter.post("/gc/spardha/admin/event-result/:id",spardhaMiddleware,)
 
 module.exports = { gcScoreboardRouter };

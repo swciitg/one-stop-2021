@@ -19,56 +19,85 @@ const hostelPointsSchema = new mongoose.Schema({
     }
 });
 
-const gcCompetitionsSchema = new mongoose.Schema({
+const gcCompetitionsStoreSchema = new mongoose.Schema({
     // store all the event names in the array for each competition and admins
     "spardha_events" : {
-        type: Array
+        type: Array,
+        default:[]
     },
     "kriti_events" : {
-        type: Array
+        type: Array,
+        default:[]
     },
     "manthan_events" : {
-        type: Array
+        type: Array,
+        default:[]
     },
     "spardha_admins": {
-        type: Array
+        type: Array,
+        default:[]
     },
     "kriti_admins": {
-        type: Array
+        type: Array,
+        default:[]
     },
     "manthan_admins": {
-        type: Array
+        type: Array,
+        default:[]
     },
     "spardha_board_admins": {
-        type: Array
+        type: Array,
+        default:[]
     },
     "kriti_board_admins": {
-        type: Array
+        type: Array,
+        default:[]
     },
     "manthan_board_admins": {
-        type: Array
+        type: Array,
+        default:[]
     }
 });
 
-const spardhaModelSchema = new mongoose.Schema({
+const spardhaResultsSchema = new mongoose.Schema({
+    "name" : {
+        type: String,
+        required: true
+    },
+    "points" : {
+        type: Number,
+        required: true
+    },
+    "primaryScore" : {
+        type: String,
+        required: true
+    },
+    "secondaryScore" : {
+        type: String
+    }
+});
+
+const spardhaEventModelSchema = new mongoose.Schema({
     "event" : {
         type: String,
         required: true
     },
     "stage" : {
         type: String,
-        enum: ["Qualifiers","Quater-Final","Semi-Final","Final"]
+        enum: ["Qualifiers","Quater-Final","Semi-Final","Final"],
+        required: true
     },
     "category": {
         type: String,
-        enum: ["Men","Women","Men + Women"]
+        enum: ["Men","Women","Men + Women"],
+        required: true
     },
     "posterEmail": {
         type: String, 
         required: true
     },
-    "date": {
-        type: Date,
+    "date" : {
+        type: Date, 
         required: true
     },
     "status": {
@@ -88,29 +117,13 @@ const spardhaModelSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    "winners" : {
-        type: [[spardhaWinnerSchema]]
-    }
-});
-
-const spardhaWinnerSchema = new mongoose.Schema({
-    "name" : {
-        type: String,
-        required: true
-    },
-    "points" : {
-        type: Number,
-        required: true
-    },
-    "primaryScore" : {
-        type: String,
-        required: true
-    },
-    "secondaryScore" : {
-        type: String
+    "results" : {
+        type: [[spardhaResultsSchema]]
     }
 });
 
 
-module.exports = {"spardhaScoreModel" : mongoose.model(spardhaModelSchema),"gcEventsModel" : mongoose.model(gcCompetitionsSchema),"hostelPointsModel":mongoose.model(hostelPointsSchema)};
+
+
+module.exports = {"spardhaEventModel" : mongoose.model("spardhaEventSchedule",spardhaEventModelSchema),"gcCompetitionsStoreModel" : mongoose.model("gcCompetitionsStore",gcCompetitionsStoreSchema),"hostelPointsModel":mongoose.model("hostelPoint",hostelPointsSchema), "spardhaResultsModel":mongoose.model("spardhaResults",spardhaResultsSchema)};
 
