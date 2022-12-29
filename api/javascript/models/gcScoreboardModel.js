@@ -117,6 +117,9 @@ const spardhaEventModelSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    "victoryStatement" : {
+        type: String
+    },
     "results" : {
         type: [[spardhaResultsSchema]]
     }
