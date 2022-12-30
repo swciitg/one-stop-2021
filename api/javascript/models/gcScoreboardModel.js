@@ -84,7 +84,7 @@ const spardhaEventModelSchema = new mongoose.Schema({
     },
     "stage" : {
         type: String,
-        enum: ["Qualifiers","Quater-Finals","Semi-Final","Finals","3rd vs 4th"],
+        enum: ["Qualifiers","Quater-Finals","Semi-Finals","Finals","3rd vs 4th"],
         required: true
     },
     "category": {
