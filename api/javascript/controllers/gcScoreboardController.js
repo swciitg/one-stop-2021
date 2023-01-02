@@ -1,5 +1,5 @@
 const { getGcScoreboardStore, checkIfAdmin, checkIfBoardAdmin } = require("../helpers/gcScorebaordHelpers");
-const { gcCompetitionsStoreModel, spardhaEventModel } = require("../models/gcScoreboardModel");
+const { gcCompetitionsStoreModel, spardhaEventModel, spardhaOverallStandingsModel, gcOverallHostelPoints, gcHostelWisePoints } = require("../models/gcScoreboardModel");
 
 async function ifValidEvent(event,competition){
     let gcCompetitionsStore = await getGcScoreboardStore();
@@ -62,21 +62,12 @@ exports.getSpardhaEventsSchdedules = async (req, res) => {
         if(req.query.forAdmin==="true" && await checkIfBoardAdmin(req.body.email,"spardha")===false){
             filters["posterEmail"]=req.body.email;
         }
-        if(req.query.date!==undefined){
-            let lowerDate = new Date(req.query.date);
-            let upperDate = new Date(req.query.date);
-            upperDate.setDate(upperDate.getDate() + 1);
-            filters["date"]={
-                $gte: lowerDate,
-                $lt: upperDate
-            }
-        }
         console.log(filters);
         const events = await spardhaEventModel.find(filters).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
         res.status(200).json({ "success": true, "details": events });
     }
     catch(err){
-        res.status(500).json({ "success": true, "message" : err.toString() });
+        res.status(500).json({ "success": false, "message" : err.toString() });
     }
 };
 
@@ -108,15 +99,52 @@ exports.addResultSpardha = async (req, res) => {
     }
 };
 
+exports.getGcOverallStandings = async (req,res) => {
+    try{
+        let gcCompetitionsStore = await getGcScoreboardStore();
+        let gcStandings = [];
+        gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
+            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"totalPoints" : hostelGcPoints["spardha_points"] + hostelGcPoints["kriti_points"] + hostelGcPoints["manthan_points"]});
+        });
+        res.json({"success" : true,"details" : gcStandings});
+    }
+    catch(err){
+        res.status(500).json({ "success": false, "message": err.toString() });
+    }
+}
 
-exports.addEventSchedule = async (req, res) => {
+exports.getSpardhaOverallStandings = async (req,res) => {
+    try{
+        let gcCompetitionsStore = await getGcScoreboardStore();
+        let gcStandings = [];
+        gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
+            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"totalPoints" : hostelGcPoints["spardha_points"]});
+        });
+        res.json({"success" : true,"details" : gcStandings});
+    }
+    catch(err){
+        res.status(500).json({ "success": false, "message": err.toString() });
+    }
+}
+
+
+exports.postSpardhaOverallStanding = async (req, res) => {
     try {
         req.body.posterEmail = req.body.email;
-        let spardhaEventSchedule = new spardhaEventSchedule(req.body);
-        console.log(spardhaEventSchedule);
-        res.json({});
+        let spardhaOverallStanding = spardhaOverallStandingsModel(req.body);
+        await spardhaOverallStanding.save();
+        let gcCompetitionsStore = await getGcScoreboardStore();
+        req.body.standings.forEach((hostelOverallStanding) => {
+            gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
+                if(hostelGcPoints["hostelName"]===hostelOverallStanding["hostelName"]){
+                    hostelGcPoints["spardha_points"]+=hostelOverallStanding["points"];
+                }
+            });
+        });
+        await gcCompetitionsStore.save();
+        res.json({"success" : true,"details" : spardhaOverallStanding});
     } catch (err) {
-        res.status(401).json({ "success": false, "message": err.toString() });
+        res.status(400).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -186,9 +214,7 @@ exports.postCompetitionAdmins = async (req, res) => {
         else if (competition == "manthan") gcScoreboardStore.manthan_admins = emails;
         else if(competition=="kriti") gcScoreboardStore.kriti_admins = emails;
         console.log(gcScoreboardStore);
-
         await gcCompetitionsStoreModel.findByIdAndUpdate(gcScoreboardStore._id, gcScoreboardStore);
-
         res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} admin list` });
 
     } catch (err) {
