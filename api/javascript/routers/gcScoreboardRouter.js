@@ -6,7 +6,7 @@ const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 console.log(accessjwtsecret, refreshjwtsecret);
 const { gcScoreboardAuthMiddleware } = require("../middlewares/gcScoreboardAuth");
 const {checkIfModeratorMiddleware} = require("../middlewares/addAdmin");
-const { deleteAnEventSchedule, getEventsScheduled, getEventsResult, postCompetitionAdmins, postCompetitionBoardAdmins,  postSpardhaEvents, getSpardhaEvents, postSpardhaEventSchedule, getSpardhaEventsSchdedules} = require("../controllers/gcScoreboardController");
+const { deleteAnEventSchedule, getEventsScheduled, getEventsResult, postCompetitionAdmins, postCompetitionBoardAdmins,  postSpardhaEvents, getSpardhaEvents, postSpardhaEventSchedule, getSpardhaEventsSchdedules, postSpardhaOverallStanding, getGcOverallStandings, getSpardhaOverallStandings} = require("../controllers/gcScoreboardController");
 const { gcRequestsMiddleware } = require("../middlewares/gcChampionshipMiddlewares");
 const { getGcScoreboardStore } = require("../helpers/gcScorebaordHelpers");
 
@@ -68,9 +68,15 @@ gcScoreboardRouter.post("/gc/spardha/all-events",checkIfModeratorMiddleware, pos
 
 gcScoreboardRouter.use(gcScoreboardAuthMiddleware); // check tokens for all below routes with this middleware
 
+gcScoreboardRouter.get("/gc/overall/standings",getGcOverallStandings);
+
+gcScoreboardRouter.get("/gc/spardha/standings",getSpardhaOverallStandings);
+
 gcScoreboardRouter.get("/gc/spardha/event-schedule",getSpardhaEventsSchdedules);
 
 gcScoreboardRouter.post("/gc/spardha/event-schedule",gcRequestsMiddleware,postSpardhaEventSchedule);
+
+gcScoreboardRouter.post("/gc/spardha/standings",gcRequestsMiddleware,postSpardhaOverallStanding);
 
 gcScoreboardRouter.delete("/gc/spardha/event-schedule/:id",gcRequestsMiddleware,deleteAnEventSchedule);
 

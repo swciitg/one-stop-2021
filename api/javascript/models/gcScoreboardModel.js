@@ -1,26 +1,30 @@
 const mongoose = require("mongoose");
 
-const hostelPointsSchema = new mongoose.Schema({
-    "name" : {
+const gcHostelWisePointsSchema = new mongoose.Schema({
+    "hostelName" : {
         type: String,
         required: true
     },
     "spardha_points": {
         type: Number,
-        required: true
+        default: 0
     },
     "kriti_points": {
         type: Number,
-        required: true
+        default: 0
     },
     "manthan_points": {
         type: Number,
-        required: true
+        default: 0
     }
 });
 
 const gcCompetitionsStoreSchema = new mongoose.Schema({
-    // store all the event names in the array for each competition and admins
+    // store all the event names, overall gc points, admins emails for gc
+    "overallGcStandings" : {
+        type: [gcHostelWisePointsSchema],
+        default:[]
+    },
     "spardha_events" : {
         type: Array,
         default:[]
@@ -59,6 +63,38 @@ const gcCompetitionsStoreSchema = new mongoose.Schema({
     }
 });
 
+const hostelOverallStandingsPointsSchema = new mongoose.Schema({
+    "hostelName" : {
+        type: String,
+        required: true,
+        enum: ["Brahmaputra","Kameng","Dihing"]
+    },
+    "points" : {
+        type: Number,
+        required: true
+    }
+});
+
+const spardhaOverallStandingSchema = new mongoose.Schema({
+    "event" : {
+        type: String,
+        required: true
+    },
+    "category" : {
+        type: String,
+        enum: ["Men","Women","Men + Women"],
+        required: true
+    },
+    "standings" : {
+        type: [hostelOverallStandingsPointsSchema],
+        required: true
+    },
+    "posterEmail" : {
+        type: String,
+        required: true
+    }
+});
+
 const spardhaResultsSchema = new mongoose.Schema({
     "name" : {
         type: String,
@@ -93,7 +129,7 @@ const spardhaEventModelSchema = new mongoose.Schema({
         required: true
     },
     "posterEmail": {
-        type: String, 
+        type: String,
         required: true
     },
     "date" : {
@@ -125,8 +161,5 @@ const spardhaEventModelSchema = new mongoose.Schema({
     }
 });
 
-
-
-
-module.exports = {"spardhaEventModel" : mongoose.model("spardhaEventSchedule",spardhaEventModelSchema),"gcCompetitionsStoreModel" : mongoose.model("gcCompetitionsStore",gcCompetitionsStoreSchema),"hostelPointsModel":mongoose.model("hostelPoint",hostelPointsSchema), "spardhaResultsModel":mongoose.model("spardhaResults",spardhaResultsSchema)};
+module.exports = {"spardhaEventModel" : mongoose.model("spardhaEventSchedule",spardhaEventModelSchema),"gcCompetitionsStoreModel" : mongoose.model("gcCompetitionsStore",gcCompetitionsStoreSchema),"gcHostelWisePoints" : mongoose.model("gcOverallHostelWisePoints",gcHostelWisePointsSchema), "spardhaResultsModel":mongoose.model("spardhaResults",spardhaResultsSchema),"spardhaOverallStandingsModel" : mongoose.model("spardhaOverallStandingsModel",spardhaOverallStandingSchema)};
 
