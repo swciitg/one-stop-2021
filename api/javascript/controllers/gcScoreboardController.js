@@ -206,6 +206,24 @@ exports.deleteAnEventSchedule = async (req, res) => {
     }
 }
 
+exports.getSpardhaResults = async (req,res) => {
+    try{
+        // console.log(typeof(req.query.forAdmin));
+        // console.log(req.body.email);
+        console.log(await checkIfAdmin(req.body.email,"spardha"), await checkIfBoardAdmin(req.body.email,"spardha"));
+        let filters = {"resultAdded" : true}; // filters for event schedules
+        if(req.query.forAdmin==="true" && await checkIfBoardAdmin(req.body.email,"spardha")===false){
+            filters["posterEmail"]=req.body.email;
+        }
+        console.log(filters);
+        const events = await spardhaEventModel.find(filters).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
+        res.status(200).json({ "success": true, "details": events });
+    }
+    catch(err){
+        res.status(500).json({ "success": false, "message" : err.toString() });
+    }
+}
+
 exports.addSpardhaEventResult = async (req,res) => {
     try{
         const id = req.params.id;
@@ -220,7 +238,7 @@ exports.addSpardhaEventResult = async (req,res) => {
         spardhaEventSchedule["victoryStatement"]=req.body["victoryStatement"];
         spardhaEventSchedule["results"]=spardhaEventResults;
         await spardhaEventSchedule.save();
-        res.json({ "success": false, "message": "Spardha event result added successfully" });
+        res.json({ "success": true, "message": "Spardha event result added successfully" });
     }
     catch(err){
         res.status(401).json({ "success": false, "message": err.toString() });
