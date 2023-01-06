@@ -6,7 +6,7 @@ const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 console.log(accessjwtsecret, refreshjwtsecret);
 const { gcScoreboardAuthMiddleware } = require("../middlewares/gcScoreboardAuth");
 const {checkIfModeratorMiddleware} = require("../middlewares/addAdmin");
-const { deleteAnEventSchedule, getEventsScheduled, getEventsResult, postCompetitionAdmins, postCompetitionBoardAdmins,  postSpardhaEvents, getSpardhaEvents, postSpardhaEventSchedule, getSpardhaEventsSchdedules, postSpardhaOverallStanding, getGcOverallStandings, getSpardhaOverallStandings} = require("../controllers/gcScoreboardController");
+const { deleteAnEventSchedule, getEventsScheduled, getEventsResult, postCompetitionAdmins, postCompetitionBoardAdmins,  postSpardhaEvents, getSpardhaEvents, postSpardhaEventSchedule, getSpardhaEventsSchdedules, postSpardhaOverallStanding, getGcOverallStandings, getSpardhaOverallStandings, postSpardhaEventResult, updateSpardhaOverallStanding, updateSpardhaEventSchedule, addSpardhaEventResult} = require("../controllers/gcScoreboardController");
 const { gcRequestsMiddleware } = require("../middlewares/gcChampionshipMiddlewares");
 const { getGcScoreboardStore } = require("../helpers/gcScorebaordHelpers");
 
@@ -72,15 +72,19 @@ gcScoreboardRouter.get("/gc/overall/standings",getGcOverallStandings);
 
 gcScoreboardRouter.get("/gc/spardha/standings",getSpardhaOverallStandings);
 
+gcScoreboardRouter.post("/gc/spardha/standings",gcRequestsMiddleware,postSpardhaOverallStanding);
+
+gcScoreboardRouter.patch("/gc/spardha/standings/:id",gcRequestsMiddleware,updateSpardhaOverallStanding);
+
 gcScoreboardRouter.get("/gc/spardha/event-schedule",getSpardhaEventsSchdedules);
 
 gcScoreboardRouter.post("/gc/spardha/event-schedule",gcRequestsMiddleware,postSpardhaEventSchedule);
 
-gcScoreboardRouter.post("/gc/spardha/standings",gcRequestsMiddleware,postSpardhaOverallStanding);
+gcScoreboardRouter.patch("/gc/spardha/event-schedule/:id",gcRequestsMiddleware,updateSpardhaEventSchedule);
 
 gcScoreboardRouter.delete("/gc/spardha/event-schedule/:id",gcRequestsMiddleware,deleteAnEventSchedule);
 
-gcScoreboardRouter.get("/gc/spardha/event-results",getEventsResult);
+gcScoreboardRouter.patch("/gc/spardha/event-schedule/result/:id",gcRequestsMiddleware,addSpardhaEventResult)
 
 // gcScoreboardRouter.post("/gc/spardha/admin/event-result/:id",spardhaMiddleware,)
 

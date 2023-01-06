@@ -96,7 +96,7 @@ const spardhaOverallStandingSchema = new mongoose.Schema({
 });
 
 const spardhaResultsSchema = new mongoose.Schema({
-    "name" : {
+    "hostelName" : {
         type: String,
         required: true
     },
@@ -161,5 +161,5 @@ const spardhaEventModelSchema = new mongoose.Schema({
     }
 });
 
-module.exports = {"spardhaEventModel" : mongoose.model("spardhaEventSchedule",spardhaEventModelSchema),"gcCompetitionsStoreModel" : mongoose.model("gcCompetitionsStore",gcCompetitionsStoreSchema),"gcHostelWisePoints" : mongoose.model("gcOverallHostelWisePoints",gcHostelWisePointsSchema), "spardhaResultsModel":mongoose.model("spardhaResults",spardhaResultsSchema),"spardhaOverallStandingsModel" : mongoose.model("spardhaOverallStandingsModel",spardhaOverallStandingSchema)};
+module.exports = {"spardhaEventModel" : mongoose.model("spardhaEventSchedule",spardhaEventModelSchema),"gcCompetitionsStoreModel" : mongoose.model("gcCompetitionsStore",gcCompetitionsStoreSchema),"gcHostelWisePoints" : mongoose.model("gcOverallHostelWisePoints",gcHostelWisePointsSchema), "spardhaResultModel":mongoose.model("spardhaResults",spardhaResultsSchema),"spardhaOverallStandingsModel" : mongoose.model("spardhaOverallStandingsModel",spardhaOverallStandingSchema)};
 
