@@ -63,7 +63,7 @@ exports.getSpardhaEventsSchdedules = async (req, res) => {
             filters["posterEmail"]=req.body.email;
         }
         console.log(filters);
-        const events = await spardhaEventModel.find(filters).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
+        const events = await spardhaEventModel.find(filters).sort({ "date": -1 }); // send all event schedules if no email passed or passed email belongs to board admin
         res.status(200).json({ "success": true, "details": events });
     }
     catch(err){
@@ -181,12 +181,13 @@ exports.updateSpardhaOverallStanding = async (req,res) => {
 exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for result posting and updation
     try {
         const id = req.params.id;
+        console.log(req.body.email,id);
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
         if(spardhaEventModel["posterEmail"] !== req.body.email && await checkIfBoardAdmin(req.body.email,"spardha")===false){
             throw new Error("You are not authorized");
         }
-        await spardhaEventSchedule.findByIdAndUpdate(id,req.body);
-        res.json({ "success": false, "message": "Spardha event updated successfully" });
+        await spardhaEventModel.findByIdAndUpdate(id,req.body);
+        res.json({ "success": true, "message": "Spardha event updated successfully" });
     } catch (err) {
         res.status(401).json({ "success": false, "message": err.toString() });
     }
@@ -200,7 +201,7 @@ exports.deleteAnEventSchedule = async (req, res) => {
             throw new Error("You are not authorized admin");
         }
         await spardhaEventModel.findByIdAndDelete(id);
-        res.json({ "success": false, "message": "Spardha event delete successfully" });
+        res.json({ "success": true, "message": "Spardha event delete successfully" });
     } catch (err) {
         res.status(401).json({ "success": false, "message": err.toString() });
     }
@@ -216,7 +217,7 @@ exports.getSpardhaResults = async (req,res) => {
             filters["posterEmail"]=req.body.email;
         }
         console.log(filters);
-        const events = await spardhaEventModel.find(filters).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
+        const events = await spardhaEventModel.find(filters).sort({ "date": -1 }); // send all event schedules if no email passed or passed email belongs to board admin
         res.status(200).json({ "success": true, "details": events });
     }
     catch(err){
