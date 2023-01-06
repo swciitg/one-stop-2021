@@ -183,7 +183,7 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
         const id = req.params.id;
         console.log(req.body.email,id);
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(spardhaEventModel["posterEmail"] !== req.body.email && await checkIfBoardAdmin(req.body.email,"spardha")===false){
+        if(spardhaEventSchedule["posterEmail"] !== req.body.email && await checkIfBoardAdmin(req.body.email,"spardha")===false){
             throw new Error("You are not authorized");
         }
         await spardhaEventModel.findByIdAndUpdate(id,req.body);
@@ -197,7 +197,7 @@ exports.deleteAnEventSchedule = async (req, res) => {
     try {
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(spardhaEventModel["posterEmail"] !== req.body.email && await checkIfBoardAdmin(req.body.email,"spardha")===false){
+        if(spardhaEventSchedule["posterEmail"] !== req.body.email && await checkIfBoardAdmin(req.body.email,"spardha")===false){
             throw new Error("You are not authorized admin");
         }
         await spardhaEventModel.findByIdAndDelete(id);
@@ -229,7 +229,7 @@ exports.addSpardhaEventResult = async (req,res) => {
     try{
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(spardhaEventModel["posterEmail"] !== req.body.email && await checkIfBoardAdmin(req.body.email,"spardha")===false){
+        if(spardhaEventSchedule["posterEmail"] !== req.body.email && await checkIfBoardAdmin(req.body.email,"spardha")===false){
             throw new Error("You are not authorized admin");
         }
         console.log(req.body.results);
