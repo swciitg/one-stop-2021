@@ -112,7 +112,7 @@ exports.getGcOverallStandings = async (req,res) => {
         let gcCompetitionsStore = await getGcScoreboardStore();
         let gcStandings = [];
         gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
-            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"totalPoints" : hostelGcPoints["spardha_points"] + hostelGcPoints["kriti_points"] + hostelGcPoints["manthan_points"]});
+            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : hostelGcPoints["spardha_points"] + hostelGcPoints["kriti_points"] + hostelGcPoints["manthan_points"]});
         });
         res.json({"success" : true,"details" : gcStandings});
     }
@@ -126,7 +126,7 @@ exports.getSpardhaOverallStandings = async (req,res) => {
         let gcCompetitionsStore = await getGcScoreboardStore();
         let gcStandings = [];
         gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
-            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"totalPoints" : hostelGcPoints["spardha_points"]});
+            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : hostelGcPoints["spardha_points"]});
         });
         res.json({"success" : true,"details" : gcStandings});
     }
