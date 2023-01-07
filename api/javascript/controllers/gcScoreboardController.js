@@ -135,10 +135,25 @@ exports.getSpardhaOverallStandings = async (req,res) => {
     }
 }
 
+exports.getSpardhaOverallStandingsAllEvents = async (req,res) => {
+    try{
+        let eventsGcStandings = await spardhaOverallStandingsModel.find();
+        res.json({"success" : true,"details" : eventsGcStandings});
+    }
+    catch(err){
+        res.status(500).json({ "success": false, "message": err.toString() });
+    }
+}
 
 exports.postSpardhaOverallStanding = async (req, res) => {
     try {
         req.body.posterEmail = req.body.email;
+        if(await ifValidEvent(req.body.event,"spardha")===false){
+            throw new Error("Event not in list of spardha events");
+        }
+        if((await spardhaOverallStandingsModel.find({"event" : req.body.event,"category" : req.body.category})).length!==0){
+            throw new Error("Result already added for this event & category");
+        }
         let spardhaOverallStandingEvent = spardhaOverallStandingsModel(req.body);
         await spardhaOverallStandingEvent.save();
         let gcCompetitionsStore = await getGcScoreboardStore();
@@ -190,7 +205,6 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
     try {
         const id = req.params.id;
         console.log(req.body.email,id);
-        let spardhaEventSchedule = await spardhaEventModel.findById(id);
         if(await checkIfValidAdmin(id,req.body.email)===false) throw new Error("You are not authorized admin");
         await spardhaEventModel.findByIdAndUpdate(id,req.body);
         res.json({ "success": true, "message": "Spardha event updated successfully" });
