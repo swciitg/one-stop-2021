@@ -1,6 +1,6 @@
 const { gcCompetitionsStoreModel, gcHostelWisePoints } = require("../models/gcScoreboardModel");
 
-let allIITGHostels = ["Brahmaputra","Kameng","Dihing"];
+let allIITGHostels = ["Brahmaputra","Kameng","Dihing","Barak","Kapili","Lohit","Manas","Married Scholars","Siang","Subansiri","Umiam","Dhansiri","Disang"];
 
 async function fetchGcScoreboardStore(){
     let gcScoreboardStoreArray = await gcCompetitionsStoreModel.find();
