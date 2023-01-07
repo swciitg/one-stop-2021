@@ -67,7 +67,7 @@ const hostelOverallStandingsPointsSchema = new mongoose.Schema({
     "hostelName" : {
         type: String,
         required: true,
-        enum: ["Brahmaputra","Kameng","Dihing","Barak","Kapili","Lohit","Manas","Married Scholars","Siang","Subansiri","Umiam","Dhansiri","Disang"]
+        enum: ["Brahmaputra","Kameng","Dihing","Barak","Kapili","Lohit","Manas","Married Scholars","Siang","Subansiri","Umiam","Dhansiri",,"Disang (Men)","Disang (Women)"]
     },
     "points" : {
         type: Number,
