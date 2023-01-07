@@ -10,6 +10,14 @@ async function ifValidEvent(event,competition){
     return false;
 }
 
+async function checkIfValidAdmin(eventId, email){
+    let spardhaEventSchedule = await spardhaEventModel.findById(eventId);
+    if(spardhaEventSchedule["posterEmail"] !== email && await checkIfBoardAdmin(email,"spardha")===false){
+        return false;
+    }
+    return true;
+}
+
 // Spardha - user
 
 exports.getEventsResult = async (req, res) => {
@@ -24,7 +32,7 @@ exports.getEventsResult = async (req, res) => {
             res.status(200).json({ "success": true, "details": events });
         }
     } catch (err) {
-        res.status(401).json({ "success": false, "message": err.toString() });
+        res.status(403).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -183,13 +191,11 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
         const id = req.params.id;
         console.log(req.body.email,id);
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(spardhaEventSchedule["posterEmail"] !== req.body.email && await checkIfBoardAdmin(req.body.email,"spardha")===false){
-            throw new Error("You are not authorized");
-        }
+        if(await checkIfValidAdmin(id,req.body.email)===false) throw new Error("You are not authorized admin");
         await spardhaEventModel.findByIdAndUpdate(id,req.body);
         res.json({ "success": true, "message": "Spardha event updated successfully" });
     } catch (err) {
-        res.status(401).json({ "success": false, "message": err.toString() });
+        res.status(403).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -197,13 +203,11 @@ exports.deleteAnEventSchedule = async (req, res) => {
     try {
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(spardhaEventSchedule["posterEmail"] !== req.body.email && await checkIfBoardAdmin(req.body.email,"spardha")===false){
-            throw new Error("You are not authorized admin");
-        }
+        if(await checkIfValidAdmin(id,req.body.email)===false) throw new Error("You are not authorized admin");
         await spardhaEventModel.findByIdAndDelete(id);
         res.json({ "success": true, "message": "Spardha event delete successfully" });
     } catch (err) {
-        res.status(401).json({ "success": false, "message": err.toString() });
+        res.status(403).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -229,9 +233,7 @@ exports.addSpardhaEventResult = async (req,res) => {
     try{
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(spardhaEventSchedule["posterEmail"] !== req.body.email && await checkIfBoardAdmin(req.body.email,"spardha")===false){
-            throw new Error("You are not authorized admin");
-        }
+        if(await checkIfValidAdmin(id,req.body.email)===false) throw new Error("You are not authorized admin");
         console.log(req.body.results);
         let spardhaEventResults = Array.from(req.body.results,(positionResults) => Array.from(positionResults), (result) => spardhaResultModel(result));
         console.log(spardhaEventResults);
@@ -242,10 +244,25 @@ exports.addSpardhaEventResult = async (req,res) => {
         res.json({ "success": true, "message": "Spardha event result added successfully" });
     }
     catch(err){
-        res.status(401).json({ "success": false, "message": err.toString() });
+        res.status(403).json({ "success": false, "message": err.toString() });
     }
 }
 
+exports.deleteSpardhaEventResult = async (req,res) => {
+    try{
+        const id = req.params.id;
+        let spardhaEventSchedule = await spardhaEventModel.findById(id);
+        if(await checkIfValidAdmin(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        spardhaEventSchedule["resultAdded"]=false;
+        spardhaEventSchedule["victoryStatement"]='';
+        spardhaEventSchedule["results"]=[];
+        await spardhaEventSchedule.save();
+        res.json({ "success": true, "message": "Spardha event result deleted successfully" });
+    }
+    catch(err){
+        res.status(403).json({ "success": false, "message": err.toString() });
+    }
+}
 
 //Add admins
 
