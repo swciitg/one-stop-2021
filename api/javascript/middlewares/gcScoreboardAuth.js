@@ -13,7 +13,7 @@ exports.gcScoreboardAuthMiddleware = (req,res,next) => {
             console.log(req.body.email);
             next();
         }
-        else res.status(401).json({"success" : false,"message":  "Token Expired or not Valid"});
+        else throw new Error("Token Expired or not Valid");
     }
     catch (err) {
         res.status(401).json({ "success" : false,"message":  err.toString()});
