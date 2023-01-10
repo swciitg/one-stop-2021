@@ -34,9 +34,9 @@ gcScoreboardRouter.post("/gc/login", async (req, res) => {
         if (email === undefined) {
             throw new Error("Not Valid parameters in body");
         }
-        const accessToken = jwt.sign({ "email": email }, accessjwtsecret, { expiresIn: "1 days" });
+        const accessToken = jwt.sign({ "email": email }, accessjwtsecret, { expiresIn: "60s" });
         console.log(jwt.verify(accessToken, accessjwtsecret));
-        const refreshToken = jwt.sign({ "email": email }, refreshjwtsecret, { expiresIn: "7 days" });
+        const refreshToken = jwt.sign({ "email": email }, refreshjwtsecret, { expiresIn: "120s" });
         const authEvents = await getAuthEvents(email);
         const isAdmin = authEvents.length===0 ? false : true;
         res.json({ "success": true, accessToken, refreshToken, isAdmin, authEvents });
