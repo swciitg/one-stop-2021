@@ -10,9 +10,17 @@ async function ifValidEvent(event,competition){
     return false;
 }
 
-async function checkIfValidAdmin(eventId, email){
+async function ifAuthorizedForSpardhaEventSchedules(eventId, email){
     let spardhaEventSchedule = await spardhaEventModel.findById(eventId);
     if(spardhaEventSchedule["posterEmail"] !== email && await checkIfBoardAdmin(email,"spardha")===false){
+        return false;
+    }
+    return true;
+}
+
+async function ifAuthorizedForSpardhaStandings(eventId, email){
+    let spardhaStanding = await spardhaOverallStandingsModel.findById(eventId);
+    if(spardhaOverallStandingsModel["posterEmail"] !== email && await checkIfBoardAdmin(email,"spardha")===false){
         return false;
     }
     return true;
@@ -135,7 +143,7 @@ exports.getSpardhaOverallStandings = async (req,res) => {
     }
 }
 
-exports.getSpardhaOverallStandingsAllEvents = async (req,res) => {
+exports.getSpardhaEventStandings = async (req,res) => {
     try{
         let eventsGcStandings = await spardhaOverallStandingsModel.find();
         res.json({"success" : true,"details" : eventsGcStandings});
@@ -145,14 +153,14 @@ exports.getSpardhaOverallStandingsAllEvents = async (req,res) => {
     }
 }
 
-exports.postSpardhaOverallStanding = async (req, res) => {
+exports.postSpardhaOverallStandings = async (req, res) => {
     try {
         req.body.posterEmail = req.body.email;
         if(await ifValidEvent(req.body.event,"spardha")===false){
             throw new Error("Event not in list of spardha events");
         }
         if((await spardhaOverallStandingsModel.find({"event" : req.body.event,"category" : req.body.category})).length!==0){
-            throw new Error("Result already added for this event & category");
+            throw new Error("Standings already added for this event & category");
         }
         let spardhaOverallStandingEvent = spardhaOverallStandingsModel(req.body);
         await spardhaOverallStandingEvent.save();
@@ -175,7 +183,11 @@ exports.updateSpardhaOverallStanding = async (req,res) => {
     try{
         let id = req.params.id;
         req.body.posterEmail = req.body.email;
+        if(await ifAuthorizedForSpardhaStandings(id,req.body.email)===false) throw new Error("You are not authorized admin");
         let spardhaOverallStandingEvent = await spardhaOverallStandingsModel.findById(id);
+        if(req.body.event!==spardhaOverallStandingEvent["event"] && (await spardhaOverallStandingsModel.find({"event" : req.body.event,"category" : req.body.category})).length!==0){
+            throw new Error("Standings already added for this event & category");
+        }
         let gcCompetitionsStore = await getGcScoreboardStore();
         req.body.standings.forEach((hostelOverallStanding) => {
             gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
@@ -191,13 +203,34 @@ exports.updateSpardhaOverallStanding = async (req,res) => {
                 }
             });
         });
-        spardhaOverallStandingEvent["standings"]=req.body.standings;
-        await spardhaOverallStandingEvent.save();
+        console.log(req.body);
+        await spardhaOverallStandingsModel.findOneAndUpdate({_id : id},req.body,{runValidators: true});
         await gcCompetitionsStore.save();
-        res.json({"success" : true,"details" : spardhaOverallStandingEvent});
+        res.json({"success" : true,"details" : await spardhaOverallStandingsModel.findById(id)});
     }
     catch(err){
         res.status(400).json({ "success": false, "message": err.toString() });
+    }
+}
+
+exports.deleteSpardhaStanding = async (req,res) => {
+    try {
+        const id = req.params.id;
+        if(await ifAuthorizedForSpardhaStandings(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        let spardhaOverallStandingEvent = await spardhaOverallStandingsModel.findById(id);
+        let gcCompetitionsStore = await getGcScoreboardStore();
+        spardhaOverallStandingEvent["standings"].forEach((hostelOverallStanding) => {
+            gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
+                if(hostelGcPoints["hostelName"]===hostelOverallStanding["hostelName"]){
+                    hostelGcPoints["spardha_points"]-=hostelOverallStanding["points"]; // subtract old points
+                }
+            });
+        });
+        await gcCompetitionsStore.save();
+        await spardhaOverallStandingsModel.findByIdAndDelete(id);
+        res.json({ "success": true, "message": "Spardha standing delete successfully" });
+    } catch (err) {
+        res.status(403).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -205,8 +238,8 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
     try {
         const id = req.params.id;
         console.log(req.body.email,id);
-        if(await checkIfValidAdmin(id,req.body.email)===false) throw new Error("You are not authorized admin");
-        await spardhaEventModel.findByIdAndUpdate(id,req.body);
+        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        await spardhaEventModel.findOneAndUpdate({_id : id},req.body,{runValidators: true});
         res.json({ "success": true, "message": "Spardha event updated successfully" });
     } catch (err) {
         res.status(403).json({ "success": false, "message": err.toString() });
@@ -217,7 +250,7 @@ exports.deleteAnEventSchedule = async (req, res) => {
     try {
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(await checkIfValidAdmin(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false) throw new Error("You are not authorized admin");
         await spardhaEventModel.findByIdAndDelete(id);
         res.json({ "success": true, "message": "Spardha event delete successfully" });
     } catch (err) {
@@ -227,8 +260,6 @@ exports.deleteAnEventSchedule = async (req, res) => {
 
 exports.getSpardhaResults = async (req,res) => {
     try{
-        // console.log(typeof(req.query.forAdmin));
-        // console.log(req.body.email);
         console.log(await checkIfAdmin(req.body.email,"spardha"), await checkIfBoardAdmin(req.body.email,"spardha"));
         let filters = {"resultAdded" : true}; // filters for event schedules
         if(req.query.forAdmin==="true" && await checkIfBoardAdmin(req.body.email,"spardha")===false){
@@ -247,14 +278,13 @@ exports.addSpardhaEventResult = async (req,res) => {
     try{
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(await checkIfValidAdmin(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false) throw new Error("You are not authorized admin");
         console.log(req.body.results);
         let spardhaEventResults = Array.from(req.body.results,(positionResults) => Array.from(positionResults), (result) => spardhaResultModel(result));
         console.log(spardhaEventResults);
-        spardhaEventSchedule["resultAdded"]=true;
-        spardhaEventSchedule["victoryStatement"]=req.body["victoryStatement"];
-        spardhaEventSchedule["results"]=spardhaEventResults;
-        await spardhaEventSchedule.save();
+        req.body.resultAdded=true;
+        await spardhaEventModel.findOneAndUpdate({_id : id},req.body,{runValidators: true});
+        console.log((await spardhaEventModel.findById(id)));
         res.json({ "success": true, "message": "Spardha event result added successfully" });
     }
     catch(err){
@@ -266,7 +296,7 @@ exports.deleteSpardhaEventResult = async (req,res) => {
     try{
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(await checkIfValidAdmin(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false) throw new Error("You are not authorized admin");
         spardhaEventSchedule["resultAdded"]=false;
         spardhaEventSchedule["victoryStatement"]='';
         spardhaEventSchedule["results"]=[];
