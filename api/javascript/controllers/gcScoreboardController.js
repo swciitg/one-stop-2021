@@ -159,9 +159,6 @@ exports.getSpardhaEventStandings = async (req,res) => {
 exports.postSpardhaOverallStandings = async (req, res) => {
     try {
         req.body.posterEmail = req.body.email;
-        if(await ifValidEvent(req.body.event,"spardha")===false){
-            throw new Error("Event not in list of spardha events");
-        }
         if((await spardhaOverallStandingsModel.find({"event" : req.body.event,"category" : req.body.category})).length!==0){
             throw new Error("Standings already added for this event & category");
         }
