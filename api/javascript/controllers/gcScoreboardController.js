@@ -92,6 +92,9 @@ exports.postSpardhaEventSchedule = async (req, res) => {
         if(await ifValidEvent(req.body.event,"spardha")===false){
             throw new Error("Event not in list of spardha events");
         }
+        if((await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category})).length!==0){
+            throw new Error("Schedule already added for this event & category");
+        }
         req.body.date = new Date(req.body.date);
         req.body.posterEmail = req.body.email;
         let spardhaEvent = new spardhaEventModel(req.body);
@@ -238,6 +241,7 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
     try {
         const id = req.params.id;
         console.log(req.body.email,id);
+        req.body.posterEmail = req.body.email;
         if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false) throw new Error("You are not authorized admin");
         await spardhaEventModel.findOneAndUpdate({_id : id},req.body,{runValidators: true});
         res.json({ "success": true, "message": "Spardha event updated successfully" });
