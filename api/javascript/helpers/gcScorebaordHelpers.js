@@ -1,13 +1,13 @@
 const { gcCompetitionsStoreModel, gcHostelWisePoints } = require("../models/gcScoreboardModel");
 
-let allIITGHostels = ["Brahmaputra","Kameng","Dihing","Barak","Kapili","Lohit","Manas","Married Scholars","Siang","Subansiri","Umiam","Dhansiri","Disang (Men)","Disang (Women)"];
+let allIITGHostels = ["Brahmaputra","Kameng","Dihing","Barak","Kapili","Lohit","Manas","Married Scholars (Men)","Married Scholars (Women)","Siang","Subansiri","Umiam","Dhansiri","Disang (Men)","Disang (Women)"];
 
 async function fetchGcScoreboardStore(){
     let gcScoreboardStoreArray = await gcCompetitionsStoreModel.find();
     if(gcScoreboardStoreArray.length===0){ // if no store on first time
         let createdGcScoreboardStore = gcCompetitionsStoreModel();
         allIITGHostels.forEach((hostelName) => {
-            createdGcScoreboardStore["overallGcStandings"].push(gcHostelWisePoints({"hostelName" : hostelName}));
+            createdGcScoreboardStore["overallGcStandings"].push(gcHostelWisePoints({"hostelName" : hostelName,"spardha_points":0,"kriti_points":0,"manthan_points":0}));
         });
         await createdGcScoreboardStore.save();
         gcScoreboardStoreArray = [createdGcScoreboardStore];
