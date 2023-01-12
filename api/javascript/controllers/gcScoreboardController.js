@@ -48,14 +48,15 @@ exports.postSpardhaEvents= async (req, res) => {
     try {
         let spardhaEvents = req.body.events;
         if(spardhaEvents===undefined){
-            throw new Error("Not valid parameters in request");
+            res.status(400).json({ "success": false, "message": "Not valid parameters in request"});
+            return;
         }
         const gcScoreboardStore = await getGcScoreboardStore();
         gcScoreboardStore.spardha_events = spardhaEvents;
         await gcScoreboardStore.save();
         res.json({"success" : true, "message" : "Spardha events posted successfully","details" : gcScoreboardStore.spardha_events});
     } catch (err) {
-        res.status(400).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -90,10 +91,12 @@ exports.getSpardhaEventsSchdedules = async (req, res) => {
 exports.postSpardhaEventSchedule = async (req, res) => {
     try {
         if(await ifValidEvent(req.body.event,"spardha")===false){
-            throw new Error("Event not in list of spardha events");
+            res.status(406).json({ "success": false, "message": "Event not in list of spardha events"});
+            return;
         }
         if((await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category})).length!==0){
-            throw new Error("Schedule already added for this event & category");
+            res.status(406).json({ "success": false, "message" : "Standings already added for this event & category"});
+            return;
         }
         req.body.date = new Date(req.body.date);
         req.body.posterEmail = req.body.email;
@@ -102,7 +105,7 @@ exports.postSpardhaEventSchedule = async (req, res) => {
         res.json({ "success": true });
     }
     catch (err) {
-        res.status(400).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
 };
 
@@ -159,8 +162,13 @@ exports.getSpardhaEventStandings = async (req,res) => {
 exports.postSpardhaOverallStandings = async (req, res) => {
     try {
         req.body.posterEmail = req.body.email;
+        if(await ifValidEvent(req.body.event,"spardha")===false){
+            res.status(406).json({ "success": false, "message": "Event not in list of spardha events"});
+            return;
+        }
         if((await spardhaOverallStandingsModel.find({"event" : req.body.event,"category" : req.body.category})).length!==0){
-            throw new Error("Standings already added for this event & category");
+            res.status(406).json({ "success": false, "message": "Standings already added for this event & category"});
+            return;
         }
         let spardhaOverallStandingEvent = spardhaOverallStandingsModel(req.body);
         await spardhaOverallStandingEvent.save();
@@ -175,7 +183,7 @@ exports.postSpardhaOverallStandings = async (req, res) => {
         await gcCompetitionsStore.save();
         res.json({"success" : true,"details" : spardhaOverallStandingEvent});
     } catch (err) {
-        res.status(400).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -183,10 +191,14 @@ exports.updateSpardhaOverallStanding = async (req,res) => {
     try{
         let id = req.params.id;
         req.body.posterEmail = req.body.email;
-        if(await ifAuthorizedForSpardhaStandings(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        if(await ifAuthorizedForSpardhaStandings(id,req.body.email)===false){
+            res.status(403).json({ "success": false, "message": "You are not authorized admin"});
+            return;
+        }
         let spardhaOverallStandingEvent = await spardhaOverallStandingsModel.findById(id);
         if(req.body.event!==spardhaOverallStandingEvent["event"] && (await spardhaOverallStandingsModel.find({"event" : req.body.event,"category" : req.body.category})).length!==0){
-            throw new Error("Standings already added for this event & category");
+            res.status(406).json({ "success": false, "message": "Standings already added for this event & category"});
+            return;
         }
         let gcCompetitionsStore = await getGcScoreboardStore();
         req.body.standings.forEach((hostelOverallStanding) => {
@@ -209,14 +221,17 @@ exports.updateSpardhaOverallStanding = async (req,res) => {
         res.json({"success" : true,"details" : await spardhaOverallStandingsModel.findById(id)});
     }
     catch(err){
-        res.status(400).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
 }
 
 exports.deleteSpardhaStanding = async (req,res) => {
     try {
         const id = req.params.id;
-        if(await ifAuthorizedForSpardhaStandings(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        if(await ifAuthorizedForSpardhaStandings(id,req.body.email)===false){
+            res.status(403).json({ "success": false, "message": "You are not authorized admin"});
+            return;
+        }
         let spardhaOverallStandingEvent = await spardhaOverallStandingsModel.findById(id);
         let gcCompetitionsStore = await getGcScoreboardStore();
         spardhaOverallStandingEvent["standings"].forEach((hostelOverallStanding) => {
@@ -230,7 +245,7 @@ exports.deleteSpardhaStanding = async (req,res) => {
         await spardhaOverallStandingsModel.findByIdAndDelete(id);
         res.json({ "success": true, "message": "Spardha standing delete successfully" });
     } catch (err) {
-        res.status(403).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -239,11 +254,14 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
         const id = req.params.id;
         console.log(req.body.email,id);
         req.body.posterEmail = req.body.email;
-        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false){
+            res.status(403).json({ "success": false, "message": "You are not authorized admin"});
+            return;
+        }
         await spardhaEventModel.findOneAndUpdate({_id : id},req.body,{runValidators: true});
         res.json({ "success": true, "message": "Spardha event updated successfully" });
     } catch (err) {
-        res.status(403).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -251,11 +269,14 @@ exports.deleteAnEventSchedule = async (req, res) => {
     try {
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false){
+            res.status(403).json({ "success": false, "message": "You are not authorized admin"});
+            return;
+        }
         await spardhaEventModel.findByIdAndDelete(id);
         res.json({ "success": true, "message": "Spardha event delete successfully" });
     } catch (err) {
-        res.status(403).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -279,7 +300,10 @@ exports.addSpardhaEventResult = async (req,res) => {
     try{
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false){
+            res.status(403).json({ "success": false, "message": "You are not authorized admin"});
+            return;
+        }
         console.log(req.body.results);
         let spardhaEventResults = Array.from(req.body.results,(positionResults) => Array.from(positionResults), (result) => spardhaResultModel(result));
         console.log(spardhaEventResults);
@@ -289,15 +313,20 @@ exports.addSpardhaEventResult = async (req,res) => {
         res.json({ "success": true, "message": "Spardha event result added successfully" });
     }
     catch(err){
-        res.status(403).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
 }
 
 exports.deleteSpardhaEventResult = async (req,res) => {
     try{
         const id = req.params.id;
+        console.log(id);
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false) throw new Error("You are not authorized admin");
+        console.log(spardhaEventSchedule);
+        if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false){
+            res.status(403).json({ "success": false, "message": "You are not authorized admin"});
+            return;
+        }
         spardhaEventSchedule["resultAdded"]=false;
         spardhaEventSchedule["victoryStatement"]='';
         spardhaEventSchedule["results"]=[];
@@ -305,7 +334,7 @@ exports.deleteSpardhaEventResult = async (req,res) => {
         res.json({ "success": true, "message": "Spardha event result deleted successfully" });
     }
     catch(err){
-        res.status(403).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
 }
 
@@ -316,7 +345,8 @@ exports.postCompetitionAdmins = async (req, res) => {
         const competition = req.query.competition;
         const emails = req.body.emails;
         if(emails===undefined || competition===undefined){
-            throw new Error("Not valid parameters in request");
+            res.status(400).json({ "success": false, "message": "Not Valid parameters in request body"});
+            return;
         }
         const gcScoreboardStore = await getGcScoreboardStore();
         if (competition == "spardha") gcScoreboardStore.spardha_admins = emails;
@@ -327,19 +357,18 @@ exports.postCompetitionAdmins = async (req, res) => {
         res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} admin list` });
 
     } catch (err) {
-        res.status(400).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
         return;
     }
 }
-
-
 
 exports.postCompetitionBoardAdmins = async (req, res) => {
     try {
         const competition = req.query.competition;
         const emails = req.body.emails;
         if(emails===undefined || competition===undefined){
-            throw new Error("Not valid parameters in request");
+            res.status(400).json({ "success": false, "message": "Not valid parameters in request"});
+            return;
         }
         const gcScoreboardStore = await getGcScoreboardStore();
         if (competition == "spardha") gcScoreboardStore.spardha_board_admins = emails;
@@ -351,15 +380,7 @@ exports.postCompetitionBoardAdmins = async (req, res) => {
         res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} board admin list` });
 
     } catch (err) {
-        res.status(400).json({ "success": false, "message": err.toString() });
+        res.status(500).json({ "success": false, "message": err.toString() });
         return;
     }
 }
-
-
-// add an email id to spardha/ manthan/ kriti admins list
-
-// exports.addEmailToAdminsList = async(req,res)=>{
-
-// }
-
