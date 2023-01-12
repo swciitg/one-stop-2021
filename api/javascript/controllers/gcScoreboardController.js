@@ -197,7 +197,7 @@ exports.updateSpardhaOverallStanding = async (req,res) => {
         }
         let spardhaOverallStandingEvent = await spardhaOverallStandingsModel.findById(id);
         let sameStandings = await spardhaOverallStandingsModel.find({"event" : req.body.event,"category" : req.body.category});
-        if(!(req.body.event!==spardhaOverallStandingEvent["event"] && req.body.category!==spardhaOverallStandingEvent["category"]) && sameStandings.length!==0){
+        if(!(req.body.event===spardhaOverallStandingEvent["event"] && req.body.category===spardhaOverallStandingEvent["category"]) && sameStandings.length!==0){
             res.status(406).json({ "success": false, "message": "Standings already added for this event & category"});
             return;
         }
