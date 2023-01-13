@@ -94,10 +94,6 @@ exports.postSpardhaEventSchedule = async (req, res) => {
             res.status(406).json({ "success": false, "message": "Event not in list of spardha events"});
             return;
         }
-        if((await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage})).length!==0){
-            res.status(406).json({ "success": false, "message" : "Schedule already added for this event & category"});
-            return;
-        }
         req.body.date = new Date(req.body.date);
         req.body.posterEmail = req.body.email;
         let spardhaEvent = new spardhaEventModel(req.body);
@@ -261,12 +257,6 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
         req.body.posterEmail = req.body.email;
         if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false){
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
-            return;
-        }
-        let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        let sameEvents = await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage});
-        if(!(spardhaEventSchedule["event"]===req.body.event && spardhaEventSchedule["category"]===req.body.category && spardhaEventSchedule["stage"]===req.body.stage) && sameEvents.length!==0){
-            res.status(406).json({ "success": false, "message" : "Schedule already added for this event & category"});
             return;
         }
         await spardhaEventModel.findOneAndUpdate({_id : id},req.body,{runValidators: true});
