@@ -20,7 +20,7 @@ async function ifAuthorizedForSpardhaEventSchedules(eventId, email){
 
 async function ifAuthorizedForSpardhaStandings(eventId, email){
     let spardhaStanding = await spardhaOverallStandingsModel.findById(eventId);
-    if(spardhaOverallStandingsModel["posterEmail"] !== email && await checkIfBoardAdmin(email,"spardha")===false){
+    if(spardhaStanding["posterEmail"] !== email && await checkIfBoardAdmin(email,"spardha")===false){
         return false;
     }
     return true;
@@ -140,6 +140,7 @@ exports.getSpardhaOverallStandings = async (req,res) => {
         let gcCompetitionsStore = await getGcScoreboardStore();
         let gcStandings = [];
         gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
+            console.log(hostelGcPoints);
             gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : hostelGcPoints["spardha_points"]});
         });
         res.json({"success" : true,"details" : gcStandings});
