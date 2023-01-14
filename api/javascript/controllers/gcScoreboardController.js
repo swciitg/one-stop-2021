@@ -265,8 +265,8 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
             return;
         }
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        let sameEvents = await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage});
         req.body.hostels.sort();
+        let sameEvents = await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage,"hostels":req.body.hostels});
         if(!(spardhaEventSchedule["event"]===req.body.event && spardhaEventSchedule["category"]===req.body.category && spardhaEventSchedule["stage"]===req.body.stage && spardhaEventSchedule["hostels"]===req.body.hostels) && sameEvents.length!==0){
             res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
             return;
