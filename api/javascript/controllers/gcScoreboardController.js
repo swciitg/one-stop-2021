@@ -259,7 +259,6 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
     try {
         const id = req.params.id;
         console.log(req.body.email,id);
-        req.body.posterEmail = req.body.email;
         if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false){
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
             return;
