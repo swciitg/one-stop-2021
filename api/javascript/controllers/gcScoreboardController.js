@@ -94,6 +94,10 @@ exports.postSpardhaEventSchedule = async (req, res) => {
             res.status(406).json({ "success": false, "message": "Event not in list of spardha events"});
             return;
         }
+        if((await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage,"hostels":req.body.hostels})).length!==0){
+            res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
+            return;
+        }
         req.body.date = new Date(req.body.date);
         req.body.posterEmail = req.body.email;
         let spardhaEvent = new spardhaEventModel(req.body);
@@ -259,6 +263,12 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
             return;
         }
+        let spardhaEventSchedule = await spardhaEventModel.findById(id);
+        let sameEvents = await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage});
+        if(!(spardhaEventSchedule["event"]===req.body.event && spardhaEventSchedule["category"]===req.body.category && spardhaEventSchedule["stage"]===req.body.stage && spardhaEventSchedule["hostels"]===req.body.hostels) && sameEvents.length!==0){
+            res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
+            return;
+        }
         await spardhaEventModel.findOneAndUpdate({_id : id},req.body,{runValidators: true});
         res.json({ "success": true, "message": "Spardha event updated successfully" });
     } catch (err) {
@@ -289,7 +299,7 @@ exports.getSpardhaResults = async (req,res) => {
             filters["posterEmail"]=req.body.email;
         }
         console.log(filters);
-        const events = await spardhaEventModel.find(filters).sort({ "date": -1 }); // send all event schedules if no email passed or passed email belongs to board admin
+        const events = await spardhaEventModel.find(filters).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
         res.status(200).json({ "success": true, "details": events });
     }
     catch(err){
