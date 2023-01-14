@@ -278,6 +278,19 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
     }
 }
 
+exports.sortAllHostelsList = async (req,res){
+    try {
+        let spardhaSchedules = await spardhaEventModel.find();
+        spardhaSchedules.forEach((element) => {
+            element.hostels.sort();
+            await element.save();
+        });
+        res.json({ "success": true, "message": await  spardhaEventModel.find()});
+    } catch (err) {
+        res.status(500).json({ "success": false, "message": err.toString() });
+    }
+}
+
 exports.deleteAnEventSchedule = async (req, res) => {
     try {
         const id = req.params.id;
