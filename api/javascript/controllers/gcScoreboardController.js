@@ -94,7 +94,7 @@ exports.postSpardhaEventSchedule = async (req, res) => {
             res.status(406).json({ "success": false, "message": "Event not in list of spardha events"});
             return;
         }
-        req.body.hostels.sort(); // sort hostel list
+        // req.body.hostels.sort(); // sort hostel list
         if((await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage,"hostels":req.body.hostels})).length!==0){
             res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
             return;
@@ -265,7 +265,7 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
             return;
         }
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
-        req.body.hostels.sort();
+        // req.body.hostels.sort();
         let sameEvents = await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage,"hostels":req.body.hostels});
         let sameHostels=false;
         if(spardhaEventSchedule["hostels"].length===req.body.hostels.length){
@@ -293,14 +293,13 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
 exports.sortAllHostelsList = async (req,res) => {
     try {
         let spardhaSchedules = await spardhaEventModel.find();
-        // console.log(spardhaSchedules);
-        spardhaSchedules.forEach(async (element) => {
-            let schedule = await spardhaEventModel.findById(element["_id"]);
-            console.log(schedule);
-            console.log("here");
-            await schedule.hostels.sort();
-            console.log(await spardhaEventModel.findById(element["_id"]));
-        });
+        console.log(spardhaSchedules);
+        for(let i=0;i<spardhaSchedules.length;i++){
+            let schedule = await spardhaEventModel.findById(spardhaSchedules[i]["_id"]);
+            console.log(await spardhaEventModel.findById(spardhaSchedules[i]["_id"]));
+            schedule.hostels.sort();
+            await schedule.save();
+        }
         res.json({ "success": true, "message": await  spardhaEventModel.find()});
     } catch (err) {
         res.status(500).json({ "success": false, "message": err.toString() });
