@@ -267,7 +267,19 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
         req.body.hostels.sort();
         let sameEvents = await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage,"hostels":req.body.hostels});
-        if(!(spardhaEventSchedule["event"]===req.body.event && spardhaEventSchedule["category"]===req.body.category && spardhaEventSchedule["stage"]===req.body.stage && spardhaEventSchedule["hostels"]===req.body.hostels) && sameEvents.length!==0){
+        let sameHostels=false;
+        if(spardhaEventSchedule["hostels"].length===req.body.hostels.length){
+            sameHostels=true;
+            for(let i=0;i<spardhaEventSchedule["hostels"].length;i++){
+                if(spardhaEventSchedule["hostels"][i]!==req.body.hostels[i]){
+                    sameHostels=false;
+                    break;
+                }
+            }
+        }
+        console.log(spardhaEventSchedule["event"]===req.body.event,spardhaEventSchedule["category"]===req.body.category,spardhaEventSchedule["stage"]===req.body.stage,sameHostels);
+        console.log(!(spardhaEventSchedule["event"]===req.body.event && spardhaEventSchedule["category"]===req.body.category && spardhaEventSchedule["stage"]===req.body.stage && spardhaEventSchedule["hostels"]===req.body.hostels));
+        if(!(spardhaEventSchedule["event"]===req.body.event && spardhaEventSchedule["category"]===req.body.category && spardhaEventSchedule["stage"]===req.body.stage && sameHostels) && sameEvents.length!==0){
             res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
             return;
         }
@@ -281,10 +293,13 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
 exports.sortAllHostelsList = async (req,res) => {
     try {
         let spardhaSchedules = await spardhaEventModel.find();
-        console.log(spardhaSchedules);
+        // console.log(spardhaSchedules);
         spardhaSchedules.forEach(async (element) => {
             let schedule = await spardhaEventModel.findById(element["_id"]);
+            console.log(schedule);
+            console.log("here");
             await schedule.hostels.sort();
+            console.log(await spardhaEventModel.findById(element["_id"]));
         });
         res.json({ "success": true, "message": await  spardhaEventModel.find()});
     } catch (err) {
