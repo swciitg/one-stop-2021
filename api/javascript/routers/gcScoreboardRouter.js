@@ -80,7 +80,7 @@ gcScoreboardRouter.patch("/gc/spardha/standings/:id",gcRequestsMiddleware,update
 
 gcScoreboardRouter.delete("/gc/spardha/standings/:id",gcRequestsMiddleware,deleteSpardhaStanding);
 
-gcScoreboardRouter.get("/gc/spardha/event-schedule",gcRequestsMiddleware,getSpardhaEventsSchdedules);
+gcScoreboardRouter.get("/gc/spardha/event-schedule",getSpardhaEventsSchdedules);
 
 gcScoreboardRouter.post("/gc/spardha/event-schedule",gcRequestsMiddleware,postSpardhaEventSchedule);
 
@@ -88,7 +88,7 @@ gcScoreboardRouter.patch("/gc/spardha/event-schedule/:id",gcRequestsMiddleware,u
 
 gcScoreboardRouter.delete("/gc/spardha/event-schedule/:id",gcRequestsMiddleware,deleteAnEventSchedule);
 
-gcScoreboardRouter.get("/gc/spardha/event-schedule/results",gcRequestsMiddleware,getSpardhaResults);
+gcScoreboardRouter.get("/gc/spardha/event-schedule/results",getSpardhaResults);
 
 gcScoreboardRouter.patch("/gc/spardha/event-schedule/result/:id",gcRequestsMiddleware,addSpardhaEventResult);
 
