@@ -6,9 +6,11 @@ const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 console.log(accessjwtsecret, refreshjwtsecret);
 const { gcScoreboardAuthMiddleware } = require("../middlewares/gcScoreboardAuth");
 const {checkIfModeratorMiddleware} = require("../middlewares/addAdmin");
-const { deleteAnEventSchedule, postCompetitionAdmins, postCompetitionBoardAdmins,  postSpardhaEvents, getSpardhaEvents, postSpardhaEventSchedule, getSpardhaEventsSchdedules, getGcOverallStandings, getSpardhaOverallStandings, updateSpardhaOverallStanding, updateSpardhaEventSchedule, addSpardhaEventResult, getSpardhaResults, deleteSpardhaEventResult, postSpardhaOverallStandings, deleteSpardhaStanding, getSpardhaEventStandings, sortAllHostelsList} = require("../controllers/gcScoreboardController");
+const { deleteAnEventSchedule, postSpardhaEvents, getSpardhaEvents, postSpardhaEventSchedule, getSpardhaEventsSchdedules, getGcOverallStandings, getSpardhaOverallStandings, updateSpardhaOverallStanding, updateSpardhaEventSchedule, addSpardhaEventResult, getSpardhaResults, deleteSpardhaEventResult, postSpardhaOverallStandings, deleteSpardhaStanding, getSpardhaEventStandings} = require("../controllers/gcScoreboard/spardhaController");
 const { gcRequestsMiddleware } = require("../middlewares/gcChampionshipMiddlewares");
-const { getGcScoreboardStore } = require("../helpers/gcScorebaordHelpers");
+const { getGcScoreboardStore } = require("../helpers/gcScoreboardHelpers");
+const { postCompetitionAdmins, postCompetitionBoardAdmins } = require("../controllers/gcScoreboard/gcController");
+const { getKritiEvents, postKritiEvents } = require("../controllers/gcScoreboard/kritiController");
 
 async function getAuthEvents(email){
     let gcCompetitionsStore = await getGcScoreboardStore();
@@ -58,17 +60,25 @@ gcScoreboardRouter.post("/gc/gen-accesstoken", (req, res) => {
     }
 });
 
-gcScoreboardRouter.post("/gc/competition-admins", checkIfModeratorMiddleware, postCompetitionAdmins);
+gcScoreboardRouter.post("/gc/competition-admins/:competition", checkIfModeratorMiddleware, postCompetitionAdmins);
 
-gcScoreboardRouter.post("/gc/competition-board-admins", checkIfModeratorMiddleware, postCompetitionBoardAdmins);
+gcScoreboardRouter.post("/gc/competition-board-admins/:competition", checkIfModeratorMiddleware, postCompetitionBoardAdmins);
+
+// open routes -> no tokens needed
 
 gcScoreboardRouter.get("/gc/spardha/all-events",getSpardhaEvents);
 
 gcScoreboardRouter.post("/gc/spardha/all-events",checkIfModeratorMiddleware, postSpardhaEvents);
 
+gcScoreboardRouter.get("/gc/kriti/all-events",getKritiEvents);
+
+gcScoreboardRouter.post("/gc/kriti/all-events",checkIfModeratorMiddleware, postKritiEvents);
+
 gcScoreboardRouter.use(gcScoreboardAuthMiddleware); // check tokens for all below routes with this middleware
 
 gcScoreboardRouter.get("/gc/overall/standings",getGcOverallStandings);
+
+// spardha routes
 
 gcScoreboardRouter.get("/gc/spardha/standings",getSpardhaOverallStandings);
 
@@ -93,5 +103,10 @@ gcScoreboardRouter.get("/gc/spardha/event-schedule/results",gcRequestsMiddleware
 gcScoreboardRouter.patch("/gc/spardha/event-schedule/result/:id",gcRequestsMiddleware,addSpardhaEventResult);
 
 gcScoreboardRouter.delete("/gc/spardha/event-schedule/result/:id",gcRequestsMiddleware,deleteSpardhaEventResult);
+
+
+// kriti routes
+
+
 
 module.exports = { gcScoreboardRouter };

@@ -1,14 +1,5 @@
-const { getGcScoreboardStore, checkIfAdmin, checkIfBoardAdmin } = require("../helpers/gcScorebaordHelpers");
-const { gcCompetitionsStoreModel, spardhaEventModel, spardhaOverallStandingsModel, spardhaResultModel} = require("../models/gcScoreboardModel");
-
-async function ifValidEvent(event,competition){
-    let gcCompetitionsStore = await getGcScoreboardStore();
-    if(competition==="spardha" && gcCompetitionsStore.spardha_events.includes(event) ||
-    competition==="manthan" && gcCompetitionsStore.manthan_events.includes(event) ||
-    competition==="kriti" && gcCompetitionsStore.kriti_events.includes(event)
-    ) return true;
-    return false;
-}
+const { getGcScoreboardStore, checkIfAdmin, checkIfBoardAdmin, ifValidEvent } = require("../../helpers/gcScoreboardHelpers");
+const { spardhaEventModel, spardhaOverallStandingsModel} = require("../../models/gcModels/spardhaModel");
 
 async function ifAuthorizedForSpardhaEventSchedules(eventId, email){
     let spardhaEventSchedule = await spardhaEventModel.findById(eventId);
@@ -299,8 +290,6 @@ exports.addSpardhaEventResult = async (req,res) => {
             return;
         }
         console.log(req.body.results);
-        let spardhaEventResults = Array.from(req.body.results,(positionResults) => Array.from(positionResults), (result) => spardhaResultModel(result));
-        console.log(spardhaEventResults);
         req.body.resultAdded=true;
         await spardhaEventModel.findOneAndUpdate({_id : id},req.body,{runValidators: true});
         console.log((await spardhaEventModel.findById(id)));
@@ -329,51 +318,5 @@ exports.deleteSpardhaEventResult = async (req,res) => {
     }
     catch(err){
         res.status(500).json({ "success": false, "message": err.toString() });
-    }
-}
-
-
-exports.postCompetitionAdmins = async (req, res) => {
-    try {
-        const competition = req.query.competition;
-        const emails = req.body.emails;
-        if(emails===undefined || competition===undefined){
-            res.status(400).json({ "success": false, "message": "Not Valid parameters in request body"});
-            return;
-        }
-        const gcScoreboardStore = await getGcScoreboardStore();
-        if (competition == "spardha") gcScoreboardStore.spardha_admins = emails;
-        else if (competition == "manthan") gcScoreboardStore.manthan_admins = emails;
-        else if(competition=="kriti") gcScoreboardStore.kriti_admins = emails;
-        console.log(gcScoreboardStore);
-        await gcCompetitionsStoreModel.findByIdAndUpdate(gcScoreboardStore._id, gcScoreboardStore);
-        res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} admin list` });
-
-    } catch (err) {
-        res.status(500).json({ "success": false, "message": err.toString() });
-        return;
-    }
-}
-
-exports.postCompetitionBoardAdmins = async (req, res) => {
-    try {
-        const competition = req.query.competition;
-        const emails = req.body.emails;
-        if(emails===undefined || competition===undefined){
-            res.status(400).json({ "success": false, "message": "Not valid parameters in request"});
-            return;
-        }
-        const gcScoreboardStore = await getGcScoreboardStore();
-        if (competition == "spardha") gcScoreboardStore.spardha_board_admins = emails;
-        else if (competition == "manthan") gcScoreboardStore.manthan_board_admins = emails;
-        else if(competition=="kriti") gcScoreboardStore.kriti_board_admins = emails;
-        console.log(gcScoreboardStore);
-        await gcCompetitionsStoreModel.findByIdAndUpdate(gcScoreboardStore._id, gcScoreboardStore);
-
-        res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} board admin list` });
-
-    } catch (err) {
-        res.status(500).json({ "success": false, "message": err.toString() });
-        return;
     }
 }
