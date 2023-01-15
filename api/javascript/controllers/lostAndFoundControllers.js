@@ -2,11 +2,9 @@ const LostModel = require("../models/LostModel");
 const FoundModel = require("../models/foundModel");
 const fs = require("fs");
 const path = require("path");
-const deepai = require("deepai");
 const uuid = require("uuid");
 const sharp = require("sharp");
 const mongoose = require("mongoose");
-deepai.setApiKey(process.env.NSFW_API_KEY);
 
 
 exports.getAllImages = async (req,res) => {
@@ -181,14 +179,6 @@ exports.postLostDetails = async (req, res) => {
         console.log("Here 2");
         console.log(process.env.NSFW_API_KEY);
         console.log(imagePath);
-        var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-          image: fs.createReadStream(imagePath),
-        });
-        fs.unlinkSync(imagePath);
-        if (safeToUseResp.output.nsfw_score > 0.1) {
-          res.json({ saved_successfully: false, image_safe: false });
-          return;
-        }
         const newLostDetail = await new LostModel({
           title,
           location,
@@ -382,14 +372,6 @@ exports.postfoundDetails = async (req, res) => {
           .toFile(compressedImagePath);
         console.log("Here 1");
         console.log("Here 2");
-        var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-          image: fs.createReadStream(imagePath),
-        });
-        fs.unlinkSync(imagePath);
-        if (safeToUseResp.output.nsfw_score > 0.1) {
-          res.json({ saved_successfully: false, image_safe: false });
-          return;
-        }
         const newFoundDetail = await new FoundModel({
           title,
           location,
