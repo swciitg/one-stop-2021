@@ -26,24 +26,6 @@ async function ifAuthorizedForSpardhaStandings(eventId, email){
     return true;
 }
 
-// Spardha - user
-
-exports.getEventsResult = async (req, res) => {
-    try {
-        const query_email = req.query.email;
-        if (query_email) {
-            const events = await spardhaEventModel.find({ posterEmail: query_email, resultAdded: true });
-            res.status(200).json({ "success": true, "details": events });
-        }
-        else {
-            const events = await spardhaEventModel.find({ resultAdded: true });
-            res.status(200).json({ "success": true, "details": events });
-        }
-    } catch (err) {
-        res.status(403).json({ "success": false, "message": err.toString() });
-    }
-}
-
 exports.postSpardhaEvents= async (req, res) => {
     try {
         let spardhaEvents = req.body.events;
@@ -107,18 +89,6 @@ exports.postSpardhaEventSchedule = async (req, res) => {
     }
     catch (err) {
         res.status(500).json({ "success": false, "message": err.toString() });
-    }
-};
-
-// Spardha - admin
-exports.addResultSpardha = async (req, res) => {
-    try {
-        let spardhaEvent = new spardhaEventSchedule(req.body);
-        await spardhaEvent.save();
-        res.json({ "success": true });
-    }
-    catch (err) {
-        res.status(400).json({ "success": false, "message": err.toString() });
     }
 };
 
@@ -289,22 +259,6 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for r
     }
 }
 
-exports.sortAllHostelsList = async (req,res) => {
-    try {
-        let spardhaSchedules = await spardhaEventModel.find();
-        console.log(spardhaSchedules);
-        for(let i=0;i<spardhaSchedules.length;i++){
-            let schedule = await spardhaEventModel.findById(spardhaSchedules[i]["_id"]);
-            console.log(await spardhaEventModel.findById(spardhaSchedules[i]["_id"]));
-            schedule.hostels.sort();
-            await schedule.save();
-        }
-        res.json({ "success": true, "message": await  spardhaEventModel.find()});
-    } catch (err) {
-        res.status(500).json({ "success": false, "message": err.toString() });
-    }
-}
-
 exports.deleteAnEventSchedule = async (req, res) => {
     try {
         const id = req.params.id;
@@ -378,7 +332,6 @@ exports.deleteSpardhaEventResult = async (req,res) => {
     }
 }
 
-//Add admins
 
 exports.postCompetitionAdmins = async (req, res) => {
     try {
