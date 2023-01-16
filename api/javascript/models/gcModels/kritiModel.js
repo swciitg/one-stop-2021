@@ -89,7 +89,7 @@ kritiEventSchema.pre('save',function(){
     else if(this.difficulty === 'Mid'){
         this.points = 250;
     }
-    else this.points = 200;
+    else this.points = 150;
 });
 
 module.exports = {"kritiEventModel" : mongoose.model("kritiEventSchedule",kritiEventSchema)}
