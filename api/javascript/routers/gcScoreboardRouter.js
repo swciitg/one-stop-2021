@@ -10,7 +10,7 @@ const { deleteAnEventSchedule, postSpardhaEvents, getSpardhaEvents, postSpardhaE
 const { gcRequestsMiddleware } = require("../middlewares/gcChampionshipMiddlewares");
 const { getGcScoreboardStore } = require("../helpers/gcScoreboardHelpers");
 const { postCompetitionAdmins, postCompetitionBoardAdmins } = require("../controllers/gcScoreboard/gcController");
-const { getKritiEvents, postKritiEvents } = require("../controllers/gcScoreboard/kritiController");
+const { getKritiEvents, postKritiEvents, getKritiEventsSchdedules, postKritiEventSchedule, updateKritiEventSchedule, deleteKritiEventSchedule, getKritiResults, addKritiEventResult, deleteKritiEventResult } = require("../controllers/gcScoreboard/kritiController");
 
 async function getAuthEvents(email){
     let gcCompetitionsStore = await getGcScoreboardStore();
@@ -90,7 +90,7 @@ gcScoreboardRouter.patch("/gc/spardha/standings/:id",gcRequestsMiddleware,update
 
 gcScoreboardRouter.delete("/gc/spardha/standings/:id",gcRequestsMiddleware,deleteSpardhaStanding);
 
-gcScoreboardRouter.get("/gc/spardha/event-schedule",gcRequestsMiddleware,getSpardhaEventsSchdedules);
+gcScoreboardRouter.get("/gc/spardha/event-schedule",getSpardhaEventsSchdedules);
 
 gcScoreboardRouter.post("/gc/spardha/event-schedule",gcRequestsMiddleware,postSpardhaEventSchedule);
 
@@ -98,7 +98,7 @@ gcScoreboardRouter.patch("/gc/spardha/event-schedule/:id",gcRequestsMiddleware,u
 
 gcScoreboardRouter.delete("/gc/spardha/event-schedule/:id",gcRequestsMiddleware,deleteAnEventSchedule);
 
-gcScoreboardRouter.get("/gc/spardha/event-schedule/results",gcRequestsMiddleware,getSpardhaResults);
+gcScoreboardRouter.get("/gc/spardha/event-schedule/results",getSpardhaResults);
 
 gcScoreboardRouter.patch("/gc/spardha/event-schedule/result/:id",gcRequestsMiddleware,addSpardhaEventResult);
 
@@ -107,6 +107,18 @@ gcScoreboardRouter.delete("/gc/spardha/event-schedule/result/:id",gcRequestsMidd
 
 // kriti routes
 
+gcScoreboardRouter.get("/gc/kriti/event-schedule",getKritiEventsSchdedules);
 
+gcScoreboardRouter.post("/gc/kriti/event-schedule",gcRequestsMiddleware,postKritiEventSchedule);
+
+gcScoreboardRouter.patch("/gc/kriti/event-schedule/:id",gcRequestsMiddleware,updateKritiEventSchedule);
+
+gcScoreboardRouter.delete("/gc/kriti/event-schedule/:id",gcRequestsMiddleware,deleteKritiEventSchedule);
+
+gcScoreboardRouter.get("/gc/kriti/event-schedule/results",getKritiResults);
+
+gcScoreboardRouter.patch("/gc/kriti/event-schedule/result/:id",gcRequestsMiddleware,addKritiEventResult);
+
+gcScoreboardRouter.delete("/gc/kriti/event-schedule/result/:id",gcRequestsMiddleware,deleteKritiEventResult);
 
 module.exports = { gcScoreboardRouter };

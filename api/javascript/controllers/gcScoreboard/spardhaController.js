@@ -216,7 +216,7 @@ exports.deleteSpardhaStanding = async (req,res) => {
     }
 }
 
-exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for result posting and updation
+exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for updation
     try {
         const id = req.params.id;
         console.log(req.body.email,id);
@@ -259,7 +259,7 @@ exports.deleteAnEventSchedule = async (req, res) => {
             return;
         }
         await spardhaEventModel.findByIdAndDelete(id);
-        res.json({ "success": true, "message": "Spardha event delete successfully" });
+        res.json({ "success": true, "message": "Spardha event deleted successfully" });
     } catch (err) {
         res.status(500).json({ "success": false, "message": err.toString() });
     }
@@ -273,7 +273,7 @@ exports.getSpardhaResults = async (req,res) => {
             filters["posterEmail"]=req.body.email;
         }
         console.log(filters);
-        const events = await spardhaEventModel.find(filters).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
+        const events = await spardhaEventModel.find(filters).sort({ "date": -1 }); // send all event schedules if no email passed or passed email belongs to board admin
         res.status(200).json({ "success": true, "details": events });
     }
     catch(err){
@@ -281,7 +281,7 @@ exports.getSpardhaResults = async (req,res) => {
     }
 }
 
-exports.addSpardhaEventResult = async (req,res) => {
+exports.addSpardhaEventResult = async (req,res) => { // for result added and updation
     try{
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
