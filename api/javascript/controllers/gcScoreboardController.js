@@ -62,7 +62,7 @@ exports.getSpardhaEventsSchdedules = async (req, res) => {
             filters["posterEmail"]=req.body.email;
         }
         console.log(filters);
-        const events = await spardhaEventModel.find(filters).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
+        const events = await spardhaEventModel.find(filters).sort({ "date": -1 }); // send all event schedules if no email passed or passed email belongs to board admin
         res.status(200).json({ "success": true, "details": events });
     }
     catch(err){
