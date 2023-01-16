@@ -60,19 +60,21 @@ gcScoreboardRouter.post("/gc/gen-accesstoken", (req, res) => {
     }
 });
 
+// Moderator routes
+
 gcScoreboardRouter.post("/gc/competition-admins/:competition", checkIfModeratorMiddleware, postCompetitionAdmins);
 
 gcScoreboardRouter.post("/gc/competition-board-admins/:competition", checkIfModeratorMiddleware, postCompetitionBoardAdmins);
+
+gcScoreboardRouter.post("/gc/spardha/all-events",checkIfModeratorMiddleware, postSpardhaEvents);
+
+gcScoreboardRouter.post("/gc/kriti/all-events",checkIfModeratorMiddleware, postKritiEvents);
 
 // open routes -> no tokens needed
 
 gcScoreboardRouter.get("/gc/spardha/all-events",getSpardhaEvents);
 
-gcScoreboardRouter.post("/gc/spardha/all-events",checkIfModeratorMiddleware, postSpardhaEvents);
-
 gcScoreboardRouter.get("/gc/kriti/all-events",getKritiEvents);
-
-gcScoreboardRouter.post("/gc/kriti/all-events",checkIfModeratorMiddleware, postKritiEvents);
 
 gcScoreboardRouter.use(gcScoreboardAuthMiddleware); // check tokens for all below routes with this middleware
 

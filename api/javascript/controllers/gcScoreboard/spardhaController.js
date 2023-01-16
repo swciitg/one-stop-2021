@@ -219,6 +219,7 @@ exports.deleteSpardhaStanding = async (req,res) => {
 exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for updation
     try {
         const id = req.params.id;
+        req.body.posterEmail = req.body.email;
         console.log(req.body.email,id);
         if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false){
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});

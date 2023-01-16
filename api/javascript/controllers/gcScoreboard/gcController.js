@@ -36,6 +36,7 @@ exports.postCompetitionBoardAdmins = async (req, res) => {
             return;
         }
         const gcScoreboardStore = await getGcScoreboardStore();
+    
         if (competition == "spardha") gcScoreboardStore.spardha_board_admins = emails;
         else if (competition == "manthan") gcScoreboardStore.manthan_board_admins = emails;
         else if(competition=="kriti") gcScoreboardStore.kriti_board_admins = emails;
@@ -44,8 +45,7 @@ exports.postCompetitionBoardAdmins = async (req, res) => {
             return;
         }
         console.log(gcScoreboardStore);
-        await gcCompetitionsStoreModel.findByIdAndUpdate(gcScoreboardStore._id, gcScoreboardStore);
-
+        await gcScoreboardStore.save();
         res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} board admin list` });
 
     } catch (err) {

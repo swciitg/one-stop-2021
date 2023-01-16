@@ -1,4 +1,4 @@
-const { getGcScoreboardStore, checkIfAdmin, checkIfBoardAdmin } = require("../../helpers/gcScoreboardHelpers");
+const { getGcScoreboardStore, checkIfAdmin, checkIfBoardAdmin, ifValidEvent } = require("../../helpers/gcScoreboardHelpers");
 const { kritiEventModel } = require("../../models/gcModels/kritiModel");
 
 async function ifAuthorizedForKritiEventSchedules(eventId, email){
@@ -40,6 +40,16 @@ exports.postKritiEvents= async (req, res) => {
 exports.postKritiEventSchedule = async (req,res) => {
     try{
         req.body.posterEmail = req.body.email;
+        console.log(req.body);
+        if(await ifValidEvent(req.body.event,"kriti")===false){
+            res.status(406).json({ "success": false, "message": "Event not in list of kriti events"});
+            return;
+        }
+        if((await kritiEventModel.find({"event" : req.body.event})).length!==0){
+            res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
+            return;
+        }
+        console.log(req.body);
         await kritiEventModel(req.body).save();
         res.json({"success" : true, "message" : "kriti event schedule posted successfully"});
     }
@@ -69,6 +79,7 @@ exports.getKritiEventsSchdedules = async (req, res) => {
 exports.updateKritiEventSchedule = async (req, res) => { // this is used for result posting and updation
     try {
         const id = req.params.id;
+        req.body.posterEmail = req.body.email;
         console.log(req.body.email,id);
         if(await ifAuthorizedForKritiEventSchedules(id,req.body.email)===false){
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
@@ -77,6 +88,7 @@ exports.updateKritiEventSchedule = async (req, res) => { // this is used for res
         let kritiEventSchedule = await kritiEventModel.findById(id);
         req.body.clubs.sort();
         let sameEvents = await kritiEventModel.find({"event" : req.body.event});
+        console.log(sameEvents);
         if(!(kritiEventSchedule["event"]===req.body.event) && sameEvents.length!==0){
             res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
             return;

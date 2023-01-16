@@ -37,7 +37,7 @@ exports.getGcScoreboardStore = async () => {
 }
 
 exports.ifValidEvent = async (event,competition) => {
-    let gcCompetitionsStore = await getGcScoreboardStore();
+    let gcCompetitionsStore = await fetchGcScoreboardStore();
     if(competition==="spardha" && gcCompetitionsStore.spardha_events.includes(event) ||
     competition==="manthan" && gcCompetitionsStore.manthan_events.includes(event) ||
     competition==="kriti" && gcCompetitionsStore.kriti_events.includes(event)

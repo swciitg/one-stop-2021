@@ -1,32 +1,5 @@
 const mongoose = require("mongoose");
-const { allIITGHostels } = require("../../helpers/constants");
-
-const clubSchema = new mongoose.Schema({
-    "name" : {
-        type: String,
-        enum: ["Coding Club","CnA Club","E-Cell","Robotics Club"]
-    }
-});
-
-const difficultySchema = new mongoose.Schema({
-    "problemType" : {
-        type: String,
-        enum: ["High","Mid","Low"],
-        required: true
-    },
-    "points" : {
-        type: Number,
-        set: () => {
-            if(this.problemType === 'High'){
-                return 400;
-            }
-            else if(this.problemType === 'Mid'){
-                return 250;
-            }
-            return 200;
-        }
-    }
-});
+const { allIITGHostels, allIITGTechClubs } = require("../../helpers/constants");
 
 const kritiHostelResultSchema = new mongoose.Schema({
     "hostelName": {
@@ -50,15 +23,19 @@ const kritiEventSchema = new mongoose.Schema({
         required: true,
         enum: ["Brainiac Cup","Astro Cup","Business Cup"]
     },
+    "difficulty" : {
+        type: String,
+        enum: ["High","Mid","Low"],
+        required: true
+    },
+    "points": {
+        type: Number
+    },
     "startDate" : {
         type: Date,
         required: true
     },
-    "startTime" : {
-        type: Date,
-        required: true
-    },
-    "endTime" : {
+    "endDate" : {
         type: Date,
         required: true
     },
@@ -71,8 +48,15 @@ const kritiEventSchema = new mongoose.Schema({
         required: true
     },
     "clubs": {
-        type: [clubSchema],
+        type: [String],
         required: true,
+        validate: function(clubNames){
+            clubNames.forEach(element => {
+                if(allIITGTechClubs.includes(element) === false){
+                    throw new Error("Not in tech clubs list")
+                }
+            });
+        }
     },
     "posterEmail" : {
         type: String,
@@ -86,14 +70,26 @@ const kritiEventSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    "difficulty" : {
-        type: difficultySchema,
-        required: true
-    },
     "results" : {
         type: [kritiHostelResultSchema],
-        default: []
+        default: [],
+        validate: function(results){
+            let set = new Set();
+            results.forEach((element) => set.add(element["hostelName"]));
+            if(set.size !== results.length) throw new Error("Some hostel is added twice in list");
+        }
     }
+});
+
+kritiEventSchema.pre('save',function(){
+    console.log("setting points");
+    if(this.difficulty === 'High'){
+        this.points = 400;
+    }
+    else if(this.difficulty === 'Mid'){
+        this.points = 250;
+    }
+    else this.points = 200;
 });
 
 module.exports = {"kritiEventModel" : mongoose.model("kritiEventSchedule",kritiEventSchema)}
