@@ -79,13 +79,13 @@ exports.getKritiEventsSchdedules = async (req, res) => {
 exports.updateKritiEventSchedule = async (req, res) => { // this is used for result posting and updation
     try {
         const id = req.params.id;
-        req.body.posterEmail = req.body.email;
         console.log(req.body.email,id);
         if(await ifAuthorizedForKritiEventSchedules(id,req.body.email)===false){
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
             return;
         }
         let kritiEventSchedule = await kritiEventModel.findById(id);
+        req.body.posterEmail = kritiEventSchedule.posterEmail;
         req.body.clubs.sort();
         let sameEvents = await kritiEventModel.find({"event" : req.body.event});
         console.log(sameEvents);
