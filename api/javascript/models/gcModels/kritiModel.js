@@ -53,7 +53,7 @@ const kritiEventSchema = new mongoose.Schema({
         validate: function(clubNames){
             clubNames.forEach(element => {
                 if(allIITGTechClubs.includes(element) === false){
-                    throw new Error("Not in tech clubs list")
+                    throw new Error("Some clubs not in tech clubs list")
                 }
             });
         }
@@ -76,7 +76,7 @@ const kritiEventSchema = new mongoose.Schema({
         validate: function(results){
             let set = new Set();
             results.forEach((element) => set.add(element["hostelName"]));
-            if(set.size !== results.length) throw new Error("Some hostel is added twice in list");
+            if(set.size !== results.length) throw new Error("Some hostel is added more than once in list");
         }
     }
 });

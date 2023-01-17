@@ -156,12 +156,12 @@ exports.postSpardhaOverallStandings = async (req, res) => {
 exports.updateSpardhaOverallStanding = async (req,res) => {
     try{
         let id = req.params.id;
-        req.body.posterEmail = req.body.email;
         if(await ifAuthorizedForSpardhaStandings(id,req.body.email)===false){
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
             return;
         }
         let spardhaOverallStandingEvent = await spardhaOverallStandingsModel.findById(id);
+        req.body.posterEmail = spardhaOverallStandingEvent.posterEmail;
         let sameStandings = await spardhaOverallStandingsModel.find({"event" : req.body.event,"category" : req.body.category});
         if(!(req.body.event===spardhaOverallStandingEvent["event"] && req.body.category===spardhaOverallStandingEvent["category"]) && sameStandings.length!==0){
             res.status(406).json({ "success": false, "message": "Standings already added for this event & category"});
