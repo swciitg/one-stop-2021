@@ -228,13 +228,13 @@ exports.deleteSpardhaStanding = async (req,res) => {
 exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for result posting and updation
     try {
         const id = req.params.id;
-        req.body.posterEmail = req.body.email;
         console.log(req.body.email,id);
         if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false){
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
             return;
         }
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
+        req.body.posterEmail = spardhaEventSchedule.posterEmail;
         req.body.hostels.sort();
         let sameEvents = await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage,"hostels":req.body.hostels});
         let sameHostels=false;
