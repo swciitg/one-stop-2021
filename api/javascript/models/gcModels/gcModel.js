@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require('mongoose-double')(mongoose);
 
 const gcHostelWisePointsSchema = new mongoose.Schema({
     "hostelName" : {
@@ -6,15 +7,15 @@ const gcHostelWisePointsSchema = new mongoose.Schema({
         required: true
     },
     "spardha_points": {
-        type: Number,
+        type: mongoose.Schema.Types.Double,
         default: 0
     },
     "kriti_points": {
-        type: Number,
+        type: mongoose.Schema.Types.Double,
         default: 0
     },
     "manthan_points": {
-        type: Number,
+        type: mongoose.Schema.Types.Double,
         default: 0
     }
 });

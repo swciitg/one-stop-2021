@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require('mongoose-double')(mongoose);
 const { allIITGHostels } = require("../../helpers/constants");
 
 const hostelOverallStandingsPointsSchema = new mongoose.Schema({
@@ -8,7 +9,7 @@ const hostelOverallStandingsPointsSchema = new mongoose.Schema({
         enum: allIITGHostels
     },
     "points" : {
-        type: Number,
+        type: mongoose.Schema.Types.Double,
         required: true
     }
 });

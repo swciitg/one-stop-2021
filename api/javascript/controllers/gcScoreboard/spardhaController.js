@@ -53,8 +53,8 @@ exports.getSpardhaEventsSchdedules = async (req, res) => {
             filters["posterEmail"]=req.body.email;
         }
         console.log(filters);
-        const events = await spardhaEventModel.find(filters).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
-        res.status(200).json({ "success": true, "details": events });
+        const eventschedules = await spardhaEventModel.find(filters).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
+        res.status(200).json({ "success": true, "details": eventschedules });
     }
     catch(err){
         res.status(500).json({ "success": false, "message" : err.toString() });
@@ -137,11 +137,13 @@ exports.postSpardhaOverallStandings = async (req, res) => {
             return;
         }
         let spardhaOverallStandingEvent = spardhaOverallStandingsModel(req.body);
+        console.log(spardhaOverallStandingEvent);
         await spardhaOverallStandingEvent.save();
         let gcCompetitionsStore = await getGcScoreboardStore();
         req.body.standings.forEach((hostelOverallStanding) => {
             gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
                 if(hostelGcPoints["hostelName"]===hostelOverallStanding["hostelName"]){
+                    // console.log(parseFloat(hostelGcPoints["spardha_points"].toString()));
                     hostelGcPoints["spardha_points"]+=hostelOverallStanding["points"];
                 }
             });

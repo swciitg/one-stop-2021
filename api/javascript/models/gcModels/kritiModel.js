@@ -8,7 +8,7 @@ const kritiHostelResultSchema = new mongoose.Schema({
         enum: allIITGHostels
     },
     "points": {
-        type: Number,
+        type: mongoose.Schema.Types.Double,
         required: true
     }
 });
@@ -29,7 +29,7 @@ const kritiEventSchema = new mongoose.Schema({
         required: true
     },
     "points": {
-        type: Number
+        type: mongoose.Schema.Types.Double,
     },
     "startDate" : {
         type: Date,
