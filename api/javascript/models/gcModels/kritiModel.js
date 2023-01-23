@@ -31,17 +31,9 @@ const kritiEventSchema = new mongoose.Schema({
     "points": {
         type: mongoose.Schema.Types.Double,
     },
-    "startDate" : {
+    "date" : {
         type: Date,
         required: true
-    },
-    "endDate" : {
-        type: Date,
-        required: true
-    },
-    "isScheduled" : {
-        type: Boolean,
-        default: true
     },
     "venue": {
         type: String,

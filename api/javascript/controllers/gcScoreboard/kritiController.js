@@ -36,6 +36,31 @@ exports.postKritiEvents= async (req, res) => {
     }
 }
 
+exports.getKritiOverallStandings = async (req,res) => {
+    try{
+        let gcCompetitionsStore = await getGcScoreboardStore();
+        let gcStandings = [];
+        gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
+            console.log(hostelGcPoints);
+            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : hostelGcPoints["kriti_points"]});
+        });
+        res.json({"success" : true,"details" : gcStandings});
+    }
+    catch(err){
+        res.status(500).json({ "success": false, "message": err.toString() });
+    }
+}
+
+exports.getKritiEventStandings = async (req,res) => {
+    try{
+        let eventsSchedules = await kritiEventModel.find({"resultAdded" : true});
+        res.json({"success" : true,"details" : eventsSchedules});
+    }
+    catch(err){
+        res.status(500).json({ "success": false, "message": err.toString() });
+    }
+}
+
 
 exports.postKritiEventSchedule = async (req,res) => {
     try{

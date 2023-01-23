@@ -10,7 +10,7 @@ const { deleteAnEventSchedule, postSpardhaEvents, getSpardhaEvents, postSpardhaE
 const { gcRequestsMiddleware } = require("../middlewares/gcChampionshipMiddlewares");
 const { getGcScoreboardStore } = require("../helpers/gcScoreboardHelpers");
 const { postCompetitionAdmins, postCompetitionBoardAdmins } = require("../controllers/gcScoreboard/gcController");
-const { getKritiEvents, postKritiEvents, getKritiEventsSchdedules, postKritiEventSchedule, updateKritiEventSchedule, deleteKritiEventSchedule, getKritiResults, addKritiEventResult, deleteKritiEventResult } = require("../controllers/gcScoreboard/kritiController");
+const { getKritiEvents, postKritiEvents, getKritiEventsSchdedules, postKritiEventSchedule, updateKritiEventSchedule, deleteKritiEventSchedule, getKritiResults, addKritiEventResult, deleteKritiEventResult, getKritiOverallStandings, getKritiEventStandings } = require("../controllers/gcScoreboard/kritiController");
 
 async function getAuthEvents(email){
     let gcCompetitionsStore = await getGcScoreboardStore();
@@ -40,6 +40,7 @@ gcScoreboardRouter.post("/gc/login", async (req, res) => {
         console.log(jwt.verify(accessToken, accessjwtsecret));
         const refreshToken = jwt.sign({ "email": email }, refreshjwtsecret, { expiresIn: "7 days" });
         const authEvents = await getAuthEvents(email);
+        console.log(authEvents);
         const isAdmin = authEvents.length===0 ? false : true;
         res.json({ "success": true, accessToken, refreshToken, isAdmin, authEvents });
     }
@@ -108,6 +109,10 @@ gcScoreboardRouter.delete("/gc/spardha/event-schedule/result/:id",gcRequestsMidd
 
 
 // kriti routes
+
+gcScoreboardRouter.get("/gc/kriti/standings",getKritiOverallStandings);
+
+gcScoreboardRouter.get("/gc/kriti/standings/all-events",getKritiEventStandings);
 
 gcScoreboardRouter.get("/gc/kriti/event-schedule",getKritiEventsSchdedules);
 
