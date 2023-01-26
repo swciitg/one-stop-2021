@@ -109,6 +109,10 @@ exports.updateKritiEventSchedule = async (req, res) => { // this is used for res
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
             return;
         }
+        if((await kritiEventModel.find({"event" : req.body.event})).length!==0){
+            res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
+            return;
+        }
         let kritiEventSchedule = await kritiEventModel.findById(id);
         req.body.posterEmail = kritiEventSchedule.posterEmail;
         req.body.clubs.sort();
