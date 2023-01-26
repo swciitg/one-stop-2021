@@ -1,5 +1,5 @@
 const express = require("express");
-const { checkIfAdmin, checkIfBoardAdmin } = require("../helpers/gcScorebaordHelpers");
+const { checkIfAdmin, checkIfBoardAdmin } = require("../helpers/gcScoreboardHelpers");
 
 exports.gcRequestsMiddleware = async (req,res,next)=>{
     try{

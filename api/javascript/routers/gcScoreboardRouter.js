@@ -6,9 +6,11 @@ const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 console.log(accessjwtsecret, refreshjwtsecret);
 const { gcScoreboardAuthMiddleware } = require("../middlewares/gcScoreboardAuth");
 const {checkIfModeratorMiddleware} = require("../middlewares/addAdmin");
-const { deleteAnEventSchedule, postCompetitionAdmins, postCompetitionBoardAdmins,  postSpardhaEvents, getSpardhaEvents, postSpardhaEventSchedule, getSpardhaEventsSchdedules, getGcOverallStandings, getSpardhaOverallStandings, updateSpardhaOverallStanding, updateSpardhaEventSchedule, addSpardhaEventResult, getSpardhaResults, deleteSpardhaEventResult, postSpardhaOverallStandings, deleteSpardhaStanding, getSpardhaEventStandings, sortAllHostelsList} = require("../controllers/gcScoreboardController");
+const { deleteAnEventSchedule, postSpardhaEvents, getSpardhaEvents, postSpardhaEventSchedule, getSpardhaEventsSchdedules, getGcOverallStandings, getSpardhaOverallStandings, updateSpardhaOverallStanding, updateSpardhaEventSchedule, addSpardhaEventResult, getSpardhaResults, deleteSpardhaEventResult, postSpardhaOverallStandings, deleteSpardhaStanding, getSpardhaEventStandings} = require("../controllers/gcScoreboard/spardhaController");
 const { gcRequestsMiddleware } = require("../middlewares/gcChampionshipMiddlewares");
-const { getGcScoreboardStore } = require("../helpers/gcScorebaordHelpers");
+const { getGcScoreboardStore } = require("../helpers/gcScoreboardHelpers");
+const { postCompetitionAdmins, postCompetitionBoardAdmins } = require("../controllers/gcScoreboard/gcController");
+const { getKritiEvents, postKritiEvents, getKritiEventsSchdedules, postKritiEventSchedule, updateKritiEventSchedule, deleteKritiEventSchedule, getKritiResults, addKritiEventResult, deleteKritiEventResult, getKritiOverallStandings, getKritiEventStandings } = require("../controllers/gcScoreboard/kritiController");
 
 async function getAuthEvents(email){
     let gcCompetitionsStore = await getGcScoreboardStore();
@@ -38,6 +40,7 @@ gcScoreboardRouter.post("/gc/login", async (req, res) => {
         console.log(jwt.verify(accessToken, accessjwtsecret));
         const refreshToken = jwt.sign({ "email": email }, refreshjwtsecret, { expiresIn: "7 days" });
         const authEvents = await getAuthEvents(email);
+        console.log(authEvents);
         const isAdmin = authEvents.length===0 ? false : true;
         res.json({ "success": true, accessToken, refreshToken, isAdmin, authEvents });
     }
@@ -58,17 +61,27 @@ gcScoreboardRouter.post("/gc/gen-accesstoken", (req, res) => {
     }
 });
 
-gcScoreboardRouter.post("/gc/competition-admins", checkIfModeratorMiddleware, postCompetitionAdmins);
+// Moderator routes
 
-gcScoreboardRouter.post("/gc/competition-board-admins", checkIfModeratorMiddleware, postCompetitionBoardAdmins);
+gcScoreboardRouter.post("/gc/competition-admins/:competition", checkIfModeratorMiddleware, postCompetitionAdmins);
+
+gcScoreboardRouter.post("/gc/competition-board-admins/:competition", checkIfModeratorMiddleware, postCompetitionBoardAdmins);
+
+gcScoreboardRouter.post("/gc/spardha/all-events",checkIfModeratorMiddleware, postSpardhaEvents);
+
+gcScoreboardRouter.post("/gc/kriti/all-events",checkIfModeratorMiddleware, postKritiEvents);
+
+// open routes -> no tokens needed
 
 gcScoreboardRouter.get("/gc/spardha/all-events",getSpardhaEvents);
 
-gcScoreboardRouter.post("/gc/spardha/all-events",checkIfModeratorMiddleware, postSpardhaEvents);
+gcScoreboardRouter.get("/gc/kriti/all-events",getKritiEvents);
 
 gcScoreboardRouter.use(gcScoreboardAuthMiddleware); // check tokens for all below routes with this middleware
 
 gcScoreboardRouter.get("/gc/overall/standings",getGcOverallStandings);
+
+// spardha routes
 
 gcScoreboardRouter.get("/gc/spardha/standings",getSpardhaOverallStandings);
 
@@ -93,5 +106,26 @@ gcScoreboardRouter.get("/gc/spardha/event-schedule/results",getSpardhaResults);
 gcScoreboardRouter.patch("/gc/spardha/event-schedule/result/:id",gcRequestsMiddleware,addSpardhaEventResult);
 
 gcScoreboardRouter.delete("/gc/spardha/event-schedule/result/:id",gcRequestsMiddleware,deleteSpardhaEventResult);
+
+
+// kriti routes
+
+gcScoreboardRouter.get("/gc/kriti/standings",getKritiOverallStandings);
+
+gcScoreboardRouter.get("/gc/kriti/standings/all-events",getKritiEventStandings);
+
+gcScoreboardRouter.get("/gc/kriti/event-schedule",getKritiEventsSchdedules);
+
+gcScoreboardRouter.post("/gc/kriti/event-schedule",gcRequestsMiddleware,postKritiEventSchedule);
+
+gcScoreboardRouter.patch("/gc/kriti/event-schedule/:id",gcRequestsMiddleware,updateKritiEventSchedule);
+
+gcScoreboardRouter.delete("/gc/kriti/event-schedule/:id",gcRequestsMiddleware,deleteKritiEventSchedule);
+
+gcScoreboardRouter.get("/gc/kriti/event-schedule/results",getKritiResults);
+
+gcScoreboardRouter.patch("/gc/kriti/event-schedule/result/:id",gcRequestsMiddleware,addKritiEventResult);
+
+gcScoreboardRouter.delete("/gc/kriti/event-schedule/result/:id",gcRequestsMiddleware,deleteKritiEventResult);
 
 module.exports = { gcScoreboardRouter };

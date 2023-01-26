@@ -1,6 +1,5 @@
-const { gcCompetitionsStoreModel, gcHostelWisePoints } = require("../models/gcScoreboardModel");
-
-let allIITGHostels = ["Brahmaputra","Kameng","Dihing","Barak","Kapili","Lohit","Manas","Married Scholars (Men)","Married Scholars (Women)","Siang","Subansiri","Umiam","Dhansiri","Disang (Men)","Disang (Women)"];
+const { gcCompetitionsStoreModel, gcHostelWisePoints } = require("../models/gcModels/gcModel");
+const { allIITGHostels } = require("./constants");
 
 async function fetchGcScoreboardStore(){
     let gcScoreboardStoreArray = await gcCompetitionsStoreModel.find();
@@ -35,4 +34,13 @@ exports.checkIfBoardAdmin = async (email,competition) => {
 
 exports.getGcScoreboardStore = async () => {
     return await fetchGcScoreboardStore();
+}
+
+exports.ifValidEvent = async (event,competition) => {
+    let gcCompetitionsStore = await fetchGcScoreboardStore();
+    if(competition==="spardha" && gcCompetitionsStore.spardha_events.includes(event) ||
+    competition==="manthan" && gcCompetitionsStore.manthan_events.includes(event) ||
+    competition==="kriti" && gcCompetitionsStore.kriti_events.includes(event)
+    ) return true;
+    return false;
 }
