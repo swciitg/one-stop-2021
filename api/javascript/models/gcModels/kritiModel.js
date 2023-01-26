@@ -21,7 +21,7 @@ const kritiEventSchema = new mongoose.Schema({
     "cup" : {
         type: String,
         required: true,
-        enum: ["Brainiac Cup","Astro Cup","Business Cup"]
+        enum: ["Brainiac Cup","Da Vinci Cup","Business Cup"]
     },
     "difficulty" : {
         type: String,
