@@ -287,7 +287,6 @@ exports.getSpardhaResults = async (req,res) => {
 exports.addSpardhaEventResult = async (req,res) => { // for result added and updation
     try{
         const id = req.params.id;
-        let spardhaEventSchedule = await spardhaEventModel.findById(id);
         if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false){
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
             return;

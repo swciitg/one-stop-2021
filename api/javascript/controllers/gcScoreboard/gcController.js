@@ -18,9 +18,9 @@ exports.postCompetitionAdmins = async (req, res) => {
             return;
         }
         console.log(gcScoreboardStore);
-        await gcCompetitionsStoreModel.findByIdAndUpdate(gcScoreboardStore._id, gcScoreboardStore);
+        await gcScoreboardStore.save();
+        // await gcCompetitionsStoreModel.findByIdAndUpdate(gcScoreboardStore["_id"], gcScoreboardStore);
         res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} admin list` });
-
     } catch (err) {
         res.status(500).json({ "success": false, "message": err.toString() });
         return;
