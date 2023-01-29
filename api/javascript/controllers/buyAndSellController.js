@@ -2,11 +2,9 @@ const buyModel = require("../models/buyModel");
 const sellModel = require("../models/sellModel");
 const fs = require("fs");
 const path = require("path");
-const deepai = require("deepai");
 const uuid = require("uuid");
 const sharp = require("sharp");
 const mongoose = require("mongoose");
-deepai.setApiKey(process.env.NSFW_API_KEY.toString());
 
 function errorFxn(res, err) {
   console.log(err);
@@ -158,18 +156,7 @@ exports.postSellDetails = async (req, res) => {
         console.log("Here 1");
         console.log("Here 2");
         console.log("fjklsdghjkdfhgjkdfhgjkdhgjfkdhgukjdf");
-        var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-          image: fs.createReadStream(imagePath),
-        });
-        fs.unlinkSync(imagePath);
-        //fs.unlinkSync(imagePath);
-        if (safeToUseResp.output.nsfw_score > 0.1) {
-          res.json({
-            saved_successfully: false,
-            image_safe: false
-          });
-          return;
-        }
+
         const newSellDetail = await new sellModel({
             title,
             price,
@@ -343,18 +330,7 @@ exports.postBuyDetails = async (req, res) => {
         console.log("Here 2");
         console.log(imagePath);
         console.log("fjklsdghjkdfhgjkdfhgjkdhgjfkdhgukjdf");
-        var safeToUseResp = await deepai.callStandardApi("nsfw-detector", {
-          image: fs.createReadStream(imagePath),
-        });
-        // fs.unlinkSync(imagePath);
-        fs.unlinkSync(imagePath);
-        if (safeToUseResp.output.nsfw_score > 0.1) {
-          res.json({
-            saved_successfully: false,
-            image_safe: false
-          });
-          return;
-        }
+
         const newBuyDetail = await new buyModel({
             title,
             price,
