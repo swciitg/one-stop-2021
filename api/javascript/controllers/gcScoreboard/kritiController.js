@@ -108,7 +108,7 @@ exports.updateKritiEventSchedule = async (req, res) => { // this is used for res
             return;
         }
         let sameKritiEvents = await kritiEventModel.find({"event" : req.body.event});
-        if(sameKritiEvents.length!==0 && sameKritiEvents[0]["_id"]!==id && sameKritiEvents[0]["event"]===req.body.event){
+        if(sameKritiEvents.length!==0 && sameKritiEvents[0]["_id"].toString()!==id && sameKritiEvents[0]["event"]===req.body.event){
             res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
             return;
         }
