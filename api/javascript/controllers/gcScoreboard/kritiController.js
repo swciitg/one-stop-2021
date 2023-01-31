@@ -85,8 +85,6 @@ exports.postKritiEventSchedule = async (req,res) => {
 
 exports.getKritiEventsSchdedules = async (req, res) => {
     try{
-        // console.log(typeof(req.query.forAdmin));
-        // console.log(req.body.email);
         console.log(await checkIfAdmin(req.body.email,"kriti"), await checkIfBoardAdmin(req.body.email,"kriti"));
         let filters = {"resultAdded" : false}; // filters for event schedules
         if(req.query.forAdmin==="true" && await checkIfBoardAdmin(req.body.email,"kriti")===false){
@@ -109,7 +107,8 @@ exports.updateKritiEventSchedule = async (req, res) => { // this is used for res
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
             return;
         }
-        if((await kritiEventModel.find({"event" : req.body.event})).length!==0){
+        let sameKritiEvents = await kritiEventModel.find({"event" : req.body.event});
+        if(sameKritiEvents.length!==0 && sameKritiEvents[0]["_id"]!==id && sameKritiEvents[0]["event"]===req.body.event){
             res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
             return;
         }
@@ -174,16 +173,6 @@ exports.deleteKritiEventSchedule = async (req, res) => {
             res.status(403).json({ "success": false, "message": "You are not authorized admin"});
             return;
         }
-        let gcCompetitionsStore = await getGcScoreboardStore();
-        for(let i=0;i<kritiEventSchedule["results"].length;i++){
-            for(let j=0;j<gcCompetitionsStore["overallGcStandings"].length;j++){
-                if(kritiEventSchedule["results"][i]["hostelName"] === gcCompetitionsStore["overallGcStandings"][j]["hostelName"]){
-                    // hostel found in gc competitions store
-                    gcCompetitionsStore["overallGcStandings"][j]["kriti_points"]-=kritiEventSchedule["results"][i]["points"];// subtract old points
-                }
-            }
-        }
-        await gcCompetitionsStore.save();
         await kritiEventModel.findByIdAndDelete(id);
         res.json({ "success": true, "message": "kriti event deleted successfully" });
     } catch (err) {
