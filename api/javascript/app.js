@@ -69,16 +69,7 @@ app.use(express.json({
   extended:true
 }));
 app.use(morgan("dev"));
-app.use(
-  session({
-    secret: "a very dark secret indeed",
-    resave: true,
-    saveUninitialized: false,
-  })
-);
-
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(express.urlencoded({ extended: true }));
 
 // enable CORS
 app.use((req, res, next) => {
@@ -126,6 +117,7 @@ app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
 app.use(BASEURL, routers.imageRouter.imageRouter);
 app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
+app.use(BASEURL, routers.upspRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
 
 // For demo auth purposes only
