@@ -3,7 +3,7 @@ const fs = require("fs");
 const { allIITGGymkhanaBoards, IITGAdminDepts } = require("../helpers/constants");
 
 let mailTransporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: "smtp-mail.outlook.com",
     auth: {
         user: process.env.SWC_EMAIL,
         pass: process.env.SWC_EMAIL_PASSWORD
@@ -29,7 +29,7 @@ console.log(reciverEmails,selectedAttachments);
     let mailDetails = {
         from: process.env.SWC_EMAIL,
         subject: 'UPSP Request',
-        to: reciverEmails,
+        cc: reciverEmails,
         attachments: selectedAttachments,
         html: `${req.body.problem}<br> <br> Name: ${req.body.name} <br> Roll no.: ${req.body.roll_number}, Email: ${req.body.email} <br> Hostel: ${req.body.hostel}, Ph no. :  ${req.body.phone}<br>`
     }

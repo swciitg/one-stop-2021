@@ -45,7 +45,10 @@ exports.deleteFerryStop = async (req,res) => {
 
 exports.deleteAllFerryStop = async (req,res) => {
   console.log(req.body);
-  await busTiming.deleteMany({});
+  await ferryTiming.deleteMany({});
+  await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+    travel: new Date(),
+  });
   res.json({success : true});
 }
 
@@ -84,12 +87,18 @@ exports.createbustiming = async (req, res) => {
 exports.deleteBusStop = async (req,res) => {
   console.log(req.body);
   await busTiming.deleteMany({BusStop: req.body.name});
+  await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+    travel: new Date(),
+  });
   res.json({success : true});
 }
 
 exports.deleteAllBusStop = async (req,res) => {
   console.log(req.body);
   await busTiming.deleteMany({});
+  await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
+    travel: new Date(),
+  });
   res.json({success : true});
 }
 
