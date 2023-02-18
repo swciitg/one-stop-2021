@@ -89,6 +89,7 @@ exports.deleteBusStop = async (req,res) => {
   console.log(req.body);
   await busTiming.deleteMany({BusStop: req.body.name});
   let updatesList = await LastUpdate.find();
+  console.log(updatesList);
   await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
     travel: new Date(),
   });

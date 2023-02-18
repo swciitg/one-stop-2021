@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const { allIITGGymkhanaBoards, IITGAdminDepts } = require("../helpers/constants");
+const { allIITGGymkhanaBoards, IITGAdminDepts, miscellaneousRecievers } = require("../helpers/constants");
 
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
@@ -13,9 +13,13 @@ let mailTransporter = nodemailer.createTransport({
 
 exports.submitUpspForm = async (req,res) => {
     console.log(req.body);
-    let reciverEmails = [];
-    req.body.boards.forEach((element) => reciverEmails.push(allIITGGymkhanaBoards[element]));
-    req.body.subcommittees.forEach((element) => reciverEmails.push(IITGAdminDepts[element]));
+    let recieverEmailsForTo = [];
+    let recieverEmailsForCc = [];
+    req.body.boards.forEach((element) => {
+        if(element!=='Miscellaneous') recieverEmailsForTo.push(allIITGGymkhanaBoards[element]);
+        else recieverEmailsForTo = recieverEmailsForTo.concat(miscellaneousRecievers);
+    });
+    req.body.subcommittees.forEach((element) => recieverEmailsForCc.push(IITGAdminDepts[element]));
 
     let selectedAttachments = [];
     req.body.files.forEach((element,index) => {
@@ -24,18 +28,34 @@ exports.submitUpspForm = async (req,res) => {
         else console.log("not exists");
     });
 
-console.log(reciverEmails,selectedAttachments);
+    recieverEmailsForTo = [...new Set(recieverEmailsForTo)]; // removing redundant items from array
+    recieverEmailsForCc = [...new Set(recieverEmailsForCc)];
 
-    let mailDetails = {
+    console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
+
+    let mailDetailsForAuthorities = {
         from: process.env.SWC_EMAIL,
         subject: 'UPSP Request',
-        cc: reciverEmails,
+        to: recieverEmailsForTo,
+        cc: recieverEmailsForCc,
         attachments: selectedAttachments,
         html: `${req.body.problem}<br> <br> Name: ${req.body.name} <br> Roll no.: ${req.body.roll_number}, Email: ${req.body.email} <br> Hostel: ${req.body.hostel}, Ph no. :  ${req.body.phone}<br>`
     }
 
-    mailTransporter.sendMail(mailDetails,(err,res) => {
+    let mailDetailsForUser = {
+        from: process.env.SWC_EMAIL,
+        subject: 'UPSP Request Sent',
+        to: [req.body.email],
+        attachments: selectedAttachments,
+        html: `Your request was sent with below details. <br> <br> ${req.body.problem}<br> <br> Name: ${req.body.name} <br> Roll no.: ${req.body.roll_number}, Email: ${req.body.email} <br> Hostel: ${req.body.hostel}, Ph no. :  ${req.body.phone}<br>`
+    }
+
+    mailTransporter.sendMail(mailDetailsForAuthorities,(err,res) => {
         console.log(err);
     });
+    mailTransporter.sendMail(mailDetailsForUser,(err,res) => {
+        console.log(err);
+    });
+    
     res.json({"success" : true});
 }
