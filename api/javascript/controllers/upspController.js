@@ -14,7 +14,7 @@ let mailTransporter = nodemailer.createTransport({
 exports.submitUpspForm = async (req,res) => {
     console.log(req.body);
     let recieverEmailsForTo = [];
-    let recieverEmailsForCc = [];
+    let recieverEmailsForCc = ["vp@iitg.ac.in"]; // vp recieves every email
     req.body.boards.forEach((element) => {
         if(element!=='Miscellaneous') recieverEmailsForTo.push(allIITGGymkhanaBoards[element]);
         else recieverEmailsForTo = recieverEmailsForTo.concat(miscellaneousRecievers);
@@ -56,6 +56,6 @@ exports.submitUpspForm = async (req,res) => {
     mailTransporter.sendMail(mailDetailsForUser,(err,res) => {
         console.log(err);
     });
-    
+
     res.json({"success" : true});
 }
