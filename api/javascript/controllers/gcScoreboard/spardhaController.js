@@ -106,7 +106,7 @@ exports.getSpardhaOverallStandings = async (req,res) => {
         let gcStandings = [];
         gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
             console.log(hostelGcPoints);
-            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : hostelGcPoints["spardha_points"]});
+            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : ( hostelGcPoints["spardha_points"]  * 100) / 100});
         });
         res.json({"success" : true,"details" : gcStandings});
     }
