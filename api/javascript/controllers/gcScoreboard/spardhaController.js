@@ -90,7 +90,7 @@ exports.getGcOverallStandings = async (req,res) => {
         let gcCompetitionsStore = await getGcScoreboardStore();
         let gcStandings = [];
         gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
-            let totalPoints = (hostelGcPoints["spardha_points"] + hostelGcPoints["kriti_points"] + hostelGcPoints["manthan_points"]).toFixed(2);
+            let totalPoints = Math.round((hostelGcPoints["spardha_points"] + hostelGcPoints["kriti_points"] + hostelGcPoints["manthan_points"]) * 100) / 100;
             gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : totalPoints});
         });
         res.json({"success" : true,"details" : gcStandings});
