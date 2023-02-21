@@ -42,7 +42,7 @@ exports.getKritiOverallStandings = async (req,res) => {
         let gcStandings = [];
         gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
             console.log(hostelGcPoints);
-            let roundedPoints = hostelGcPoints["kriti_points"].toFixed(2);
+            let roundedPoints = Math.round( hostelGcPoints["kriti_points"] * 100) / 100;
             gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : roundedPoints});
         });
         res.json({"success" : true,"details" : gcStandings});
