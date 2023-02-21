@@ -5,8 +5,8 @@ const { allIITGGymkhanaBoards, IITGAdminDepts, miscellaneousRecievers } = requir
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
     auth: {
-        user: process.env.SWC_EMAIL,
-        pass: process.env.SWC_EMAIL_PASSWORD
+        user: process.env.UPSP_EMAIL,
+        pass: process.env.UPSP_EMAIL_PASSWORD
     }
 });
 
@@ -14,7 +14,7 @@ let mailTransporter = nodemailer.createTransport({
 exports.submitUpspForm = async (req,res) => {
     console.log(req.body);
     let recieverEmailsForTo = [];
-    let recieverEmailsForCc = ["vp@iitg.ac.in"]; // vp recieves every email
+    let recieverEmailsForCc = ["vp@iitg.ac.in",req.body.email]; // vp recieves every email
     req.body.boards.forEach((element) => {
         if(element!=='Miscellaneous') recieverEmailsForTo.push(allIITGGymkhanaBoards[element]);
         else recieverEmailsForTo = recieverEmailsForTo.concat(miscellaneousRecievers);
@@ -33,8 +33,8 @@ exports.submitUpspForm = async (req,res) => {
 
     console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
 
-    let mailDetailsForAuthorities = {
-        from: process.env.SWC_EMAIL,
+    let mailDetails = {
+        from: process.env.UPSP_EMAIL,
         subject: 'UPSP Request',
         to: recieverEmailsForTo,
         cc: recieverEmailsForCc,
@@ -42,18 +42,7 @@ exports.submitUpspForm = async (req,res) => {
         html: `${req.body.problem}<br> <br> Name: ${req.body.name} <br> Roll no.: ${req.body.roll_number}, Email: ${req.body.email} <br> Hostel: ${req.body.hostel}, Ph no. :  ${req.body.phone}<br>`
     }
 
-    let mailDetailsForUser = {
-        from: process.env.SWC_EMAIL,
-        subject: 'UPSP Request Sent',
-        to: [req.body.email],
-        attachments: selectedAttachments,
-        html: `Your request was sent with below details. <br> <br> ${req.body.problem}<br> <br> Name: ${req.body.name} <br> Roll no.: ${req.body.roll_number}, Email: ${req.body.email} <br> Hostel: ${req.body.hostel}, Ph no. :  ${req.body.phone}<br>`
-    }
-
-    mailTransporter.sendMail(mailDetailsForAuthorities,(err,res) => {
-        console.log(err);
-    });
-    mailTransporter.sendMail(mailDetailsForUser,(err,res) => {
+    mailTransporter.sendMail(mailDetails,(err,res) => {
         console.log(err);
     });
 

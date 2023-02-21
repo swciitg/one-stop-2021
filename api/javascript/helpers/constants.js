@@ -21,4 +21,4 @@ exports.IITGAdminDepts = {
     "Medical Related Issues" : "Grp_sgc_mug@iitg.ac.in"
 }
 
-exports.miscellaneousRecievers = ["vp@iitg.ac.in"]
+exports.miscellaneousRecievers = []

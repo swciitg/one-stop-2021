@@ -1,5 +1,7 @@
 const { getGcScoreboardStore, checkIfAdmin, checkIfBoardAdmin, ifValidEvent } = require("../../helpers/gcScoreboardHelpers");
 const { spardhaEventModel, spardhaOverallStandingsModel} = require("../../models/gcModels/spardhaModel");
+const mongoose = require("mongoose");
+require('mongoose-double')(mongoose);
 
 async function ifAuthorizedForSpardhaEventSchedules(eventId, email){
     let spardhaEventSchedule = await spardhaEventModel.findById(eventId);
@@ -88,7 +90,8 @@ exports.getGcOverallStandings = async (req,res) => {
         let gcCompetitionsStore = await getGcScoreboardStore();
         let gcStandings = [];
         gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
-            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : hostelGcPoints["spardha_points"] + hostelGcPoints["kriti_points"] + hostelGcPoints["manthan_points"]});
+            let totalPoints = hostelGcPoints["spardha_points"] + hostelGcPoints["kriti_points"] + hostelGcPoints["manthan_points"];
+            gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : totalPoints});
         });
         res.json({"success" : true,"details" : gcStandings});
     }
