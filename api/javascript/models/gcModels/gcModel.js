@@ -17,6 +17,10 @@ const gcHostelWisePointsSchema = new mongoose.Schema({
     "manthan_points": {
         type: mongoose.Schema.Types.Double,
         default: 0
+    },
+    "sahyog_points": {
+        type: mongoose.Schema.Types.Double,
+        default: 0
     }
 });
 
@@ -38,6 +42,10 @@ const gcCompetitionsStoreSchema = new mongoose.Schema({
         type: Array,
         default:[]
     },
+    "sahyog_events" : {
+        type: Array,
+        default:[]
+    },
     "spardha_admins": {
         type: Array,
         default:[]
@@ -50,6 +58,10 @@ const gcCompetitionsStoreSchema = new mongoose.Schema({
         type: Array,
         default:[]
     },
+    "sahyog_admins": {
+        type: Array,
+        default:[]
+    },
     "spardha_board_admins": {
         type: Array,
         default:[]
@@ -59,6 +71,10 @@ const gcCompetitionsStoreSchema = new mongoose.Schema({
         default:[]
     },
     "manthan_board_admins": {
+        type: Array,
+        default:[]
+    },
+    "sahyog_board_admins": {
         type: Array,
         default:[]
     }

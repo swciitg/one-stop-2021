@@ -1,6 +1,7 @@
 const { getGcScoreboardStore, checkIfAdmin, checkIfBoardAdmin, ifValidEvent } = require("../../helpers/gcScoreboardHelpers");
 const { spardhaEventModel, spardhaOverallStandingsModel} = require("../../models/gcModels/spardhaModel");
 const mongoose = require("mongoose");
+const {totalSpardhaWomenPoints, allIITGWomenHostels, totalKritiPoints, totalSpardhaMenPoints } = require("../../helpers/constants");
 require('mongoose-double')(mongoose);
 
 async function ifAuthorizedForSpardhaEventSchedules(eventId, email){
@@ -90,7 +91,12 @@ exports.getGcOverallStandings = async (req,res) => {
         let gcCompetitionsStore = await getGcScoreboardStore();
         let gcStandings = [];
         gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
-            let totalPoints = Math.round((hostelGcPoints["spardha_points"] + hostelGcPoints["kriti_points"] + hostelGcPoints["manthan_points"]) * 100) / 100;
+            let totalPoints;
+            // for different total points for men, women in spardha
+            if(allIITGWomenHostels.includes(hostelGcPoints["hostelName"])){
+                totalPoints = Math.round(((hostelGcPoints["spardha_points"]*30)/totalSpardhaWomenPoints + (hostelGcPoints["kriti_points"]*30)/totalKritiPoints + hostelGcPoints["manthan_points"]) * 100) / 100;
+            }
+            else totalPoints = Math.round(((hostelGcPoints["spardha_points"]*30)/totalSpardhaMenPoints + (hostelGcPoints["kriti_points"]*30)/totalKritiPoints + hostelGcPoints["manthan_points"]) * 100) / 100;
             gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : totalPoints});
         });
         res.json({"success" : true,"details" : gcStandings});
