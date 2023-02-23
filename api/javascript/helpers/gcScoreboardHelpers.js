@@ -43,6 +43,6 @@ exports.ifValidEvent = async (event,competition) => {
     if(competition==="spardha" && gcScoreboardStore.spardha_events.includes(event) ||
     competition==="manthan" && gcScoreboardStore.manthan_events.includes(event) ||
     competition==="kriti" && gcScoreboardStore.kriti_events.includes(event) || 
-    (competition==='sahyog' && gcScoreboardStore.sahyog_events.includes(email))) return true;
+    (competition==='sahyog' && gcScoreboardStore.sahyog_events.includes(event))) return true;
     return false;
 }

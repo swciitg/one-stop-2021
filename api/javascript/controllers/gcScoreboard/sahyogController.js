@@ -66,17 +66,22 @@ exports.getSahyogEventStandings = async (req,res) => {
 exports.postSahyogEventSchedule = async (req,res) => {
     try{
         req.body.posterEmail = req.body.email;
+        console.log("here 0");
         console.log(req.body);
+        console.log("vsdfds");
         if(await ifValidEvent(req.body.event,"sahyog")===false){
             res.status(406).json({ "success": false, "message": "Event not in list of sahyog events"});
             return;
         }
+        console.log("gdfsgsdf");
         if((await sahyogEventModel.find({"event" : req.body.event})).length!==0){
             res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
             return;
         }
         console.log(req.body);
+        console.log("here 1");
         await sahyogEventModel(req.body).save();
+        console.log("here 2");
         res.json({"success" : true, "message" : "sahyog event schedule posted successfully"});
     }
     catch (err) {

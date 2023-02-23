@@ -9,6 +9,7 @@ exports.gcScoreboardAuthMiddleware = (req,res,next) => {
         let token = req.headers.authorization.split(' ').slice(-1)[0];
         let decoded = jwt.verify(token, accessjwtsecret);
         if (decoded["email"] !== undefined) {
+            console.log(decoded["email"]);
             req.body.email = decoded["email"];
             console.log(req.body.email);
             next();
