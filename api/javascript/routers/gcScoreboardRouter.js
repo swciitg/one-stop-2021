@@ -25,6 +25,9 @@ async function getAuthEvents(email){
     if(gcCompetitionsStore.kriti_admins.includes(email) || gcCompetitionsStore.kriti_board_admins.includes(email)){
         authEvents.push("kriti");
     }
+    if(gcCompetitionsStore.sahyog_admins.includes(email) || gcCompetitionsStore.sahyog_board_admins.includes(email)){
+        authEvents.push("sahyog");
+    }
     console.log(authEvents);
     return authEvents;
 }
