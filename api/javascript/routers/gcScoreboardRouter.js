@@ -11,6 +11,7 @@ const { gcRequestsMiddleware } = require("../middlewares/gcChampionshipMiddlewar
 const { getGcScoreboardStore } = require("../helpers/gcScoreboardHelpers");
 const { postCompetitionAdmins, postCompetitionBoardAdmins } = require("../controllers/gcScoreboard/gcController");
 const { getKritiEvents, postKritiEvents, getKritiEventsSchdedules, postKritiEventSchedule, updateKritiEventSchedule, deleteKritiEventSchedule, getKritiResults, addKritiEventResult, deleteKritiEventResult, getKritiOverallStandings, getKritiEventStandings } = require("../controllers/gcScoreboard/kritiController");
+const { getSahyogEvents, postSahyogEvents, getSahyogOverallStandings, getSahyogEventStandings, getSahyogEventsSchdedules, postSahyogEventSchedule, updateSahyogEventSchedule, deleteSahyogEventSchedule, getSahyogResults, addSahyogEventResult, deleteSahyogEventResult } = require("../controllers/gcScoreboard/sahyogController");
 
 async function getAuthEvents(email){
     let gcCompetitionsStore = await getGcScoreboardStore();
@@ -71,11 +72,15 @@ gcScoreboardRouter.post("/gc/spardha/all-events",checkIfModeratorMiddleware, pos
 
 gcScoreboardRouter.post("/gc/kriti/all-events",checkIfModeratorMiddleware, postKritiEvents);
 
+gcScoreboardRouter.post("/gc/sahyog/all-events",checkIfModeratorMiddleware, postSahyogEvents);
+
 // open routes -> no tokens needed
 
 gcScoreboardRouter.get("/gc/spardha/all-events",getSpardhaEvents);
 
 gcScoreboardRouter.get("/gc/kriti/all-events",getKritiEvents);
+
+gcScoreboardRouter.get("/gc/sahyog/all-events",getSahyogEvents);
 
 gcScoreboardRouter.use(gcScoreboardAuthMiddleware); // check tokens for all below routes with this middleware
 
@@ -127,5 +132,25 @@ gcScoreboardRouter.get("/gc/kriti/event-schedule/results",getKritiResults);
 gcScoreboardRouter.patch("/gc/kriti/event-schedule/result/:id",gcRequestsMiddleware,addKritiEventResult);
 
 gcScoreboardRouter.delete("/gc/kriti/event-schedule/result/:id",gcRequestsMiddleware,deleteKritiEventResult);
+
+// sahyog routes
+
+gcScoreboardRouter.get("/gc/sahyog/standings",getSahyogOverallStandings);
+
+gcScoreboardRouter.get("/gc/sahyog/standings/all-events",getSahyogEventStandings);
+
+gcScoreboardRouter.get("/gc/sahyog/event-schedule",getSahyogEventsSchdedules);
+
+gcScoreboardRouter.post("/gc/sahyog/event-schedule",gcRequestsMiddleware,postSahyogEventSchedule);
+
+gcScoreboardRouter.patch("/gc/sahyog/event-schedule/:id",gcRequestsMiddleware,updateSahyogEventSchedule);
+
+gcScoreboardRouter.delete("/gc/sahyog/event-schedule/:id",gcRequestsMiddleware,deleteSahyogEventSchedule);
+
+gcScoreboardRouter.get("/gc/sahyog/event-schedule/results",getSahyogResults);
+
+gcScoreboardRouter.patch("/gc/sahyog/event-schedule/result/:id",gcRequestsMiddleware,addSahyogEventResult);
+
+gcScoreboardRouter.delete("/gc/sahyog/event-schedule/result/:id",gcRequestsMiddleware,deleteSahyogEventResult);
 
 module.exports = { gcScoreboardRouter };
