@@ -13,6 +13,7 @@ exports.postCompetitionAdmins = async (req, res) => {
         if (competition == "spardha") gcScoreboardStore.spardha_admins = emails;
         else if (competition == "manthan") gcScoreboardStore.manthan_admins = emails;
         else if(competition=="kriti") gcScoreboardStore.kriti_admins = emails;
+        else if(competition=="sahyog") gcScoreboardStore.sahyog_board_admins = emails;
         else{
             res.status(400).json({ "success": false, "message": "No such competiton exists"});
             return;
@@ -40,6 +41,7 @@ exports.postCompetitionBoardAdmins = async (req, res) => {
         if (competition == "spardha") gcScoreboardStore.spardha_board_admins = emails;
         else if (competition == "manthan") gcScoreboardStore.manthan_board_admins = emails;
         else if(competition=="kriti") gcScoreboardStore.kriti_board_admins = emails;
+        else if(competition=="sahyog") gcScoreboardStore.sahyog_board_admins = emails;
         else{
             res.status(400).json({ "success": false, "message": "No such competiton exists"});
             return;
