@@ -19,7 +19,7 @@ exports.submitUpspForm = async (req,res) => {
         if(element!=='Miscellaneous') recieverEmailsForTo.push(allIITGGymkhanaBoards[element]);
         else recieverEmailsForTo = recieverEmailsForTo.concat(miscellaneousRecievers);
     });
-    req.body.subcommittees.forEach((element) => recieverEmailsForCc.push(IITGAdminDepts[element]));
+    req.body.subcommittees.forEach((element) => recieverEmailsForTo.push(IITGAdminDepts[element]));
 
     let selectedAttachments = [];
     req.body.files.forEach((element,index) => {
