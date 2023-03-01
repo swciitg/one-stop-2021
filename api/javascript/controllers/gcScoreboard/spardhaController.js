@@ -94,9 +94,9 @@ exports.getGcOverallStandings = async (req,res) => {
             let totalPoints;
             // for different total points for men, women in spardha
             if(allIITGWomenHostels.includes(hostelGcPoints["hostelName"])){
-                totalPoints = Math.round(((hostelGcPoints["spardha_points"]*30)/totalSpardhaWomenPoints + (hostelGcPoints["kriti_points"]*30)/totalKritiPoints + hostelGcPoints["manthan_points"]) * 100) / 100;
+                totalPoints = Math.round(((hostelGcPoints["spardha_points"]*30)/totalSpardhaWomenPoints + (hostelGcPoints["kriti_points"]*30)/totalKritiPoints + hostelGcPoints["manthan_points"] + hostelGcPoints["sahyog_points"]) * 100) / 100;
             }
-            else totalPoints = Math.round(((hostelGcPoints["spardha_points"]*30)/totalSpardhaMenPoints + (hostelGcPoints["kriti_points"]*30)/totalKritiPoints + hostelGcPoints["manthan_points"]) * 100) / 100;
+            else totalPoints = Math.round(((hostelGcPoints["spardha_points"]*30)/totalSpardhaMenPoints + (hostelGcPoints["kriti_points"]*30)/totalKritiPoints + hostelGcPoints["manthan_points"] + hostelGcPoints["sahyog_points"]) * 100) / 100;
             gcStandings.push({"hostelName" : hostelGcPoints["hostelName"],"points" : totalPoints});
         });
         res.json({"success" : true,"details" : gcStandings});

@@ -25,7 +25,7 @@ exports.IITGAdminDepts = {
 
 exports.miscellaneousRecievers = []
 
-exports.totalSpardhaWomenPoints = 115;
-exports.totalSpardhaMenPoints = 200;
+exports.totalSpardhaWomenPoints = 175;
+exports.totalSpardhaMenPoints = 210;
 exports.totalKritiPoints = 5800;
 exports.totalSahyogPoints = 4400;
