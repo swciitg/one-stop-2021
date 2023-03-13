@@ -7,6 +7,7 @@ exports.gcScoreboardAuthMiddleware = (req,res,next) => {
             throw new Error("No Token Found");
         }
         let token = req.headers.authorization.split(' ').slice(-1)[0];
+        console.log(token)
         let decoded = jwt.verify(token, accessjwtsecret);
         if (decoded["email"] !== undefined) {
             console.log(decoded["email"]);
