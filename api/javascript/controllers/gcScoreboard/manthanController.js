@@ -5,7 +5,7 @@ const {
   ifValidEvent,
 } = require("../../helpers/gcScoreboardHelpers");
 
-const {manthanEventModel} = require('../../models/gcModels/manthanModel')
+const { manthanEventModel } = require("../../models/gcModels/manthanModel");
 
 async function ifAuthorizedForManthanEventSchedules(eventId, email) {
   let manthanEventSchedule = await manthanEventModel.findById(eventId);
@@ -54,7 +54,6 @@ exports.getManthanOverallStandings = async (req, res) => {
     let gcCompetitionsStore = await getGcScoreboardStore();
     let gcStandings = [];
     gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
-      console.log(hostelGcPoints);
       let roundedPoints =
         Math.round(hostelGcPoints["manthan_points"] * 100) / 100;
       gcStandings.push({
@@ -82,12 +81,10 @@ exports.postManthanEventSchedule = async (req, res) => {
     req.body.posterEmail = req.body.email;
 
     if ((await ifValidEvent(req.body.event, "manthan")) === false) {
-      res
-        .status(406)
-        .json({
-          success: false,
-          message: "Event not in list of manthan events",
-        });
+      res.status(406).json({
+        success: false,
+        message: "Event not in list of manthan events",
+      });
       return;
     }
     if (
@@ -132,10 +129,10 @@ exports.getManthanEventsSchdedules = async (req, res) => {
 };
 
 exports.updateManthanEventSchedule = async (req, res) => {
-  // this is used for result posting and updation
+  // this is used for event posting and updation
   try {
     const id = req.params.id;
-    console.log(req.body.email, id);
+
     if (
       (await ifAuthorizedForManthanEventSchedules(id, req.body.email)) === false
     ) {
@@ -160,9 +157,9 @@ exports.updateManthanEventSchedule = async (req, res) => {
     }
     let manthanEventSchedule = await manthanEventModel.findById(id);
     req.body.posterEmail = manthanEventSchedule.posterEmail;
-    req.body.clubs.sort();
+
     let sameEvents = await manthanEventModel.find({ event: req.body.event });
-    console.log(sameEvents);
+
     if (
       !(manthanEventSchedule["event"] === req.body.event) &&
       sameEvents.length !== 0
@@ -187,6 +184,7 @@ exports.addManthanEventResult = async (req, res) => {
   try {
     const id = req.params.id;
     let manthanEventSchedule = await manthanEventModel.findById(id);
+
     if (
       (await ifAuthorizedForManthanEventSchedules(id, req.body.email)) === false
     ) {
@@ -195,12 +193,13 @@ exports.addManthanEventResult = async (req, res) => {
         .json({ success: false, message: "You are not authorized admin" });
       return;
     }
-    console.log(req.body.results);
+
     req.body.resultAdded = true;
     await manthanEventModel.findOneAndUpdate({ _id: id }, req.body, {
       runValidators: true,
     });
     let gcCompetitionsStore = await getGcScoreboardStore();
+
     for (let i = 0; i < manthanEventSchedule["results"].length; i++) {
       for (
         let j = 0;
@@ -213,11 +212,12 @@ exports.addManthanEventResult = async (req, res) => {
         ) {
           // hostel found in gc competitions store
           gcCompetitionsStore["overallGcStandings"][j]["manthan_points"] -=
-            manthanEventSchedule["results"][i]["points"]; // subtract old points
+            manthanEventSchedule["results"][i]["primaryScore"]; // subtract old points
         }
       }
     }
     for (let i = 0; i < req.body["results"].length; i++) {
+
       for (
         let j = 0;
         j < gcCompetitionsStore["overallGcStandings"].length;
@@ -227,14 +227,16 @@ exports.addManthanEventResult = async (req, res) => {
           req.body["results"][i]["hostelName"] ===
           gcCompetitionsStore["overallGcStandings"][j]["hostelName"]
         ) {
+        
           // hostel found in gc competitions store
+      
           gcCompetitionsStore["overallGcStandings"][j]["manthan_points"] +=
-            req.body["results"][i]["points"]; // add new points
+            req.body["results"][i]["primaryScore"]; // add new points
         }
       }
     }
     await gcCompetitionsStore.save();
-    console.log(await manthanEventModel.findById(id));
+
     res.json({
       success: true,
       message: "manthan event result added successfully",
