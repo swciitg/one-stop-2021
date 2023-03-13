@@ -101,7 +101,7 @@ app.use((req,res,next) => {
   next();
 });
 
-
+console.log(BASEURL)
 app.use(BASEURL, routers.userRouter.userRouter);
 app.use(BASEURL, routers.authRouter.authRouter);
 app.use(BASEURL, routers.contactRouter.contactRouter);
