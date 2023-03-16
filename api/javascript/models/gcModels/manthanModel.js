@@ -24,7 +24,7 @@ const manthanEventSchema = new mongoose.Schema({
   module: {
     type: String,
     required: true,
-    enum: ["Men", "Women"],
+    enum: ["Dance","Music","Content Creation","Photography","Literary","Dramatics","Film","Fine Arts","Debating","Culinary"],
   },
   date: {
     type: Date,
