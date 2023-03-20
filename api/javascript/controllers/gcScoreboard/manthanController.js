@@ -96,8 +96,6 @@ exports.getManthanEventStandings = async (req, res) => {
         }
 
     })
-console.log(response);
-console.log('PRINTING RESULTS');
 
 
 
@@ -214,26 +212,33 @@ exports.updateManthanEventSchedule = async (req, res) => {
 
 exports.addManthanEventResult = async (req, res) => {
   // for result added and updation
+
   try {
     const id = req.params.id;
     let manthanEventSchedule = await manthanEventModel.findById(id);
 
+    
     if (
       (await ifAuthorizedForManthanEventSchedules(id, req.body.email)) === false
-    ) {
-      res
+      ) {
+        res
         .status(403)
         .json({ success: false, message: "You are not authorized admin" });
-      return;
-    }
+        return;
+      }
+      
+      req.body.resultAdded = true;
 
-    req.body.resultAdded = true;
-    await manthanEventModel.findOneAndUpdate({ _id: id }, req.body, {
-      runValidators: true,
-    });
-    let gcCompetitionsStore = await getGcScoreboardStore();
+      
+      await manthanEventModel.findOneAndUpdate({ _id: id }, req.body, {
+        runValidators: true,
+      });
+      let gcCompetitionsStore = await getGcScoreboardStore();
+      console.log(manthanEventSchedule);
+      console.log("HELLO THERE")
+      
+      for (let i = 0; i < manthanEventSchedule["results"].length; i++) {
 
-    for (let i = 0; i < manthanEventSchedule["results"].length; i++) {
       for (
         let j = 0;
         j < gcCompetitionsStore["overallGcStandings"].length;
@@ -309,9 +314,32 @@ exports.getManthanResults = async (req, res) => {
     ) {
       filters["posterEmail"] = req.body.email;
     }
-    console.log(filters);
-    const events = await manthanEventModel.find(filters).sort({ date: -1 }); // send all event schedules if no email passed or passed email belongs to board admin
-    res.status(200).json({ success: true, details: events });
+
+    const events = await manthanEventModel.find(filters).sort({ date: -1 });
+    
+       let response = events.map((event) => {
+         return {
+           _id: event["_id"],
+           event: event["event"],
+           module: event["module"],
+           date: event["date"],
+           results: event["results"].map((result) => {
+             return {
+               hostelName: result["hostelName"],
+               points: result["primaryScore"],
+               _id: result["_id"],
+             };
+           }),
+           venue: event["venue"],
+           posterEmail: event["posterEmail"],
+           resultAdded: event["resultAdded"],
+           victoryStatement: event["victoryStatement"],
+         };
+       });
+
+
+// send all event schedules if no email passed or passed email belongs to board admin
+    res.status(200).json({ success: true, details: response });
   } catch (err) {
     res.status(500).json({ success: false, message: err.toString() });
   }
