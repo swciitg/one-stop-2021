@@ -14,6 +14,9 @@ const manthanHostelResultSchema = new mongoose.Schema({
   secondaryScore: {
     type: String
   },
+  points: {
+    type: mongoose.Schema.Types.Double
+  }
 });
 
 const manthanEventSchema = new mongoose.Schema({
@@ -57,6 +60,10 @@ const manthanEventSchema = new mongoose.Schema({
     default: "",
   },
 });
+
+manthanEventSchema.pre('save',() => {
+  this.points = this.primaryScore;
+})
 
 module.exports = {
   manthanEventModel: mongoose.model("manthanEventSchedule", manthanEventSchema),
