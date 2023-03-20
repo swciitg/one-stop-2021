@@ -61,15 +61,6 @@ const manthanEventSchema = new mongoose.Schema({
   },
 });
 
-manthanEventSchema.pre('save',function(){
-  console.log("setting points");
-  console.log(this.posterEmail);
-  this.results.forEach((result) => {
-    result["points"]=result["primaryScore"];
-    console.log(result["primaryScore"]);
-  })
-});
-
 module.exports = {
   manthanEventModel: mongoose.model("manthanEventSchedule", manthanEventSchema),
 };

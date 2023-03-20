@@ -9,6 +9,7 @@ const { manthanEventModel } = require("../../models/gcModels/manthanModel");
 
 async function ifAuthorizedForManthanEventSchedules(eventId, email) {
   let manthanEventSchedule = await manthanEventModel.findById(eventId);
+  console.log(manthanEventSchedule);
   if (
     manthanEventSchedule["posterEmail"] !== email &&
     (await checkIfBoardAdmin(email, "manthan")) === false
@@ -130,9 +131,11 @@ exports.getManthanEventsSchdedules = async (req, res) => {
 
 exports.updateManthanEventSchedule = async (req, res) => {
   // this is used for event posting and updation
+  console.log("here fasdfad");
   try {
     const id = req.params.id;
-
+    req.body.posterEmail = req.body.email;
+    console.log(req.body,id);
     if (
       (await ifAuthorizedForManthanEventSchedules(id, req.body.email)) === false
     ) {
@@ -144,6 +147,7 @@ exports.updateManthanEventSchedule = async (req, res) => {
     let sameManthanEvents = await manthanEventModel.find({
       event: req.body.event,
     });
+    console.log(sameManthanEvents);
     if (
       sameManthanEvents.length !== 0 &&
       sameManthanEvents[0]["_id"].toString() !== id &&
@@ -155,6 +159,7 @@ exports.updateManthanEventSchedule = async (req, res) => {
       });
       return;
     }
+    console.log(req.body);
     let manthanEventSchedule = await manthanEventModel.findById(id);
     req.body.posterEmail = manthanEventSchedule.posterEmail;
 
@@ -197,11 +202,11 @@ exports.addManthanEventResult = async (req, res) => {
       }
       
       req.body.resultAdded = true;
-
-      
-      await manthanEventModel.findOneAndUpdate({ _id: id }, req.body, {
-        runValidators: true,
+      req.body.results.forEach((result) => {
+        result["points"]=result["primaryScore"];
       });
+      console.log(manthanEventSchedule);
+      await manthanEventModel.findOneAndUpdate({ _id: id }, req.body, { runValidators: true});
       let gcCompetitionsStore = await getGcScoreboardStore();
       console.log(manthanEventSchedule);
       console.log("HELLO THERE")
