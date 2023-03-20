@@ -70,7 +70,40 @@ exports.getManthanOverallStandings = async (req, res) => {
 exports.getManthanEventStandings = async (req, res) => {
   try {
     let eventsSchedules = await manthanEventModel.find({ resultAdded: true });
-    res.json({ success: true, details: eventsSchedules });
+
+
+    let response = eventsSchedules.map((event)=>{
+     return {
+            "_id": event['_id'],
+            "event": event['event'],
+            "module": event['module'],
+            "date": event['date'],
+            "results": event['results'].map((result)=>{
+          
+              return {
+                "hostelName":result['hostelName'],
+                "points":result['primaryScore'],
+                "_id":result['_id']
+              }
+
+
+            }),
+            "venue":event['venue'],
+            "posterEmail": event['posterEmail'],
+            "resultAdded": event['resultAdded'],
+            "victoryStatement": event['victoryStatement'],
+      
+        }
+
+    })
+console.log(response);
+console.log('PRINTING RESULTS');
+
+
+
+
+
+    res.json({ success: true, details: response });
   } catch (err) {
     res.status(500).json({ success: false, message: err.toString() });
   }
