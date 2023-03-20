@@ -190,7 +190,6 @@ exports.addManthanEventResult = async (req, res) => {
   try {
     const id = req.params.id;
     let manthanEventSchedule = await manthanEventModel.findById(id);
-
     
     if (
       (await ifAuthorizedForManthanEventSchedules(id, req.body.email)) === false
