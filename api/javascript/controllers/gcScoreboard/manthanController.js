@@ -290,30 +290,9 @@ exports.getManthanResults = async (req, res) => {
     }
 
     const events = await manthanEventModel.find(filters).sort({ date: -1 });
-    
-       let response = events.map((event) => {
-         return {
-           _id: event["_id"],
-           event: event["event"],
-           module: event["module"],
-           date: event["date"],
-           results: event["results"].map((result) => {
-             return {
-               hostelName: result["hostelName"],
-               points: result["primaryScore"],
-               _id: result["_id"],
-             };
-           }),
-           venue: event["venue"],
-           posterEmail: event["posterEmail"],
-           resultAdded: event["resultAdded"],
-           victoryStatement: event["victoryStatement"],
-         };
-       });
-
 
 // send all event schedules if no email passed or passed email belongs to board admin
-    res.status(200).json({ success: true, details: response });
+    res.status(200).json({ success: true, details: events });
   } catch (err) {
     res.status(500).json({ success: false, message: err.toString() });
   }
