@@ -44,10 +44,7 @@ const swaggerDefinition = {
 
 mongoose.set('strictQuery',false)
 
-mongoose.connect(process.env.DATABASE_URI, (err, res) => {
-  //console.log(err, res);
-  console.log("connected to mongodb");
-});
+mongoose.connect(process.env.DATABASE_URI);
 
 // options for the swagger docs
 const options = {
