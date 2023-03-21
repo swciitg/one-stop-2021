@@ -72,6 +72,8 @@ app.use(BASEURL, routers.imageRouter.imageRouter);
 app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
 app.use(BASEURL, routers.upspRouter);
+app.use(BASEURL, routers.onestopUserRouter);
+app.use(BASEURL, routers.notificationRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
 
 const PORT = process.env.PORT || 3000;

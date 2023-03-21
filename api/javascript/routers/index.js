@@ -17,3 +17,5 @@ exports.newsRouter = require("./newsRouter");
 exports.campusTravelRouter = require("./campusTravel");
 exports.gcScoreboardRouter = require("./gcScoreboardRouter");
 exports.upspRouter = require("./upspRouter");
+exports.onestopUserRouter = require("./onsetopUser.routes");
+exports.notificationRouter = require("./notification.routes");

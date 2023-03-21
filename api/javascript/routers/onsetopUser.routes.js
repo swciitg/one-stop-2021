@@ -1,6 +1,7 @@
-const express  = require('express');
+const express = require("express");
+const { createOnestopUser } = require("../controllers/onestopUserController");
 const onestopUserRouter = express.Router();
 
-onestopUserRouter.get('/onestop-user');
-onestopUserRouter.post('/onestop-user');
-onestopUserRouter.post('/onestop-user/send/:id');
+onestopUserRouter.post("/onestop-user/", createOnestopUser);
+
+module.exports = onestopUserRouter;
