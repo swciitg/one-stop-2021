@@ -20,6 +20,31 @@ async function ifAuthorizedForSpardhaStandings(eventId, email){
     return true;
 }
 
+exports.updateSpardhaHostelsPoints = async (req,res) => {
+    try{
+        let gcCompetitionsStore = await getGcScoreboardStore();
+        let spardhaOverallStandingEvents = await spardhaOverallStandingsModel.find();
+        gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
+            hostelGcPoints["spardha_points"]=0;
+        });
+        spardhaOverallStandingEvents.forEach((eventStanding) => {
+            eventStanding["standings"].forEach((hostelOverallStanding) => {
+                gcCompetitionsStore["overallGcStandings"].forEach((hostelGcPoints) => {
+                    if(hostelGcPoints["hostelName"]===hostelOverallStanding["hostelName"]){
+                        // console.log(parseFloat(hostelGcPoints["spardha_points"].toString()));
+                        hostelGcPoints["spardha_points"]+=hostelOverallStanding["points"];
+                    }
+                });
+            });
+        });
+        await gcCompetitionsStore.save();
+        res.json({"success" : true,"details" : gcStandings});
+    }
+    catch (err){
+        res.status(500).json({ "success": false, "message": err.toString() });
+    }
+}
+
 exports.postSpardhaEvents= async (req, res) => {
     try {
         let spardhaEvents = req.body.events;

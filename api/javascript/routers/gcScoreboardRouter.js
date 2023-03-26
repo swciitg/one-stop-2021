@@ -24,6 +24,7 @@ const {
   postSpardhaOverallStandings,
   deleteSpardhaStanding,
   getSpardhaEventStandings,
+  updateSpardhaHostelsPoints,
 } = require("../controllers/gcScoreboard/spardhaController");
 const {
   gcRequestsMiddleware,
@@ -141,6 +142,12 @@ gcScoreboardRouter.post(
   "/gc/competition-board-admins/:competition",
   checkIfModeratorMiddleware,
   postCompetitionBoardAdmins
+);
+
+gcScoreboardRouter.post(
+  "/gc/spardha/update-hostel-points",
+  checkIfModeratorMiddleware,
+  updateSpardhaHostelsPoints
 );
 
 gcScoreboardRouter.post(
