@@ -35,4 +35,4 @@ exports.totalSpardhaWomenPoints = 175;
 exports.totalSpardhaMenPoints = 210;
 exports.totalKritiPoints = 5800;
 exports.totalSahyogPoints = 4400;
-exports.totalManthanPoints = 1190;
+exports.totalManthanPoints = 1400;
