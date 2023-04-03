@@ -21,6 +21,8 @@ const fileStorageEngine = multer.diskStorage({
     }
 });
 const upload = multer({storage: fileStorageEngine});
+
+foodItemsRouter.get('/outlet-menu/:outletId',Controller.getOutletMenu);
 foodItemsRouter.post('/createOutletsMenu', upload.single("file"),Controller.createItem);
 module.exports = {
     foodItemsRouter: foodItemsRouter

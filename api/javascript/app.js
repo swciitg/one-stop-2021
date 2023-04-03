@@ -1,25 +1,15 @@
 require("dotenv").config();
-// require('./passport');
-
 const express = require("express");
-const swaggerJSDoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
-const methodOverride = require("method-override");
-const helmet = require("helmet");
-const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
-const session = require("express-session");
-// const passport = require('passport');
 const mongoose = require("mongoose");
-const nconf = require("./config");
 const routers = require("./routers");
 const LastUpdate = require("./models/lastUpdate");
-const {
-  writeError,
-  writeResponse
-} = require("./helpers/response");
-
+const { BASEURL, ADMINPANELROOT } = require("./helpers/constants");
+const { adminJsRouter } = require("./admin_panel/admin-config");
 const app = express();
+
+// admin panel router
+
+app.use(ADMINPANELROOT,adminJsRouter);
 
 // setting ejs as view engine
 
@@ -28,46 +18,16 @@ app.set("view engine", "ejs");
 //for serving static files
 app.use(express.static("public"));
 
-// app.use(nconf.get('app_path'));
-
-const swaggerDefinition = {
-  info: {
-    title: "OneStop Admin",
-    version: "1.0.0",
-    description: "Node apps for the admin panel of OneStop application",
-  },
-  host: "localhost:3000",
-  basePath: "/",
-};
-
 // connect to mongodb
 
 mongoose.set('strictQuery',false)
 
 mongoose.connect(process.env.DATABASE_URI);
 
-// options for the swagger docs
-const options = {
-  // import swaggerDefinitions
-  swaggerDefinition,
-  // path to the app docs
-  apis: ["./controllers/*.js"],
-};
-
-// initialize swagger-jsdoc
-const swaggerSpec = swaggerJSDoc(options);
-
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-// app.set('port', nconf.get('PORT'));
-//app.use(bodyParser.json());
-app.use(helmet());
-app.use(methodOverride());
-app.use(cookieParser());
 app.use(express.json({
   limit: "50mb",
   extended:true
 }));
-app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 
 // enable CORS
@@ -85,10 +45,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// new API routes
-
-let BASEURL = process.env.BASE_URL + "v2/";
-
 // Validate API Call
 
 app.use((req,res,next) => {
@@ -100,6 +56,7 @@ app.use((req,res,next) => {
   next();
 });
 
+// API routers
 
 app.use(BASEURL, routers.userRouter.userRouter);
 app.use(BASEURL, routers.authRouter.authRouter);
@@ -117,22 +74,9 @@ app.use(BASEURL, routers.imageRouter.imageRouter);
 app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
 app.use(BASEURL, routers.upspRouter);
+app.use(BASEURL, routers.onestopUserRouter);
+app.use(BASEURL, routers.notificationRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
-
-// For demo auth purposes only
-app.get(`${BASEURL}user-info`, (req, res) => {
-  const response = {
-    message: "User not authenticated"
-  };
-  writeResponse(res, response);
-});
-
-// app error handler
-app.use((err, _req, res, next) => {
-  if (err && err.status) {
-    writeError(res, err);
-  } else next(err);
-});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT,async () => {
@@ -142,15 +86,4 @@ app.listen(PORT,async () => {
     let addUpdate = new LastUpdate({"food" : Date(), "menu" : Date(), "travel" : Date(), "contact" : Date()});
     await addUpdate.save();
   }
-  // eslint-disable-next-line no-console
 });
-
-// "eslint": "^8.7.0",
-// "eslint-config-airbnb-base": "^15.0.0",
-// "eslint-config-google": "^0.14.0",
-// "eslint-config-prettier": "^8.3.0",
-// "eslint-config-standard": "^16.0.3",
-// "eslint-plugin-import": "^2.25.4",
-// "eslint-plugin-node": "^11.1.0",
-// "eslint-plugin-prettier": "^4.0.0",
-// "eslint-plugin-promise": "^5.2.0",

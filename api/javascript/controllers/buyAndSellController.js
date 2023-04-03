@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 
 function errorFxn(res, err) {
   console.log(err);
-  return res.json({
+  return res.status(500).json({
     saved_successfully: false,
     image_safe: true
   });

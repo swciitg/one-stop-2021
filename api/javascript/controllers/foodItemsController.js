@@ -98,3 +98,17 @@ exports.createItem = async (req, res) => {
     console.log(err);
   }
 };
+
+exports.getOutletMenu = async (req,res) => {
+  try{
+    const outletId = req.params.outletId;
+    if(outletId === undefined){
+      throw Error("Please specify correct outlet ID");
+    }
+    let foodMenu = foodItemsModel.findById(outletId);
+    res.json({"success" : true,"details" : menu});
+  }
+  catch (err) {
+    res.status(500).json({"success" : false,"message" : err.toString()});
+  } 
+}
