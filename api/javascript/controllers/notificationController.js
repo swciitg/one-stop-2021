@@ -19,7 +19,7 @@ exports.sendToDevice = async (req, res) => {
       throw "Device for the given user not found!";
     }
     const token = user["deviceToken"];
-
+    console.log(user);
     const payload = {
       data: {
         category: req.body.notif.category,
