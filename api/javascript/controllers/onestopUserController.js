@@ -51,6 +51,10 @@ exports.logoutUser = async (req, res) => {
           var index = onestopuser.deviceTokens.indexOf(req.body.deviceToken);
           onestopuser.deviceTokens.splice(index, 1);
           await onestopuser.save();
+          res.json({
+            success: true,
+            message: "Logout Successfully"
+          });
         }
         else{
           res.status(400).json({

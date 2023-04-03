@@ -4,7 +4,7 @@ const { sendToDevice } = require("./notificationController");
 
 const sendMailForTravelPostReply = async (replier_name, reciever_email,reciever_name,from,to,travelDateTime) => {
     console.log(reciever_name,replier_name,travelDateTime);
-    nodeoutlook.sendEmail({
+    await nodeoutlook.sendEmail({
         auth: {
             user: process.env.SWC_EMAIL,
             pass: process.env.SWC_EMAIL_PASSWORD
