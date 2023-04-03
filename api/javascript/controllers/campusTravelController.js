@@ -157,6 +157,7 @@ exports.getTravelPostChatReplies = async (req, res) => {
 
 exports.postReplyChat = async (req, res) => {
     try {
+        console.log(req.body);
         const id = req.query.chatId;
         const data = req.body;
         let travelChatReply = new ReplyPostModel(data);
