@@ -36,10 +36,41 @@ exports.createOnestopUser = async (req, res) => {
 };
 
 exports.logoutUser = async (req, res) => {
-  if (!req.body.email || !req.body.name || !req.body.deviceToken) {
+  if (!req.body.email || !req.body.deviceToken) {
     res.json({
       success: false,
       message: "missing fields",
     });
+  }
+  else{
+    try{
+      let onestopuser = await userModel.findOne({"email" : req.body.email});
+      console.log(onestopuser);
+      if(onestopuser){
+        if(!onestopuser.deviceTokens.includes(req.body.deviceToken)){
+          var index = onestopuser.deviceTokens.indexOf(req.body.deviceToken);
+          onestopuser.deviceTokens.splice(index, 1);
+          await onestopuser.save();
+        }
+        else{
+          res.status(400).json({
+            success: false,
+            message: "device token wrong"
+          });
+        }
+      }
+      else{
+        res.status(400).json({
+          success: false,
+          message: "non user found"
+        });
+      }
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({
+        success: false,
+        message: e
+      });
+    }
   }
 }
