@@ -1,5 +1,6 @@
 const { TravelPostModel, TravelChatModel, ReplyPostModel } = require("../models/campusTravelModel");
 const nodeoutlook = require('nodejs-nodemailer-outlook');
+const { sendToDevice } = require("./notificationController");
 
 const sendMailForTravelPostReply = async (replier_name, reciever_email,reciever_name,from,to,travelDateTime) => {
     console.log(reciever_name,replier_name,travelDateTime);
@@ -175,7 +176,7 @@ exports.postReplyChat = async (req, res) => {
                   //ADD here chat reply body
                   req.body.sendTo = travelPost.email;
                   // ADD send to email here
-                  sendToDevice(req, res, _);
+                  sendToDevice(req,res,_);
             }
         });
         res.json({ "success": true });
