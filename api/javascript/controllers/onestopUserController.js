@@ -36,6 +36,7 @@ exports.createOnestopUser = async (req, res) => {
 };
 
 exports.logoutUser = async (req, res) => {
+  console.log(req.body);
   if (!req.body.email || !req.body.deviceToken) {
     res.json({
       success: false,
