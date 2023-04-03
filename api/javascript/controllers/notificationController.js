@@ -1,6 +1,6 @@
 const firebase = require("firebase-admin");
 const serviceAccount = require("../config/push-notification-key.json");
-const onestopUserModel = require("../models/onestopUserModel");
+const { userModel } = require("../models/onestopUserModel");
 
 exports.sendToDevice = async (req, res) => {
   if (!firebase.apps.length)
@@ -13,7 +13,7 @@ exports.sendToDevice = async (req, res) => {
       throw "Missing Fields";
     }
 
-    let user = await onestopUserModel.findOne({ email: req.body.sendTo });
+    let user = await userModel.findOne({ email: req.body.sendTo });
 
     if (!user) {
       throw "Device for the given user not found!";
@@ -44,7 +44,7 @@ exports.sendToDevice = async (req, res) => {
     console.log(e)
     res.send({
       success: false,
-      message: e,
+      message: e
     });
   }
 };
