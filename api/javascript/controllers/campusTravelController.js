@@ -176,7 +176,7 @@ exports.postReplyChat = async (req, res) => {
                   //ADD here chat reply body
                   req.body.sendTo = travelPost.email;
                   // ADD send to email here
-                  sendToDevice(req,res,_);
+                  sendToDevice(req,res);
             }
         });
         res.json({ "success": true });

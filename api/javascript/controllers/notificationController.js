@@ -2,7 +2,7 @@ const firebase = require("firebase-admin");
 const serviceAccount = require("../config/push-notification-key.json");
 const onestopUserModel = require("../models/onestopUserModel");
 
-exports.sendToDevice = async (req, res, next) => {
+exports.sendToDevice = async (req, res) => {
   if (!firebase.apps.length)
     firebase.initializeApp({
       credential: firebase.credential.cert(serviceAccount),
