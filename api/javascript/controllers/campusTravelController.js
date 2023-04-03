@@ -167,7 +167,7 @@ exports.postReplyChat = async (req, res) => {
             console.log(travelPost["travelDateTime"]);
             if(travelPost["email"]!==data["email"]){ // when other people writes a message
                 sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
-
+                req.body.notif={};
                   req.body.notif.category = "travel";
                   req.body.notif.model = "maybeJsonValue";
                   req.body.notif.header = data["name"];
