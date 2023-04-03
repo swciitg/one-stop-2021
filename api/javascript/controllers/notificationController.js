@@ -36,10 +36,6 @@ exports.sendToDevice = async (req, res) => {
 
     let data = await firebase.messaging().sendToDevice(token, payload, options);
     console.log(data);
-    res.json({
-      success: true,
-      message: data,
-    });
   } catch (e) {
     console.log(e)
     res.json({
