@@ -12,26 +12,19 @@ exports.createOnestopUser = async (req, res) => {
     });
   } else {
     try {
-      let onestopUser = new userModel(req.body);
-      let filter = { email: req.body.email };
-      let 
-      if (await userModel.findOne(filter)) {
-        let data = await userModel.findOneAndUpdate(filter, req.body, {
-          new: true,
-        });
-        res.send({
-          success: true,
-          message: "User updated succesfully",
-          data: data,
-        });
-      } else {
-        let data = await onestopUser.save();
-        res.send({
-          success: true,
-          message: "User created succesfully",
-          data: data,
-        });
+      let onestopuser = await userModel.findOne({"email" : req.body.email});
+      console.log(onestopuser);
+      if(onestopuser){
+        if(!onestopuser.deviceTokens.includes(req.body.deviceToken)){
+          onestopuser.deviceTokens.push(req.body.deviceToken);
+        }
       }
+      else{
+        onestopuser = new userModel(req.body);
+        onestopuser.deviceTokens.push(req.body.deviceToken);
+      }
+      await onestopuser.save();
+      res.json({success: true,message: onestopuser.toString()});
     } catch (e) {
       console.log(e);
       res.json({
