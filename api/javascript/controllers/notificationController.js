@@ -25,7 +25,7 @@ exports.sendToDevice = async (req, res) => {
         category: req.body.notif.category,
         model: req.body.notif.model,
         header: req.body.notif.header,
-        body: req.body.notif.body,
+        body: req.body.notif.body
       }
     };
 

@@ -171,8 +171,8 @@ exports.postReplyChat = async (req, res) => {
                 req.body.notif={};
                   req.body.notif.category = "travel";
                   req.body.notif.model = "maybeJsonValue";
-                  req.body.notif.header = data["name"];
-                  req.body.notif.body = "";
+                  req.body.notif.header = "Cab sharing reply";
+                  req.body.notif.body = `You have got reply from ${data["name"]} 🙌`;
                   //ADD here chat reply body
                   req.body.sendTo = travelPost.email;
                   // ADD send to email here
