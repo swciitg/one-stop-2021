@@ -1,6 +1,10 @@
-const onestopUserModel = require("../models/onestopUserModel");
+const { userModel } = require("../models/onestopUserModel");
 
 exports.createOnestopUser = async (req, res) => {
+  console.log(req.body.email);
+  console.log(req.body["email"]);
+  console.log(req.body.name);
+  console.log(req.body.deviceToken);
   if (!req.body.email || !req.body.name || !req.body.deviceToken) {
     res.json({
       success: false,
@@ -8,10 +12,10 @@ exports.createOnestopUser = async (req, res) => {
     });
   } else {
     try {
-      onestopUser = new onestopUserModel(req.body);
+      let onestopUser = new userModel(req.body);
       let filter = { email: req.body.email };
-      if (await onestopUserModel.findOne(filter)) {
-        let data = await onestopUserModel.findOneAndUpdate(filter, req.body, {
+      if (await userModel.findOne(filter)) {
+        let data = await userModel.findOneAndUpdate(filter, req.body, {
           new: true,
         });
         res.send({
@@ -36,3 +40,7 @@ exports.createOnestopUser = async (req, res) => {
     }
   }
 };
+
+exports.logoutUser = async (req, res) => {
+
+}

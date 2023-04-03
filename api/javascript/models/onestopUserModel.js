@@ -1,21 +1,18 @@
 const mongoose = require("mongoose");
-
-const onestopUserSchema = new mongoose.Schema({
-  name: {
+const userSchema = new mongoose.Schema({
+  "name": {
+    type: String,
+    required: true
+  },
+  "email": {
     type: String,
     required: true,
+    unique: true
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  deviceToken: {
+  "deviceToken": {
     type: [String],
-    default: [],
-  },
+    default: []
+  }
 });
 
-module.exports = {
-  onestopUserModel: mongoose.model("onestopUser", onestopUserSchema),
-};
+module.exports = {"userModel" : mongoose.model("onestopUser",userSchema)};
