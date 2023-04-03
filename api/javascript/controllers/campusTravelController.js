@@ -173,7 +173,7 @@ exports.postReplyChat = async (req, res) => {
                   req.body.notif.header = data["name"];
                   req.body.notif.body = "";
                   //ADD here chat reply body
-                  req.body.sendTo = "";
+                  req.body.sendTo = travelPost.email;
                   // ADD send to email here
                   sendToDevice(req, res, _);
             }

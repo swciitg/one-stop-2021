@@ -35,7 +35,7 @@ exports.sendToDevice = async (req, res, next) => {
     };
 
     let data = await firebase.messaging().sendToDevice(token, payload, options);
-
+    console.log(data);
     res.send({
       success: true,
       message: data,
