@@ -14,6 +14,7 @@ exports.createOnestopUser = async (req, res) => {
     try {
       let onestopUser = new userModel(req.body);
       let filter = { email: req.body.email };
+      let 
       if (await userModel.findOne(filter)) {
         let data = await userModel.findOneAndUpdate(filter, req.body, {
           new: true,
@@ -42,5 +43,10 @@ exports.createOnestopUser = async (req, res) => {
 };
 
 exports.logoutUser = async (req, res) => {
-
+  if (!req.body.email || !req.body.name || !req.body.deviceToken) {
+    res.json({
+      success: false,
+      message: "missing fields",
+    });
+  }
 }
