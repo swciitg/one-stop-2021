@@ -18,7 +18,7 @@ exports.sendToDevice = async (req, res) => {
     if (!user) {
       throw "Device for the given user not found!";
     }
-    const token = user["deviceToken"];
+    const token = user["deviceTokens"];
     console.log(user);
     const payload = {
       data: {
@@ -26,7 +26,7 @@ exports.sendToDevice = async (req, res) => {
         model: req.body.notif.model,
         header: req.body.notif.header,
         body: req.body.notif.body,
-      },
+      }
     };
 
     const options = {
@@ -36,13 +36,13 @@ exports.sendToDevice = async (req, res) => {
 
     let data = await firebase.messaging().sendToDevice(token, payload, options);
     console.log(data);
-    res.send({
+    res.json({
       success: true,
       message: data,
     });
   } catch (e) {
     console.log(e)
-    res.send({
+    res.json({
       success: false,
       message: e
     });
