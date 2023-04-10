@@ -7,9 +7,8 @@ const { BASEURL, ADMINPANELROOT } = require("./helpers/constants");
 const { adminJsRouter } = require("./admin_panel/admin-config");
 const app = express();
 
-// admin panel router
-
-app.use(ADMINPANELROOT,adminJsRouter);
+// adminjs routes
+app.use(ADMINPANELROOT, adminJsRouter);
 
 // setting ejs as view engine
 
@@ -20,39 +19,42 @@ app.use(express.static("public"));
 
 // connect to mongodb
 
-mongoose.set('strictQuery',false)
+mongoose.set("strictQuery", false);
 
 mongoose.connect(process.env.DATABASE_URI);
 
-app.use(express.json({
-  limit: "50mb",
-  extended:true
-}));
+app.use(
+    express.json({
+        limit: "50mb",
+        extended: true,
+    })
+);
 app.use(express.urlencoded({ extended: true }));
 
 // enable CORS
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET,HEAD,OPTIONS,POST,PUT,DELETE"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  next();
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    next();
 });
 
 // Validate API Call
 
-app.use((req,res,next) => {
-  if(req.method!=="GET" && req.originalUrl.split("/").includes("v2") && req.headers["security-key"]!==process.env.SECURITY_KEY){
-    res.json({"message":"You are not authorized"});
-    return;
-  }
-  next();
+app.use((req, res, next) => {
+    if (
+        req.method !== "GET" &&
+        req.originalUrl.split("/").includes("v2") &&
+        req.headers["security-key"] !== process.env.SECURITY_KEY
+    ) {
+        res.json({ message: "You are not authorized" });
+        return;
+    }
+    next();
 });
 
 // API routers
@@ -78,11 +80,16 @@ app.use(BASEURL, routers.notificationRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT,async () => {
-  console.log(`Express server listening on port ${PORT} see docs at /docs`);
-  let updatesList = await LastUpdate.find();
-  if(updatesList.length==0){
-    let addUpdate = new LastUpdate({"food" : Date(), "menu" : Date(), "travel" : Date(), "contact" : Date()});
-    await addUpdate.save();
-  }
+app.listen(PORT, async () => {
+    console.log(`Express server listening on port ${PORT} see docs at /docs`);
+    let updatesList = await LastUpdate.find();
+    if (updatesList.length == 0) {
+        let addUpdate = new LastUpdate({
+            food: Date(),
+            menu: Date(),
+            travel: Date(),
+            contact: Date(),
+        });
+        await addUpdate.save();
+    }
 });
