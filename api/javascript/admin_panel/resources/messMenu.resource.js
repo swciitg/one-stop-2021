@@ -7,10 +7,10 @@ let allowedRoles = [roles.SUPERADMIN, roles.MESS];
 module.exports = {
     resource: messMenu,
     options: {
-        listProperties: ["hostel", "day", "meal", "menu", "timing"],
-        filterProperties: ["hostel", "day", "meal", "menu", "timing"],
-        editProperties: ["hostel", "day", "meal", "menu", "timing"],
-        showProperties: ["hostel", "day", "meal", "menu", "timing"],
+        listProperties: ["hostel", "day", "meal", "mealDesription", "timing"],
+        filterProperties: ["hostel", "day", "meal", "mealDesription", "timing"],
+        editProperties: ["hostel", "day", "meal", "mealDesription", "timing"],
+        showProperties: ["hostel", "day", "meal", "mealDesription", "timing"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
