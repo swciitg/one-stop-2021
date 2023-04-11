@@ -1,21 +1,36 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const roles = require("../admin_panel/roles");
+
+var roleValues = [];
+for(var k in roles) roleValues.push(roles[k]);
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        required: true
     },
     email: {
         type: String,
         required: true,
-        unique: true,
+        unique: true
     },
     deviceTokens: {
         type: [String],
         default: [],
     },
-    password: { type: String, required: true },
-    roles: { type: [String], default: [] },
+    password: {
+        type: String,
+        required: true
+    },
+    roles: {
+        type: [
+            { 
+                type: String, 
+                enum: roleValues
+            }
+        ]
+    }
 });
 
 userSchema.pre("save", async function (next) {

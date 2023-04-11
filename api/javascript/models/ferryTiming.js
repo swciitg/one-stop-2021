@@ -3,11 +3,26 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const ferrytimingSchema = new Schema({
-  name: String,
-  MonToFri_GuwahatiToNorthGuwahati: [String],
-  MonToFri_NorthGuwahatiToGuwahati: [String],
-  Sunday_GuwahatiToNorthGuwahati: [String],
-  Sunday_NorthGuwahatiToGuwahati: [String],
+  ferryGhat: {
+    type: String,
+    required: true
+  },
+  weekdays_campusToCity: {
+    type: [Date],
+    default: []
+  },
+  weekdays_cityToCampus: {
+    type: [Date],
+    default: []
+  },
+  weekend_cityToCampus: {
+    type: [Date],
+    default: []
+  },
+  weekend_campusToCity: {
+    type: [Date],
+    default: []
+  }
 });
 
 const ferryTiming = mongoose.model('ferry_timing', ferrytimingSchema);

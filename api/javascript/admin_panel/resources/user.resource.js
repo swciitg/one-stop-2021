@@ -9,7 +9,7 @@ module.exports = {
     options: {
         listProperties: ["name", "email", "deviceTokens", "roles"],
         filterProperties: ["name", "email", "deviceTokens", "roles"],
-        editProperties: ["name", "email", "deviceTokens", "roles"],
+        editProperties: ["name", "email", "password", "deviceTokens", "roles"],
         showProperties: ["name", "email", "deviceTokens", "roles"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },

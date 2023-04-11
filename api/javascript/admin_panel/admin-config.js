@@ -6,10 +6,13 @@ const authenticate = require("./auth");
 
 const messMenuResouce = require("./resources/messMenu.resource");
 const userResource = require("./resources/user.resource");
+const ferryTimingResource = require("./resources/ferryTiming.resource");
+const busStopResource = require("./resources/busStop.resource");
 AdminJs.registerAdapter(AdminJsMongoose);
 
+
 const adminjs = new AdminJs({
-    resources: [messMenuResouce, userResource],
+    resources: [messMenuResouce, userResource, ferryTimingResource, busStopResource],
     rootPath: ADMINPANELROOT,
     loginPath: ADMINPANELROOT + "/login",
     logoutPath: ADMINPANELROOT + "/logout",

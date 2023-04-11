@@ -2,14 +2,29 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const busTimingSchema = new Schema({
-  CollegeToCity_WorkingDay: [String],
-  CityToCollege_WorkingDay: [String],
-  CollegeToCity_Holiday: [String],
-  CityToCollege_Holiday: [String],
-  BusStop: String
+const busStopSchema = new Schema({
+  busStop: {
+    type: String,
+    required: true
+  },
+  weekdays_campusToCity: {
+    type: [Date],
+    default: []
+  },
+  weekdays_cityToCampus: {
+    type: [Date],
+    default: []
+  },
+  weekend_cityToCampus: {
+    type: [Date],
+    default: []
+  },
+  weekend_campusToCity: {
+    type: [Date],
+    default: []
+  }
 });
 
-const busTiming = mongoose.model('bus_timing', busTimingSchema);
+const busStop = mongoose.model('busStops', busStopSchema);
 
-module.exports = busTiming;
+module.exports = busStop;
