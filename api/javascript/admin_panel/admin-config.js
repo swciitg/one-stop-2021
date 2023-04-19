@@ -11,9 +11,9 @@ AdminJs.registerAdapter(AdminJsMongoose);
 
 const adminjs = new AdminJs({
     resources: [
-        {
-            resource: spardhaEventModel
-        },
+        // {
+        //     resource: spardhaEventModel
+        // },
         {
             resource: foodOutlets,
             options: {
