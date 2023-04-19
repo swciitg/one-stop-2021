@@ -1,4 +1,4 @@
-name: Deploly Main
+name: Deploy Main
 on:
     workflow_dispatch:
     push:
