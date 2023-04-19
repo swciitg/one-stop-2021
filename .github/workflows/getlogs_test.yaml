@@ -1,0 +1,22 @@
+name: JS logs
+on:
+    workflow_dispatch:
+
+jobs:
+
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Establish connection and deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        port: ${{ secrets.SSH_PORT }}
+        username: ${{ secrets.SSH_USERNAME }}
+        script: |
+            cd /webapps/test-servers/one-stop-2021
+            cd api/javascript
+            docker-compose -f docker-compose.test.prod.yaml logs --tail=1000
