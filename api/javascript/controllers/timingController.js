@@ -1,21 +1,36 @@
-const busStop = require("../models/busTiming");
-const FerryTiming = require("../models/ferryTiming");
-const ferryTiming = require("../models/ferryTiming");
+
 const LastUpdate = require("../models/lastUpdate");
 
-exports.getferrytiming = (req, res) => {
-  FerryTiming.find().then((data) => {
-    res.json(data);
-  });
+const transportTiming = require("../models/transportTimings");
+
+exports.getferrytiming = async (req, res) => {
+  try {
+    let ferryTimings = await transportTiming.find({ type: "FERRY" });
+
+    res.json({
+      error: false,
+      data: ferryTimings,
+    });
+  } catch (e) {
+    res.json({
+      error: true,
+      message: e,
+    });
+  }
 };
 
-exports.getbusStop = (req, res) => {
-  busStop.find().then((data) => {
-    console.log(data);
-    let jsonData = {};
-    data.forEach((element) => {
-      jsonData[element["BusStop"]]={"CollegeToCity_WorkingDay" : element["CollegeToCity_WorkingDay"],"CityToCollege_WorkingDay" : element["CityToCollege_WorkingDay"],"CollegeToCity_Holiday":element["CollegeToCity_Holiday"],"CityToCollege_Holiday":element["CityToCollege_Holiday"]}
-    })
-    res.json(jsonData);
-  });
+exports.getbusStop = async (req, res) => {
+  try {
+    let busTimings = await transportTiming.find({ type: "BUS" });
+
+    res.json({
+      error: false,
+      data: busTimings,
+    });
+  } catch (e) {
+    res.json({
+      error: true,
+      message: e,
+    });
+  }
 };
