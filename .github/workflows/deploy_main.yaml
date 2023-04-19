@@ -22,7 +22,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         username: ${{ secrets.SSH_USERNAME }}
         script: |
-            cd /webapps/test-servers/one-stop-2021
+            cd /webapps/one-stop-2021
             git pull
             git status
             cd api/javascript
