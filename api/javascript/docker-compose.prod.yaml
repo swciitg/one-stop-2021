@@ -12,7 +12,7 @@ services:
                         - onestopimages:/home/node/app/images_folder
                         - onestopfiles:/home/node/app/files_folder
                 ports:
-                        - "9035:9040"
+                        - "9015:9010"
                 env_file:
                         - .env
 
