@@ -7,11 +7,19 @@ const authenticate = require("./auth");
 const messMenuResouce = require("./resources/messMenu.resource");
 const userResource = require("./resources/user.resource");
 const timingResource = require("./resources/timing.resource");
-AdminJs.registerAdapter(AdminJsMongoose);
+const ui = require("./ui/loader");
+const { componentLoader, Components } = ui;
+const styleAssets = require("./ui/style-assets");
 
+AdminJs.registerAdapter(AdminJsMongoose);
 
 const adminjs = new AdminJs({
     resources: [messMenuResouce, userResource, timingResource],
+    assets: {
+        styles: styleAssets,
+    },
+    componentLoader,
+    dashboard: { component: Components.Dashboard },
     rootPath: ADMINPANELROOT,
     loginPath: ADMINPANELROOT + "/login",
     logoutPath: ADMINPANELROOT + "/logout",
