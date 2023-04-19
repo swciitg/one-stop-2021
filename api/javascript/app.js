@@ -9,7 +9,7 @@ const app = express();
 
 // admin panel router
 
-app.use(ADMINPANELROOT,adminJsRouter);
+app.use(ADMINPANELROOT, adminJsRouter);
 
 // setting ejs as view engine
 
@@ -20,13 +20,13 @@ app.use(express.static("public"));
 
 // connect to mongodb
 
-mongoose.set('strictQuery',false)
+mongoose.set('strictQuery', false)
 
 mongoose.connect(process.env.DATABASE_URI);
 
 app.use(express.json({
   limit: "50mb",
-  extended:true
+  extended: true
 }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -47,9 +47,9 @@ app.use((req, res, next) => {
 
 // Validate API Call
 
-app.use((req,res,next) => {
-  if(req.method!=="GET" && req.originalUrl.split("/").includes("v2") && req.headers["security-key"]!==process.env.SECURITY_KEY){
-    res.json({"message":"You are not authorized"});
+app.use((req, res, next) => {
+  if (req.method !== "GET" && req.originalUrl.split("/").includes("v2") && req.headers["security-key"] !== process.env.SECURITY_KEY) {
+    res.json({ "message": "You are unauthorized" });
     return;
   }
   next();
@@ -78,11 +78,11 @@ app.use(BASEURL, routers.notificationRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT,async () => {
+app.listen(PORT, async () => {
   console.log(`Express server listening on port ${PORT} see docs at /docs`);
   let updatesList = await LastUpdate.find();
-  if(updatesList.length==0){
-    let addUpdate = new LastUpdate({"food" : Date(), "menu" : Date(), "travel" : Date(), "contact" : Date()});
+  if (updatesList.length == 0) {
+    let addUpdate = new LastUpdate({ "food": Date(), "menu": Date(), "travel": Date(), "contact": Date() });
     await addUpdate.save();
   }
 });

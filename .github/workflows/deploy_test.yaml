@@ -1,7 +1,6 @@
 name: Deploy Test
 on:
     workflow_dispatch:
-    
     push:
         paths:
             - "api/javascript/**"
