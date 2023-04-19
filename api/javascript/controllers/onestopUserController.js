@@ -1,18 +1,21 @@
-const { userModel } = require("../models/onestopUserModel");
+const onestopUserModel = require("../models/onestopUserModel");
+
 
 exports.createOnestopUser = async (req, res) => {
   console.log(req.body.email);
   console.log(req.body["email"]);
   console.log(req.body.name);
   console.log(req.body.deviceToken);
-  if (!req.body.email || !req.body.name || !req.body.deviceToken) {
+  console.log(req.body.password);
+  if (!req.body.email || !req.body.name || !req.body.deviceToken || !req.body.password) {
     res.json({
       success: false,
       message: "missing fields",
     });
   } else {
     try {
-      let onestopuser = await userModel.findOne({"email" : req.body.email});
+      console.log(req.body);
+      let onestopuser = await onestopUserModel.findOne({"email" : req.body.email});
       console.log(onestopuser);
       if(onestopuser){
         if(!onestopuser.deviceTokens.includes(req.body.deviceToken)){
@@ -20,11 +23,11 @@ exports.createOnestopUser = async (req, res) => {
         }
       }
       else{
-        onestopuser = new userModel(req.body);
+        onestopuser = new onestopUserModel(req.body);
         onestopuser.deviceTokens.push(req.body.deviceToken);
       }
       await onestopuser.save();
-      res.json({success: true,message: onestopuser.toString()});
+      res.json({success: true,message: onestopuser.toJSON()});
     } catch (e) {
       console.log(e);
       res.json({
@@ -45,7 +48,7 @@ exports.logoutUser = async (req, res) => {
   }
   else{
     try{
-      let onestopuser = await userModel.findOne({"email" : req.body.email});
+      let onestopuser = await onestopUserModel.findOne({"email" : req.body.email});
       console.log(onestopuser);
       if(onestopuser){
         if(!onestopuser.deviceTokens.includes(req.body.deviceToken)){
