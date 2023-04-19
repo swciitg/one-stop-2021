@@ -26,5 +26,5 @@ jobs:
             git pull
             git status
             cd api/javascript
-            touch kunal.txt
+            docker-compose -f docker-compose.prod.yaml up -d --build
 
