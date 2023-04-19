@@ -1,4 +1,4 @@
-name: JS Api
+name: Deploy Main
 on:
     workflow_dispatch:
     push:
