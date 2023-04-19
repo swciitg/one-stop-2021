@@ -5,7 +5,7 @@ const messMenuItemModelSchema = new mongoose.Schema({
   day: { type: String, required: true },
   meal: { type: String, required: true },
   menu: { type: String, required: true },
-  timing: { type: String, required: true },
+  timing: { type: String, required: true }
 });
 
 module.exports = mongoose.model(

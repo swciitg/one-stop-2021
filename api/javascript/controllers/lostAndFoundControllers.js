@@ -6,7 +6,6 @@ const uuid = require("uuid");
 const sharp = require("sharp");
 const mongoose = require("mongoose");
 
-
 exports.getAllImages = async (req,res) => {
   let files = fs.readdirSync("../images_folder/");
   let filenames=[];

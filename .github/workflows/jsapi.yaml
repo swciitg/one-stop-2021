@@ -22,9 +22,9 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         username: ${{ secrets.SSH_USERNAME }}
         script: |
-            cd /webapps/one-stop-2021
+            cd /webapps/test-servers/one-stop-2021
             git pull
             git status
             cd api/javascript
-            docker-compose -f docker-compose.prod.yaml up -d --build
+            touch kunal.txt
 

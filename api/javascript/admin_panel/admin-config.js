@@ -11,17 +11,17 @@ AdminJs.registerAdapter(AdminJsMongoose);
 
 const adminjs = new AdminJs({
     resources: [
-        // {
-        //     resource: spardhaEventModel
-        // },
-        // {
-        //     resource: foodOutlets,
-        //     options: {
-        //         actions: {
-        //             edit: { isAccessible: true }
-        //         },
-        //     },
-        // }
+        {
+            resource: spardhaEventModel
+        },
+        {
+            resource: foodOutlets,
+            options: {
+                actions: {
+                    edit: { isAccessible: true }
+                },
+            },
+        }
     ],
     rootPath: ADMINPANELROOT
 });
