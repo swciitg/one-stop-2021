@@ -9,6 +9,9 @@ const authenticate = require("./auth");
 const messMenuResouce = require("./resources/messMenu.resource");
 const userResource = require("./resources/user.resource");
 const timingResource = require("./resources/transportTming.resource");
+const ui = require("./ui/loader");
+const { componentLoader, Components } = ui;
+const styleAssets = require("./ui/style-assets");
 AdminJs.registerAdapter(AdminJsMongoose);
 
 
@@ -24,9 +27,14 @@ var sessiontStore = new MongoDBStore(
 
 const adminjs = new AdminJs({
     resources: [messMenuResouce, userResource, timingResource],
+    assets: {
+        styles: styleAssets,
+    },
+    componentLoader,
+    dashboard: { component: Components.Dashboard },
     rootPath: ADMINPANELROOT,
     loginPath: ADMINPANELROOT + "/login",
-    logoutPath: ADMINPANELROOT + "/logout",
+    logoutPath: ADMINPANELROOT + "/logout"
 });
 
 exports.adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(
