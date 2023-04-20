@@ -1,0 +1,18 @@
+
+
+a[data-css="sidebar-logo"] img {
+  content: url(../assets/one-stop-logo.png) !important;
+}
+
+
+form h5 img{
+  content: url(../assets/OneStopAdmin.png) !important;
+}
+
+section section section[color="white"]{
+  display: none !important;
+}
+
+section section section[color="grey60"]{
+  display: none !important;
+}
