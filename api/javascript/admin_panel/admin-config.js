@@ -38,6 +38,9 @@ exports.adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(
     null,
     {
         store: sessiontStore,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 // 1 day
+          },
         resave: false, saveUninitialized: true
     }
 );
