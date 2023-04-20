@@ -27,6 +27,7 @@
     "@azure/msal-node": "^1.16.0",
     "adminjs": "^6.8.7",
     "bcrypt": "^5.1.0",
+    "connect-mongodb-session": "^3.1.1",
     "cookie-parser": "^1.4.6",
     "csvtojson": "^2.0.10",
     "dotenv": "^16.0.3",
