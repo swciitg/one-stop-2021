@@ -37,11 +37,7 @@ const adminjs = new AdminJs({
     logoutPath: ADMINPANELROOT + "/logout"
 });
 
-if (process.env.NODE_ENV === "production") {
-    adminjs.initialize();
-} else {
-    adminjs.watch();
-}
+adminjs.watch();
 
 exports.adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(
     adminjs,
