@@ -6,7 +6,7 @@ const authenticate = require("./auth");
 
 const messMenuResouce = require("./resources/messMenu.resource");
 const userResource = require("./resources/user.resource");
-const timingResource = require("./resources/timing.resource");
+const timingResource = require("./resources/transportTming.resource");
 AdminJs.registerAdapter(AdminJsMongoose);
 
 
