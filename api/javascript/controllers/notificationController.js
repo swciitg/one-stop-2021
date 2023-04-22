@@ -1,6 +1,6 @@
 const firebase = require("firebase-admin");
 const serviceAccount = require("../config/push-notification-key.json");
-const { userModel } = require("../models/onestopUserModel");
+const  userModel  = require("../models/onestopUserModel");
 
 exports.sendToDevice = async (req, res) => {
   if (!firebase.apps.length)
@@ -19,7 +19,7 @@ exports.sendToDevice = async (req, res) => {
       throw "Device for the given user not found!";
     }
     const token = user["deviceTokens"];
-    console.log(user);
+
     const payload = {
       data: {
         category: req.body.notif.category,
@@ -45,4 +45,34 @@ exports.sendToDevice = async (req, res) => {
   }
 };
 
-exports.sendToAll = async (req, res, next) => {};
+exports.sendToAll = async (req, res, next) => {
+  if (!firebase.apps.length)
+    firebase.initializeApp({
+      credential: firebase.credential.cert(serviceAccount),
+    });
+
+  try {
+    const payload = {
+      data: {
+        category: req.body.notif.category,
+        model: req.body.notif.model,
+        header: req.body.notif.header,
+        body: req.body.notif.body,
+      },
+      topic: "all",
+    };
+
+    let data = await firebase.messaging().send(payload);
+
+    res.send({
+      success: true,
+      message: data,
+    });
+  } catch (e) {
+    console.log(e);
+    res.send({
+      success: false,
+      message: e,
+    });
+  }
+};
