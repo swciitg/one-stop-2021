@@ -7,9 +7,6 @@ const { BASEURL, ADMINPANELROOT } = require("./helpers/constants");
 const { adminJsRouter } = require("./admin_panel/admin-config");
 const app = express();
 
-// adminjs routes
-app.use(ADMINPANELROOT, adminJsRouter);
-
 // setting ejs as view engine
 
 app.set("view engine", "ejs");
@@ -29,6 +26,9 @@ app.use(
         extended: true,
     })
 );
+// adminjs routes
+app.use(ADMINPANELROOT, adminJsRouter);
+
 app.use(express.urlencoded({ extended: true }));
 
 // enable CORS
