@@ -1,4 +1,4 @@
-const messMenu = require("../../models/messMenuItem");
+const messMenu = require("../../models/messMenuModel");
 const verifyRoles = require("../utils");
 const roles = require("../roles");
 
