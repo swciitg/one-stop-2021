@@ -47,6 +47,7 @@ exports.getSellDetails = async (req, res) => {
     console.log(req);
     const details = await sellModel.find();
     details.sort(compare);
+    details.map(d => d.imageURL = "https://" + d.imageId)
     return res.json({
       details: details
     });
@@ -94,7 +95,7 @@ exports.postSellDetails = async (req, res) => {
       __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
     );
     console.log("image path is: " + imagePath);
-    console.log(Buffer.from(imageString, "base64").toString("ascii"));
+    // console.log(Buffer.from(imageString, "base64").toString("ascii"));
     fs.writeFileSync(imagePath, Buffer.from(imageString, "base64"), (err) => {
       if (err) console.log(err);
       else {
@@ -104,12 +105,12 @@ exports.postSellDetails = async (req, res) => {
     try {
       const metadata = await sharp(imagePath).metadata();
       console.log(metadata);
-      const photo_id = imageName;
-      const imageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
-      const compressedImageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
-        imageName;
+      // const photo_id = imageName;
+      // const imageURL =
+      //   "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
+      // const compressedImageURL =
+      //   "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
+      //   imageName;
       const newImagePath = path.resolve(
         __dirname +
         "/../" +
@@ -162,8 +163,8 @@ exports.postSellDetails = async (req, res) => {
             price,
             phonenumber,
             description,
-            imageURL,
-            compressedImageURL,
+            imageId: imageName,
+            // compressedImageURL,
             email,
             username,
           })
@@ -278,12 +279,12 @@ exports.postBuyDetails = async (req, res) => {
     try {
       const metadata = await sharp(imagePath).metadata();
       console.log(metadata);
-      const photo_id = imageName;
-      const imageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
-      const compressedImageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
-        imageName;
+      // const photo_id = imageName;
+      // const imageURL =
+      //   "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
+      // const compressedImageURL =
+      //   "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
+      //   imageName;
       const newImagePath = path.resolve(
         __dirname +
         "/../" +
@@ -336,8 +337,9 @@ exports.postBuyDetails = async (req, res) => {
             price,
             phonenumber,
             description,
-            imageURL,
-            compressedImageURL,
+            // imageURL,
+            // compressedImageURL,
+            imageId: imageName,
             email,
             username,
           })
