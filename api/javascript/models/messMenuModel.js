@@ -1,15 +1,10 @@
 const mongoose = require("mongoose");
 const { allIITGHostels } = require("../helpers/constants");
 
-const dayMealsSchema = new mongoose.Schema({
+const mealSchema = new mongoose.Schema({
     mealDesription: { 
         type: String,
         required: true
-    },
-    mealType: {
-            type: String,
-            enum: ["breakfast", "lunch", "dinner"],
-            required: true
     },
     timing: {
         type: String,
@@ -18,38 +13,50 @@ const dayMealsSchema = new mongoose.Schema({
     }
 });
 
+const dayMenuSchema = new mongoose.Schema({
+    breakfast: {
+        type: mealSchema
+    },
+    lunch: {
+        type: mealSchema
+    },
+    dinner: {
+        type: mealSchema
+    },
+});
+
 const messMenuSchema = new mongoose.Schema({
     hostel: {
-        type: String, required: true,
+        type: String,
         enum: allIITGHostels,
         required: true
     },
     monday: {
-        type: dayMealsSchema,
+        type: dayMenuSchema,
         required: true
     },
     tuesday: {
-        type: dayMealsSchema,
+        type: dayMenuSchema,
         required: true
     },
     wednesday: {
-        type: dayMealsSchema,
+        type: dayMenuSchema,
         required: true
     },
     thrusday: {
-        type: dayMealsSchema,
+        type: dayMenuSchema,
         required: true
     },
     friday: {
-        type: dayMealsSchema,
+        type: dayMenuSchema,
         required: true
     },
     saturday: {
-        type: dayMealsSchema,
+        type: dayMenuSchema,
         required: true
     },
     sunday: {
-        type: dayMealsSchema,
+        type: dayMenuSchema,
         required: true
     }
 });
