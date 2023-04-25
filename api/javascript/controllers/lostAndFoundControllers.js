@@ -130,11 +130,11 @@ exports.postLostDetails = async (req, res) => {
       const metadata = await sharp(imagePath).metadata();
       console.log(metadata);
       const photo_id = imageName;
-      const imageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
-      const compressedImageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
-        imageName;
+      // const imageURL =
+      //   "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
+      // const compressedImageURL =
+      //   "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
+      //   imageName;
       const newImagePath = path.resolve(
         __dirname +
         "/../" +
@@ -174,7 +174,7 @@ exports.postLostDetails = async (req, res) => {
           .toFormat("jpg", { mozjpeg: true })
           .toFile(compressedImagePath);
         console.log("Here 1");
-        console.log(imageURL);
+        // console.log(imageURL);
         console.log("Here 2");
         console.log(process.env.NSFW_API_KEY);
         console.log(imagePath);
@@ -184,8 +184,8 @@ exports.postLostDetails = async (req, res) => {
           phonenumber,
           description,
           photo_id,
-          imageURL,
-          compressedImageURL,
+          // imageURL,
+          // compressedImageURL,
           email,
           username,
         })
@@ -325,12 +325,12 @@ exports.postfoundDetails = async (req, res) => {
     try {
       const metadata = await sharp(imagePath).metadata();
       console.log(metadata);
-      const photo_id = imageName;
-      const imageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
-      const compressedImageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
-        imageName;
+      // const photo_id = imageName;
+      // const imageURL =
+      //   "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
+      // const compressedImageURL =
+      //   "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
+      //   imageName;
       const newImagePath = path.resolve(
         __dirname +
         "/../" +
@@ -376,9 +376,9 @@ exports.postfoundDetails = async (req, res) => {
           location,
           submittedat,
           description,
-          photo_id,
-          imageURL,
-          compressedImageURL,
+          photo_id: imageName,
+          // imageURL,
+          // compressedImageURL,
           email,
           username,
         })
