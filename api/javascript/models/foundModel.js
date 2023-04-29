@@ -20,9 +20,9 @@ const foundDetailsSchema = new mongoose.Schema(
     {
         toJSON: {
             transform: function (doc, ret) {
-                ret.imageURL = process.env.IMAGE_URL_ROOT + "getImage?photo_id=" + ret.photo_id;
+                ret.imageURL = process.env.IMAGE_URL_ROOT + "getImage/" + ret.photo_id;
                 ret.compressedImageURL =
-                    process.env.IMAGE_URL_ROOT + "getCompressedImage?photo_id=" + ret.photo_id;
+                    process.env.IMAGE_URL_ROOT + "getCompressedImage/" + ret.photo_id;
                 delete ret.imageId;
             },
         },

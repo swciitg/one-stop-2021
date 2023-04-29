@@ -5,9 +5,9 @@ const LostAndFoundControllers = require("../controllers/lostAndFoundControllers"
 const LostAndFoundRouter = express.Router();
 const multer = require("multer");
 const fs = require("fs");
-LostAndFoundRouter.get("/getImage", LostAndFoundControllers.getImage);
+// LostAndFoundRouter.get("/getImage", LostAndFoundControllers.getImage);
 
-LostAndFoundRouter.get("/getCompressedImage", LostAndFoundControllers.getCompressedImage);
+// LostAndFoundRouter.get("/getCompressedImage", LostAndFoundControllers.getCompressedImage);
 
 LostAndFoundRouter.get("/lost", LostAndFoundControllers.getLostDetails);
 

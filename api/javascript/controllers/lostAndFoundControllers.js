@@ -20,33 +20,6 @@ function errorFxn(res, err) {
   return res.json({ saved_successfully: false, image_safe: true, error: err });
 }
 
-exports.getImage = async (req, res) => {
-  console.log("Get image par");
-  const imagePath = path.resolve(
-    __dirname +
-    "/../" +
-    "images_folder" +
-    "/" +
-    req.query.photo_id +
-    "-compressed.jpg"
-  );
-  console.log(imagePath);
-  res.sendFile(imagePath);
-};
-
-exports.getCompressedImage = async (req, res) => {
-  console.log("Get image par");
-  const imagePath = path.resolve(
-    __dirname +
-    "/../" +
-    "images_folder" +
-    "/" +
-    req.query.photo_id +
-    "-ultracompressed.jpg"
-  );
-  console.log(imagePath);
-  res.sendFile(imagePath);
-};
 
 exports.getLostPageDetails = async (req, res) => {
   let page = req.query.page;

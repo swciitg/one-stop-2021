@@ -18,9 +18,9 @@ const BuyAndSellDetailsSchema = new mongoose.Schema(
     {
         toJSON: {
             transform: function (doc, ret) {
-                ret.imageURL = process.env.IMAGE_URL_ROOT + "getImage?photo_id=" + ret.imageId;
+                ret.imageURL = process.env.IMAGE_URL_ROOT + "getImage/" + ret.imageId;
                 ret.compressedImageURL =
-                    process.env.IMAGE_URL_ROOT + "getCompressedImage?photo_id=" + ret.imageId;
+                    process.env.IMAGE_URL_ROOT + "getCompressedImage/" + ret.imageId;
                 delete ret.imageId;
             },
         },
