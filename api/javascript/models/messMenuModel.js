@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { allIITGHostels } = require("../helpers/constants");
 
 const mealSchema = new mongoose.Schema({
-    mealDesription: { 
+    mealDescription: { 
         type: String,
         required: true
     },
@@ -43,7 +43,7 @@ const messMenuSchema = new mongoose.Schema({
         type: dayMenuSchema,
         required: true
     },
-    thrusday: {
+    thursday: {
         type: dayMenuSchema,
         required: true
     },
