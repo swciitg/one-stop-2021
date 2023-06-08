@@ -1,4 +1,4 @@
-const onestopUserModel = require("../models/onestopUserModel");
+const onestopUserModel = require("../models/userModel");
 
 
 exports.createOnestopUser = async (req, res) => {

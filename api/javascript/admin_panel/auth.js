@@ -1,7 +1,8 @@
-const User = require("../models/onestopUserModel");
+const onestopAdmin = require("../models/adminModel");
 module.exports = async function authenticate(email, password) {
     try {
-        const user = await User.findOne({ email });
+        console.log(email, password);
+        const user = await onestopAdmin.findOne({ email });
         if (!user) return false;
         const match = await user.comparePassword(password);
         if (!match) return false;

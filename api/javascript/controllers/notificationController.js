@@ -1,6 +1,6 @@
 const firebase = require("firebase-admin");
 const serviceAccount = require("../config/push-notification-key.json");
-const  userModel  = require("../models/onestopUserModel");
+const  userModel  = require("../models/userModel");
 
 exports.sendToDevice = async (req, res) => {
   if (!firebase.apps.length)

@@ -7,6 +7,8 @@ const { BASEURL, ADMINPANELROOT } = require("./helpers/constants");
 const { adminJsRouter } = require("./admin_panel/admin-config");
 const app = express();
 
+const bcrypt = require("bcrypt");
+
 // setting ejs as view engine
 
 app.set("view engine", "ejs");
@@ -81,6 +83,7 @@ app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
+    console.log(bcrypt.hashSync("123", 10));
     console.log(`Express server listening on port ${PORT} see docs at /docs`);
     let updatesList = await LastUpdate.find();
     if (updatesList.length == 0) {

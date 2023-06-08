@@ -1,4 +1,4 @@
-const user = require("../../models/onestopUserModel");
+const user = require("../../models/userModel");
 const verifyRoles = require("../utils");
 const roles = require("../roles");
 
