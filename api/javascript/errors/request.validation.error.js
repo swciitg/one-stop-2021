@@ -1,6 +1,7 @@
-class RequestValidationError extends Error{
+const { CustomError } = require("./custom.error");
+
+exports.RequestValidationError = class RequestValidationError extends CustomError{
     constructor(message){
-        super(message);
-        this.name = "400 Bad request error";
+        super(message,400,"Bad request error");
     }
 }

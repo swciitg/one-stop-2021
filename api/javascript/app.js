@@ -8,19 +8,20 @@ const { adminJsRouter } = require("./admin_panel/admin-config");
 const app = express();
 
 const bcrypt = require("bcrypt");
-
-// setting ejs as view engine
-
-app.set("view engine", "ejs");
+const { verifyUserRequest } = require("./middlewares/user.auth");
+const { errorHandler } = require("./middlewares/error.handler");
+const path = require('path');
+const { NotFoundError } = require("./errors/not.found.error");
+require('express-async-errors');
 
 //for serving static files
 app.use(express.static("public"));
 
+// setting ejs as view engine
+app.set("view engine", "ejs");
+
 // connect to mongodb
-
 mongoose.set("strictQuery", false);
-
-mongoose.connect(process.env.DATABASE_URI);
 
 app.use(
     express.json({
@@ -53,7 +54,7 @@ app.use((req, res, next) => {
         req.originalUrl.split("/").includes("v2") &&
         req.headers["security-key"] !== process.env.SECURITY_KEY
     ) {
-        res.json({ message: "You are not authorized" });
+        res.json({ message: "You are not authorized app.js" });
         return;
     }
     next();
@@ -61,8 +62,9 @@ app.use((req, res, next) => {
 
 // API routers
 
-app.use(BASEURL, routers.userRouter.userRouter);
 app.use(BASEURL, routers.authRouter.authRouter);
+app.use(BASEURL, routers.onestopUserRouter);
+app.use(BASEURL, routers.imageRouter.imageRouter);
 app.use(BASEURL, routers.contactRouter.contactRouter);
 app.use(BASEURL, routers.timingRouter.timingRouter);
 app.use(BASEURL, routers.emailRouter.emailRouter);
@@ -73,18 +75,24 @@ app.use(BASEURL, routers.messMenuRouter.messMenuRouter);
 app.use(BASEURL, routers.LostAndFoundRouters.LostAndFoundRouter);
 app.use(BASEURL, routers.updateRouter.updateRouter);
 app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
-app.use(BASEURL, routers.imageRouter.imageRouter);
 app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
 app.use(BASEURL, routers.upspRouter);
-app.use(BASEURL, routers.onestopUserRouter);
 app.use(BASEURL, routers.notificationRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
+
+app.use("*",(req,res) => {
+    throw new NotFoundError("Route not found");
+});
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
     console.log(bcrypt.hashSync("123", 10));
     console.log(`Express server listening on port ${PORT} see docs at /docs`);
+    await mongoose.connect(process.env.DATABASE_URI);
+    console.log("Connected to MongoDB");
     let updatesList = await LastUpdate.find();
     if (updatesList.length == 0) {
         let addUpdate = new LastUpdate({

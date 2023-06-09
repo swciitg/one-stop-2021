@@ -28,7 +28,7 @@
             height: 100vh;
         }
 
-        p#userInfo {
+        p#userTokens {
             color: #1B1B1D;
         }
 
@@ -58,9 +58,9 @@
 <body>
     <div class="mainDiv">
         <img src="../../appLogo" id="appLogo">
-        <% if(userInfo==="ERROR OCCURED"){ %> <p class="confirmText"> Oops!! Something went wrong :( </p> <% } else {%> <p class="confirmText"> Successfully signed in </p> <img src="../../confirmicon" id="confirmIcon"><%}%>
+        <% if(userTokens==="ERROR OCCURED"){ %> <p class="confirmText"> Oops!! Something went wrong :( </p> <% } else {%> <p class="confirmText"> Successfully signed in </p> <img src="../../confirmicon" id="confirmIcon"><%}%>
     </div>
-    <p id="userInfo"><%= userInfo %></p>
+    <p id="userTokens"><%= userTokens %></p>
 </body>
 
 </html>

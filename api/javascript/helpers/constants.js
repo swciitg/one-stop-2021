@@ -2,6 +2,11 @@ exports.BASEURL = process.env.BASE_URL + "v2/";
 
 exports.ADMINPANELROOT = this.BASEURL + 'admin';
 
+exports.guestUserEmail = "guest@onestop.swc.iitg.ac.in";
+exports.guestUserName = "Guest";
+exports.guestUserRollNo = '2110';
+
+
 exports.adminRoles = ["super","board","mmc","hmc","club"]
 
 exports.allIITGHostels = ["Brahmaputra","Kameng","Dihing","Barak","Kapili","Lohit","Manas","Married Scholars (Men)","Married Scholars (Women)","Siang","Subansiri","Umiam","Dhansiri","Disang (Men)","Disang (Women)"];
