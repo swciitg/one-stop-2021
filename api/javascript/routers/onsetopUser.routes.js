@@ -1,8 +1,11 @@
 const express = require("express");
-const { createOnestopUser } = require("../controllers/onestopUserController");
+const { updateOnestopUserValidate, updateOnestopUser, logoutUserValidate, logoutUser } = require("../controllers/onestopUserController");
+const { requestValidation } = require("../middlewares/validate.request");
 const onestopUserRouter = express.Router();
 
-onestopUserRouter.post("/onestop-user/", createOnestopUser);
-onestopUserRouter.delete("/onestop-user/", createOnestopUser);
+// onestopUserRouter.get("/onestop-user",)
+// onestopUserRouter.post("/onestop-user", createOnestopUser);
+onestopUserRouter.patch("/user/:userid", updateOnestopUserValidate, requestValidation, updateOnestopUser);
+onestopUserRouter.delete("/user/:userid",logoutUserValidate,requestValidation,logoutUser);
 
 module.exports = onestopUserRouter;

@@ -1,5 +1,6 @@
 const msal = require('@azure/msal-node');
 const request = require('request');
+const { createOnestopUser } = require('./onestopUserController');
 const REDIRECT_URI = "https://swc.iitg.ac.in/onestopapi/v2/auth/microsoft/redirect";
 const clientID = process.env.MICROSOFT_GRAPH_CLIENT_ID;
 const tenantID = "https://login.microsoftonline.com/" + process.env.MICROSOFT_GRAPH_TENANT_ID;
@@ -53,7 +54,7 @@ exports.microsoftLoginRedirect = (req,res) => {
         headers: {
           "Authorization": "Bearer " + response.accessToken
         }
-    },function(err, resp, body) {
+    }, async function(err, resp, body) {
       console.log("here");
       if(err){
         console.log(err);
@@ -62,7 +63,8 @@ exports.microsoftLoginRedirect = (req,res) => {
       }
       const userInfo = JSON.parse(body);
       console.log(userInfo);
-      const userInfoString = `${userInfo["displayName"]}/${userInfo["mail"]}/${userInfo["surname"]}/${userInfo["id"]}`;
+      let onestopuser = await createOnestopUser(userInfo["displayName"],userInfo["mail"],userInfo["surname"]);
+      const userInfoString = `${onestopuser.name}/${onestopuser.email}/${onestopuser.rollNo}`;
       console.log(userInfoString);
       res.render('authSuccessView.ejs',{userInfo : userInfoString});
     });

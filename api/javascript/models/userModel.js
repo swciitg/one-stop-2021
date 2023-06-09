@@ -6,47 +6,37 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    deviceTokens: {
-        type: [String],
-        default: [],
-    },
     outlook_email: {
         type: String,
         required: true
     },
-    alt_email: {
+    altEmail: {
         type: String,
-        required: true
+        default: ''
     },
     rollNo: {
         type: String,
         required: true
     },
     dob: {
-        type: Date,
-        required: true
+        type: Date
     },
     gender: {
         type: String,
         enum: ["Male", "Female", "Others"],
-        required: true
     },
     hostel: {
         type: String,
         enum: allIITGHostels,
-        required: true
     },
     roomNo: {
         type: String,
-        required: true
     },
-    permanentAddress: {
+    homeAddress: {
         type: String,
-        required: true
     },
     phoneNumber: {
         type: Number,
-        required: true,
         min: [1000000000, "Invalid mobile number."],
         max: [9999999999, "Invalid mobile number."],
     },
