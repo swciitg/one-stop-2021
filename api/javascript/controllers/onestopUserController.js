@@ -51,8 +51,10 @@ exports.regenerateUserAccessToken = async (req, res) => {
 
 exports.guestUserLogin = async (req,res) => {
   const guestUserID = await this.getGuestUserID();
-  let userTokens = await this.generateUserTokens(guestUserID);
-  res.json(userTokens);
+  let userJson = await this.generateUserTokens(guestUserID);
+  userJson.name = guestUserName;
+  userJson.email = guestUserEmail;
+  res.json(userJson);
 }
 
 
