@@ -42,17 +42,17 @@ exports.getGuestUserID = async function(){
 }
 
 
-let getUserTokens = async (userid) => {
+let getUserTokensString = async (userid) => {
   const accessToken = jwt.sign({ userid }, accessjwtsecret, {
     expiresIn: "1 days",
   });
   const refreshToken = jwt.sign({ userid }, refreshjwtsecret, {
     expiresIn: "60 days",
   });
-  return { accessToken, refreshToken };
+  return `${accessToken}/${refreshToken}`; // for outlook login
 }
 
-exports.getUserTokens = getUserTokens;
+exports.getUserTokens = getUserTokensString;
 
 exports.getUserInfo = async (req,res,next) => {
   let onestopuser = await onestopUserModel.findById(req.userid);
@@ -80,8 +80,13 @@ exports.regenerateUserAccessToken = async (req, res,next) => {
 
 exports.guestUserLogin = async (req,res) => {
   const guestUserID = await this.getGuestUserID();
-  let userJson = await this.getUserTokens(guestUserID);
-  res.json(userJson);
+  const accessToken = jwt.sign({ guestUserID }, accessjwtsecret, {
+    expiresIn: "1 days",
+  });
+  const refreshToken = jwt.sign({ guestUserID }, refreshjwtsecret, {
+    expiresIn: "60 days",
+  });
+  res.json({accessToken,refreshToken});
 }
 
 exports.updateOnestopUserValidate = [

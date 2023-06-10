@@ -66,9 +66,7 @@ exports.microsoftLoginRedirect = (req, res) => {
       const userInfo = JSON.parse(body);
       console.log(userInfo);
       let userid = await createOrFindOnestopUserID(userInfo.displayName, userInfo.mail, userInfo.surname);
-      let userTokens = await getUserTokens(userid);
-      console.log(userTokens);
-      const userTokensString = JSON.stringify(userTokens);
+      const userTokensString = await getUserTokens(userid);
       console.log(userTokensString);
       // res.set('Authorization', `Bearer ${JSON.parse(userTokensString).accessToken}`);
       return res.render('authSuccessView.ejs', { userTokens: userTokensString });
