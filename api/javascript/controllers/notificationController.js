@@ -18,7 +18,8 @@ exports.sendToDevice = async (req, res) => {
     if (!user) {
       throw "Device for the given user not found!";
     }
-    const token = user["deviceTokens"];
+    const token = user["deviceIDs"][0];
+    // this only allows one device at a time so either loop through or send to only one device per user which is better
 
     const payload = {
       data: {
