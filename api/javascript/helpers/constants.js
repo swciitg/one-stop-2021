@@ -4,7 +4,7 @@ exports.ADMINPANELROOT = this.BASEURL + 'admin';
 
 exports.guestUserEmail = "guest@onestop.swc.iitg.ac.in";
 exports.guestUserName = "Guest";
-exports.guestUserRollNo = '2110';
+exports.guestUserRollNo = '2110000000';
 
 
 exports.adminRoles = ["super","board","mmc","hmc","club"]
