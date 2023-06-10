@@ -4,8 +4,8 @@ const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 const onestopUserModel = require("../models/userModel");
 const msal = require('@azure/msal-node');
 const request = require('request');
-const { getUserTokensAndInfo, createOrFindOnestopUserID } = require('./onestopUserController');
-const REDIRECT_URI = "https://swc.iitg.ac.in/test/onestopapi/v2/auth/microsoft/redirect";
+const { createOrFindOnestopUserID, getUserTokens } = require('./onestopUserController');
+const REDIRECT_URI = "http://localhost:3000/test/onestopapi/v2/auth/microsoft/redirect";
 const clientID = process.env.MICROSOFT_GRAPH_CLIENT_ID;
 const tenantID = "https://login.microsoftonline.com/" + process.env.MICROSOFT_GRAPH_TENANT_ID;
 const clientSecret = process.env.MICROSOFT_GRAPH_CLIENT_SECRET;
@@ -66,12 +66,12 @@ exports.microsoftLoginRedirect = (req, res) => {
       const userInfo = JSON.parse(body);
       console.log(userInfo);
       let userid = await createOrFindOnestopUserID(userInfo.displayName, userInfo.mail, userInfo.surname);
-      let userJson = await getUserTokensAndInfo(userid);
-      console.log(userJson);
-      const userJsonString = JSON.stringify(userJson);
-      console.log(userJsonString);
+      let userTokens = await getUserTokens(userid);
+      console.log(userTokens);
+      const userTokensString = JSON.stringify(userTokens);
+      console.log(userTokensString);
       // res.set('Authorization', `Bearer ${JSON.parse(userTokensString).accessToken}`);
-      return res.render('authSuccessView.ejs', { userJson: userJsonString });
+      return res.render('authSuccessView.ejs', { userTokens: userTokensString });
     });
   }).catch((error) => {
     console.log(error);

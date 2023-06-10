@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  outlook_email: {
+  outlookEmail:: {
     type: String,
     required: true
   },

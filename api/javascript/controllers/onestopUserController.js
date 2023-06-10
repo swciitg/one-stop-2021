@@ -17,14 +17,14 @@ let titleCase = (str)=>{
 
 exports.titleCase = titleCase;
 
-let createOrFindOnestopUserID = async (name,outlook_email,rollNo) => {
-  console.log(name,outlook_email,rollNo);
-  let onestopuser = await onestopUserModel.findOne({outlook_email});
+let createOrFindOnestopUserID = async (name,outlookEmail,rollNo) => {
+  console.log(name,outlookEmail,rollNo);
+  let onestopuser = await onestopUserModel.findOne({outlookEmail});
   console.log(onestopuser);
   if(onestopuser!==null) return onestopuser._id.toString(); // already a user exists
   console.log("here");
   name = titleCase(name);
-  onestopuser = onestopUserModel({name,outlook_email,rollNo});
+  onestopuser = onestopUserModel({name,outlookEmail,rollNo});
   console.log(onestopuser);
   console.log("Created new user");
   await onestopuser.save();
@@ -42,21 +42,22 @@ exports.getGuestUserID = async function(){
 }
 
 
-let getUserTokensAndInfo = async (userid) => {
-  let onestopuser = await onestopUserModel.findById(userid);
+let getUserTokens = async (userid) => {
   const accessToken = jwt.sign({ userid }, accessjwtsecret, {
     expiresIn: "1 days",
   });
   const refreshToken = jwt.sign({ userid }, refreshjwtsecret, {
     expiresIn: "60 days",
   });
-  console.log(onestopuser);
-  console.log(onestopuser.name,onestopuser.outlook_email);
-
-  return { accessToken, refreshToken, name: onestopuser.name, email: onestopuser.outlook_email, rollNo: onestopuser.rollNo};
+  return { accessToken, refreshToken };
 }
 
-exports.getUserTokensAndInfo = getUserTokensAndInfo;
+exports.getUserTokens = getUserTokens;
+
+exports.getUserInfo = async (req,res,next) => {
+  let onestopuser = await onestopUserModel.findById(req.userid);
+  res.json(onestopuser.toJSON());
+}
 
 exports.regenerateUserAccessToken = async (req, res,next) => {
   let refreshToken = req.headers.authorization.split(" ").slice(-1)[0];
@@ -79,7 +80,7 @@ exports.regenerateUserAccessToken = async (req, res,next) => {
 
 exports.guestUserLogin = async (req,res) => {
   const guestUserID = await this.getGuestUserID();
-  let userJson = await this.getUserTokensAndInfo(guestUserID);
+  let userJson = await this.getUserTokens(guestUserID);
   res.json(userJson);
 }
 

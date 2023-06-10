@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    outlook_email: {
+    outlookEmail: {
         type: String,
         required: true
     },
@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
         min: [1000000000, "Invalid mobile number."],
         max: [9999999999, "Invalid mobile number."],
     },
-    linkedinProfile: {
+    linkedin: {
         type: String
     },
     deviceIDs: [String]
