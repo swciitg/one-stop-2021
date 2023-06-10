@@ -7,16 +7,38 @@ const { RequestValidationError } = require("../errors/request.validation.error")
 const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 
-exports.titleCase = (str)=>{
+let titleCase = (str)=>{
   var splitStr = str.toLowerCase().split(' ');
   for (var i = 0; i < splitStr.length; i++) {
       splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
   }
-  return splitStr.join(' '); 
+  return splitStr.join(' ');
 }
 
+exports.titleCase = titleCase;
+
+let createOrFindOnestopUserID = async (name,outlook_email,rollNo) => {
+  console.log(name,outlook_email,rollNo);
+  let onestopuser = await onestopUserModel.findOne({outlook_email});
+  console.log(onestopuser);
+  if(onestopuser!==null) return onestopuser._id.toString(); // already a user exists
+  console.log("here");
+  name = titleCase(name);
+  onestopuser = onestopUserModel({name,outlook_email,rollNo});
+  console.log(onestopuser);
+  console.log("Created new user");
+  await onestopuser.save();
+  console.log(onestopuser);
+  return onestopuser._id.toString();
+}
+
+exports.createOrFindOnestopUserID = createOrFindOnestopUserID;
+
 exports.getGuestUserID = async function(){
-  return await this.createOrFindOnestopUserID(guestUserName,guestUserEmail,guestUserRollNo); // get document id for guest
+  console.log(typeof(createOrFindOnestopUserID));
+  let id = await createOrFindOnestopUserID(guestUserName,guestUserEmail,guestUserRollNo); // get document id for guest
+  console.log(id);
+  return id;
 }
 
 
@@ -30,13 +52,13 @@ exports.generateUserTokens = async function generateUserTokens(userid) {
   return { accessToken, refreshToken };
 }
 
-exports.regenerateUserAccessToken = async (req, res) => {
+exports.regenerateUserAccessToken = async (req, res,next) => {
   let refreshToken = req.headers.authorization.split(" ").slice(-1)[0];
-  if(!refreshToken) throw new RequestValidationError("Refresh token not passed");
+  if(!refreshToken) next(new RequestValidationError("Refresh token not passed"));
   let decoded;
   jwt.verify(refreshToken, refreshjwtsecret, (err,dec) => {
     if(err){
-      throw new RefreshTokenError(err.message);
+      next(new RefreshTokenError(err.message));
     }
     decoded=dec;
   });
@@ -46,7 +68,7 @@ exports.regenerateUserAccessToken = async (req, res) => {
     });
     res.json({ success: true, accessToken });
   }
-  else throw new RequestValidationError("invalid user id found");
+  else next(new RequestValidationError("invalid user id found"));
 }
 
 exports.guestUserLogin = async (req,res) => {
@@ -55,22 +77,6 @@ exports.guestUserLogin = async (req,res) => {
   userJson.name = guestUserName;
   userJson.email = guestUserEmail;
   res.json(userJson);
-}
-
-
-exports.createOrFindOnestopUserID = async (name,outlook_email,rollNo) => {
-  console.log(name,outlook_email,rollNo);
-  let onestopuser = await onestopUserModel.findOne({outlook_email});
-  console.log(onestopuser);
-  if(onestopuser!==null) return onestopuser._id.toString(); // already a user exists
-  console.log("here");
-  name = this.titleCase(name);
-  onestopuser = onestopUserModel({name,outlook_email,rollNo});
-  console.log(onestopuser);
-  console.log("Created new user");
-  await onestopuser.save();
-  console.log(onestopuser);
-  return onestopuser._id.toString();
 }
 
 exports.updateOnestopUserValidate = () => {
@@ -110,7 +116,7 @@ exports.logoutUser = async (req, res) => {
   let onestopuser = await onestopUserModel.findById(userid);
   console.log(onestopuser);
   if(!onestopuser.deviceTokens.includes(deviceID)){
-    throw new RequestValidationError("Device ID not found");
+    next(new RequestValidationError("Device ID not found"));
   }
   var deviceIdIdx = onestopuser.deviceIDs.indexOf(deviceID);
   onestopuser.deviceIDs.splice(deviceIdIdx, 1);

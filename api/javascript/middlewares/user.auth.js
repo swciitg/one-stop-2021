@@ -14,7 +14,7 @@ exports.verifyUserRequest = async (req,res,next) => {
     let decoded;
     jwt.verify(accessToken, accessjwtsecret,(err,dec) => {
         if(err){
-            throw new AccessTokenError(err.message);
+            next(new AccessTokenError(err.message));
         }
         decoded=dec;
     });
@@ -24,7 +24,7 @@ exports.verifyUserRequest = async (req,res,next) => {
         console.log("Token Verified");
         next();
     }
-    else throw new RequestValidationError("invalid user id found");
+    else next(new RequestValidationError("invalid user id found"));
 }
 
 exports.restrictIfGuest = async (req,res,next) => {
@@ -38,7 +38,7 @@ exports.restrictIfGuest = async (req,res,next) => {
         decoded=dec;
     });
     if(decoded.userid === await getGuestUserID()){
-        throw new GuestAccessError("Guest Access not allowed");
+        next(new GuestAccessError("Guest Access not allowed"));
     }
-    next();
+    else next();
 }

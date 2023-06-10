@@ -12,7 +12,6 @@ const { verifyUserRequest } = require("./middlewares/user.auth");
 const { errorHandler } = require("./middlewares/error.handler");
 const path = require('path');
 const { NotFoundError } = require("./errors/not.found.error");
-require('express-async-errors');
 
 //for serving static files
 app.use(express.static("public"));
