@@ -7,7 +7,7 @@ const { RequestValidationError } = require("../errors/request.validation.error")
 const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 
-function titleCase(str) {
+exports.titleCase = (str)=>{
   var splitStr = str.toLowerCase().split(' ');
   for (var i = 0; i < splitStr.length; i++) {
       splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
@@ -62,7 +62,7 @@ exports.createOrFindOnestopUserID = async (name,outlook_email,rollNo) => {
   console.log(onestopuser);
   if(onestopuser!==null) return onestopuser._id.toString(); // already a user exists
   console.log("here");
-  name = titleCase(name);
+  name = this.titleCase(name);
   onestopuser = onestopUserModel({name,outlook_email,rollNo});
   console.log(onestopuser);
   console.log("Created new user");

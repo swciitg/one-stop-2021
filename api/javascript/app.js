@@ -29,6 +29,7 @@ app.use(
         extended: true,
     })
 );
+
 // adminjs routes
 app.use(ADMINPANELROOT, adminJsRouter);
 
@@ -46,14 +47,12 @@ app.use((req, res, next) => {
     next();
 });
 
-// Validate API Call
+app.use(BASEURL, routers.authRouter.authRouter);
+app.use(BASEURL, routers.imageRouter.imageRouter);
 
+// Validate API Call
 app.use((req, res, next) => {
-    if (
-        req.method !== "GET" &&
-        req.originalUrl.split("/").includes("v2") &&
-        req.headers["security-key"] !== process.env.SECURITY_KEY
-    ) {
+    if (req.headers["security-key"] !== process.env.SECURITY_KEY) {
         res.json({ message: "You are not authorized app.js" });
         return;
     }
@@ -61,10 +60,7 @@ app.use((req, res, next) => {
 });
 
 // API routers
-
-app.use(BASEURL, routers.authRouter.authRouter);
 app.use(BASEURL, routers.onestopUserRouter);
-app.use(BASEURL, routers.imageRouter.imageRouter);
 app.use(BASEURL, routers.contactRouter.contactRouter);
 app.use(BASEURL, routers.timingRouter.timingRouter);
 app.use(BASEURL, routers.emailRouter.emailRouter);
