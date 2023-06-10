@@ -43,14 +43,17 @@ exports.getGuestUserID = async function(){
 
 
 let getUserTokensAndInfo = async (userid) => {
-  let onestopuser = onestopUserModel.findById(userid);
+  let onestopuser = await onestopUserModel.findById(userid);
   const accessToken = jwt.sign({ userid }, accessjwtsecret, {
     expiresIn: "1 days",
   });
   const refreshToken = jwt.sign({ userid }, refreshjwtsecret, {
     expiresIn: "60 days",
   });
-  return { accessToken, refreshToken, name: onestopuser.name, email: onestopuser.email, rollNo: onestopuser.rollNo};
+  console.log(onestopuser);
+  console.log(onestopuser.name,onestopuser.outlook_email);
+
+  return { accessToken, refreshToken, name: onestopuser.name, email: onestopuser.outlook_email, rollNo: onestopuser.rollNo};
 }
 
 exports.getUserTokensAndInfo = getUserTokensAndInfo;
