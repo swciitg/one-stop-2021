@@ -83,35 +83,33 @@ exports.guestUserLogin = async (req,res) => {
   res.json(userJson);
 }
 
-exports.updateOnestopUserValidate = () => {
-  return [
-    body('deviceID', 'device ID is required').exists(), // every time profile update happens
-    body('altEmail', 'alt email is required').exists(),
-    body('rollNo', 'roll no is required').exists(),
-    body('dob', 'birth date is required').exists(),
-    body('gender', 'birth date is required').exists().isIn(["Male", "Female", "Others"]),
-    body('hostel', 'hostel is required').exists(),
-    body('roomNo', 'roomNo is required').exists(),
-    body('homeAddress', 'home address is required').exists(),
-    body('phoneNumber', 'phone number is required').exists().isInt({ min: 1000000000, max: 9999999999 }),
-    body('emergencyPhoneNumber', 'phone number is required').exists().isInt({ min: 1000000000, max: 9999999999 }),
-  ];
-}
+exports.updateOnestopUserValidate = [
+  body('deviceID', 'device ID is required').optional(), // every time profile update happens
+  body('altEmail', 'alt email is required').exists(),
+  body('rollNo', 'roll no is required').exists(),
+  body('dob', 'birth date is required').exists(),
+  body('gender', 'birth date is required').exists().isIn(["Male", "Female", "Others"]),
+  body('hostel', 'hostel is required').exists(),
+  body('roomNo', 'roomNo is required').exists(),
+  body('homeAddress', 'home address is required').exists(),
+  body('phoneNumber', 'phone number is required').exists().isInt({ min: 1000000000, max: 9999999999 }),
+  body('emergencyPhoneNumber', 'phone number is required').exists().isInt({ min: 1000000000, max: 9999999999 }),
+  body('linkedinProfile', 'user linkedin profile').optional()
+];
 
 exports.updateOnestopUser = async (req, res) => {
   let userid = req.userid;
   let data = matchedData(req, { locations: ["body"] });
-  let onestopuser = await onestopUserModel.findById(userid);
-  await onestopuser.updateOne(data);
+  console.log(data);
+  console.log(userid);
+  await onestopUserModel.findByIdAndUpdate(userid,data);
   res.json({ "success": true, "message": "Updated user data correctly" });
 }
 
 
-exports.logoutUserValidate = () => {
-  return [
-    body('deviceID', 'device ID is required').exists(), // to remove this device id
-  ];
-}
+exports.logoutUserValidate = [
+  body('deviceID', 'device ID is required').exists(), // to remove this device id
+];
 
 exports.logoutUser = async (req, res) => {
   console.log(req.body);

@@ -19,8 +19,8 @@ exports.verifyUserRequest = async (req,res,next) => {
         decoded=dec;
     });
     if (await onestopUserModel.findById(decoded.userid)!== undefined) {
-        req.body.userid = decoded.userid;
-        console.log(req.body.userid);
+        req.userid = decoded.userid;
+        console.log(req.userid);
         console.log("Token Verified");
         next();
     }

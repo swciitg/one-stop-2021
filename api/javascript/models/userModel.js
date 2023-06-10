@@ -45,6 +45,9 @@ const userSchema = new mongoose.Schema({
         min: [1000000000, "Invalid mobile number."],
         max: [9999999999, "Invalid mobile number."],
     },
+    linkedinProfile: {
+        type: String
+    },
     deviceIDs: [String]
 });
 
