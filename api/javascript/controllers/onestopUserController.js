@@ -1,9 +1,10 @@
-const { body, matchedData } = require("express-validator");
+const { body, matchedData, query } = require("express-validator");
 const onestopUserModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const { RefreshTokenError } = require("../errors/jwt.auth.error");
 const { guestUserName, guestUserEmail, guestUserRollNo } = require("../helpers/constants");
 const { RequestValidationError } = require("../errors/request.validation.error");
+const userNotifTokenModel = require("../models/userNotifTokenModel");
 const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 
@@ -90,7 +91,7 @@ exports.guestUserLogin = async (req,res) => {
 }
 
 exports.updateOnestopUserValidate = [
-  body('deviceID', 'device ID is required').optional(), // every time profile update happens
+  query('deviceToken', 'device Token').optional(), // every time profile update happens
   body('altEmail', 'alt email is required').exists(),
   body('rollNo', 'roll no is required').exists(),
   body('dob', 'birth date is required').exists(),
@@ -109,7 +110,34 @@ exports.updateOnestopUser = async (req, res) => {
   console.log(data);
   console.log(userid);
   await onestopUserModel.findByIdAndUpdate(userid,data);
+  let deviceToken = matchedData(req, { locations: ["query"] }).deviceToken;
+  if(deviceToken){
+    let userNotifToken = new userNotifTokenModel({userid, deviceToken,createdAt});
+    await userNotifToken.save();
+  }
   res.json({ "success": true, "message": "Updated user data correctly" });
+}
+
+exports.postOnestopUserDeviceTokenValidate = [
+  body("deviceToken","A device token is reqd").exists()
+];
+
+exports.postOnestopUserDeviceToken = async (req,res) => { // creates new device token model
+  let body = matchedData(req,{locations: ["body"]});
+  let userNotifToken = new userNotifTokenModel({userid: req.userid,deviceToken: body.deviceToken});
+  await userNotifToken.save();
+  res.json({"success" : true});
+}
+
+exports.updateOnestopUserDeviceTokenValidate = [
+  body("oldToken","old token is reqd").exists(),
+  body("newToken","new token is reqd").exists()
+];
+
+exports.updateOnestopUserDeviceToken = async (req,res) => { // updates token already stored
+  let body = matchedData(req,{locations: ["body"]});
+  await userNotifTokenModel.findOneAndUpdate({deviceToken: body.oldToken},{deviceToken: body.newToken,createdAt: new Date});
+  res.json({"success" : true});
 }
 
 
@@ -119,15 +147,7 @@ exports.logoutUserValidate = [
 
 exports.logoutUser = async (req, res) => {
   console.log(req.body);
-  let userid = req.userid;
-  let deviceID = matchedData(req, { locations: ["body"] }).deviceID;
-  let onestopuser = await onestopUserModel.findById(userid);
-  console.log(onestopuser);
-  if(!onestopuser.deviceTokens.includes(deviceID)){
-    next(new RequestValidationError("Device ID not found"));
-  }
-  var deviceIdIdx = onestopuser.deviceIDs.indexOf(deviceID);
-  onestopuser.deviceIDs.splice(deviceIdIdx, 1);
-  await onestopuser.save();
+  let deviceToken = matchedData(req, { locations: ["body"] }).deviceToken;
+  await userNotifTokenModel.deleteMany({deviceToken});
   res.json({ "success": true, "message": "logged out user successfully" });
 }
