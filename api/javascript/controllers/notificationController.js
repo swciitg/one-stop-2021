@@ -86,6 +86,7 @@ exports.sendToAll = async (req, res, next) => {
     topic: sendToAllFirebaseTopicName,
   };
 
+  console.log(payload);
   let data = await firebase.messaging().send(payload);
 
   res.json({
