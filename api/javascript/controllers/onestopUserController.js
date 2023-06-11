@@ -154,12 +154,12 @@ exports.updateOnestopUserDeviceToken = async (req,res) => { // updates token alr
 
 
 exports.logoutUserValidate = [
-  body('deviceID', 'device ID is required').exists(), // to remove this device id
+  body('deviceToken', 'device Token is required').exists(), // to remove this device id
 ];
 
 exports.logoutUser = async (req, res) => {
   console.log(req.body);
-  let deviceToken = matchedData(req, { locations: ["body"] }).deviceToken;
+  let deviceToken = req.body.deviceToken;
   await userNotifTokenModel.deleteMany({deviceToken});
   res.json({ "success": true, "message": "logged out user successfully" });
 }
