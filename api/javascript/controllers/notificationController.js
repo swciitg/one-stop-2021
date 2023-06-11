@@ -45,7 +45,6 @@ exports.sendToDevice = async (req, res) => {
 
     let userNotifTokens = await userNotifTokenModel.find({userid: user._id});
     userNotifTokens.forEach((userNotifToken) => firebase.messaging().sendToDevice(userNotifToken.deviceToken, payload, options));
-    res.json({success: true,message: "notif sent"});
 };
 
 exports.sendToAllValidate = [
@@ -90,9 +89,4 @@ exports.sendToAll = async (req, res) => {
 
   console.log(payload);
   let data = await firebase.messaging().send(payload);
-
-  res.json({
-    success: true,
-    message: data,
-  });
 };
