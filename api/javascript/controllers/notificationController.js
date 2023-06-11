@@ -50,6 +50,7 @@ exports.sendToDevice = async (req, res) => {
 
 exports.sendToAllValidate = [
   body("category", "notif must have a category").exists(),
+  body("model", "notif must have a model string").exists(),
   body("header", "a header is required to send notification").exists(),
   body("body", "a body is required to send notification").exists(),
 ];
