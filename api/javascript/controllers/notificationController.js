@@ -72,7 +72,7 @@ exports.sendToAll = async (req, res, next) => {
     $lte: compDate
   }});
 
-  await firebase.messaging().unsubscribeFromTopic(inactiveDeviceTokens,sendToAllFirebaseTopicName);
+  if(inactiveDeviceTokens.length>0) await firebase.messaging().unsubscribeFromTopic(inactiveDeviceTokens,sendToAllFirebaseTopicName);
 
   let bodyData = matchedData(req,{locations: ["body"]});
   const payload = {
