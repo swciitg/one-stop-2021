@@ -30,10 +30,10 @@ exports.sendToDevice = async (req, res) => {
 
     const payload = {
       data: {
-        category: req.body.notif.category,
-        model: req.body.notif.model,
-        header: req.body.notif.header,
-        body: req.body.notif.body
+        category: req.body.category,
+        model: req.body.model,
+        header: req.body.header,
+        body: req.body.body
       }
     };
 
@@ -75,7 +75,9 @@ exports.sendToAll = async (req, res, next) => {
 
   if(inactiveDeviceTokens.length>0) await firebase.messaging().unsubscribeFromTopic(inactiveDeviceTokens,sendToAllFirebaseTopicName);
 
-  let bodyData = matchedData(req,{locations: ["body"]});
+  let bodyData = matchedData(req);
+  console.log(bodyData);
+  console.log(req.body);
   const payload = {
     data: {
       category: bodyData.category,
