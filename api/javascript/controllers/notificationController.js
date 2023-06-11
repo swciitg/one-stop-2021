@@ -55,11 +55,11 @@ exports.sendToAllValidate = [
   body("body", "a body is required to send notification").exists(),
 ];
 
-exports.sendToAll = async (req, res, next) => {
+exports.sendToAll = async (req, res) => {
   if (!firebase.apps.length)
     firebase.initializeApp({
       credential: firebase.credential.cert(serviceAccount)
-    }); // on server initialization
+    }); // initialization
 
   let compDate = new Date();
   compDate.setMonth(compDate.getMonth()-3); // set date 3 months prior
@@ -80,10 +80,10 @@ exports.sendToAll = async (req, res, next) => {
   console.log(req.body);
   const payload = {
     data: {
-      category: bodyData.category,
-      model: bodyData.model,
-      header: bodyData.header,
-      body: bodyData.body
+      category: req.body.category,
+      model: req.body.model,
+      header: req.body.header,
+      body: req.body.body
     },
     topic: sendToAllFirebaseTopicName,
   };
