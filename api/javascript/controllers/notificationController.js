@@ -3,6 +3,7 @@ const serviceAccount = require("../config/push-notification-key.json");
 const userModel = require("../models/userModel");
 const { body, matchedData } = require("express-validator");
 const userNotifTokenModel = require("../models/userNotifTokenModel");
+const { sendToAllFirebaseTopicName } = require("../helpers/constants");
 
 exports.sendToDeviceValidate = [
   body("category", "notif must have a category").exists(),
@@ -70,7 +71,7 @@ exports.sendToAll = async (req, res, next) => {
     $lte: compDate
   }});
 
-  await firebase.messaging().unsubscribeFromTopic(inactiveDeviceTokens,"all");
+  await firebase.messaging().unsubscribeFromTopic(inactiveDeviceTokens,sendToAllFirebaseTopicName);
 
   let bodyData = matchedData(req,{locations: ["body"]});
   const payload = {
@@ -80,7 +81,7 @@ exports.sendToAll = async (req, res, next) => {
       header: bodyData.header,
       body: bodyData.body
     },
-    topic: "all",
+    topic: sendToAllFirebaseTopicName,
   };
 
   let data = await firebase.messaging().send(payload);

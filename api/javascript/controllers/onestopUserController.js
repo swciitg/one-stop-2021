@@ -2,11 +2,13 @@ const { body, matchedData, query } = require("express-validator");
 const onestopUserModel = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const { RefreshTokenError } = require("../errors/jwt.auth.error");
-const { guestUserName, guestUserEmail, guestUserRollNo } = require("../helpers/constants");
+const { guestUserName, guestUserEmail, guestUserRollNo, sendToAllFirebaseTopicName } = require("../helpers/constants");
 const { RequestValidationError } = require("../errors/request.validation.error");
 const userNotifTokenModel = require("../models/userNotifTokenModel");
 const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
+const firebase = require("firebase-admin");
+const serviceAccount = require("../config/push-notification-key.json");
 
 let titleCase = (str)=>{
   var splitStr = str.toLowerCase().split(' ');
@@ -126,6 +128,11 @@ exports.postOnestopUserDeviceToken = async (req,res) => { // creates new device 
   let body = matchedData(req,{locations: ["body"]});
   let userNotifToken = new userNotifTokenModel({userid: req.userid,deviceToken: body.deviceToken});
   await userNotifToken.save();
+  if (!firebase.apps.length)
+    firebase.initializeApp({
+      credential: firebase.credential.cert(serviceAccount),
+    });
+  await firebase.messaging().subscribeToTopic([body.deviceToken],sendToAllFirebaseTopicName);
   res.json({"success" : true});
 }
 
@@ -136,7 +143,12 @@ exports.updateOnestopUserDeviceTokenValidate = [
 
 exports.updateOnestopUserDeviceToken = async (req,res) => { // updates token already stored
   let body = matchedData(req,{locations: ["body"]});
-  await userNotifTokenModel.findOneAndUpdate({deviceToken: body.oldToken},{deviceToken: body.newToken,createdAt: new Date});
+  if(body.oldToken!==body.newToken){
+    //token got changed in app
+    await userNotifTokenModel.findOneAndUpdate({deviceToken: body.oldToken},{deviceToken: body.newToken,createdAt: new Date});
+    await firebase.messaging().unsubscribeFromTopic([body.oldToken],sendToAllFirebaseTopicName);
+    await firebase.messaging().subscribeToTopic([body.newToken],sendToAllFirebaseTopicName);
+  }
   res.json({"success" : true});
 }
 

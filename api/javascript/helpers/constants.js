@@ -41,3 +41,5 @@ exports.totalSpardhaMenPoints = 210;
 exports.totalKritiPoints = 5800;
 exports.totalSahyogPoints = 4400;
 exports.totalManthanPoints = 1400;
+
+exports.sendToAllFirebaseTopicName = "all";
