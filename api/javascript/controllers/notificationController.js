@@ -10,6 +10,7 @@ exports.sendToDeviceValidate = [
   body("model", "notif must have a model").exists(),
   body("header", "a header is required to send notification").exists(),
   body("body", "a body is required to send notification").exists(),
+  body("sendTo","Send to email is required").exists()
 ];
 
 exports.sendToDevice = async (req, res) => {
