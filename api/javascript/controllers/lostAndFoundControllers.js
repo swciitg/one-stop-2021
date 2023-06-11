@@ -286,6 +286,17 @@ exports.claimFoundItem = async (req, res) => {
   }
 };
 
+
+async function sendFoundNotif(req,res,title){
+  req.body = {
+    category: "FOUND",
+    model: "hello",
+    header: title,
+    body: "An item was found"
+  }
+  await sendToAll(req,res);
+}
+
 exports.postfoundDetails = async (req, res) => {
   console.log(req.body);
   try {
@@ -372,6 +383,7 @@ exports.postfoundDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
+        await sendFoundNotif(req,res);
         return res.json({ saved_successfully: true, image_safe: true });
       } catch (error) {
         return errorFxn(res, error);
