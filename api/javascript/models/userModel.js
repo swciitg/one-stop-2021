@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
     phoneNumber: {
         type: Number,
         min: [1000000000, "Invalid mobile number."],
-        max: [9999999999, "Invalid mobile number."],
+        max: [9999999999, "Invalid mobile number."]
     },
     emergencyPhoneNumber: {
         type: Number,

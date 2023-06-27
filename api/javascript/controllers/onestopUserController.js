@@ -59,7 +59,7 @@ exports.getUserTokens = getUserTokensString;
 
 exports.getUserInfo = async (req,res,next) => {
   let onestopuser = await onestopUserModel.findById(req.userid);
-  res.json(onestopuser.toJSON());
+  res.json(onestopuser);
 }
 
 exports.regenerateUserAccessToken = async (req, res,next) => {
