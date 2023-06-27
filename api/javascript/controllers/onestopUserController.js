@@ -59,6 +59,7 @@ exports.getUserTokens = getUserTokensString;
 
 exports.getUserInfo = async (req,res,next) => {
   let onestopuser = await onestopUserModel.findById(req.userid);
+  console.log(onestopuser);
   res.json(onestopuser);
 }
 

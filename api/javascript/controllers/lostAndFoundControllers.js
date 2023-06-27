@@ -383,7 +383,7 @@ exports.postfoundDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
-        await sendFoundNotif(req,res);
+        await sendFoundNotif(req,res,req.body.title);
         return res.json({ saved_successfully: true, image_safe: true });
       } catch (error) {
         return errorFxn(res, error);
