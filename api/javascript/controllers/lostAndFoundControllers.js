@@ -88,7 +88,7 @@ exports.deleteLostAll = async (req, res) => {
 async function sendLostNotif(req,res,title){
   req.body = {
     category: "LOST",
-    model: "hello",
+    model: "",
     header: title,
     body: "An item has been lost"
   }
@@ -290,7 +290,7 @@ exports.claimFoundItem = async (req, res) => {
 async function sendFoundNotif(req,res,title){
   req.body = {
     category: "FOUND",
-    model: "hello",
+    model: "",
     header: title,
     body: "An item was found"
   }

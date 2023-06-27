@@ -107,8 +107,13 @@ exports.getTravelPosts = async (req, res) => {
 
 exports.deleteTravelPost = async (req, res) => {
     try {
+        console.log("FSJDFJKSDFJK");
         const id = req.query.travelPostId;
         let travelPost = await TravelPostModel.findById(id);
+        console.log(travelPost);
+        console.log(req.body);
+        console.log(travelPost["email"]);
+        console.log("here");
         if (travelPost["email"] !== req.body.email) {
             res.json({ "success": false, "message": "Email doesn't match" });
             return;
@@ -155,6 +160,18 @@ exports.getTravelPostChatReplies = async (req, res) => {
     }
 }
 
+
+async function sendPostReplyNotif(req,res,title,replier,replierOutlook){
+    req.body = {
+        category: "CAB SHARING",
+        model: "",
+        header: title,
+        body: `${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`,
+        sendTo: replierOutlook
+    }
+    await sendToDevice(req,res);
+}
+
 exports.postReplyChat = async (req, res) => {
     try {
         console.log(req.body);
@@ -167,18 +184,19 @@ exports.postReplyChat = async (req, res) => {
         // console.log(travelChat);
         TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
             console.log(travelPost["travelDateTime"]);
-            if(true){ // when other people writes a message
-                sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
-                  req.body.notif={};
-                  req.body.notif.category = "travel";
-                  req.body.notif.model = "maybeJsonValue";
-                  req.body.notif.header = "Cab sharing reply";
-                  req.body.notif.body = `You have got reply from ${data["name"]} 🙌`;
-                  //ADD here chat reply body
-                  req.body.sendTo = travelPost.email;
+            sendPostReplyNotif(req,res,"Cab sharing reply",data["name"],travelPost.email);  
+            //if(true){ // when other people writes a message
+                //sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
+                // req.body.notif={};
+                //   req.body.notif.category = "travel";
+                //   req.body.notif.model = "maybeJsonValue";
+                //   req.body.notif.header = "Cab sharing reply";
+                //   req.body.notif.body = `You have got reply from ${data["name"]} 🙌`;
+                //   //ADD here chat reply body
+                //   req.body.sendTo = travelPost.email;
                   // ADD send to email here
-                  sendToDevice(req,res);
-            }
+                  //sendToDevice(req,res);
+            //}
         });
         res.json({ "success": true });
     }

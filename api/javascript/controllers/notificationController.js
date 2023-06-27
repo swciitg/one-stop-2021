@@ -24,9 +24,6 @@ exports.sendToDevice = async (req, res) => {
     }
 
     let user = await userModel.findOne({ outlookEmail: req.body.sendTo });
-    
-    const token = user["deviceIDs"][0];
-    // this only allows one device at a time so either loop through or send to only one device per user which is better
 
     const payload = {
       data: {
@@ -42,8 +39,8 @@ exports.sendToDevice = async (req, res) => {
       timeToLive: 60 * 60 * 24
     };
 
-
     let userNotifTokens = await userNotifTokenModel.find({userid: user._id});
+    console.log(userNotifTokens);
     userNotifTokens.forEach((userNotifToken) => firebase.messaging().sendToDevice(userNotifToken.deviceToken, payload, options));
 };
 
