@@ -83,7 +83,7 @@ exports.regenerateUserAccessToken = async (req, res,next) => {
 
 exports.guestUserLogin = async (req,res) => {
   const guestUserID = await this.getGuestUserID();
-  const accessToken = jwt.sign({ guestUserID }, accessjwtsecret, {
+  const accessToken = jwt.sign({ userid: guestUserID }, accessjwtsecret, {
     expiresIn: "1 days",
   });
   const refreshToken = jwt.sign({ guestUserID }, refreshjwtsecret, {
