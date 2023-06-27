@@ -8,6 +8,6 @@ campusTravelRouter.get("/campus-travel/myads",restrictIfGuest,campusTravelContro
 campusTravelRouter.post("/campus-travel",restrictIfGuest,campusTravelController.postTravel);
 campusTravelRouter.get("/campus-travel/chat",campusTravelController.getTravelPostChatReplies);
 campusTravelRouter.post("/campus-travel/chat",restrictIfGuest,campusTravelController.postReplyChat);
-campusTravelRouter.delete("/campus-travel/",restrictIfGuest,campusTravelController.deleteTravelPost);
+campusTravelRouter.delete("/campus-travel",restrictIfGuest,campusTravelController.deleteTravelPost);
 campusTravelRouter.delete("/campus-travel/all",restrictIfGuest,campusTravelController.deleteAllTravelPosts);
 module.exports = {campusTravelRouter : campusTravelRouter};
