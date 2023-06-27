@@ -169,7 +169,8 @@ async function sendPostReplyNotif(req,res,title,replier,replierOutlook){
         body: `${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`,
         sendTo: replierOutlook
     }
-    await sendToDevice(req,res);
+    let user = await userModel.findOne({ outlookEmail: req.body.sendTo });
+    if(user.outlookEmail!=replierOutlook) await sendToDevice(req,res);
 }
 
 exports.postReplyChat = async (req, res) => {
@@ -184,7 +185,7 @@ exports.postReplyChat = async (req, res) => {
         // console.log(travelChat);
         TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
             console.log(travelPost["travelDateTime"]);
-            sendPostReplyNotif(req,res,"Cab sharing reply",data["name"],travelPost.email);  
+            sendPostReplyNotif(req,res,"Cab sharing reply",data["name"],travelPost.email);
             //if(true){ // when other people writes a message
                 //sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
                 // req.body.notif={};
