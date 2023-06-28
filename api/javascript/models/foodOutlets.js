@@ -60,6 +60,11 @@ const foodOutletsSchema = new mongoose.Schema({
 
 foodOutletsSchema.pre('save',async function(){
   console.log(this.menu);
+  const google = new Scraper({
+    puppeteer: {
+      headless: true,
+    }
+  });
   const imageResults1 = await google.scrape("pizza",1);
   console.log(imageResults1);
   for(let i=0;i<this.menu.length;i++){
@@ -68,11 +73,6 @@ foodOutletsSchema.pre('save',async function(){
     console.log("here");
     if(!this.menu[i]["imageURL"] || this.menu[i]["imageURL"].length==0){
       console.log("INSIDE HERE");
-      const google = new Scraper({
-        puppeteer: {
-          headless: true,
-        }
-      });
       const imageResults = await google.scrape(this.menu[i]["itemName"],1);
       console.log(imageResults);
       this.menu[i]["imageURL"] = imageResults[0]["url"];
