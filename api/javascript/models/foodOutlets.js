@@ -71,6 +71,7 @@ foodOutletsSchema.pre('save',async function(){
       ]
     }
   });
+  
   console.log("BEFORE SCRAPE");
   const imageResults1 = await google.scrape("pizza",1);
   console.log("AFTER SCRAPE");
