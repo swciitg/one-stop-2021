@@ -29,13 +29,6 @@ WORKDIR /home/node/app
 # Install PM2
 RUN npm i -g pm2
 
-# Set CWD
-WORKDIR /home/node/app/node_modules/puppeteer
-RUN npm install
-
-# Set CWD
-WORKDIR /home/node/app
-
 # Copy package.json, package-lock.json and process.yml
 COPY package*.json process.yml ./
 
