@@ -29,6 +29,8 @@ WORKDIR /home/node/app
 # Install PM2
 RUN npm i -g pm2
 
+RUN cd ./node_modules/puppeteer && npm install
+
 # Copy package.json, package-lock.json and process.yml
 COPY package*.json process.yml ./
 
