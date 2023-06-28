@@ -62,7 +62,7 @@ foodOutletsSchema.pre('save',async function(){
   console.log(this.menu);
   const google = new Scraper({
     puppeteer: {
-      headless: true,
+      headless: true
     }
   });
   console.log("BEFORE SCRAPE");
@@ -72,7 +72,6 @@ foodOutletsSchema.pre('save',async function(){
   for(let i=0;i<this.menu.length;i++){
     console.log(this.menu[i]);
     console.log(this.menu[i]["imageURL"]);
-    console.log("here");
     if(!this.menu[i]["imageURL"] || this.menu[i]["imageURL"].length==0){
       console.log("INSIDE HERE");
       const imageResults = await google.scrape(this.menu[i]["itemName"],1);
