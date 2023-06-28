@@ -1,6 +1,6 @@
 # Final stage
 
-FROM node:18-alpine
+FROM node:20-slim
 # We don't need the standalone Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
