@@ -31,7 +31,7 @@ RUN npm i -g pm2
 
 # Set CWD
 WORKDIR /home/node/app/node_modules/puppeteer
-RUN && npm install
+RUN npm install
 
 # Set CWD
 WORKDIR /home/node/app
