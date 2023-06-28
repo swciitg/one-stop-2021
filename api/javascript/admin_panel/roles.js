@@ -7,5 +7,6 @@ module.exports = {
     ONESTOPUSER: "user",
     LOST: "lost",
     FOUND: "found",
+    CONTACTS: "contacts",
     SUPERADMIN: "super-admin",
 };

@@ -20,9 +20,9 @@ const fileStorageEngine = multer.diskStorage({
 const upload = multer({storage: fileStorageEngine});
 contactRouter.use(verifyUserRequest);
 contactRouter.get('/getContacts', Controller.getAllContacts);
-contactRouter.post('/createContacts',restrictIfGuest,upload.single("file"), Controller.createContact);
-contactRouter.post('/createSections',restrictIfGuest,upload.single("file"), Controller.createsection);
-contactRouter.post('/deleteContacts',restrictIfGuest,upload.single("file"), Controller.deleteContacts);
+// contactRouter.post('/createContacts',restrictIfGuest,upload.single("file"), Controller.createContact);
+// contactRouter.post('/createSections',restrictIfGuest,upload.single("file"), Controller.createsection);
+// contactRouter.post('/deleteContacts',restrictIfGuest,upload.single("file"), Controller.deleteContacts);
 module.exports = {
     contactRouter: contactRouter
 };
