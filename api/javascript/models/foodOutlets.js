@@ -72,7 +72,6 @@ foodOutletsSchema.pre('save',async function(){
       ]
     }
   });
-  console.log(imageResults1);
   for(let i=0;i<this.menu.length;i++){
     console.log(this.menu[i]);
     console.log(this.menu[i]["imageURL"]);
