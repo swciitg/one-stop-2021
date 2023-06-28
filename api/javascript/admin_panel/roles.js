@@ -1,6 +1,7 @@
 module.exports = {
     SPORTS: "sports",
     MESS: "mess",
+    FOODOUTLET: "food outlet",
     FERRYTIMING: "ferry",
     BUSSTOP: "bus",
     CABSHARING: "cab sharing",

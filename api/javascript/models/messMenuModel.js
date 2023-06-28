@@ -4,7 +4,8 @@ const { allIITGHostels } = require("../helpers/constants");
 const mealSchema = new mongoose.Schema({
     mealDescription: { 
         type: String,
-        required: true
+        required: true,
+        maxLength: 60
     },
     timing: {
         type: String,

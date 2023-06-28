@@ -3,7 +3,7 @@ const foodItems = require("./foodItems");
 var Scraper = require("images-scraper");
 
 const foodItemSchema = new mongoose.Schema({
-  name: {
+  itemName: {
     type: String,
     required: true
   },
@@ -54,8 +54,7 @@ const foodOutletsSchema = new mongoose.Schema({
   }],
   menu: [foodItemSchema],
   imageURL: {
-    type: String,
-    required: true
+    type: String
   }
 });
 
@@ -65,13 +64,15 @@ foodOutletsSchema.pre('save',async function(){
     console.log(this.menu[i]);
     console.log(this.menu[i]["imageURL"]);
     console.log("here");
-    if(this.menu[i]["imageURL"].length===0){
+    if(!this.menu[i]["imageURL"] || this.menu[i]["imageURL"].length==0){
+      console.log("INSIDE HERE");
       const google = new Scraper({
         puppeteer: {
           headless: true,
         }
       });
-      const imageResults = await google.scrape(this.menu[i]["name"],1);
+      const imageResults = await google.scrape(this.menu[i]["itemName"],1);
+      console.log(imageResults);
       this.menu[i]["imageURL"] = imageResults[0]["url"];
       console.log(imageResults);
     }
@@ -83,13 +84,13 @@ foodOutletsSchema.pre('findOneAndUpdate',async function(){
     console.log(this["_update"]['$set']['menu']);
     console.log(this["_update"]['$set']['menu'][i]["imageURL"]);
     console.log("here");
-    if(this["_update"]['$set']['menu'][i]["imageURL"].length===0){
+    if(!this["_update"]['$set']['menu'][i]["imageURL"].length===0 || this["_update"]['$set']['menu'][i]["imageURL"].length===0){
       const google = new Scraper({
         puppeteer: {
           headless: true,
         }
       });
-      const imageResults = await google.scrape(this["_update"]['$set']['menu'][i]["name"],1);
+      const imageResults = await google.scrape(this["_update"]['$set']['menu'][i]["itemName"],1);
       this["_update"]['$set']['menu'][i]["imageURL"] = imageResults[0]["url"];
       console.log(imageResults);
     }
