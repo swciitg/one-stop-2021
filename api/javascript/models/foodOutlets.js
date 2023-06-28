@@ -86,7 +86,6 @@ foodOutletsSchema.pre('findOneAndUpdate',async function(){
   for(let i=0;i<this["_update"]['$set']['menu'].length;i++){
     console.log(this["_update"]['$set']['menu']);
     console.log(this["_update"]['$set']['menu'][i]["imageURL"]);
-    console.log("here");
     if(!this["_update"]['$set']['menu'][i]["imageURL"].length===0 || this["_update"]['$set']['menu'][i]["imageURL"].length===0){
       const google = new Scraper({
         puppeteer: {
