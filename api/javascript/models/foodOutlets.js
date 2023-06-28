@@ -62,6 +62,7 @@ foodOutletsSchema.pre('save',async function(){
   console.log(this.menu);
   const google = new Scraper({
     puppeteer: {
+      executablePath: '/usr/bin/google-chrome',
       headless: true,
       args: [
         "--disable-gpu",
@@ -71,7 +72,7 @@ foodOutletsSchema.pre('save',async function(){
       ]
     }
   });
-  
+
   console.log("BEFORE SCRAPE");
   const imageResults1 = await google.scrape("pizza",1);
   console.log("AFTER SCRAPE");
