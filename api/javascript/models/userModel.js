@@ -31,9 +31,11 @@ const userSchema = new mongoose.Schema({
     },
     roomNo: {
         type: String,
+        maxLength: 5
     },
     homeAddress: {
         type: String,
+        maxLength: 400
     },
     phoneNumber: {
         type: Number,
@@ -46,9 +48,9 @@ const userSchema = new mongoose.Schema({
         max: [9999999999, "Invalid mobile number."],
     },
     linkedin: {
-        type: String
-    },
-    deviceIDs: [String]
+        type: String,
+        maxLength: 50
+    }
 });
 
 module.exports = mongoose.model("onestopUser", userSchema);

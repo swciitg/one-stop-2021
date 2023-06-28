@@ -2,15 +2,15 @@ const user = require("../../models/userModel");
 const verifyRoles = require("../utils");
 const roles = require("../roles");
 
-let allowedRoles = [roles.SUPERADMIN];
+let allowedRoles = [roles.SUPERADMIN,roles.ONESTOPUSER];
 
 module.exports = {
     resource: user,
     options: {
-        listProperties: ["name", "email", "deviceTokens", "roles"],
-        filterProperties: ["name", "email", "deviceTokens", "roles"],
-        editProperties: ["name", "email", "password", "deviceTokens", "roles"],
-        showProperties: ["name", "email", "deviceTokens", "roles"],
+        listProperties: ["name", "outlookEmail","altEmail","rollNo","dob","gender","hostel","roomNo","homeAddress","phoneNumber","emergencyPhoneNumber","linkedin"],
+        filterProperties: ["name", "outlookEmail","altEmail","rollNo","dob","gender","hostel","roomNo","homeAddress","phoneNumber","emergencyPhoneNumber","linkedin"],
+        editProperties: ["name", "outlookEmail","altEmail","rollNo","dob","gender","hostel","roomNo","homeAddress","phoneNumber","emergencyPhoneNumber","linkedin"],
+        showProperties: ["name", "outlookEmail","altEmail","rollNo","dob","gender","hostel","roomNo","homeAddress","phoneNumber","emergencyPhoneNumber","linkedin"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },

@@ -12,6 +12,10 @@ const timingResource = require("./resources/transportTming.resource");
 const ui = require("./ui/loader");
 const { componentLoader, Components } = ui;
 const styleAssets = require("./ui/style-assets");
+const cabSharingResource = require("./resources/cabSharing.resource");
+const lostItemResource = require("./resources/lostItem.resource");
+const foundItemResource = require("./resources/foundItem.resource");
+const adminResource = require("./resources/admin.resource");
 AdminJs.registerAdapter(AdminJsMongoose);
 
 
@@ -26,9 +30,9 @@ var sessiontStore = new MongoDBStore(
 });
 
 const adminjs = new AdminJs({
-    resources: [messMenuResouce, userResource, timingResource],
+    resources: [messMenuResouce, adminResource, userResource, timingResource, cabSharingResource, lostItemResource, foundItemResource],
     assets: {
-        styles: styleAssets,
+        styles: styleAssets
     },
     componentLoader,
     dashboard: { component: Components.Dashboard },

@@ -24,7 +24,8 @@ const adminSchema = new mongoose.Schema({
     }
 });
 
-adminSchema.pre("save", async function (next) {
+adminSchema.pre("save" || "update", async function (next) {
+    console.log("HASHING PASSWORD");
     if (!this.isModified("password")) {
         return next();
     }
@@ -33,8 +34,24 @@ adminSchema.pre("save", async function (next) {
     return next();
 });
 
+adminSchema.pre("findOneAndUpdate", async function (next) {
+    console.log("HASHING UPDATED PASSWORD");
+    const update = this.getUpdate();
+    console.log(update);
+    let thisAdmin = await adminModel.findById(update.$set._id);
+    if (thisAdmin.password!==update.$set.password){
+        // password changed from admin panel
+        const hashed = await bcrypt.hash(update.$set.password, 10);
+        update.$set.password = hashed;
+        return next();
+    }
+    return next();
+});
+
 adminSchema.methods.comparePassword = async function (candidatePassword) {
     try {
+        console.log(candidatePassword,this.password);
+        console.log(await bcrypt.hash(candidatePassword, 10));
         const match = await bcrypt.compare(candidatePassword, this.password);
         return match;
     } catch (error) {
@@ -42,4 +59,6 @@ adminSchema.methods.comparePassword = async function (candidatePassword) {
     }
 };
 
-module.exports = mongoose.model("onestopAdmin", adminSchema);
+const adminModel = mongoose.model("onestopAdmin", adminSchema);
+
+module.exports = adminModel;
