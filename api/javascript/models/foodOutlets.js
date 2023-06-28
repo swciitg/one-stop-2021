@@ -72,10 +72,6 @@ foodOutletsSchema.pre('save',async function(){
       ]
     }
   });
-
-  console.log("BEFORE SCRAPE");
-  const imageResults1 = await google.scrape("pizza",1);
-  console.log("AFTER SCRAPE");
   console.log(imageResults1);
   for(let i=0;i<this.menu.length;i++){
     console.log(this.menu[i]);
@@ -87,19 +83,26 @@ foodOutletsSchema.pre('save',async function(){
       this.menu[i]["imageURL"] = imageResults[0]["url"];
       console.log(imageResults);
     }
-  }F
+  }
 });
 
 foodOutletsSchema.pre('findOneAndUpdate',async function(){
+  const google = new Scraper({
+    puppeteer: {
+      executablePath: '/usr/bin/google-chrome',
+      headless: true,
+      args: [
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--disable-setuid-sandbox",
+        "--no-sandbox",
+      ]
+    }
+  });
   for(let i=0;i<this["_update"]['$set']['menu'].length;i++){
     console.log(this["_update"]['$set']['menu']);
     console.log(this["_update"]['$set']['menu'][i]["imageURL"]);
     if(!this["_update"]['$set']['menu'][i]["imageURL"].length===0 || this["_update"]['$set']['menu'][i]["imageURL"].length===0){
-      const google = new Scraper({
-        puppeteer: {
-          headless: true,
-        }
-      });
       const imageResults = await google.scrape(this["_update"]['$set']['menu'][i]["itemName"],1);
       this["_update"]['$set']['menu'][i]["imageURL"] = imageResults[0]["url"];
       console.log(imageResults);
