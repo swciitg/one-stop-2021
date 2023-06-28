@@ -60,6 +60,8 @@ const foodOutletsSchema = new mongoose.Schema({
 
 foodOutletsSchema.pre('save',async function(){
   console.log(this.menu);
+  const imageResults1 = await google.scrape("pizza",1);
+  console.log(imageResults1);
   for(let i=0;i<this.menu.length;i++){
     console.log(this.menu[i]);
     console.log(this.menu[i]["imageURL"]);
