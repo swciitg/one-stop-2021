@@ -69,8 +69,6 @@ COPY package*.json process.yml ./
 #RUN npm i --only=production
 RUN npm ci
 
-RUN chmod -R o+rwx node_modules/puppeteer/.local-chromium
-
 # Copy js files and change ownership to user node
 #COPY --chown=node:node . .
 COPY  . .
