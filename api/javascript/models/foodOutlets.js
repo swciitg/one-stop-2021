@@ -79,7 +79,7 @@ foodOutletsSchema.pre('save',async function(){
       this.menu[i]["imageURL"] = imageResults[0]["url"];
       console.log(imageResults);
     }
-  }
+  }F
 });
 
 foodOutletsSchema.pre('findOneAndUpdate',async function(){
