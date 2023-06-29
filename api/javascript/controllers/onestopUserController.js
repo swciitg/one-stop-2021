@@ -102,7 +102,7 @@ exports.updateOnestopUserValidate = [
   body('hostel', 'hostel is required').exists(),
   body('roomNo', 'roomNo is required').exists(),
   body('homeAddress', 'home address is required').exists(),
-  body('phoneNumber', 'phone number is required').exists().isInt({ min: 1000000000, max: 9999999999 }),
+  body('phoneNumber', 'phone number is invalid').exists().isInt({ min: 1000000000, max: 9999999999 }),
   body('emergencyPhoneNumber', 'phone number is required').exists().isInt({ min: 1000000000, max: 9999999999 }),
   body('linkedin', 'user linkedin profile').optional()
 ];

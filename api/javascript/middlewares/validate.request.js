@@ -6,7 +6,7 @@ exports.requestValidation = (req,res,next) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         console.log(errors);
-        throw new RequestValidationError(errors.toString());
+        throw new RequestValidationError(errors.errors[0].msg);
     }
     next();
 }
