@@ -40,7 +40,9 @@ exports.sendToDevice = async (req, res) => {
     };
     let userNotifTokens = await userNotifTokenModel.find({userid: user._id});
     console.log(userNotifTokens);
-    userNotifTokens.forEach((userNotifToken) => firebase.messaging().sendToDevice(userNotifToken.deviceToken, payload, options));
+    for(let i=0;i<userNotifTokens.size();i++){
+      await firebase.messaging().sendToDevice(userNotifToken.deviceToken, payload, options);
+    }
 };
 
 exports.sendToAllValidate = [
