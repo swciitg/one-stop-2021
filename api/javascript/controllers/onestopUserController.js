@@ -81,6 +81,7 @@ exports.regenerateUserAccessToken = asyncHandler(async (req, res,next) => {
     const accessToken = jwt.sign({ userid: decoded.userid }, accessjwtsecret, {
       expiresIn: "1m"
     });
+    console.log(accessToken);
     res.json({ success: true, accessToken });
   }
   else next(new RequestValidationError("invalid user id found"));
