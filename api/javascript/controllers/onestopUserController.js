@@ -130,9 +130,7 @@ exports.postOnestopUserDeviceToken = async (req,res) => { // creates new device 
   let userNotifTokenPrevious = await userNotifTokenModel.find({deviceToken: body.deviceToken}); // deviceToken was already there
   if(userNotifTokenPrevious){
     // attempt for login via different or same account
-    userNotifTokenPrevious.userid = req.userid;
-    userNotifTokenPrevious.createdAt= new Date;
-    await userNotifTokenPrevious.save();
+    await userNotifTokenModel.findOneAndUpdate({deviceToken: body.deviceToken},{userid: req.userid,createdAt: new Date});
   }
   else{
     let userNotifToken = new userNotifTokenModel({userid: req.userid,deviceToken: body.deviceToken});
