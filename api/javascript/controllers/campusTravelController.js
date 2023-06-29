@@ -162,17 +162,17 @@ exports.getTravelPostChatReplies = async (req, res) => {
 }
 
 
-async function sendPostReplyNotif(req,res,title,replier,replierOutlook){
+async function sendPostReplyNotif(req,res,title,replier,recieverOutlook){
     req.body = {
         category: "CAB SHARING",
         model: "",
         header: title,
         body: `${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`,
-        sendTo: replierOutlook
+        sendTo: recieverOutlook
     }
     console.log(req.body);
-    let user = await userModel.findOne({ outlookEmail: req.body.sendTo });
-    if(user.outlookEmail!==replierOutlook) await sendToDevice(req,res);
+    let user = await userModel.findById(req.userid);
+    if(user.outlookEmail!==recieverOutlook) await sendToDevice(req,res);
 }
 
 exports.postReplyChat = async (req, res) => {
