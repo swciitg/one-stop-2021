@@ -14,6 +14,6 @@ onestopUserRouter.get("/user",verifyUserRequest,getUserInfo);
 onestopUserRouter.patch("/user",verifyUserRequest,restrictIfGuest, updateOnestopUserValidate, requestValidation, updateOnestopUser);
 onestopUserRouter.post("/user/device-tokens",verifyUserRequest,restrictIfGuest,postOnestopUserDeviceTokenValidate,requestValidation,postOnestopUserDeviceToken);
 onestopUserRouter.patch("/user/device-tokens",verifyUserRequest,restrictIfGuest,updateOnestopUserDeviceTokenValidate,requestValidation,updateOnestopUserDeviceToken);
-onestopUserRouter.delete("/user/logout",verifyUserRequest,logoutUserValidate,requestValidation,logoutUser);
+//onestopUserRouter.delete("/user/logout",verifyUserRequest,logoutUserValidate,requestValidation,logoutUser);
 
 module.exports = onestopUserRouter;

@@ -125,10 +125,19 @@ exports.postOnestopUserDeviceTokenValidate = [
   body("deviceToken","A device token is reqd").exists()
 ];
 
-exports.postOnestopUserDeviceToken = async (req,res) => { // creates new device token model
+exports.postOnestopUserDeviceToken = async (req,res) => { // creates new device token model or update
   let body = matchedData(req,{locations: ["body"]});
-  let userNotifToken = new userNotifTokenModel({userid: req.userid,deviceToken: body.deviceToken});
-  await userNotifToken.save();
+  let userNotifTokenPrevious = await userNotifTokenModel.find({deviceToken: body.deviceToken}); // deviceToken was already there
+  if(userNotifTokenPrevious){
+    // attempt for login via different or same account
+    userNotifTokenPrevious.userid = req.userid;
+    userNotifTokenPrevious.createdAt= new Date;
+    await userNotifTokenPrevious.save();
+  }
+  else{
+    let userNotifToken = new userNotifTokenModel({userid: req.userid,deviceToken: body.deviceToken});
+    await userNotifToken.save();
+  }
   if (!firebase.apps.length)
     firebase.initializeApp({
       credential: firebase.credential.cert(serviceAccount),
@@ -154,13 +163,13 @@ exports.updateOnestopUserDeviceToken = async (req,res) => { // updates token alr
 }
 
 
-exports.logoutUserValidate = [
-  body('deviceToken', 'device Token is required').exists(), // to remove this device id
-];
+// exports.logoutUserValidate = [
+//   body('deviceToken', 'device Token is required').exists(), // to remove this device id
+// ];
 
-exports.logoutUser = async (req, res) => {
-  console.log(req.body);
-  let deviceToken = req.body.deviceToken;
-  await userNotifTokenModel.deleteMany({deviceToken});
-  res.json({ "success": true, "message": "logged out user successfully" });
-}
+// exports.logoutUser = async (req, res) => {
+//   console.log(req.body);
+//   let deviceToken = req.body.deviceToken;
+//   await userNotifTokenModel.deleteMany({deviceToken});
+//   res.json({ "success": true, "message": "logged out user successfully" });
+// }
