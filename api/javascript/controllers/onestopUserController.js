@@ -87,7 +87,7 @@ exports.guestUserLogin = async (req,res) => {
   const accessToken = jwt.sign({ userid: guestUserID }, accessjwtsecret, {
     expiresIn: 30,
   });
-  const refreshToken = jwt.sign({ guestUserID }, refreshjwtsecret, {
+  const refreshToken = jwt.sign({ userid: guestUserID }, refreshjwtsecret, {
     expiresIn: 600,
   });
   res.json({accessToken,refreshToken});
