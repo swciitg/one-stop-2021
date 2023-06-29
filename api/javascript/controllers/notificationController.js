@@ -38,7 +38,7 @@ exports.sendToDevice = async (req, res) => {
       priority: "high",
       timeToLive: 60 * 60 * 24
     };
-
+    console.log()
     let userNotifTokens = await userNotifTokenModel.find({userid: user._id});
     console.log(userNotifTokens);
     userNotifTokens.forEach((userNotifToken) => firebase.messaging().sendToDevice(userNotifToken.deviceToken, payload, options));
