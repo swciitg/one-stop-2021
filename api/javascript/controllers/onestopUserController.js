@@ -48,10 +48,10 @@ exports.getGuestUserID = async function(){
 
 let getUserTokensString = async (userid) => {
   const accessToken = jwt.sign({ userid }, accessjwtsecret, {
-    expiresIn: "1h",
+    expiresIn: "1m",
   });
   const refreshToken = jwt.sign({ userid }, refreshjwtsecret, {
-    expiresIn: "2h",
+    expiresIn: "10m",
   });
   return `${accessToken}/${refreshToken}`; // for outlook login
 }
@@ -67,6 +67,7 @@ exports.getUserInfo = async (req,res,next) => {
 exports.regenerateUserAccessToken = asyncHandler(async (req, res,next) => {
   let refreshToken = req.headers.authorization.split(" ").slice(-1)[0];
   if(!refreshToken) next(new RequestValidationError("Refresh token not passed"));
+  console.log(refreshToken);
   let decoded;
   jwt.verify(refreshToken, refreshjwtsecret, (err,dec) => {
     if(err){
@@ -74,9 +75,9 @@ exports.regenerateUserAccessToken = asyncHandler(async (req, res,next) => {
     }
     decoded=dec;
   });
-  if (await onestopUserModel.findById(decoded.userid) !== undefined) { // if someone found JWT refresh secrets and tries to generate access token
+  if (await onestopUserModel.findById(decoded.userid)) { // if someone found JWT refresh secrets and tries to generate access token
     const accessToken = jwt.sign({ userid: decoded.userid }, accessjwtsecret, {
-      expiresIn: "1h"
+      expiresIn: "10m"
     });
     res.json({ success: true, accessToken });
   }
@@ -86,10 +87,10 @@ exports.regenerateUserAccessToken = asyncHandler(async (req, res,next) => {
 exports.guestUserLogin = asyncHandler(async (req,res) => {
   const guestUserID = await this.getGuestUserID();
   const accessToken = jwt.sign({ userid: guestUserID }, accessjwtsecret, {
-    expiresIn: "1h",
+    expiresIn: "1m",
   });
   const refreshToken = jwt.sign({ userid: guestUserID }, refreshjwtsecret, {
-    expiresIn: "2h",
+    expiresIn: "10m",
   });
   res.json({accessToken,refreshToken});
 });
