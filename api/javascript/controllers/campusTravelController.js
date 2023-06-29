@@ -172,7 +172,7 @@ async function sendPostReplyNotif(req,res,title,replier,replierOutlook){
     }
     console.log(req.body);
     let user = await userModel.findOne({ outlookEmail: req.body.sendTo });
-    if(user.outlookEmail!=replierOutlook) await sendToDevice(req,res);
+    if(user.outlookEmail!==replierOutlook) await sendToDevice(req,res);
 }
 
 exports.postReplyChat = async (req, res) => {
