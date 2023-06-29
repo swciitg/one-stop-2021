@@ -128,7 +128,7 @@ exports.postOnestopUserDeviceTokenValidate = [
 exports.postOnestopUserDeviceToken = async (req,res) => { // creates new device token model or update
   let body = matchedData(req,{locations: ["body"]});
   console.log(body);
-  let userNotifTokenPrevious = await userNotifTokenModel.find({deviceToken: body.deviceToken}); // deviceToken was already there
+  let userNotifTokenPrevious = await userNotifTokenModel.findOne({deviceToken: body.deviceToken}); // deviceToken was already there
   console.log("HERE 1");
   console.log(userNotifTokenPrevious);
   if(userNotifTokenPrevious){
