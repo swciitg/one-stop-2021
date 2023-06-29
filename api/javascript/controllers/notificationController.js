@@ -21,7 +21,7 @@ exports.sendToDevice = async (req, res) => {
     });
 
     if (!req.body.sendTo) {
-      throw RequestValidationError("Missing Fields");
+      throw new RequestValidationError("Missing Fields");
     }
 
     let user = await userModel.findOne({ outlookEmail: req.body.sendTo });
