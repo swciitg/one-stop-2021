@@ -104,8 +104,8 @@ exports.updateOnestopUserValidate = [
   body('roomNo', 'roomNo is required').exists(),
   body('homeAddress', 'home address is required').exists(),
   body('phoneNumber', 'phone number is invalid').exists().isInt({ min: 1000000000, max: 9999999999 }),
-  body('emergencyPhoneNumber', 'phone number is required').exists().isInt({ min: 1000000000, max: 9999999999 }),
-  body('linkedin', 'user linkedin profile').optional()
+  body('emergencyPhoneNumber', 'emergency phone number is invalid').exists().isInt({ min: 1000000000, max: 9999999999 }),
+  body('linkedin', 'linkedin is required').optional()
 ];
 
 exports.updateOnestopUser = asyncHandler(async (req, res) => {
