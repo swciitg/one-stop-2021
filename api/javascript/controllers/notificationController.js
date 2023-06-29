@@ -4,6 +4,7 @@ const userModel = require("../models/userModel");
 const { body, matchedData } = require("express-validator");
 const userNotifTokenModel = require("../models/userNotifTokenModel");
 const { sendToAllFirebaseTopicName } = require("../helpers/constants");
+const { RequestValidationError } = require("../errors/request.validation.error");
 
 exports.sendToDeviceValidate = [
   body("category", "notif must have a category").exists(),
@@ -20,7 +21,7 @@ exports.sendToDevice = async (req, res) => {
     });
 
     if (!req.body.sendTo) {
-      throw "Missing Fields";
+      throw RequestValidationError("Missing Fields");
     }
 
     let user = await userModel.findOne({ outlookEmail: req.body.sendTo });

@@ -51,6 +51,7 @@ app.use(BASEURL, routers.imageRouter.imageRouter);
 
 // Validate API Call
 app.use((req, res, next) => {
+    console.log(req.path);
     if (req.headers["security-key"] !== process.env.SECURITY_KEY) {
         res.json({ message: "You are not authorized app.js" });
         return;
