@@ -9,6 +9,7 @@ const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 const firebase = require("firebase-admin");
 const serviceAccount = require("../config/push-notification-key.json");
+const asyncHandler = require("../middlewares/async.controllers.handler");
 
 let titleCase = (str)=>{
   var splitStr = str.toLowerCase().split(' ');
@@ -63,7 +64,7 @@ exports.getUserInfo = async (req,res,next) => {
   res.json(onestopuser);
 }
 
-exports.regenerateUserAccessToken = async (req, res,next) => {
+exports.regenerateUserAccessToken = asyncHandler(async (req, res,next) => {
   let refreshToken = req.headers.authorization.split(" ").slice(-1)[0];
   if(!refreshToken) next(new RequestValidationError("Refresh token not passed"));
   let decoded;
@@ -80,9 +81,9 @@ exports.regenerateUserAccessToken = async (req, res,next) => {
     res.json({ success: true, accessToken });
   }
   else next(new RequestValidationError("invalid user id found"));
-}
+});
 
-exports.guestUserLogin = async (req,res) => {
+exports.guestUserLogin = asyncHandler(async (req,res) => {
   const guestUserID = await this.getGuestUserID();
   const accessToken = jwt.sign({ userid: guestUserID }, accessjwtsecret, {
     expiresIn: "1h",
@@ -91,7 +92,7 @@ exports.guestUserLogin = async (req,res) => {
     expiresIn: "2h",
   });
   res.json({accessToken,refreshToken});
-}
+});
 
 exports.updateOnestopUserValidate = [
   query('deviceToken', 'device Token').optional(), // every time profile update happens
@@ -107,7 +108,7 @@ exports.updateOnestopUserValidate = [
   body('linkedin', 'user linkedin profile').optional()
 ];
 
-exports.updateOnestopUser = async (req, res) => {
+exports.updateOnestopUser = asyncHandler(async (req, res) => {
   let userid = req.userid;
   let data = matchedData(req, { locations: ["body"] });
   console.log(data);
@@ -119,42 +120,44 @@ exports.updateOnestopUser = async (req, res) => {
     await userNotifToken.save();
   }
   res.json({ "success": true, "message": "Updated user data correctly" });
-}
+});
 
 exports.postOnestopUserDeviceTokenValidate = [
   body("deviceToken","A device token is reqd").exists()
 ];
 
-exports.postOnestopUserDeviceToken = async (req,res) => { // creates new device token model or update
-  let body = matchedData(req,{locations: ["body"]});
-  console.log(body);
-  let userNotifTokenPrevious = await userNotifTokenModel.findOne({deviceToken: body.deviceToken}); // deviceToken was already there
-  console.log("HERE 1");
-  console.log(userNotifTokenPrevious);
-  if(userNotifTokenPrevious){
-    // attempt for login via different or same account
-    console.log("INSIDE IF");
-    await userNotifTokenModel.findOneAndUpdate({deviceToken: body.deviceToken},{userid: req.userid,createdAt: new Date});
+exports.postOnestopUserDeviceToken = asyncHandler(
+  async (req,res) => { // creates new device token model or update
+    let body = matchedData(req,{locations: ["body"]});
+    console.log(body);
+    let userNotifTokenPrevious = await userNotifTokenModel.findOne({deviceToken: body.deviceToken}); // deviceToken was already there
+    console.log("HERE 1");
+    console.log(userNotifTokenPrevious);
+    if(userNotifTokenPrevious){
+      // attempt for login via different or same account
+      console.log("INSIDE IF");
+      await userNotifTokenModel.findOneAndUpdate({deviceToken: body.deviceToken},{userid: req.userid,createdAt: new Date});
+    }
+    else{
+      console.log("INSIDE ELSE");
+      let userNotifToken = new userNotifTokenModel({userid: req.userid,deviceToken: body.deviceToken});
+      await userNotifToken.save();
+    }
+    if (!firebase.apps.length)
+      firebase.initializeApp({
+        credential: firebase.credential.cert(serviceAccount),
+      });
+    await firebase.messaging().subscribeToTopic([body.deviceToken],sendToAllFirebaseTopicName);
+    res.json({"success" : true});
   }
-  else{
-    console.log("INSIDE ELSE");
-    let userNotifToken = new userNotifTokenModel({userid: req.userid,deviceToken: body.deviceToken});
-    await userNotifToken.save();
-  }
-  if (!firebase.apps.length)
-    firebase.initializeApp({
-      credential: firebase.credential.cert(serviceAccount),
-    });
-  await firebase.messaging().subscribeToTopic([body.deviceToken],sendToAllFirebaseTopicName);
-  res.json({"success" : true});
-}
+);
 
 exports.updateOnestopUserDeviceTokenValidate = [
   body("oldToken","old token is reqd").exists(),
   body("newToken","new token is reqd").exists()
 ];
 
-exports.updateOnestopUserDeviceToken = async (req,res) => { // updates token already stored
+exports.updateOnestopUserDeviceToken = asyncHandler(async (req,res) => { // updates token already stored
   let body = matchedData(req,{locations: ["body"]});
   if(body.oldToken!==body.newToken){
     //token got changed in app
@@ -163,7 +166,7 @@ exports.updateOnestopUserDeviceToken = async (req,res) => { // updates token alr
     await firebase.messaging().subscribeToTopic([body.newToken],sendToAllFirebaseTopicName);
   }
   res.json({"success" : true});
-}
+});
 
 
 // exports.logoutUserValidate = [

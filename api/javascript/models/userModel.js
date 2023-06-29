@@ -12,18 +12,17 @@ const userSchema = new mongoose.Schema({
     },
     altEmail: {
         type: String,
-        default: ''
     },
     rollNo: {
         type: String,
         required: true
     },
     dob: {
-        type: Date
+        type: Date,
     },
     gender: {
         type: String,
-        enum: ["Male", "Female", "Others"],
+        enum: ["Male", "Female", "Others"]
     },
     hostel: {
         type: String,
@@ -31,21 +30,21 @@ const userSchema = new mongoose.Schema({
     },
     roomNo: {
         type: String,
-        maxLength: 5
+        maxLength: 5,
     },
     homeAddress: {
         type: String,
-        maxLength: 400
+        maxLength: 400,
     },
     phoneNumber: {
         type: Number,
         min: [1000000000, "Invalid mobile number."],
-        max: [9999999999, "Invalid mobile number."]
+        max: [9999999999, "Invalid mobile number."],
     },
     emergencyPhoneNumber: {
         type: Number,
         min: [1000000000, "Invalid mobile number."],
-        max: [9999999999, "Invalid mobile number."],
+        max: [9999999999, "Invalid mobile number."]
     },
     linkedin: {
         type: String,
