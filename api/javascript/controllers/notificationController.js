@@ -41,7 +41,7 @@ exports.sendToDevice = async (req, res) => {
     let userNotifTokens = await userNotifTokenModel.find({userid: user._id});
     console.log(userNotifTokens);
     for(let i=0;i<userNotifTokens.size();i++){
-      await firebase.messaging().sendToDevice(userNotifToken.deviceToken, payload, options);
+      await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload, options);
     }
 };
 
