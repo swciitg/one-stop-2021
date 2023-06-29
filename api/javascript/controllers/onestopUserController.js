@@ -9,6 +9,10 @@ const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 const firebase = require("firebase-admin");
 const serviceAccount = require("../config/push-notification-key.json");
+if (!firebase.apps.length)
+      firebase.initializeApp({
+        credential: firebase.credential.cert(serviceAccount),
+      });
 const asyncHandler = require("../middlewares/async.controllers.handler");
 
 let titleCase = (str)=>{
@@ -147,10 +151,6 @@ exports.postOnestopUserDeviceToken = asyncHandler(
       let userNotifToken = new userNotifTokenModel({userid: req.userid,deviceToken: body.deviceToken});
       await userNotifToken.save();
     }
-    if (!firebase.apps.length)
-      firebase.initializeApp({
-        credential: firebase.credential.cert(serviceAccount),
-      });
     await firebase.messaging().subscribeToTopic([body.deviceToken],sendToAllFirebaseTopicName);
     res.json({"success" : true});
   }

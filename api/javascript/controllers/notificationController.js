@@ -1,5 +1,9 @@
 const firebase = require("firebase-admin");
 const serviceAccount = require("../config/push-notification-key.json");
+if (!firebase.apps.length)
+    firebase.initializeApp({
+      credential: firebase.credential.cert(serviceAccount),
+    });
 const userModel = require("../models/userModel");
 const { body, matchedData } = require("express-validator");
 const userNotifTokenModel = require("../models/userNotifTokenModel");
@@ -15,10 +19,6 @@ exports.sendToDeviceValidate = [
 ];
 
 exports.sendToDevice = async (req, res) => {
-  if (!firebase.apps.length)
-    firebase.initializeApp({
-      credential: firebase.credential.cert(serviceAccount),
-    });
 
     if (!req.body.sendTo) {
       throw new RequestValidationError("Missing Fields");
@@ -55,10 +55,6 @@ exports.sendToAllValidate = [
 ];
 
 exports.sendToAll = async (req, res) => {
-  if (!firebase.apps.length)
-    firebase.initializeApp({
-      credential: firebase.credential.cert(serviceAccount)
-    }); // initialization
 
   let compDate = new Date();
   compDate.setMonth(compDate.getMonth()-3); // set date 3 months prior
