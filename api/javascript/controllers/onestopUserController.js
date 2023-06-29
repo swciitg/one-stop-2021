@@ -75,6 +75,7 @@ exports.regenerateUserAccessToken = asyncHandler(async (req, res,next) => {
     }
     decoded=dec;
   });
+  console.log(decoded);
   if (await onestopUserModel.findById(decoded.userid)) { // if someone found JWT refresh secrets and tries to generate access token
     const accessToken = jwt.sign({ userid: decoded.userid }, accessjwtsecret, {
       expiresIn: "10m"

@@ -2,9 +2,10 @@ const { TravelPostModel, TravelChatModel, ReplyPostModel } = require("../models/
 const nodeoutlook = require('nodejs-nodemailer-outlook');
 const { sendToDevice } = require("./notificationController");
 const userModel = require("../models/userModel");
+const asyncHandler = require("../middlewares/async.controllers.handler");
 
-const sendMailForTravelPostReply = async (replier_name, reciever_email,reciever_name,from,to,travelDateTime) => {
-    console.log(reciever_name,replier_name,travelDateTime);
+const sendMailForTravelPostReply = async (replier_name, reciever_email, reciever_name, from, to, travelDateTime) => {
+    console.log(reciever_name, replier_name, travelDateTime);
     await nodeoutlook.sendEmail({
         auth: {
             user: process.env.SWC_EMAIL,
@@ -162,7 +163,7 @@ exports.getTravelPostChatReplies = async (req, res) => {
 }
 
 
-async function sendPostReplyNotif(req,res,title,replier,recieverOutlook){
+async function sendPostReplyNotif(req, res, title, replier, recieverOutlook) {
     req.body = {
         category: "CAB SHARING",
         model: "",
@@ -172,38 +173,33 @@ async function sendPostReplyNotif(req,res,title,replier,recieverOutlook){
     }
     console.log(req.body);
     let user = await userModel.findById(req.userid);
-    if(user.outlookEmail!==recieverOutlook) await sendToDevice(req,res);
+    if (user.outlookEmail !== recieverOutlook) await sendToDevice(req, res);
 }
 
-exports.postReplyChat = async (req, res) => {
-    try {
-        console.log(req.body);
-        const id = req.query.chatId;
-        const data = req.body;
-        let travelChatReply = new ReplyPostModel(data);
-        let travelChat = await TravelChatModel.findById(id);
-        travelChat["replies"].push(travelChatReply);
-        travelChat = await travelChat.save();
-        // console.log(travelChat);
-        TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
-            console.log(travelPost["travelDateTime"]);
-            sendPostReplyNotif(req,res,"Cab sharing reply",data["name"],travelPost.email);
-            //if(true){ // when other people writes a message
-                //sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
-                // req.body.notif={};
-                //   req.body.notif.category = "travel";
-                //   req.body.notif.model = "maybeJsonValue";
-                //   req.body.notif.header = "Cab sharing reply";
-                //   req.body.notif.body = `You have got reply from ${data["name"]} 🙌`;
-                //   //ADD here chat reply body
-                //   req.body.sendTo = travelPost.email;
-                  // ADD send to email here
-                  //sendToDevice(req,res);
-            //}
-        });
-        res.json({ "success": true });
-    }
-    catch (err) {
-        res.json({ "success": false, "message": err.toString() });
-    }
-}
+exports.postReplyChat = asyncHandler(async (req, res) => {
+    console.log(req.body);
+    const id = req.query.chatId;
+    const data = req.body;
+    let travelChatReply = new ReplyPostModel(data);
+    let travelChat = await TravelChatModel.findById(id);
+    travelChat["replies"].push(travelChatReply);
+    travelChat = await travelChat.save();
+    // console.log(travelChat);
+    TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
+        console.log(travelPost["travelDateTime"]);
+        sendPostReplyNotif(req, res, "Cab sharing reply", data["name"], travelPost.email);
+        //if(true){ // when other people writes a message
+        //sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
+        // req.body.notif={};
+        //   req.body.notif.category = "travel";
+        //   req.body.notif.model = "maybeJsonValue";
+        //   req.body.notif.header = "Cab sharing reply";
+        //   req.body.notif.body = `You have got reply from ${data["name"]} 🙌`;
+        //   //ADD here chat reply body
+        //   req.body.sendTo = travelPost.email;
+        // ADD send to email here
+        //sendToDevice(req,res);
+        //}
+    });
+    res.json({ "success": true });
+});
