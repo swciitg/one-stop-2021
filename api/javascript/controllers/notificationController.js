@@ -42,6 +42,7 @@ exports.sendToDevice = async (req, res) => {
     console.log(userNotifTokens);
     for(let i=0;i<userNotifTokens.length;i++){
       await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload, options);
+      console.log("NOTIFICATION SENT");
     }
 };
 
