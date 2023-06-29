@@ -50,7 +50,7 @@ let getUserTokensString = async (userid) => {
     expiresIn: 30,
   });
   const refreshToken = jwt.sign({ userid }, refreshjwtsecret, {
-    expiresIn: 120,
+    expiresIn: 600,
   });
   return `${accessToken}/${refreshToken}`; // for outlook login
 }
@@ -88,7 +88,7 @@ exports.guestUserLogin = async (req,res) => {
     expiresIn: 30,
   });
   const refreshToken = jwt.sign({ guestUserID }, refreshjwtsecret, {
-    expiresIn: 120,
+    expiresIn: 600,
   });
   res.json({accessToken,refreshToken});
 }
