@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const foodItems = require("./foodItems");
 var Scraper = require("images-scraper");
+const { updateFoodOutletInLastUpdateDocument } = require("../controllers/lastUpdateController");
 
 const foodItemSchema = new mongoose.Schema({
   itemName: {
@@ -58,7 +59,12 @@ const foodOutletsSchema = new mongoose.Schema({
   }
 });
 
+foodOutletsSchema.pre('findOneAndRemove',async function(){ // adminjs calls findOneAndRemove internally
+  await updateFoodOutletInLastUpdateDocument();
+});
+
 foodOutletsSchema.pre('save',async function(){
+  await updateFoodOutletInLastUpdateDocument();
   console.log(this.menu);
   const google = new Scraper({
     puppeteer: {
@@ -85,7 +91,8 @@ foodOutletsSchema.pre('save',async function(){
   }
 });
 
-foodOutletsSchema.pre('findOneAndUpdate',async function(){
+foodOutletsSchema.pre('findOneAndUpdate',async function(){ // // adminjs calls findOneAndUpdate internally
+  await updateFoodOutletInLastUpdateDocument();
   const google = new Scraper({
     puppeteer: {
       executablePath: '/usr/bin/google-chrome',

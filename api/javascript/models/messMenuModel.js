@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { allIITGHostels } = require("../helpers/constants");
+const { updateMessMenuInLastUpdateDocument } = require("../controllers/lastUpdateController");
 
 const mealSchema = new mongoose.Schema({
     mealDescription: { 
@@ -78,5 +79,18 @@ const messMenuSchema = new mongoose.Schema({
         required: true
     }
 });
+
+messMenuSchema.pre('save',async function(){
+    await updateMessMenuInLastUpdateDocument();
+});
+
+messMenuSchema.pre('findOneAndRemove',async function(){ // adminjs calls findOneAndRemove internally
+    await updateMessMenuInLastUpdateDocument();
+});
+
+messMenuSchema.pre('findOneAndUpdate',async function(){ // // adminjs calls findOneAndUpdate internally
+    await updateMessMenuInLastUpdateDocument();
+});
+
 
 module.exports = mongoose.model("messMenu", messMenuSchema);

@@ -8,10 +8,9 @@ const { adminJsRouter } = require("./admin_panel/admin-config");
 const app = express();
 
 const bcrypt = require("bcrypt");
-const { verifyUserRequest } = require("./middlewares/user.auth");
 const { errorHandler } = require("./middlewares/error.handler");
-const path = require('path');
 const { NotFoundError } = require("./errors/not.found.error");
+const { createLastUpdateDocument } = require("./controllers/lastUpdateController");
 
 //for serving static files
 app.use(express.static("public"));
@@ -89,14 +88,5 @@ app.listen(PORT, async () => {
     console.log(`Express server listening on port ${PORT} see docs at /docs`);
     await mongoose.connect(process.env.DATABASE_URI);
     console.log("Connected to MongoDB");
-    let updatesList = await LastUpdate.find();
-    if (updatesList.length == 0) {
-        let addUpdate = new LastUpdate({
-            food: Date(),
-            menu: Date(),
-            travel: Date(),
-            contact: Date(),
-        });
-        await addUpdate.save();
-    }
+    await createLastUpdateDocument();
 });

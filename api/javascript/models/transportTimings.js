@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { updateTimingInLastUpdateDocument } = require("../controllers/lastUpdateController");
 const { Schema } = mongoose;
 const timingSchema = new Schema({
   type: {
@@ -30,6 +31,18 @@ const timingSchema = new Schema({
       type: [Date],
     },
   },
+});
+
+timingSchema.pre('save',async function(){
+  await updateTimingInLastUpdateDocument();
+});
+
+timingSchema.pre('findOneAndRemove',async function(){ // adminjs calls findOneAndRemove internally
+  await updateTimingInLastUpdateDocument();
+});
+
+timingSchema.pre('findOneAndUpdate',async function(){ // // adminjs calls findOneAndUpdate internally
+  await updateTimingInLastUpdateDocument();
 });
 
 const transportTiming = mongoose.model("transportTiming", timingSchema);
