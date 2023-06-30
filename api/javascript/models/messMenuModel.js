@@ -26,7 +26,6 @@ mealSchema.post('validate',async function(next){
     else if(this.endTiming.getTime()-this.startTiming.getTime()>4*60*60*1000){ // 4 hours
         throw new Error("meal duration cannot be more than 4 hours");
     }
-    next();
 });
 
 const dayMenuSchema = new mongoose.Schema({
