@@ -90,7 +90,7 @@ async function sendLostNotif(req,res,title){
     category: "LOST",
     model: "",
     header: title,
-    body: "An item has been lost"
+    body: `${req.body.username}'s belonging got lost. \n ${req.body.description.slice(0,20)}...`
   }
   await sendToAll(req,res);
 }
@@ -292,7 +292,7 @@ async function sendFoundNotif(req,res,title){
     category: "FOUND",
     model: "",
     header: title,
-    body: "An item was found"
+    body: `${req.body.username} found some item. \n ${req.body.description.slice(0,20)}`
   }
   await sendToAll(req,res);
 }
