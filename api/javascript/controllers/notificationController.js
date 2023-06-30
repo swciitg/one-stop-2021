@@ -35,10 +35,7 @@ exports.sendToDevice = async (req, res) => {
       }
     };
 
-    const options = {
-      priority: "high",
-      timeToLive: 60 * 60 * 24
-    };
+    const options = {priority: "high"};
     let userNotifTokens = await userNotifTokenModel.find({userid: user._id});
     console.log(userNotifTokens);
     for(let i=0;i<userNotifTokens.length;i++){
@@ -84,5 +81,6 @@ exports.sendToAll = async (req, res) => {
   };
 
   console.log(payload);
-  let data = await firebase.messaging().send(payload);
+  const options = {priority: "high"};
+  await firebase.messaging().sendToTopic(sendToAllFirebaseTopicName,payload,options);
 };

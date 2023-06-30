@@ -17,6 +17,7 @@ exports.allIITGWelfareClubs = ["Academic Initiatives Club","Rights and Responsib
 exports.allIITGGymkhanaBoards = {
     "Sports Board" : "sportsec@iitg.ac.in",
     "Students Web Committee (SWC)" : "swc@iitg.ac.in",
+    "Students Academic Board (SAB)" : "sab@iitg.ac.in",
     "Technical Board" : "techsec@iitg.ac.in",
     "Cultural Board" : "cultsec@iitg.ac.in",
     "Welfare Board" : "gensec_welfare@iitg.ac.in",
