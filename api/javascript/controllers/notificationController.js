@@ -76,8 +76,7 @@ exports.sendToAll = async (req, res) => {
       model: req.body.model,
       header: req.body.header,
       body: req.body.body
-    },
-    topic: sendToAllFirebaseTopicName,
+    }
   };
 
   console.log(payload);
