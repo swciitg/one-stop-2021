@@ -7,22 +7,39 @@ const mealSchema = new mongoose.Schema({
         required: true,
         maxLength: 60
     },
-    timing: {
-        type: String,
-        enum: ["8:00 AM - 9:45 AM","8:00 AM - 10:15 AM"],
+    startTiming: {
+        type: Date,
+        required: true
+    },
+    endTiming: {
+        type: Date,
         required: true
     }
 });
 
+mealSchema.post('validate',async function(next){
+    console.log(this);
+    if(this.startTiming.getTime()>this.endTiming.getTime()){
+        throw new Error("Start time cannot be ahead of End time")
+    }
+    else if(this.endTiming.getTime()-this.startTiming.getTime()>4*60*60*1000){ // 4 hours
+        throw new Error("meal duration cannot be more than 4 hours");
+    }
+    next();
+});
+
 const dayMenuSchema = new mongoose.Schema({
     breakfast: {
-        type: mealSchema
+        type: mealSchema,
+        required: true
     },
     lunch: {
-        type: mealSchema
+        type: mealSchema,
+        required: true
     },
     dinner: {
-        type: mealSchema
+        type: mealSchema,
+        required: true
     },
 });
 
