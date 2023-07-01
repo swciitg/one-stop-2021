@@ -65,14 +65,15 @@ exports.microsoftLoginRedirect = (req, res) => {
       }
       const userInfo = JSON.parse(body);
       console.log(userInfo);
+      if(!userInfo.displayName || !userInfo.mail || !userInfo.surname){
+        return res.render('authSuccessView.ejs', { userTokens: "ERROR OCCURED" });
+        return;
+      }
       let userid = await createOrFindOnestopUserID(userInfo.displayName, userInfo.mail, userInfo.surname);
       const userTokensString = await getUserTokens(userid);
       console.log(userTokensString);
       // res.set('Authorization', `Bearer ${JSON.parse(userTokensString).accessToken}`);
       return res.render('authSuccessView.ejs', { userTokens: userTokensString });
     });
-  }).catch((error) => {
-    console.log(error);
-    res.status(500).send(error);
   });
 }
