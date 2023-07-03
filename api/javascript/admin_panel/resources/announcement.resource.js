@@ -15,7 +15,7 @@ module.exports = {
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             filter: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             edit: { isAccessible: ({ currentAdmin }) => false }, // never edit an announcement
-            delete: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
+            delete: { isAccessible: ({ currentAdmin }) => false } // never delete an announcement
         },
     },
 };
