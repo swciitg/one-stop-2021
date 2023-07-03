@@ -43,4 +43,13 @@ exports.totalKritiPoints = 5800;
 exports.totalSahyogPoints = 4400;
 exports.totalManthanPoints = 1400;
 
+
+exports.NotificationCategories = {
+    lost: "lost",
+    found: "found",
+    buy: "buy",
+    sell: "sell",
+    cabSharing: "cab sharing",
+    announcement: "announcement"
+};
 exports.sendToAllFirebaseTopicName = "all";

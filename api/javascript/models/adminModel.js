@@ -24,7 +24,7 @@ const adminSchema = new mongoose.Schema({
     }
 });
 
-adminSchema.pre("save" || "update", async function (next) {
+adminSchema.pre("save", async function (next) {
     console.log("HASHING PASSWORD");
     if (!this.isModified("password")) {
         return next();

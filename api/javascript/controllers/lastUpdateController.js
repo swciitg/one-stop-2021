@@ -1,6 +1,7 @@
 const LastUpdate = require("../models/lastUpdate");
 
 exports.createLastUpdateDocument = async function(){
+    if((await LastUpdate.find()).length!==0) return; // if last update document is already there
     console.log("CREATED LAST UPDATE DOCUMENT");
     await LastUpdate.deleteMany({}); // delete existing document
     let addUpdate = LastUpdate();

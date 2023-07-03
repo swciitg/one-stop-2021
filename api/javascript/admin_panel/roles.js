@@ -1,5 +1,4 @@
 module.exports = {
-    SPORTS: "sports",
     MESS: "mess",
     FOODOUTLET: "food outlet",
     FERRYTIMING: "ferry",
@@ -9,5 +8,6 @@ module.exports = {
     LOST: "lost",
     FOUND: "found",
     CONTACTS: "contacts",
+    ANNOUNCEMENT: "announcement",
     SUPERADMIN: "super-admin",
 };

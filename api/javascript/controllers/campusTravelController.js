@@ -3,6 +3,7 @@ const nodeoutlook = require('nodejs-nodemailer-outlook');
 const { sendToDevice } = require("./notificationController");
 const userModel = require("../models/userModel");
 const asyncHandler = require("../middlewares/async.controllers.handler");
+const { NotificationCategories } = require("../helpers/constants");
 
 const sendMailForTravelPostReply = async (replier_name, reciever_email, reciever_name, from, to, travelDateTime) => {
     console.log(reciever_name, replier_name, travelDateTime);
@@ -165,7 +166,7 @@ exports.getTravelPostChatReplies = async (req, res) => {
 
 async function sendPostReplyNotif(req, res, title, replier, recieverOutlook) {
     req.body = {
-        category: "CAB SHARING",
+        category: NotificationCategories.cabSharing,
         model: "",
         header: title,
         body: `${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`,

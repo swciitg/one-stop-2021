@@ -5,6 +5,7 @@ const path = require("path");
 const uuid = require("uuid");
 const sharp = require("sharp");
 const { sendToAll } = require("./notificationController");
+const { NotificationCategories } = require("../helpers/constants");
 
 exports.getAllImages = async (req, res) => {
   let files = fs.readdirSync("../images_folder/");
@@ -87,7 +88,7 @@ exports.deleteLostAll = async (req, res) => {
 
 async function sendLostNotif(req,res,title){
   req.body = {
-    category: "LOST",
+    category: NotificationCategories.lost,
     model: "",
     header: title,
     body: `${req.body.username}'s belonging got lost.\n${req.body.description.slice(0,20)}...`
@@ -286,10 +287,9 @@ exports.claimFoundItem = async (req, res) => {
   }
 };
 
-
 async function sendFoundNotif(req,res,title){
   req.body = {
-    category: "FOUND",
+    category: NotificationCategories.found,
     model: "",
     header: title,
     body: `${req.body.username} found some item.\n${req.body.description.slice(0,20)}`
