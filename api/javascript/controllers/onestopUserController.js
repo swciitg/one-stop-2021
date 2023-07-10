@@ -172,6 +172,17 @@ exports.updateOnestopUserDeviceToken = asyncHandler(async (req,res) => { // upda
   res.json({"success" : true});
 });
 
+exports.getUserByEmail = async (req, res, next) => {
+  const { email } = req.params;
+  try {
+    const onestopuser = await onestopUserModel.find({ outlookEmail: email });
+    return res.status(200).json(onestopuser);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 // exports.logoutUserValidate = [
 //   body('deviceToken', 'device Token is required').exists(), // to remove this device id
