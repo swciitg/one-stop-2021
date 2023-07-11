@@ -175,7 +175,7 @@ exports.updateOnestopUserDeviceToken = asyncHandler(async (req,res) => { // upda
 exports.getUserByEmail = async (req, res, next) => {
   const { email } = req.params;
   try {
-    const onestopuser = await onestopUserModel.find({ outlookEmail: email });
+    const onestopuser = await onestopUserModel.findOne({ outlookEmail: email });
     return res.status(200).json(onestopuser);
   } catch (error) {
     console.error(error);
