@@ -217,7 +217,7 @@ exports.getUserByEmail = async (req, res, next) => {
     if (onestopuser) {
       return res.status(200).json({ found: true, user: onestopuser });
     } else {
-      return res.status(404).json({ found: false });
+      return res.status(204).json({ found: false });
     }
   } catch (error) {
 
