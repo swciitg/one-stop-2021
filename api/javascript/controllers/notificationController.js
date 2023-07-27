@@ -1,9 +1,9 @@
 const firebase = require("firebase-admin");
 const serviceAccount = require("../config/push-notification-key.json");
 if (!firebase.apps.length)
-    firebase.initializeApp({
-      credential: firebase.credential.cert(serviceAccount),
-    });
+  firebase.initializeApp({
+    credential: firebase.credential.cert(serviceAccount),
+  });
 const userModel = require("../models/userModel");
 const { body, matchedData } = require("express-validator");
 const userNotifTokenModel = require("../models/userNotifTokenModel");
@@ -15,33 +15,33 @@ exports.sendToDeviceValidate = [
   body("model", "notif must have a model").exists(),
   body("header", "a header is required to send notification").exists(),
   body("body", "a body is required to send notification").exists(),
-  body("sendTo","Send to email is required").exists()
+  body("sendTo", "Send to email is required").exists()
 ];
 
 exports.sendToDevice = async (req, res) => {
 
-    if (!req.body.sendTo) {
-      throw new RequestValidationError("Missing Fields");
+  if (!req.body.sendTo) {
+    throw new RequestValidationError("Missing Fields");
+  }
+
+  let user = await userModel.findOne({ outlookEmail: req.body.sendTo });
+
+  const payload = {
+    data: {
+      category: req.body.category,
+      model: req.body.model,
+      header: req.body.header,
+      body: req.body.body
     }
+  };
 
-    let user = await userModel.findOne({ outlookEmail: req.body.sendTo });
-
-    const payload = {
-      data: {
-        category: req.body.category,
-        model: req.body.model,
-        header: req.body.header,
-        body: req.body.body
-      }
-    };
-
-    const options = {priority: "high"};
-    let userNotifTokens = await userNotifTokenModel.find({userid: user._id});
-    console.log(userNotifTokens);
-    for(let i=0;i<userNotifTokens.length;i++){
-      await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload, options);
-      console.log("NOTIFICATION SENT");
-    }
+  const options = { priority: "high" };
+  let userNotifTokens = await userNotifTokenModel.find({ userid: user._id });
+  console.log(userNotifTokens);
+  for (let i = 0; i < userNotifTokens.length; i++) {
+    await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload, options);
+    console.log("NOTIFICATION SENT");
+  }
 };
 
 exports.sendToAllValidate = [
@@ -54,23 +54,36 @@ exports.sendToAllValidate = [
 exports.sendToAll = async (req, res) => {
 
   let compDate = new Date();
-  compDate.setMonth(compDate.getMonth()-3); // set date 3 months prior
-  let inactiveNotifTokens = await userNotifTokenModel.find({createdAt: {
-    $lte: compDate
-  }});
+  compDate.setMonth(compDate.getMonth() - 3); // set date 3 months prior
+  let inactiveNotifTokens = await userNotifTokenModel.find({
+    createdAt: {
+      $lte: compDate
+    }
+  });
 
   let inactiveDeviceTokens = inactiveNotifTokens.map((userNotif) => userNotif.deviceToken);
 
-  await userNotifTokenModel.deleteMany({createdAt: {
-    $lte: compDate
-  }});
+  await userNotifTokenModel.deleteMany({
+    createdAt: {
+      $lte: compDate
+    }
+  });
 
-  if(inactiveDeviceTokens.length>0) await firebase.messaging().unsubscribeFromTopic(inactiveDeviceTokens,sendToAllFirebaseTopicName);
+  if (inactiveDeviceTokens.length > 0) await firebase.messaging().unsubscribeFromTopic(inactiveDeviceTokens, sendToAllFirebaseTopicName);
 
   let bodyData = matchedData(req);
   console.log(bodyData);
   console.log(req.body);
   const payload = {
+    "notification": {
+      "body": "sample body",
+      "OrganizationId": "2",
+      "content_available": true,
+      "mutable_content": true,
+      "priority": "high",
+      "subtitle": "sample sub-title",
+      "Title": "hello"
+    },
     data: {
       category: req.body.category,
       model: req.body.model,
@@ -80,6 +93,6 @@ exports.sendToAll = async (req, res) => {
   };
 
   console.log(payload);
-  const options = {priority: "high"};
-  await firebase.messaging().sendToTopic(sendToAllFirebaseTopicName,payload,options);
+  const options = { priority: "high" };
+  await firebase.messaging().sendToTopic(sendToAllFirebaseTopicName, payload);
 };
