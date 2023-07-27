@@ -289,6 +289,13 @@ exports.claimFoundItem = async (req, res) => {
 
 async function sendFoundNotif(req,res,title){
   req.body = {
+    "notification": {
+      "body": this.body,
+      "OrganizationId": "2",
+      "priority": "high",
+      "subtitle": this.title,
+      "Title": "hello"
+    },
     category: NotificationCategories.found,
     model: "",
     header: title,

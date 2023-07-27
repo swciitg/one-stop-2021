@@ -27,6 +27,13 @@ exports.sendToDevice = async (req, res) => {
   let user = await userModel.findOne({ outlookEmail: req.body.sendTo });
 
   const payload = {
+    "notification": {
+      "body": this.body,
+      "OrganizationId": "2",
+      "priority": "high",
+      "subtitle": this.title,
+      "Title": "hello"
+    },
     data: {
       category: req.body.category,
       model: req.body.model,
@@ -39,7 +46,7 @@ exports.sendToDevice = async (req, res) => {
   let userNotifTokens = await userNotifTokenModel.find({ userid: user._id });
   console.log(userNotifTokens);
   for (let i = 0; i < userNotifTokens.length; i++) {
-    await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload, options);
+    await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload);
     console.log("NOTIFICATION SENT");
   }
 };
@@ -76,12 +83,10 @@ exports.sendToAll = async (req, res) => {
   console.log(req.body);
   const payload = {
     "notification": {
-      "body": "sample body",
+      "body": this.body,
       "OrganizationId": "2",
-      "content_available": true,
-      "mutable_content": true,
       "priority": "high",
-      "subtitle": "sample sub-title",
+      "subtitle": this.title,
       "Title": "hello"
     },
     data: {

@@ -23,10 +23,10 @@ AnnouncementSchema.pre('save', async function(next){
     console.log(this);
     const payload = {
       "notification": {
-        "body": "sample body",
+        "body": this.body,
         "OrganizationId": "2",
         "priority": "high",
-        "subtitle": "sample sub-title",
+        "subtitle": this.title,
         "Title": "hello"
       },
         data: {
@@ -37,8 +37,7 @@ AnnouncementSchema.pre('save', async function(next){
         }
       };
       console.log(payload);
-      const options = {priority: "high"};
-      await firebase.messaging().sendToTopic(sendToAllFirebaseTopicName,payload,options);
+      await firebase.messaging().sendToTopic(sendToAllFirebaseTopicName,payload);
 });
 
 module.exports = mongoose.model("announcements",AnnouncementSchema);

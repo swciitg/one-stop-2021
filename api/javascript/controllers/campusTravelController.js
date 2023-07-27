@@ -166,6 +166,13 @@ exports.getTravelPostChatReplies = async (req, res) => {
 
 async function sendPostReplyNotif(req, res, title, replier, recieverOutlook) {
     req.body = {
+        "notification": {
+            "body": this.body,
+            "OrganizationId": "2",
+            "priority": "high",
+            "subtitle": this.title,
+            "Title": "hello"
+          },
         category: NotificationCategories.cabSharing,
         model: "",
         header: title,
