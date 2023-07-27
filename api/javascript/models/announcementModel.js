@@ -22,6 +22,13 @@ const AnnouncementSchema = new mongoose.Schema({
 AnnouncementSchema.pre('save', async function(next){
     console.log(this);
     const payload = {
+      "notification": {
+        "body": "sample body",
+        "OrganizationId": "2",
+        "priority": "high",
+        "subtitle": "sample sub-title",
+        "Title": "hello"
+      },
         data: {
           category: NotificationCategories.announcement,
           model: "",
