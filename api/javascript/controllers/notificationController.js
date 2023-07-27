@@ -28,10 +28,10 @@ exports.sendToDevice = async (req, res) => {
 
   const payload = {
     "notification": {
-      "body": this.body,
+      "body": req.body.body,
       "OrganizationId": "2",
       "priority": "high",
-      "subtitle": this.title,
+      "subtitle": req.body.header,
       "Title": "hello"
     },
     data: {
@@ -83,10 +83,10 @@ exports.sendToAll = async (req, res) => {
   console.log(req.body);
   const payload = {
     "notification": {
-      "body": this.body,
+      "body": req.body.body,
       "OrganizationId": "2",
       "priority": "high",
-      "subtitle": this.title,
+      "subtitle": req.body.header,
       "Title": "hello"
     },
     data: {
