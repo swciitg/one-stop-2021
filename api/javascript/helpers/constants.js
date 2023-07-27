@@ -1,4 +1,4 @@
-exports.BASEURL = process.env.BASE_URL + "v2/";
+exports.BASEURL = process.env.BASE_URL + "v3/";
 
 exports.ADMINPANELROOT = this.BASEURL + 'admin';
 
