@@ -6,11 +6,12 @@ const LostAndFoundRouter = express.Router();
 const multer = require("multer");
 const fs = require("fs");
 const { restrictIfGuest, verifyUserRequest } = require("../middlewares/user.auth");
-LostAndFoundRouter.use(verifyUserRequest);
+
 LostAndFoundRouter.get("/getImage", LostAndFoundControllers.getImage);
 
 LostAndFoundRouter.get("/getCompressedImage", LostAndFoundControllers.getCompressedImage);
 
+LostAndFoundRouter.use(verifyUserRequest);
 LostAndFoundRouter.get("/lost", LostAndFoundControllers.getLostDetails);
 
 LostAndFoundRouter.get("/lostPage", LostAndFoundControllers.getLostPageDetails);
