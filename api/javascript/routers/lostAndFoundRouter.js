@@ -7,9 +7,9 @@ const multer = require("multer");
 const fs = require("fs");
 const { restrictIfGuest, verifyUserRequest } = require("../middlewares/user.auth");
 
-LostAndFoundRouter.get("/getImage", LostAndFoundControllers.getImage);
+// LostAndFoundRouter.get("/getImage", LostAndFoundControllers.getImage);
 
-LostAndFoundRouter.get("/getCompressedImage", LostAndFoundControllers.getCompressedImage);
+// LostAndFoundRouter.get("/getCompressedImage", LostAndFoundControllers.getCompressedImage);
 
 LostAndFoundRouter.use(verifyUserRequest);
 LostAndFoundRouter.get("/lost", LostAndFoundControllers.getLostDetails);
