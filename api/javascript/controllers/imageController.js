@@ -1,3 +1,5 @@
+const path = require("path");
+
 exports.getImage = async (req, res) => {
     console.log("Get image par");
     const imagePath = path.resolve(
