@@ -138,5 +138,4 @@ exports.sendToAll = async (req, res) => {
   console.log(payload);
   const options = { priority: "high" };
   await firebase.messaging().sendToTopic(sendToAllFirebaseTopicName, payload);
-  res.json({"success" : true});
 };
