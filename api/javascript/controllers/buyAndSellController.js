@@ -72,6 +72,16 @@ exports.deleteSellAll = async (req,res) => {
   res.json({success : true});
 }
 
+async function sendSellNotif(req,res,title){
+  req.body = {
+    category: NotificationCategories.sell,
+    model: "",
+    header: title,
+    body: `${req.body.username} wants to sell an item.`
+  }
+  await sendToAll(req,res);
+}
+
 exports.postSellDetails = async (req, res) => {
   try {
     var {
@@ -171,6 +181,7 @@ exports.postSellDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
+          await sendSellNotif(req,res,req.body.title);
         return res.json({
           saved_successfully: true,
           image_safe: true
@@ -247,6 +258,16 @@ exports.getBuyDetails = async (req, res) => {
 exports.deleteBuyAll = async (req,res) => {
   await buyModel.deleteMany({});
   res.json({success : true});
+}
+
+async function sendBuyNotif(req,res,title){
+  req.body = {
+    category: NotificationCategories.buy,
+    model: "",
+    header: title,
+    body: `${req.body.username} wants to buy an item.`
+  }
+  await sendToAll(req,res);
 }
 
 exports.postBuyDetails = async (req, res) => {
@@ -345,6 +366,7 @@ exports.postBuyDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
+          await sendBuyNotif(req,res,req.body.title);
         return res.json({
           saved_successfully: true,
           image_safe: true
