@@ -183,7 +183,7 @@ exports.postSellDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
-          await sendSellNotif(req,res,req.body.title);
+          //await sendSellNotif(req,res,req.body.title);
         return res.json({
           saved_successfully: true,
           image_safe: true
