@@ -6,6 +6,7 @@ const uuid = require("uuid");
 const sharp = require("sharp");
 const mongoose = require("mongoose");
 const { NotificationCategories } = require("../helpers/constants");
+const { sendToAll } = require("./notificationController");
 
 function errorFxn(res, err) {
   console.log(err);
