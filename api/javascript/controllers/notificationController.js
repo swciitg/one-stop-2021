@@ -12,6 +12,8 @@ const { RequestValidationError } = require("../errors/request.validation.error")
 
 exports.sendTestNotifToDevice = async (req, res) => {
 
+  console.log(req.body);
+
   if (!req.body.sendTo) {
     throw new RequestValidationError("Missing Fields");
   }
