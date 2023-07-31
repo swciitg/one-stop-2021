@@ -5,6 +5,7 @@ const path = require("path");
 const uuid = require("uuid");
 const sharp = require("sharp");
 const mongoose = require("mongoose");
+const { NotificationCategories } = require("../helpers/constants");
 
 function errorFxn(res, err) {
   console.log(err);
