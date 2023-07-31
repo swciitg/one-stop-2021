@@ -43,6 +43,8 @@ exports.sendTestNotifToDevice = async (req, res) => {
     await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload);
     console.log("NOTIFICATION SENT");
   }
+  res.json({"success" : true});
+
 };
 
 exports.sendToDeviceValidate = [
@@ -84,6 +86,7 @@ exports.sendToDevice = async (req, res) => {
     await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload);
     console.log("NOTIFICATION SENT");
   }
+  res.json({"success" : true});
 };
 
 exports.sendToAllValidate = [
@@ -135,4 +138,5 @@ exports.sendToAll = async (req, res) => {
   console.log(payload);
   const options = { priority: "high" };
   await firebase.messaging().sendToTopic(sendToAllFirebaseTopicName, payload);
+  res.json({"success" : true});
 };

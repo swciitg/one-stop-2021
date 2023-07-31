@@ -51,12 +51,15 @@ app.use(BASEURL, routers.imageRouter.imageRouter);
 // Validate API Call
 app.use((req, res, next) => {
     console.log(req.path);
+    console.log(req.body);
     if (req.headers["security-key"] !== process.env.SECURITY_KEY) {
         res.json({ message: "You are not authorized app.js" });
         return;
     }
     next();
 });
+
+app.use(BASEURL, routers.notificationRouter);
 
 // API routers
 app.use(BASEURL, routers.onestopUserRouter);
@@ -73,7 +76,6 @@ app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
 app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
 app.use(BASEURL, routers.upspRouter);
-app.use(BASEURL, routers.notificationRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
 
 app.use("*",(req,res) => {

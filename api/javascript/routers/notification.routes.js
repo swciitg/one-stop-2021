@@ -6,7 +6,7 @@ const notificationRouter = express.Router();
 
 notificationRouter.post("/notification/send/test",sendTestNotifToDevice);
 
-notificationRouter.post("/notification/send",verifyUserRequest,restrictIfGuest,sendToDeviceValidate,requestValidation, sendToDevice);
-notificationRouter.post("/notification/send/all",verifyUserRequest,restrictIfGuest,sendToAllValidate,requestValidation, sendToAll);
+notificationRouter.post("/notification/send",sendToDeviceValidate,requestValidation, sendToDevice);
+notificationRouter.post("/notification/send/all",sendToAllValidate,requestValidation, sendToAll);
 
 module.exports = notificationRouter;
