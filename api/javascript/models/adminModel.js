@@ -30,6 +30,7 @@ adminSchema.pre("save", async function (next) {
         return next();
     }
     const hashed = await bcrypt.hash(this.password, 10);
+    console.log(hashed);
     this.password = hashed;
     return next();
 });
@@ -42,6 +43,7 @@ adminSchema.pre("findOneAndUpdate", async function (next) {
     if (thisAdmin.password!==update.$set.password){
         // password changed from admin panel
         const hashed = await bcrypt.hash(update.$set.password, 10);
+        console.log(hashed);
         update.$set.password = hashed;
         return next();
     }
