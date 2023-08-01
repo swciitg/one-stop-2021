@@ -19,6 +19,8 @@ const adminResource = require("./resources/admin.resource");
 const contactsResource = require("./resources/contacts.resource");
 const foodOutletResource = require("./resources/foodOutlet.resource");
 const announcementResource = require("./resources/announcement.resource");
+const buyItemResource = require("./resources/buyItem.resource");
+const sellItemResource = require("./resources/sellItem.resource");
 AdminJs.registerAdapter(AdminJsMongoose);
 
 
@@ -33,7 +35,7 @@ var sessiontStore = new MongoDBStore(
 });
 
 const adminjs = new AdminJs({
-    resources: [announcementResource, messMenuResouce, foodOutletResource, adminResource, userResource, timingResource, contactsResource, cabSharingResource, lostItemResource, foundItemResource],
+    resources: [announcementResource, messMenuResouce, foodOutletResource, adminResource, userResource, timingResource, contactsResource, cabSharingResource, lostItemResource, foundItemResource, buyItemResource, sellItemResource],
     assets: {
         styles: styleAssets
     },
