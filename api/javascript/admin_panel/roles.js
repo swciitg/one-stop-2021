@@ -1,8 +1,7 @@
 module.exports = {
     MESS: "mess",
     FOODOUTLET: "food outlet",
-    FERRYTIMING: "ferry",
-    BUSSTOP: "bus",
+    TRANSPORTTIMING: "transport",
     CABSHARING: "cab sharing",
     ONESTOPUSER: "user",
     LOST: "lost",

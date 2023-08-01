@@ -2,7 +2,7 @@ const verifyRoles = require("../utils");
 const roles = require("../roles");
 const transportTiming = require("../../models/transportTimings");
 
-let allowedRoles = [roles.SUPERADMIN, roles.FERRYTIMING];
+let allowedRoles = [roles.SUPERADMIN, roles.TRANSPORTTIMING];
 
 module.exports = {
     resource: transportTiming,
