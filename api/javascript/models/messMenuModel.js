@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-const { allIITGHostels } = require("../helpers/constants");
+const { allIITGHostels, allIITGHostelMesses } = require("../helpers/constants");
 const { updateMessMenuInLastUpdateDocument } = require("../controllers/lastUpdateController");
 
 const mealSchema = new mongoose.Schema({
     mealDescription: { 
         type: String,
         required: true,
-        maxLength: 60
+        maxLength: 200
     },
     startTiming: {
         type: Date,
@@ -47,7 +47,7 @@ const dayMenuSchema = new mongoose.Schema({
 const messMenuSchema = new mongoose.Schema({
     hostel: {
         type: String,
-        enum: allIITGHostels,
+        enum: allIITGHostelMesses,
         required: true
     },
     monday: {

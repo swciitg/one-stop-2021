@@ -10,6 +10,7 @@ exports.guestUserRollNo = '2110000000';
 exports.adminRoles = ["super","board","mmc","hmc","club"]
 
 exports.allIITGHostels = ["Brahmaputra","Kameng","Dihing","Barak","Kapili","Lohit","Manas","Married Scholars (Men)","Married Scholars (Women)","Siang","Subansiri","Umiam","Dhansiri","Disang (Men)","Disang (Women)"];
+exports.allIITGHostelMesses = ["Brahmaputra","Kameng","Dihing","Barak","Kapili","Lohit","Manas","Married Scholars","Siang","Subansiri","Umiam","Dhansiri","Disang"];
 exports.allIITGWomenHostels = ["Married Scholars (Women)","Subansiri","Dhansiri","Disang (Women)"];
 exports.allIITGTechClubs =  ["Coding Club","CnA Club","E-Cell","Robotics Club","Aeromodelling Club","Automobile Club","Electronics Club","IITG.AI","Gamedev and ESports","Equinox","FEC","Whitespace","Acumen","4i Labs"];
 exports.allIITGWelfareClubs = ["Academic Initiatives Club","Rights and Responsibilities Club","Red Ribbon Club","Youth Empowerment Club","Saathi","Social Service Club","Substance Abuse Awareness Club"];
