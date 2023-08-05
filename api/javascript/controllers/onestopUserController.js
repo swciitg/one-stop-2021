@@ -171,6 +171,7 @@ exports.postOnestopUserDeviceToken = asyncHandler(async (req, res) => {
     await userNotifTokenModel.findOneAndUpdate(
       { deviceToken: body.deviceToken },
       { userid: req.userid, createdAt: new Date() }
+      ,{ runValidators: true }
     );
   } else {
     console.log("INSIDE ELSE");
@@ -199,6 +200,7 @@ exports.updateOnestopUserDeviceToken = asyncHandler(async (req, res) => {
     await userNotifTokenModel.findOneAndUpdate(
       { deviceToken: body.oldToken },
       { deviceToken: body.newToken, createdAt: new Date() }
+      ,{ runValidators: true }
     );
     await firebase
       .messaging()
