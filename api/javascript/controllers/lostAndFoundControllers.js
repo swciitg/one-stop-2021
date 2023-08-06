@@ -86,14 +86,19 @@ exports.deleteLostAll = async (req, res) => {
 }
 
 
-async function sendLostNotif(req,res,title){
-  req.body = {
-    category: NotificationCategories.lost,
-    model: "",
-    header: title,
-    body: `${req.body.username}'s belonging got lost.\n${req.body.description.slice(0,20)}...`
+async function sendLostNotif(title,username,outlookEmail){
+
+  let notification = {
+    "title": `Lost: ${title}`,
+    "body": `Added by ${username}(${outlookEmail})`
+  };
+
+  let data= {
+    "title": `Lost: ${title}`,
+    "body": `Added by ${username}(${outlookEmail})`
   }
-  await sendToAll(req,res);
+
+  await sendToATopic(NotificationCategories.lost,notification, data);
 }
 
 exports.postLostDetails = async (req, res) => {

@@ -1,6 +1,39 @@
 const mongoose = require("mongoose");
 const { allIITGHostelsGC, NotificationCategories, defaultNotifCategoriesMap, allIITGHostels } = require("../helpers/constants");
 
+const NotifPrefSchema = new mongoose.Schema({
+    "lost": {
+        type: Boolean,
+        default: true,
+        required: true,
+    },
+    "found": {
+        type: Boolean,
+        default: true,
+        required: true
+    },
+    "buy": {
+        type: Boolean,
+        default: true,
+        required: true
+    },
+    "sell": {
+        type: Boolean,
+        default: true,
+        required: true
+    },
+    "cab sharing": {
+        type: Boolean,
+        default: true,
+        required: true
+    },
+    "announcement": {
+        type: Boolean,
+        default: true,
+        required: true
+    }
+});
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -55,20 +88,7 @@ const userSchema = new mongoose.Schema({
         default: false
     },
     notifPref: {
-        type: Map,
-        of: Boolean,
-        default: defaultNotifCategoriesMap,
-        validate: {
-            validator: function(m) {
-                let keys=Array.from(m.keys());
-                console.log(keys);
-                console.log(typeof(m),typeof(defaultNotifCategoriesMap));
-                let defaultKeys=Object.keys(defaultNotifCategoriesMap);
-                console.log(keys,defaultKeys);
-                return keys.length===defaultKeys.length && keys.every((e,i) => e===defaultKeys[i]);
-            },
-            message: props => "NOt valid notif categories"
-        }
+        type: NotifPrefSchema
     }
 });
 
