@@ -53,4 +53,15 @@ exports.NotificationCategories = {
     cabSharing: "cab sharing",
     announcement: "announcement"
 };
+
+exports.defaultNotifCategoriesMap = {
+    lost: true,
+    found: true,
+    buy: true,
+    sell: true,
+    cabSharing: true,
+    announcement: true
+}
+
+
 exports.sendToAllFirebaseTopicName = "all";
