@@ -5,6 +5,8 @@ const path = require("path");
 const uuid = require("uuid");
 const sharp = require("sharp");
 const mongoose = require("mongoose");
+const { NotificationCategories } = require("../helpers/constants");
+const { sendToAll } = require("./notificationController");
 
 function errorFxn(res, err) {
   console.log(err);
@@ -14,33 +16,33 @@ function errorFxn(res, err) {
   });
 }
 
-exports.getImage = async (req, res) => {
-  console.log("Get image par");
-  const imagePath = path.resolve(
-    __dirname +
-    "/../" +
-    "images_folder" +
-    "/" +
-    req.query.photo_id +
-    "-compressed.jpg"
-  );
-  console.log(imagePath);
-  res.sendFile(imagePath);
-};
+// exports.getImage = async (req, res) => {
+//   console.log("Get image par");
+//   const imagePath = path.resolve(
+//     __dirname +
+//     "/../" +
+//     "images_folder" +
+//     "/" +
+//     req.query.photo_id +
+//     "-compressed.jpg"
+//   );
+//   console.log(imagePath);
+//   res.sendFile(imagePath);
+// };
 
-exports.getCompressedImage = async (req, res) => {
-  console.log("Get image par");
-  const imagePath = path.resolve(
-    __dirname +
-    "/../" +
-    "images_folder" +
-    "/" +
-    req.query.photo_id +
-    "-ultracompressed.jpg"
-  );
-  console.log(imagePath);
-  res.sendFile(imagePath);
-};
+// exports.getCompressedImage = async (req, res) => {
+//   console.log("Get image par");
+//   const imagePath = path.resolve(
+//     __dirname +
+//     "/../" +
+//     "images_folder" +
+//     "/" +
+//     req.query.photo_id +
+//     "-ultracompressed.jpg"
+//   );
+//   console.log(imagePath);
+//   res.sendFile(imagePath);
+// };
 
 exports.getSellDetails = async (req, res) => {
   try {
@@ -70,6 +72,16 @@ exports.getSellPageDetails = async (req, res) => {
 exports.deleteSellAll = async (req,res) => {
   await sellModel.deleteMany({});
   res.json({success : true});
+}
+
+async function sendSellNotif(req,res,title){
+  req.body = {
+    category: NotificationCategories.sell,
+    model: "",
+    header: title,
+    body: `${req.body.username} wants to sell an item.`
+  }
+  await sendToAll(req,res);
 }
 
 exports.postSellDetails = async (req, res) => {
@@ -106,9 +118,9 @@ exports.postSellDetails = async (req, res) => {
       console.log(metadata);
       const photo_id = imageName;
       const imageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
+      process.env.API_URL+"/v3/getImage?photo_id=" + imageName;
       const compressedImageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
+      process.env.API_URL+"/v3/getCompressedImage?photo_id=" +
         imageName;
       const newImagePath = path.resolve(
         __dirname +
@@ -171,6 +183,7 @@ exports.postSellDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
+          await sendSellNotif(req,res,req.body.title);
         return res.json({
           saved_successfully: true,
           image_safe: true
@@ -249,6 +262,16 @@ exports.deleteBuyAll = async (req,res) => {
   res.json({success : true});
 }
 
+async function sendBuyNotif(req,res,title){
+  req.body = {
+    category: NotificationCategories.buy,
+    model: "",
+    header: title,
+    body: `${req.body.username} wants to buy an item.`
+  }
+  await sendToAll(req,res);
+}
+
 exports.postBuyDetails = async (req, res) => {
   console.log(req.body);
   try {
@@ -280,9 +303,9 @@ exports.postBuyDetails = async (req, res) => {
       console.log(metadata);
       const photo_id = imageName;
       const imageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
+      process.env.API_URL+"/v3/getImage?photo_id=" + imageName;
       const compressedImageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
+      process.env.API_URL+"/v3/getCompressedImage?photo_id=" +
         imageName;
       const newImagePath = path.resolve(
         __dirname +
@@ -345,6 +368,7 @@ exports.postBuyDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
+          await sendBuyNotif(req,res,req.body.title);
         return res.json({
           saved_successfully: true,
           image_safe: true

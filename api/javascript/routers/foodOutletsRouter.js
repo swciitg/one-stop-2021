@@ -3,6 +3,7 @@ const {routes} = require('../routes');
 const Controller = require('../controllers/foodOutletsController');
 const foodOutletsRouter = express.Router();
 const multer = require("multer");
+const { restrictIfGuest, verifyUserRequest } = require('../middlewares/user.auth');
 const fileStorageEngine = multer.diskStorage({
     destination: (req,file,cb) => {
         cb(null,__dirname + "/../files_folder/");
@@ -16,8 +17,9 @@ const fileStorageEngine = multer.diskStorage({
 });
 const upload = multer({storage: fileStorageEngine});
 
+foodOutletsRouter.use(verifyUserRequest);
 foodOutletsRouter.get('/getAllOutlets', Controller.getAllOutlets);
-foodOutletsRouter.post('/createOutletsList', upload.single("file"),Controller.createOutlet);
+foodOutletsRouter.post('/createOutletsList',restrictIfGuest, upload.single("file"),Controller.createOutlet);
 module.exports = {
     foodOutletsRouter
 };

@@ -5,12 +5,24 @@ const {
 } = mongoose;
 
 const lastUpdateSchema = new Schema({
-  food: Date,
-  menu: Date,
-  travel: Date,
-  contact: Date,
+  foodOutlet: {
+    type: Date,
+    default: new Date
+  },
+  messMenu: {
+    type: Date,
+    default: new Date
+  },
+  timing: {
+    type: Date,
+    default: new Date
+  },
+  contact: {
+    type: Date,
+    default: new Date
+  }
 });
 
-const lastUpdate = mongoose.model("last_update", lastUpdateSchema);
+const LastUpdate = mongoose.model("lastupdate", lastUpdateSchema);
 
-module.exports = lastUpdate;
+module.exports = LastUpdate;

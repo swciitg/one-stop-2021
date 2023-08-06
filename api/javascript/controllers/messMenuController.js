@@ -1,16 +1,14 @@
-const Menu = require("../models/messMenuItem");
+const messMenu = require("../models/messMenuModel");
 // var multiparty = require("multiparty");
 // var form = new multiparty.Form();
 const csv = require("csvtojson");
 const LastUpdate = require("../models/lastUpdate");
 // const { csvToMongo } = require("./fileController");
 const { uploadFilePath } = require("../constants");
-exports.getAllMenuItems = (req, res) => {
-  Menu.find()
-    .lean()
-    .exec(function (err, users) {
-      res.send(JSON.stringify(users));
-    });
+exports.getAllMenuItems = async (req, res) => {
+  let menuItems = await messMenu.find();
+  console.log(menuItems);
+  res.json({details : menuItems});
 };
 
 exports.createMessMenu = (req, res) => {
@@ -28,8 +26,8 @@ exports.createMessMenu = (req, res) => {
       .then(async (jsonObj) => {
         console.log("its messMenu model");
         console.log(jsonObj);
-        await Menu.deleteMany({});
-        Menu.insertMany(jsonObj, async (err, data) => {
+        await messMenu.deleteMany({});
+        messMenu.insertMany(jsonObj, async (err, data) => {
           // console.log(jsonObj);
           if (err) {
             console.log(err);

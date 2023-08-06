@@ -3,6 +3,7 @@ const express = require("express");
 const Controller = require("../controllers/messMenuController");
 const messMenuRouter = express.Router();
 const multer = require("multer");
+const { verifyUserRequest } = require('../middlewares/user.auth');
 const fileStorageEngine = multer.diskStorage({
     destination: (req,file,cb) => {
         cb(null,__dirname + "/../files_folder/");
@@ -15,6 +16,7 @@ const fileStorageEngine = multer.diskStorage({
     }
 });
 const upload = multer({storage: fileStorageEngine});
+messMenuRouter.use(verifyUserRequest);
 messMenuRouter.get("/hostelsMessMenu", Controller.getAllMenuItems);
 messMenuRouter.post("/createMessMenu", upload.single("file"),Controller.createMessMenu);
 

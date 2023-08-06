@@ -4,15 +4,16 @@ const fs = require("fs");
 const path = require("path");
 const uuid = require("uuid");
 const sharp = require("sharp");
-const mongoose = require("mongoose");
+const { sendToAll } = require("./notificationController");
+const { NotificationCategories } = require("../helpers/constants");
 
-exports.getAllImages = async (req,res) => {
+exports.getAllImages = async (req, res) => {
   let files = fs.readdirSync("../images_folder/");
-  let filenames=[];
+  let filenames = [];
   files.forEach((file) => {
     filenames.push(file.split(".")[0]);
   });
-  res.json({"details" : filenames});
+  res.json({ "details": filenames });
 }
 
 function errorFxn(res, err) {
@@ -20,33 +21,33 @@ function errorFxn(res, err) {
   return res.json({ saved_successfully: false, image_safe: true, error: err });
 }
 
-exports.getImage = async (req, res) => {
-  console.log("Get image par");
-  const imagePath = path.resolve(
-    __dirname +
-    "/../" +
-    "images_folder" +
-    "/" +
-    req.query.photo_id +
-    "-compressed.jpg"
-  );
-  console.log(imagePath);
-  res.sendFile(imagePath);
-};
+// exports.getImage = async (req, res) => {
+//   console.log("Get image par");
+//   const imagePath = path.resolve(
+//     __dirname +
+//     "/../" +
+//     "images_folder" +
+//     "/" +
+//     req.query.photo_id +
+//     "-compressed.jpg"
+//   );
+//   console.log(imagePath);
+//   res.sendFile(imagePath);
+// };
 
-exports.getCompressedImage = async (req, res) => {
-  console.log("Get image par");
-  const imagePath = path.resolve(
-    __dirname +
-    "/../" +
-    "images_folder" +
-    "/" +
-    req.query.photo_id +
-    "-ultracompressed.jpg"
-  );
-  console.log(imagePath);
-  res.sendFile(imagePath);
-};
+// exports.getCompressedImage = async (req, res) => {
+//   console.log("Get image par");
+//   const imagePath = path.resolve(
+//     __dirname +
+//     "/../" +
+//     "images_folder" +
+//     "/" +
+//     req.query.photo_id +
+//     "-ultracompressed.jpg"
+//   );
+//   console.log(imagePath);
+//   res.sendFile(imagePath);
+// };
 
 exports.getLostPageDetails = async (req, res) => {
   let page = req.query.page;
@@ -79,19 +80,24 @@ exports.addLostForm = async (req, res) => {
   }
 };
 
-exports.deleteLostAll = async (req,res) => {
+exports.deleteLostAll = async (req, res) => {
   await LostModel.deleteMany({});
-  res.json({success : true});
+  res.json({ success: true });
+}
+
+
+async function sendLostNotif(req,res,title){
+  req.body = {
+    category: NotificationCategories.lost,
+    model: "",
+    header: title,
+    body: `${req.body.username}'s belonging got lost.\n${req.body.description.slice(0,20)}...`
+  }
+  await sendToAll(req,res);
 }
 
 exports.postLostDetails = async (req, res) => {
-  // if (!req.files) {
-  //   return res.json({ saved_successfully: false ,status : "No file recieved"});
-  //   return;
-  // }
-  // const file = req.files.imageToUpload;
   try {
-    // console.log(req);
     var {
       title,
       location,
@@ -106,15 +112,6 @@ exports.postLostDetails = async (req, res) => {
     console.log(phonenumber);
     console.log(description);
     console.log(imageString);
-    // console.log(imageString);
-    //console.log(uuid.v4());
-
-    //   const image = req.file ? req.file.filename : link;
-
-    //   if (!image) {
-    //     console.log("error", "Please attach your pdf!!");
-    //     return res.redirect("/Lost/raise");
-    //   }
     const imageName = uuid.v4();
     const imagePath = path.resolve(
       __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
@@ -126,80 +123,73 @@ exports.postLostDetails = async (req, res) => {
         console.log("File written successfully\n");
       }
     });
-    try {
-      const metadata = await sharp(imagePath).metadata();
-      console.log(metadata);
-      const photo_id = imageName;
-      const imageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
-      const compressedImageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
-        imageName;
-      const newImagePath = path.resolve(
-        __dirname +
-        "/../" +
-        "images_folder" +
-        "/" +
-        imageName +
-        "-compressed.jpg"
-      );
-      const compressedImagePath = path.resolve(
-        __dirname +
-        "/../" +
-        "images_folder" +
-        "/" +
-        imageName +
-        "-ultracompressed.jpg"
-      );
-      //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
-      try {
-        await sharp(imagePath)
-          .resize({
-            width: Math.floor(metadata.width / 2),
-            height: Math.floor(metadata.height / 2),
-          })
-          .withMetadata()
-          .toFormat("jpg", { mozjpeg: true })
-          .toFile(newImagePath);
-        await sharp(imagePath)
-          .resize({
-            width: Math.floor(
-              metadata.width > 5 ? metadata.width / 5 : metadata.width
-            ),
-            height: Math.floor(
-              metadata.height > 5 ? metadata.height / 5 : metadata.height
-            ),
-          })
-          .withMetadata()
-          .toFormat("jpg", { mozjpeg: true })
-          .toFile(compressedImagePath);
-        console.log("Here 1");
-        console.log(imageURL);
-        console.log("Here 2");
-        console.log(process.env.NSFW_API_KEY);
-        console.log(imagePath);
-        const newLostDetail = await new LostModel({
-          title,
-          location,
-          phonenumber,
-          description,
-          photo_id,
-          imageURL,
-          compressedImageURL,
-          email,
-          username,
-        })
-          .save()
-          .then((result) => {
-            console.log(result);
-          });
-        return res.json({ saved_successfully: true, image_safe: true });
-      } catch (error) {
-        return errorFxn(res, error);
-      }
-    } catch (error) {
-      return errorFxn(res, error);
-    }
+    const metadata = await sharp(imagePath).metadata();
+    console.log(metadata);
+    const photo_id = imageName;
+    const imageURL =
+    process.env.API_URL+"/v3/getImage?photo_id=" + imageName;
+    const compressedImageURL =
+    process.env.API_URL+"/v3/getCompressedImage?photo_id=" +
+      imageName;
+    const newImagePath = path.resolve(
+      __dirname +
+      "/../" +
+      "images_folder" +
+      "/" +
+      imageName +
+      "-compressed.jpg"
+    );
+    const compressedImagePath = path.resolve(
+      __dirname +
+      "/../" +
+      "images_folder" +
+      "/" +
+      imageName +
+      "-ultracompressed.jpg"
+    );
+    //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
+    await sharp(imagePath)
+      .resize({
+        width: Math.floor(metadata.width / 2),
+        height: Math.floor(metadata.height / 2),
+      })
+      .withMetadata()
+      .toFormat("jpg", { mozjpeg: true })
+      .toFile(newImagePath);
+    await sharp(imagePath)
+      .resize({
+        width: Math.floor(
+          metadata.width > 5 ? metadata.width / 5 : metadata.width
+        ),
+        height: Math.floor(
+          metadata.height > 5 ? metadata.height / 5 : metadata.height
+        ),
+      })
+      .withMetadata()
+      .toFormat("jpg", { mozjpeg: true })
+      .toFile(compressedImagePath);
+    console.log("Here 1");
+    console.log(imageURL);
+    console.log("Here 2");
+    console.log(process.env.NSFW_API_KEY);
+    console.log(imagePath);
+    const newLostDetail = await new LostModel({
+      title,
+      location,
+      phonenumber,
+      description,
+      photo_id,
+      imageURL,
+      compressedImageURL,
+      email,
+      username,
+    })
+      .save()
+      .then((result) => {
+        console.log(result);
+      });
+    await sendLostNotif(req,res,req.body.title);
+    return res.json({ saved_successfully: true, image_safe: true });
   } catch (error) {
     return errorFxn(res, error);
   }
@@ -297,6 +287,23 @@ exports.claimFoundItem = async (req, res) => {
   }
 };
 
+async function sendFoundNotif(req,res,title){
+  req.body = {
+    "notification": {
+      "body": `${req.body.username} found some item.\n${req.body.description.slice(0,20)}`,
+      "OrganizationId": "2",
+      "priority": "high",
+      "subtitle": title,
+      "Title": "hello"
+    },
+    category: NotificationCategories.found,
+    model: "",
+    header: title,
+    body: `${req.body.username} found some item.\n${req.body.description.slice(0,20)}`
+  }
+  await sendToAll(req,res);
+}
+
 exports.postfoundDetails = async (req, res) => {
   console.log(req.body);
   try {
@@ -321,15 +328,13 @@ exports.postfoundDetails = async (req, res) => {
         console.log("File written successfully\n");
       }
     });
-
-    try {
       const metadata = await sharp(imagePath).metadata();
       console.log(metadata);
       const photo_id = imageName;
       const imageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getImage?photo_id=" + imageName;
+      process.env.API_URL+"/v3/getImage?photo_id=" + imageName;
       const compressedImageURL =
-        "https://swc.iitg.ac.in/onestopapi/v2/getCompressedImage?photo_id=" +
+      process.env.API_URL+"/v3/getCompressedImage?photo_id=" +
         imageName;
       const newImagePath = path.resolve(
         __dirname +
@@ -348,7 +353,6 @@ exports.postfoundDetails = async (req, res) => {
         "-ultracompressed.jpg"
       );
       //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
-      try {
         await sharp(imagePath)
           .resize({
             width: Math.floor(metadata.width / 2),
@@ -386,21 +390,16 @@ exports.postfoundDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
+        await sendFoundNotif(req,res,req.body.title);
         return res.json({ saved_successfully: true, image_safe: true });
       } catch (error) {
         return errorFxn(res, error);
       }
-    } catch (error) {
-      return errorFxn(res, error);
-    }
-  } catch (error) {
-    return errorFxn(res, error);
-  }
 };
 
-exports.updateFoundDetails = async (req,res) => {
-  try{
-    const id=req.query.id;
+exports.updateFoundDetails = async (req, res) => {
+  try {
+    const id = req.query.id;
     let updateData = req.body;
     const foundItem = await FoundModel.findById(id);
     if (!foundItem) {
@@ -410,12 +409,12 @@ exports.updateFoundDetails = async (req,res) => {
       });
       return;
     }
-    await FoundModel.findByIdAndUpdate(id,updateData);
+    await FoundModel.findByIdAndUpdate(id, updateData);
     res.json({
       "updated_successfully": true
     });
   }
-  catch (err){
+  catch (err) {
     res.json({ "updated_successfully": false, "message": err.toString() });
   }
 }
@@ -481,9 +480,9 @@ exports.getMyAds = async (req, res) => {
   }
 };
 
-exports.deleteFoundAll = async (req,res) => {
+exports.deleteFoundAll = async (req, res) => {
   await FoundModel.deleteMany({});
-  res.json({success : true});
+  res.json({ success: true });
 }
 
 const compare = (a, b) => {

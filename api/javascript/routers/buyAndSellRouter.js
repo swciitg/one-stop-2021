@@ -4,31 +4,30 @@ const buyAndSellControllers = require("../controllers/buyAndSellController");
 const buyAndSellRouter = express.Router();
 const fs = require("fs");
 const upload = require("../helpers/multer_single");
+const { restrictIfGuest } = require("../middlewares/user.auth");
 buyAndSellRouter.post(
-  "/sell/remove",
-  buyAndSellControllers.postSellRemoveDetails
+  "/sell/remove",restrictIfGuest,buyAndSellControllers.postSellRemoveDetails
 );
 
 buyAndSellRouter.get("/sell",buyAndSellControllers.getSellDetails);
 
 buyAndSellRouter.get("/sellPage", buyAndSellControllers.getSellPageDetails);
 
-buyAndSellRouter.post("/sell", buyAndSellControllers.postSellDetails);
-buyAndSellRouter.delete("/sell", buyAndSellControllers.deleteSellAll);
+buyAndSellRouter.post("/sell",restrictIfGuest, buyAndSellControllers.postSellDetails);
+buyAndSellRouter.delete("/sell",restrictIfGuest, buyAndSellControllers.deleteSellAll);
 
 buyAndSellRouter.post(
-  "/buy/remove",
-  buyAndSellControllers.postBuyRemoveDetails
+  "/buy/remove",restrictIfGuest,buyAndSellControllers.postBuyRemoveDetails
 );
 buyAndSellRouter.get("/buy", buyAndSellControllers.getBuyDetails);
 buyAndSellRouter.get("/buyPage", buyAndSellControllers.getBuyPageDetails);
 
-buyAndSellRouter.post("/buy", buyAndSellControllers.postBuyDetails);
-buyAndSellRouter.delete("/buy", buyAndSellControllers.deleteBuyAll);
+buyAndSellRouter.post("/buy",restrictIfGuest, buyAndSellControllers.postBuyDetails);
+buyAndSellRouter.delete("/buy",restrictIfGuest, buyAndSellControllers.deleteBuyAll);
 
-buyAndSellRouter.post("/myads", buyAndSellControllers.getMyAds);
+buyAndSellRouter.post("/myads",restrictIfGuest, buyAndSellControllers.getMyAds);
 
-buyAndSellRouter.post("/bns/myads", buyAndSellControllers.getMyAds);
+buyAndSellRouter.post("/bns/myads",restrictIfGuest, buyAndSellControllers.getMyAds);
 
 module.exports = {
   buyAndSellRouter: buyAndSellRouter

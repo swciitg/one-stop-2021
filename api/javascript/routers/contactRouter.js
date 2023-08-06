@@ -2,6 +2,7 @@ const express = require('express');
 const contactRouter = express.Router();
 const Controller = require('../controllers/contactController');
 const multer = require("multer");
+const { restrictIfGuest, verifyUserRequest } = require('../middlewares/user.auth');
 const fileStorageEngine = multer.diskStorage({
     destination: (req,file,cb) => {
         cb(null,__dirname + "/../files_folder/");
@@ -17,10 +18,11 @@ const fileStorageEngine = multer.diskStorage({
     }
 });
 const upload = multer({storage: fileStorageEngine});
+contactRouter.use(verifyUserRequest);
 contactRouter.get('/getContacts', Controller.getAllContacts);
-contactRouter.post('/createContacts',upload.single("file"), Controller.createContact);
-contactRouter.post('/createSections',upload.single("file"), Controller.createsection);
-contactRouter.post('/deleteContacts',upload.single("file"), Controller.deleteContacts);
+// contactRouter.post('/createContacts',restrictIfGuest,upload.single("file"), Controller.createContact);
+// contactRouter.post('/createSections',restrictIfGuest,upload.single("file"), Controller.createsection);
+// contactRouter.post('/deleteContacts',restrictIfGuest,upload.single("file"), Controller.deleteContacts);
 module.exports = {
     contactRouter: contactRouter
 };

@@ -1,4 +1,4 @@
-name: Test logs
+name: JS logs
 on:
     workflow_dispatch:
 
