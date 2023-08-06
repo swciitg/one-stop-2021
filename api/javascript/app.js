@@ -28,6 +28,8 @@ app.use(
     })
 );
 
+console.log(BASEURL,ADMINPANELROOT);
+
 // adminjs routes
 app.use(ADMINPANELROOT, adminJsRouter);
 

@@ -1,5 +1,5 @@
 const express = require("express");
-const { updateOnestopUserValidate, updateOnestopUser, logoutUserValidate, logoutUser, regenerateUserAccessToken, guestUserLogin, getUserInfo, updateOnestopUserDeviceTokenValidate, updateOnestopUserDeviceToken, postOnestopUserDeviceTokenValidate, postOnestopUserDeviceToken, getUserByEmail } = require("../controllers/onestopUserController");
+const { updateOnestopUserValidate, updateOnestopUser, logoutUserValidate, logoutUser, regenerateUserAccessToken, guestUserLogin, getUserInfo, updateOnestopUserDeviceTokenValidate, updateOnestopUserDeviceToken, postOnestopUserDeviceTokenValidate, postOnestopUserDeviceToken, getUserByEmail, addBlockedFalseAndNotifPrefs } = require("../controllers/onestopUserController");
 const { requestValidation } = require("../middlewares/validate.request");
 const { verifyUserRequest, restrictIfGuest } = require("../middlewares/user.auth");
 const onestopUserRouter = express.Router();
@@ -16,5 +16,7 @@ onestopUserRouter.post("/user/device-tokens",verifyUserRequest,restrictIfGuest,p
 onestopUserRouter.patch("/user/device-tokens",verifyUserRequest,restrictIfGuest,updateOnestopUserDeviceTokenValidate,requestValidation,updateOnestopUserDeviceToken);
 onestopUserRouter.get("/user/email/:email", getUserByEmail);
 //onestopUserRouter.delete("/user/logout",verifyUserRequest,logoutUserValidate,requestValidation,logoutUser);
+
+onestopUserRouter.patch("/user/bug-fix",addBlockedFalseAndNotifPrefs);
 
 module.exports = onestopUserRouter;

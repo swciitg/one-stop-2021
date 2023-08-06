@@ -5,6 +5,7 @@ const { RequestValidationError } = require("../errors/request.validation.error")
 const { AccessTokenError } = require("../errors/jwt.auth.error");
 const { getGuestUserID } = require("../controllers/onestopUserController");
 const { GuestAccessError } = require("../errors/guest.access.error");
+const { UserBlockedError } = require("../errors/user.blocked.error");
 
 exports.verifyUserRequest = async (req,res,next) => {
     if(req.originalUrl.split('/').includes('public')) next();
@@ -18,12 +19,17 @@ exports.verifyUserRequest = async (req,res,next) => {
         }
         decoded=dec;
     });
-    if (await onestopUserModel.findById(decoded.userid)!== undefined) {
+    console.log(decoded);
+    let onestopUser = await onestopUserModel.findById(decoded.userid);
+    if (onestopUser !== undefined && !onestopUser.blocked) {
         console.log(decoded);
         req.userid = decoded.userid;
         console.log(req.userid);
         console.log("Token Verified");
         next();
+    }
+    else if(onestopUser !== undefined && onestopUser.blocked){
+        next(new UserBlockedError("user has been blocked due to spamming"));
     }
     else next(new RequestValidationError("invalid user id found"));
 }

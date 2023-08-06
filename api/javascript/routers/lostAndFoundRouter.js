@@ -11,38 +11,37 @@ const { restrictIfGuest, verifyUserRequest } = require("../middlewares/user.auth
 
 // LostAndFoundRouter.get("/getCompressedImage", LostAndFoundControllers.getCompressedImage);
 
-LostAndFoundRouter.use(verifyUserRequest);
-LostAndFoundRouter.get("/lost", LostAndFoundControllers.getLostDetails);
+LostAndFoundRouter.get("/lost",verifyUserRequest, LostAndFoundControllers.getLostDetails);
 
-LostAndFoundRouter.get("/lostPage", LostAndFoundControllers.getLostPageDetails);
+LostAndFoundRouter.get("/lostPage",verifyUserRequest, LostAndFoundControllers.getLostPageDetails);
 
-LostAndFoundRouter.post("/lost",restrictIfGuest,LostAndFoundControllers.postLostDetails
+LostAndFoundRouter.post("/lost",verifyUserRequest,restrictIfGuest,LostAndFoundControllers.postLostDetails
 )
 
 LostAndFoundRouter.post(
-    "/lost/remove",restrictIfGuest,LostAndFoundControllers.postLostRemoveDetails
+    "/lost/remove",verifyUserRequest,restrictIfGuest,LostAndFoundControllers.postLostRemoveDetails
   );
 
-LostAndFoundRouter.delete("/lost",restrictIfGuest, LostAndFoundControllers.deleteLostAll);
+LostAndFoundRouter.delete("/lost",verifyUserRequest,restrictIfGuest, LostAndFoundControllers.deleteLostAll);
 
-LostAndFoundRouter.get("/found", LostAndFoundControllers.getfoundDetails);
+LostAndFoundRouter.get("/found",verifyUserRequest, LostAndFoundControllers.getfoundDetails);
 
-LostAndFoundRouter.get("/foundPage", LostAndFoundControllers.getFoundPageDetails);
+LostAndFoundRouter.get("/foundPage",verifyUserRequest, LostAndFoundControllers.getFoundPageDetails);
 
-LostAndFoundRouter.post("/found",restrictIfGuest,LostAndFoundControllers.postfoundDetails
+LostAndFoundRouter.post("/found",verifyUserRequest,restrictIfGuest,LostAndFoundControllers.postfoundDetails
 );
 
-LostAndFoundRouter.put("/found",restrictIfGuest,LostAndFoundControllers.updateFoundDetails
+LostAndFoundRouter.put("/found",verifyUserRequest,restrictIfGuest,LostAndFoundControllers.updateFoundDetails
 );
 
 LostAndFoundRouter.post(
-    "/found/remove",restrictIfGuest,LostAndFoundControllers.postFoundRemoveDetails
+    "/found/remove",verifyUserRequest,restrictIfGuest,LostAndFoundControllers.postFoundRemoveDetails
   );
 
-LostAndFoundRouter.post("/found/claim",restrictIfGuest, LostAndFoundControllers.claimFoundItem);
+LostAndFoundRouter.post("/found/claim",verifyUserRequest,restrictIfGuest, LostAndFoundControllers.claimFoundItem);
 
-LostAndFoundRouter.delete("/found",restrictIfGuest, LostAndFoundControllers.deleteFoundAll);
+LostAndFoundRouter.delete("/found",verifyUserRequest,restrictIfGuest, LostAndFoundControllers.deleteFoundAll);
 
-LostAndFoundRouter.post("/lnf/myads",restrictIfGuest, LostAndFoundControllers.getMyAds);
+LostAndFoundRouter.post("/lnf/myads",verifyUserRequest,restrictIfGuest, LostAndFoundControllers.getMyAds);
 
 module.exports = { LostAndFoundRouter: LostAndFoundRouter };

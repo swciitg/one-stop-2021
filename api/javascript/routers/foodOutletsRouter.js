@@ -17,9 +17,8 @@ const fileStorageEngine = multer.diskStorage({
 });
 const upload = multer({storage: fileStorageEngine});
 
-foodOutletsRouter.use(verifyUserRequest);
-foodOutletsRouter.get('/getAllOutlets', Controller.getAllOutlets);
-foodOutletsRouter.post('/createOutletsList',restrictIfGuest, upload.single("file"),Controller.createOutlet);
+foodOutletsRouter.get('/getAllOutlets',verifyUserRequest, Controller.getAllOutlets);
+foodOutletsRouter.post('/createOutletsList',verifyUserRequest,restrictIfGuest, upload.single("file"),Controller.createOutlet);
 module.exports = {
     foodOutletsRouter
 };

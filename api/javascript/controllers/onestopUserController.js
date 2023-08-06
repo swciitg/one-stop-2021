@@ -7,6 +7,7 @@ const {
   guestUserEmail,
   guestUserRollNo,
   sendToAllFirebaseTopicName,
+  defaultNotifCategoriesMap,
 } = require("../helpers/constants");
 const {
   RequestValidationError,
@@ -139,7 +140,7 @@ exports.updateOnestopUser = asyncHandler(async (req, res) => {
   let data = matchedData(req, { locations: ["body"] });
   console.log(data);
   console.log(userid);
-  await onestopUserModel.findByIdAndUpdate(userid, data);
+  await onestopUserModel.findByIdAndUpdate(userid, data, {runValidators: true});
   let deviceToken = matchedData(req, { locations: ["query"] }).deviceToken;
   if (deviceToken) {
     let userNotifToken = new userNotifTokenModel({
@@ -226,6 +227,27 @@ exports.getUserByEmail = async (req, res, next) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.addBlockedFalseAndNotifPrefs = async (req,res) => {
+  try {
+    const onestopusers = await onestopUserModel.find();
+    for(let i = 0 ; i<onestopusers.length;i++){
+      if(onestopusers[i].hostel!==undefined && onestopusers[i].hostel==="Brahma"){
+        onestopusers[i].hostel="Brahmaputra";
+      }
+      else if(onestopusers[i].hostel!==undefined && onestopusers[i].hostel==="Subhansiri"){
+        onestopusers[i].hostel="Subansiri";
+      }
+      onestopusers[i].blocked=false;
+      onestopusers[i].notifPref=defaultNotifCategoriesMap;
+      await onestopusers[i].save();
+    }
+    return res.status(200).json({users: onestopusers});
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
 
 // exports.logoutUserValidate = [
 //   body('deviceToken', 'device Token is required').exists(), // to remove this device id

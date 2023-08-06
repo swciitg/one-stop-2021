@@ -276,7 +276,7 @@ exports.claimFoundItem = async (req, res) => {
         claimed: true,
         claimerEmail: claimerEmail,
         claimerName: claimerName
-      })
+      },{runValidators: true})
       .then((ele) => {
         console.log(ele);
         res.json({ saved: true, message: "Saved successfully" });
