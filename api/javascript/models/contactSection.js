@@ -9,8 +9,7 @@ const contactsSubsectionSchema = new Schema({
     required: true
   },
   email: {
-    type: String,
-    required: true
+    type: String
   },
   contact: {
     type: String,
