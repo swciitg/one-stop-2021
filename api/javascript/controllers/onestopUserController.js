@@ -8,6 +8,7 @@ const {
   guestUserRollNo,
   sendToAllFirebaseTopicName,
   defaultNotifCategoriesMap,
+  NotificationCategories,
 } = require("../helpers/constants");
 const {
   RequestValidationError,
@@ -182,9 +183,12 @@ exports.postOnestopUserDeviceToken = asyncHandler(async (req, res) => {
     });
     await userNotifToken.save();
   }
-  await firebase
+
+  for(category in Object.keys(NotificationCategories)){
+    await firebase
     .messaging()
-    .subscribeToTopic([body.deviceToken], sendToAllFirebaseTopicName);
+    .subscribeToTopic([body.deviceToken], category);
+  }
   res.json({ success: true });
 });
 
@@ -203,12 +207,14 @@ exports.updateOnestopUserDeviceToken = asyncHandler(async (req, res) => {
       { deviceToken: body.newToken, createdAt: new Date() }
       ,{ runValidators: true }
     );
+    for(category in Object.keys(NotificationCategories)){
+      await firebase
+      .messaging()
+      .unsubscribeFromTopic([body.oldToken], category);
     await firebase
       .messaging()
-      .unsubscribeFromTopic([body.oldToken], sendToAllFirebaseTopicName);
-    await firebase
-      .messaging()
-      .subscribeToTopic([body.newToken], sendToAllFirebaseTopicName);
+      .subscribeToTopic([body.newToken], category);
+    }
   }
   res.json({ success: true });
 });
@@ -240,7 +246,17 @@ exports.addBlockedFalseAndNotifPrefs = async (req,res) => {
       }
       onestopusers[i].blocked=false;
       onestopusers[i].notifPref=defaultNotifCategoriesMap;
-      
+      for(category in Object.keys(NotificationCategories)){
+        if(category==="found"){
+          continue;
+        }
+        let userNotifTokens = await userNotifTokenModel.find({userid: onestopusers[i]._id});
+        for(let j=0; j<userNotifTokens.length;j++){
+          await firebase
+                .messaging()
+                .subscribeToTopic(userNotifTokens[j].deviceToken, category);
+        }
+      }
       await onestopusers[i].save();
     }
     // return res.status(200).json({users: onestopusers});
