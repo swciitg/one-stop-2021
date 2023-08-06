@@ -118,9 +118,9 @@ exports.postSellDetails = async (req, res) => {
       console.log(metadata);
       const photo_id = imageName;
       const imageURL =
-        "https://swc.iitg.ac.in/onestop/api/v3/getImage?photo_id=" + imageName;
+      process.env.API_URL+"/v3/getImage?photo_id=" + imageName;
       const compressedImageURL =
-        "https://swc.iitg.ac.in/onestop/api/v3/getCompressedImage?photo_id=" +
+      process.env.API_URL+"/v3/getCompressedImage?photo_id=" +
         imageName;
       const newImagePath = path.resolve(
         __dirname +
@@ -303,9 +303,9 @@ exports.postBuyDetails = async (req, res) => {
       console.log(metadata);
       const photo_id = imageName;
       const imageURL =
-        "https://swc.iitg.ac.in/onestop/api/v3/getImage?photo_id=" + imageName;
+      process.env.API_URL+"/v3/getImage?photo_id=" + imageName;
       const compressedImageURL =
-        "https://swc.iitg.ac.in/onestop/api/v3/getCompressedImage?photo_id=" +
+      process.env.API_URL+"/v3/getCompressedImage?photo_id=" +
         imageName;
       const newImagePath = path.resolve(
         __dirname +
