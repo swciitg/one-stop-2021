@@ -242,7 +242,7 @@ exports.addBlockedFalseAndNotifPrefs = async (req,res) => {
       onestopusers[i].notifPref=defaultNotifCategoriesMap;
       await onestopusers[i].save();
     }
-    return res.status(200).json({users: onestopusers});
+    // return res.status(200).json({users: onestopusers});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
