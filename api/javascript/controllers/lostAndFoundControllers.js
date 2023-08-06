@@ -94,6 +94,7 @@ async function sendLostNotif(title,username,outlookEmail){
   };
 
   let data= {
+    "category": NotificationCategories.lost,
     "title": `Lost: ${title}`,
     "body": `Added by ${username}(${outlookEmail})`
   }
@@ -300,6 +301,7 @@ async function sendFoundNotif(title,username,outlookEmail){
   };
 
   let data= {
+    "category": NotificationCategories.found,
     "title": `Found: ${title}`,
     "body": `Added by ${username}(${outlookEmail})`
   }

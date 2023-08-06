@@ -82,6 +82,7 @@ async function sendSellNotif(title,username,outlookEmail){
   };
 
   let data= {
+    "category": NotificationCategories.sell,
     "title": `Selling: ${title}`,
     "body": `Added by ${username}(${outlookEmail})`
   }
@@ -275,6 +276,7 @@ async function sendBuyNotif(title,username,outlookEmail){
   };
 
   let data= {
+    "category": NotificationCategories.buy,
     "title": `Interested in buying: ${title}`,
     "body": `Added by ${username}(${outlookEmail})`
   }
