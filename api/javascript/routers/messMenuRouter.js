@@ -16,9 +16,8 @@ const fileStorageEngine = multer.diskStorage({
     }
 });
 const upload = multer({storage: fileStorageEngine});
-messMenuRouter.use(verifyUserRequest);
-messMenuRouter.get("/hostelsMessMenu", Controller.getAllMenuItems);
-messMenuRouter.post("/createMessMenu", upload.single("file"),Controller.createMessMenu);
+messMenuRouter.get("/hostelsMessMenu",verifyUserRequest, Controller.getAllMenuItems);
+messMenuRouter.post("/createMessMenu",verifyUserRequest, upload.single("file"),Controller.createMessMenu);
 
 module.exports = {
     messMenuRouter

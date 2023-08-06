@@ -1,11 +1,11 @@
 const { gcCompetitionsStoreModel, gcHostelWisePoints } = require("../models/gcModels/gcModel");
-const { allIITGHostels } = require("./constants");
+const { allIITGHostelsGC } = require("./constants");
 
 async function fetchGcScoreboardStore(){
     let gcScoreboardStoreArray = await gcCompetitionsStoreModel.find();
     if(gcScoreboardStoreArray.length===0){ // if no store on first time
         let createdGcScoreboardStore = gcCompetitionsStoreModel();
-        allIITGHostels.forEach((hostelName) => {
+        allIITGHostelsGC.forEach((hostelName) => {
             createdGcScoreboardStore["overallGcStandings"].push(gcHostelWisePoints({"hostelName" : hostelName,"spardha_points":0,"kriti_points":0,"manthan_points":0,"sahyog_points":0}));
         });
         await createdGcScoreboardStore.save();

@@ -34,7 +34,7 @@ exports.createOutlet = (req, res) => {
             console.log(updatesList);
             await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
               food: new Date(),
-            });
+            },{runValidators: true});
             res.send({
               jsonObj,
               message: "entries saved successfully",

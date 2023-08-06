@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-const { allIITGHostels, allIITGTechClubs } = require("../../helpers/constants");
+const { allIITGHostelsGC, allIITGTechClubs } = require("../../helpers/constants");
 
 const kritiHostelResultSchema = new mongoose.Schema({
     "hostelName": {
         type: String,
         required: true,
-        enum: allIITGHostels
+        enum: allIITGHostelsGC
     },
     "points": {
         type: mongoose.Schema.Types.Double,

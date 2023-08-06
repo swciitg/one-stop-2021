@@ -38,7 +38,7 @@ exports.createMessMenu = (req, res) => {
         // console.log(updatesList);
         await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
           menu: new Date(),
-        });
+        },{runValidators: true});
         res.json({
           jsonObj,
           message: "entries saved successfully",

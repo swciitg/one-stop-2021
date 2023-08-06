@@ -22,10 +22,8 @@ const fileStorageEngine = multer.diskStorage({
     }
 });
 const upload = multer({storage: fileStorageEngine});
-
-foodItemsRouter.use(verifyUserRequest);
-foodItemsRouter.get('/outlet-menu/:outletId',Controller.getOutletMenu);
-foodItemsRouter.post('/createOutletsMenu',restrictIfGuest, upload.single("file"),Controller.createItem);
+foodItemsRouter.get('/outlet-menu/:outletId',verifyUserRequest,Controller.getOutletMenu);
+foodItemsRouter.post('/createOutletsMenu',verifyUserRequest,restrictIfGuest, upload.single("file"),Controller.createItem);
 module.exports = {
     foodItemsRouter: foodItemsRouter
 };

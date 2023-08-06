@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 require('mongoose-double')(mongoose);
-const { allIITGHostels } = require("../../helpers/constants");
+const { allIITGHostelsGC } = require("../../helpers/constants");
 
 const hostelOverallStandingsPointsSchema = new mongoose.Schema({
     "hostelName" : {
         type: String,
         required: true,
-        enum: allIITGHostels
+        enum: allIITGHostelsGC
     },
     "points" : {
         type: mongoose.Schema.Types.Double,
@@ -38,7 +38,7 @@ const spardhaResultsSchema = new mongoose.Schema({
     "hostelName" : {
         type: String,
         required: true,
-        enum: allIITGHostels
+        enum: allIITGHostelsGC
     },
     "primaryScore" : {
         type: String,

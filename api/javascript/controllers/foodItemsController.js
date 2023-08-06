@@ -88,7 +88,7 @@ exports.createItem = async (req, res) => {
         console.log(updatesList);
         await LastUpdate.findByIdAndUpdate(updatesList[0].id, {
           food: new Date(),
-        });
+        },{runValidators: true});
         res.json({
           message: "entries saved successfully",
         });

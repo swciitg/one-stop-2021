@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { allIITGHostels } = require("../helpers/constants");
+const { allIITGHostelsGC, NotificationCategories, defaultNotifCategoriesMap, allIITGHostels } = require("../helpers/constants");
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -26,11 +26,11 @@ const userSchema = new mongoose.Schema({
     },
     hostel: {
         type: String,
-        enum: allIITGHostels,
+        enum: allIITGHostels
     },
     roomNo: {
         type: String,
-        maxLength: 5,
+        maxLength: 10,
     },
     homeAddress: {
         type: String,
@@ -48,7 +48,27 @@ const userSchema = new mongoose.Schema({
     },
     linkedin: {
         type: String,
-        maxLength: 50
+        maxLength: 100
+    },
+    blocked: {
+        type: Boolean,
+        default: false
+    },
+    notifPref: {
+        type: Map,
+        of: Boolean,
+        default: defaultNotifCategoriesMap,
+        validate: {
+            validator: function(m) {
+                let keys=Array.from(m.keys());
+                console.log(keys);
+                console.log(typeof(m),typeof(defaultNotifCategoriesMap));
+                let defaultKeys=Object.keys(defaultNotifCategoriesMap);
+                console.log(keys,defaultKeys);
+                return keys.length===defaultKeys.length && keys.every((e,i) => e===defaultKeys[i]);
+            },
+            message: props => "NOt valid notif categories"
+        }
     }
 });
 
