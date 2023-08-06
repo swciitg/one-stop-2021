@@ -121,6 +121,7 @@ exports.sendToATopic = async (topic,notification,data) => {
   console.log(payload);
   const options = { priority: "high" };
   await firebase.messaging().sendToTopic(topic,payload,options);
+  console.log(`SENT TO TOPIC: ${topic}`);
 };
 
 exports.sendToAllValidate = [

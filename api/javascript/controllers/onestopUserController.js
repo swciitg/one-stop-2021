@@ -150,6 +150,12 @@ exports.updateOnestopUser = asyncHandler(async (req, res) => {
       createdAt,
     });
     await userNotifToken.save();
+    for(category in NotificationCategories){
+      console.log(category,deviceToken);
+      await firebase
+      .messaging()
+      .subscribeToTopic([deviceToken], category);
+    }
   }
   res.json({ success: true, message: "Updated user data correctly" });
 });
@@ -183,8 +189,8 @@ exports.postOnestopUserDeviceToken = asyncHandler(async (req, res) => {
     });
     await userNotifToken.save();
   }
-
-  for(category in Object.keys(NotificationCategories)){
+  for(category in NotificationCategories){
+    console.log(category,body.deviceToken);
     await firebase
     .messaging()
     .subscribeToTopic([body.deviceToken], category);
@@ -207,7 +213,8 @@ exports.updateOnestopUserDeviceToken = asyncHandler(async (req, res) => {
       { deviceToken: body.newToken, createdAt: new Date() }
       ,{ runValidators: true }
     );
-    for(category in Object.keys(NotificationCategories)){
+    for(category in NotificationCategories){
+      console.log(category);
       await firebase
       .messaging()
       .unsubscribeFromTopic([body.oldToken], category);
@@ -237,6 +244,7 @@ exports.getUserByEmail = async (req, res, next) => {
 exports.addBlockedFalseAndNotifPrefs = async (req,res) => {
   try {
     const onestopusers = await onestopUserModel.find();
+    console.log(onestopusers);
     for(let i = 0 ; i<onestopusers.length;i++){
       if(onestopusers[i].hostel!==undefined && onestopusers[i].hostel==="Brahma"){
         onestopusers[i].hostel="Brahmaputra";
@@ -246,12 +254,14 @@ exports.addBlockedFalseAndNotifPrefs = async (req,res) => {
       }
       onestopusers[i].blocked=false;
       onestopusers[i].notifPref=defaultNotifCategoriesMap;
-      for(category in Object.keys(NotificationCategories)){
+      for(const category in NotificationCategories){
+        console.log(category);
         if(category==="found"){
           continue;
         }
         let userNotifTokens = await userNotifTokenModel.find({userid: onestopusers[i]._id});
         for(let j=0; j<userNotifTokens.length;j++){
+          console.log(category);
           await firebase
                 .messaging()
                 .subscribeToTopic(userNotifTokens[j].deviceToken, category);
