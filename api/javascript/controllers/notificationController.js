@@ -89,6 +89,40 @@ exports.sendToDevice = async (req, res) => {
   res.json({"success" : true});
 };
 
+exports.sendToATopic = async (topic,notification,data) => {
+
+  // WILL MAKE A CRON SERVER FOR THIS
+
+
+  // let compDate = new Date();
+  // compDate.setMonth(compDate.getMonth() - 3); // set date 3 months prior
+  // let inactiveNotifTokens = await userNotifTokenModel.find({
+  //   createdAt: {
+  //     $lte: compDate
+  //   }
+  // });
+
+  // let inactiveDeviceTokens = inactiveNotifTokens.map((userNotif) => userNotif.deviceToken);
+
+  // await userNotifTokenModel.deleteMany({
+  //   createdAt: {
+  //     $lte: compDate
+  //   }
+  // });
+
+  // if (inactiveDeviceTokens.length > 0) await firebase.messaging().unsubscribeFromTopic(inactiveDeviceTokens, topic);
+
+  const payload = {
+    notification: notification,
+    data: data
+  };
+
+
+  console.log(payload);
+  const options = { priority: "high" };
+  await firebase.messaging().sendToTopic(topic,payload,options);
+};
+
 exports.sendToAllValidate = [
   body("category", "notif must have a category").exists(),
   body("model", "notif must have a model string").exists(),

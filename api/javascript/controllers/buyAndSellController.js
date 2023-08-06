@@ -6,7 +6,7 @@ const uuid = require("uuid");
 const sharp = require("sharp");
 const mongoose = require("mongoose");
 const { NotificationCategories } = require("../helpers/constants");
-const { sendToAll } = require("./notificationController");
+const { sendToAll, sendToATopic } = require("./notificationController");
 
 function errorFxn(res, err) {
   console.log(err);
@@ -74,14 +74,19 @@ exports.deleteSellAll = async (req,res) => {
   res.json({success : true});
 }
 
-async function sendSellNotif(req,res,title){
-  req.body = {
-    category: NotificationCategories.sell,
-    model: "",
-    header: title,
-    body: `${req.body.username} wants to sell an item.`
+async function sendSellNotif(title,username,outlookEmail){
+
+  let notification = {
+    "title": `Selling: ${title}`,
+    "body": `Added by ${username}(${outlookEmail})`
+  };
+
+  let data= {
+    "title": `Selling: ${title}`,
+    "body": `Added by ${username}(${outlookEmail})`
   }
-  await sendToAll(req,res);
+
+  await sendToATopic(NotificationCategories.sell,notification, data);
 }
 
 exports.postSellDetails = async (req, res) => {
@@ -262,14 +267,19 @@ exports.deleteBuyAll = async (req,res) => {
   res.json({success : true});
 }
 
-async function sendBuyNotif(req,res,title){
-  req.body = {
-    category: NotificationCategories.buy,
-    model: "",
-    header: title,
-    body: `${req.body.username} wants to buy an item.`
+async function sendBuyNotif(title,username,outlookEmail){
+
+  let notification = {
+    "title": `Interested in buying: ${title}`,
+    "body": `Added by ${username}(${outlookEmail})`
+  };
+
+  let data= {
+    "title": `Interested in buying: ${title}`,
+    "body": `Added by ${username}(${outlookEmail})`
   }
-  await sendToAll(req,res);
+
+  await sendToATopic(NotificationCategories.buy,notification, data);
 }
 
 exports.postBuyDetails = async (req, res) => {
@@ -368,7 +378,7 @@ exports.postBuyDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
-          await sendBuyNotif(req,res,req.body.title);
+          await sendBuyNotif(title,username,email);
         return res.json({
           saved_successfully: true,
           image_safe: true
