@@ -193,7 +193,7 @@ exports.postLostDetails = async (req, res) => {
       .then((result) => {
         console.log(result);
       });
-    await sendLostNotif(req,res,req.body.title);
+    await sendLostNotif(title,username,email);
     return res.json({ saved_successfully: true, image_safe: true });
   } catch (error) {
     return errorFxn(res, error);
@@ -292,21 +292,19 @@ exports.claimFoundItem = async (req, res) => {
   }
 };
 
-async function sendFoundNotif(req,res,title){
-  req.body = {
-    "notification": {
-      "body": `${req.body.username} found some item.\n${req.body.description.slice(0,20)}`,
-      "OrganizationId": "2",
-      "priority": "high",
-      "subtitle": title,
-      "Title": "hello"
-    },
-    category: NotificationCategories.found,
-    model: "",
-    header: title,
-    body: `${req.body.username} found some item.\n${req.body.description.slice(0,20)}`
+async function sendFoundNotif(title,username,outlookEmail){
+
+  let notification = {
+    "title": `Found: ${title}`,
+    "body": `Added by ${username}(${outlookEmail})`
+  };
+
+  let data= {
+    "title": `Found: ${title}`,
+    "body": `Added by ${username}(${outlookEmail})`
   }
-  await sendToAll(req,res);
+
+  await sendToATopic(NotificationCategories.found,notification, data);
 }
 
 exports.postfoundDetails = async (req, res) => {
@@ -395,7 +393,7 @@ exports.postfoundDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
-        await sendFoundNotif(req,res,req.body.title);
+        await sendFoundNotif(title,username,email);
         return res.json({ saved_successfully: true, image_safe: true });
       } catch (error) {
         return errorFxn(res, error);

@@ -240,6 +240,7 @@ exports.addBlockedFalseAndNotifPrefs = async (req,res) => {
       }
       onestopusers[i].blocked=false;
       onestopusers[i].notifPref=defaultNotifCategoriesMap;
+      
       await onestopusers[i].save();
     }
     // return res.status(200).json({users: onestopusers});
