@@ -50,7 +50,7 @@ exports.NotificationCategories = {
     found: "found",
     buy: "buy",
     sell: "sell",
-    cabSharing: "cab sharing",
+    cabSharing: "cabSharing",
     announcement: "announcement"
 };
 

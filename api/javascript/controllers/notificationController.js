@@ -9,6 +9,9 @@ const { body, matchedData } = require("express-validator");
 const userNotifTokenModel = require("../models/userNotifTokenModel");
 const { sendToAllFirebaseTopicName } = require("../helpers/constants");
 const { RequestValidationError } = require("../errors/request.validation.error");
+const userPersonalNotifModel = require("../models/userPersonalNotifModel");
+const topicNotifModel= require("../models/topicNotifModel");
+
 
 exports.sendTestNotifToDevice = async (req, res) => {
 
@@ -47,46 +50,55 @@ exports.sendTestNotifToDevice = async (req, res) => {
 
 };
 
-exports.sendToDeviceValidate = [
-  body("category", "notif must have a category").exists(),
-  body("model", "notif must have a model").exists(),
-  body("header", "a header is required to send notification").exists(),
-  body("body", "a body is required to send notification").exists(),
-  body("sendTo", "Send to email is required").exists()
-];
+exports.sendNotifByEmail = async (req,res) => {
+  let outlookEmail=req.body.outlookEmail;
+  let onestopUser=await userModel.find({outlookEmail: outlookEmail});
 
-exports.sendToDevice = async (req, res) => {
+  await this.sendToUser(onestopUser._id,req.body.category,req.body.title,req.body.body);
+  console.log("SENT TO EMAIL NOTIFS");
+  re.json({success: true});
+}
 
-  if (!req.body.sendTo) {
-    throw new RequestValidationError("Missing Fields");
+exports.updateTopicSubscriptionOfUser = async (notifPref,userid) => {
+  let userNotifTokens = await userNotifTokenModel.find({ userid: userid });
+  console.log(userNotifTokens);
+  console.log(notifPref);
+  for (let i = 0; i < userNotifTokens.length; i++) {
+    for(let category in notifPref){
+      console.log(category);
+      await firebase.messaging().unsubscribeFromTopic([userNotifTokens[i].deviceToken],category);
+      if(notifPref[category]===true){
+        await firebase.messaging().subscribeToTopic([userNotifTokens[i].deviceToken],category);
+      }
+    }
   }
+}
 
-  let user = await userModel.findOne({ outlookEmail: req.body.sendTo });
+exports.sendToUser = async (userid,category,title,body) => {
 
   const payload = {
-    "notification": {
-      "body": req.body.body,
-      "OrganizationId": "2",
-      "priority": "high",
-      "subtitle": req.body.header,
-      "Title": "hello"
+    notification: {
+      title: title,
+      body: body
     },
     data: {
-      category: req.body.category,
-      model: req.body.model,
-      header: req.body.header,
-      body: req.body.body
+      category: category,
+      title: title,
+      body: body
     }
   };
 
   const options = { priority: "high" };
-  let userNotifTokens = await userNotifTokenModel.find({ userid: user._id });
+  let userNotifTokens = await userNotifTokenModel.find({ userid: userid });
   console.log(userNotifTokens);
+
+  let userPersonalNotif = userPersonalNotifModel(userid,category,title,body);
+  await userPersonalNotif.save();
+
   for (let i = 0; i < userNotifTokens.length; i++) {
-    await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload);
+    await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload,options);
     console.log("NOTIFICATION SENT");
   }
-  res.json({"success" : true});
 };
 
 exports.sendToATopic = async (topic,notification,data) => {
@@ -117,12 +129,20 @@ exports.sendToATopic = async (topic,notification,data) => {
     data: data
   };
 
+  let topicNotif = topicNotifModel(data);
+  await topicNotif.save();
 
   console.log(payload);
   const options = { priority: "high" };
   await firebase.messaging().sendToTopic(topic,payload,options);
+
   console.log(`SENT TO TOPIC: ${topic}`);
 };
+
+exports.getAllTopicNotifs = async (req,res) => {
+  let topicNotifs = await topicNotifModel.find();
+  res.json({"allTopicNotifs" : topicNotifs});
+}
 
 exports.sendToAllValidate = [
   body("category", "notif must have a category").exists(),

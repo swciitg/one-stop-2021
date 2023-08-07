@@ -27,10 +27,11 @@ AnnouncementSchema.pre('save', async function(next){
     };
   
     let data= {
+      "category": NotificationCategories.announcement,
       "title": this.title,
       "body": this.body
     }
-  
+    
     await sendToATopic(NotificationCategories.announcement,notification, data);
 });
 

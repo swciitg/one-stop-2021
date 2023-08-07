@@ -1,6 +1,6 @@
 const { TravelPostModel, TravelChatModel, ReplyPostModel } = require("../models/campusTravelModel");
 const nodeoutlook = require('nodejs-nodemailer-outlook');
-const { sendToDevice } = require("./notificationController");
+const { sendToDevice, sendToUser } = require("./notificationController");
 const userModel = require("../models/userModel");
 const asyncHandler = require("../middlewares/async.controllers.handler");
 const { NotificationCategories } = require("../helpers/constants");
@@ -164,17 +164,12 @@ exports.getTravelPostChatReplies = async (req, res) => {
 }
 
 
-async function sendPostReplyNotif(req, res, title, replier, recieverOutlook) {
-    req.body = {
-        category: NotificationCategories.cabSharing,
-        model: "",
-        header: title,
-        body: `${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`,
-        sendTo: recieverOutlook
-    }
-    console.log(req.body);
+async function sendPostReplyNotif(title, replier, recieverOutlook) {
     let user = await userModel.findById(req.userid);
-    if (user.outlookEmail !== recieverOutlook) await sendToDevice(req, res);
+    if (user.outlookEmail !== recieverOutlook){
+        let user = await userModel.findOne({ outlookEmail: recieverOutlook});
+        await sendToUser(user._id,NotificationCategories.cabSharing,title,`${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`);
+    }
 }
 
 exports.postReplyChat = asyncHandler(async (req, res) => {
@@ -188,7 +183,7 @@ exports.postReplyChat = asyncHandler(async (req, res) => {
     // console.log(travelChat);
     TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
         console.log(travelPost["travelDateTime"]);
-        sendPostReplyNotif(req, res, "Cab sharing reply", data["name"], travelPost.email);
+        sendPostReplyNotif(`Cab sharing reply: ${travelChatReply.message.substr(0,1)}`, data["name"], travelPost.email);
         //if(true){ // when other people writes a message
         //sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
         // req.body.notif={};

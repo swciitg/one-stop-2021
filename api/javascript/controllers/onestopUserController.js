@@ -23,6 +23,8 @@ if (!firebase.apps.length)
     credential: firebase.credential.cert(serviceAccount),
   });
 const asyncHandler = require("../middlewares/async.controllers.handler");
+const userPersonalNotifModel = require("../models/userPersonalNotifModel");
+const { updateTopicSubscriptionOfUser } = require("./notificationController");
 
 let titleCase = (str) => {
   var splitStr = str.toLowerCase().split(" ");
@@ -241,6 +243,31 @@ exports.getUserByEmail = async (req, res, next) => {
   }
 };
 
+exports.getUserPersonalNotifs = async (req,res) => {
+  let userPersonalNotifs = await userPersonalNotifModel.find({userid: req.userid});
+  res.json({userPersonalNotifs});
+}
+
+exports.deleteUserPersonalNotifs = async (req,res) => {
+  await userPersonalNotifModel.deleteMany({userid: req.userid});
+  res.json({success: true});
+}
+
+exports.updateOnestopUserNotifPrefsValidate = [
+  body(NotificationCategories.lost, "lost pref is required").exists(),
+  body(NotificationCategories.found, "found pref is required").exists(),
+  body(NotificationCategories.buy, "buy pref is required").exists(),
+  body(NotificationCategories.sell, "sell pref is required").exists(),
+  body(NotificationCategories.cabSharing, "cab sharing pref is required").exists(),
+];
+
+exports.updateOnestopUserNotifPrefs = async (req,res) => {
+  let data = matchedData(req, { locations: ["body"] });
+  await updateTopicSubscriptionOfUser(data,req.userid);
+  await onestopUserModel.findByIdAndUpdate(req.userid, {"notifPref" : data}, {runValidators: true});
+  res.json({success: true});
+}
+
 exports.addBlockedFalseAndNotifPrefs = async (req,res) => {
   try {
     const onestopusers = await onestopUserModel.find();
@@ -256,9 +283,6 @@ exports.addBlockedFalseAndNotifPrefs = async (req,res) => {
       onestopusers[i].notifPref=defaultNotifCategoriesMap;
       for(const category in NotificationCategories){
         console.log(category);
-        if(category==="found"){
-          continue;
-        }
         let userNotifTokens = await userNotifTokenModel.find({userid: onestopusers[i]._id});
         for(let j=0; j<userNotifTokens.length;j++){
           console.log(category);

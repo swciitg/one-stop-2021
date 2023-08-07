@@ -22,7 +22,7 @@ const NotifPrefSchema = new mongoose.Schema({
         default: true,
         required: true
     },
-    "cab sharing": {
+    "cabSharing": {
         type: Boolean,
         default: true,
         required: true
