@@ -164,8 +164,8 @@ exports.getTravelPostChatReplies = async (req, res) => {
 }
 
 
-async function sendPostReplyNotif(title, replier, recieverOutlook) {
-    if (user.outlookEmail !== recieverOutlook){
+async function sendPostReplyNotif(title, replier, senderOutlook, recieverOutlook) {
+    if (senderOutlook !== recieverOutlook){
         let user = await userModel.findOne({ outlookEmail: recieverOutlook});
         await sendToUser(user._id,NotificationCategories.cabSharing,title,`${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`);
     }
@@ -182,7 +182,7 @@ exports.postReplyChat = asyncHandler(async (req, res) => {
     // console.log(travelChat);
     TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
         console.log(travelPost["travelDateTime"]);
-        sendPostReplyNotif(`Cab sharing reply: ${travelChatReply.message.substr(0,1)}`, data["name"], travelPost.email);
+        sendPostReplyNotif(`Cab sharing reply: ${travelChatReply.message.substr(0,1)}`, data["name"], data["email"], travelPost.email);
         //if(true){ // when other people writes a message
         //sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
         // req.body.notif={};
