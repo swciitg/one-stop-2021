@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const firebase = require("firebase-admin");
 const serviceAccount = require("../config/push-notification-key.json");
 const { NotificationCategories, sendToAllFirebaseTopicName } = require("../helpers/constants");
+const { sendToATopic } = require("../controllers/notificationController");
 if (!firebase.apps.length)
     firebase.initializeApp({
       credential: firebase.credential.cert(serviceAccount),

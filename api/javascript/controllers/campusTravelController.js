@@ -165,7 +165,6 @@ exports.getTravelPostChatReplies = async (req, res) => {
 
 
 async function sendPostReplyNotif(title, replier, recieverOutlook) {
-    let user = await userModel.findById(req.userid);
     if (user.outlookEmail !== recieverOutlook){
         let user = await userModel.findOne({ outlookEmail: recieverOutlook});
         await sendToUser(user._id,NotificationCategories.cabSharing,title,`${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`);
