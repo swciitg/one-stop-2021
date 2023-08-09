@@ -66,7 +66,7 @@ app.use(BASEURL, routers.notificationRouter);
 // API routers
 app.use(BASEURL, routers.onestopUserRouter);
 app.use(BASEURL, routers.contactRouter.contactRouter);
-app.use(BASEURL, routers.timingRouter.timingRouter);
+app.use(BASEURL, routers.timingRouter);
 app.use(BASEURL, routers.emailRouter.emailRouter);
 app.use(BASEURL, routers.roleRouter.roleRouter);
 app.use(BASEURL, routers.foodOutletsRouter.foodOutletsRouter);

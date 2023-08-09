@@ -82,6 +82,7 @@ async function sendSellNotif(title,username,outlookEmail){
   };
 
   let data= {
+    "category": NotificationCategories.sell,
     "title": `Selling: ${title}`,
     "body": `Added by ${username}(${outlookEmail})`
   }
@@ -188,7 +189,7 @@ exports.postSellDetails = async (req, res) => {
           .then((result) => {
             console.log(result);
           });
-          await sendSellNotif(req,res,req.body.title);
+          await sendSellNotif(title,username,email);
         return res.json({
           saved_successfully: true,
           image_safe: true
@@ -275,6 +276,7 @@ async function sendBuyNotif(title,username,outlookEmail){
   };
 
   let data= {
+    "category": NotificationCategories.buy,
     "title": `Interested in buying: ${title}`,
     "body": `Added by ${username}(${outlookEmail})`
   }

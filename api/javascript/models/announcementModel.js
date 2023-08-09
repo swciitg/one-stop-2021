@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const firebase = require("firebase-admin");
 const serviceAccount = require("../config/push-notification-key.json");
 const { NotificationCategories, sendToAllFirebaseTopicName } = require("../helpers/constants");
+const { sendToATopic } = require("../controllers/notificationController");
 if (!firebase.apps.length)
     firebase.initializeApp({
       credential: firebase.credential.cert(serviceAccount),
@@ -21,23 +22,18 @@ const AnnouncementSchema = new mongoose.Schema({
 
 AnnouncementSchema.pre('save', async function(next){
     console.log(this);
-    const payload = {
-      "notification": {
-        "body": this.body,
-        "OrganizationId": "2",
-        "priority": "high",
-        "subtitle": this.title,
-        "Title": "hello"
-      },
-        data: {
-          category: NotificationCategories.announcement,
-          model: "",
-          header: this.title,
-          body: this.body
-        }
-      };
-      console.log(payload);
-      await firebase.messaging().sendToTopic(sendToAllFirebaseTopicName,payload);
+    let notification = {
+      "title": this.title,
+      "body": this.body
+    };
+  
+    let data= {
+      "category": NotificationCategories.announcement,
+      "title": this.title,
+      "body": this.body
+    }
+    
+    await sendToATopic(NotificationCategories.announcement,notification, data);
 });
 
 module.exports = mongoose.model("announcements",AnnouncementSchema);

@@ -7,4 +7,4 @@ timingRouter.get("/ferrytimings",verifyUserRequest, Controller.getferrytiming);
 
 timingRouter.get("/busStops",verifyUserRequest, Controller.getbusStop);
 
-module.exports = { timingRouter };
+module.exports =  timingRouter ;

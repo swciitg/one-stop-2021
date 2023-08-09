@@ -17,7 +17,6 @@ exports.checkIfModeratorMiddleware = (req,res,next) => {
     }
 }
 
-
 exports.checkSuperAdmin = async (req, res, next) => {
     try {
         const email = req.body.email;

@@ -1,5 +1,5 @@
 const express = require("express");
-const { updateOnestopUserValidate, updateOnestopUser, logoutUserValidate, logoutUser, regenerateUserAccessToken, guestUserLogin, getUserInfo, updateOnestopUserDeviceTokenValidate, updateOnestopUserDeviceToken, postOnestopUserDeviceTokenValidate, postOnestopUserDeviceToken, getUserByEmail, addBlockedFalseAndNotifPrefs } = require("../controllers/onestopUserController");
+const { updateOnestopUserValidate, updateOnestopUser, regenerateUserAccessToken, guestUserLogin, getUserInfo, updateOnestopUserDeviceTokenValidate, updateOnestopUserDeviceToken, postOnestopUserDeviceTokenValidate, postOnestopUserDeviceToken, getUserByEmail, addBlockedFalseAndNotifPrefs, getUserPersonalNotifs, deleteUserPersonalNotifs , updateOnestopUserNotifPrefsValidate, updateOnestopUserNotifPrefs} = require("../controllers/onestopUserController");
 const { requestValidation } = require("../middlewares/validate.request");
 const { verifyUserRequest, restrictIfGuest } = require("../middlewares/user.auth");
 const onestopUserRouter = express.Router();
@@ -15,6 +15,9 @@ onestopUserRouter.patch("/user",verifyUserRequest,restrictIfGuest, updateOnestop
 onestopUserRouter.post("/user/device-tokens",verifyUserRequest,restrictIfGuest,postOnestopUserDeviceTokenValidate,requestValidation,postOnestopUserDeviceToken);
 onestopUserRouter.patch("/user/device-tokens",verifyUserRequest,restrictIfGuest,updateOnestopUserDeviceTokenValidate,requestValidation,updateOnestopUserDeviceToken);
 onestopUserRouter.get("/user/email/:email", getUserByEmail);
+onestopUserRouter.get("/user/notifs",verifyUserRequest,restrictIfGuest,getUserPersonalNotifs);
+onestopUserRouter.patch("/user/notifs/prefs",verifyUserRequest,restrictIfGuest,updateOnestopUserNotifPrefsValidate,requestValidation,updateOnestopUserNotifPrefs);
+onestopUserRouter.delete("/user/notifs",verifyUserRequest,restrictIfGuest,deleteUserPersonalNotifs);
 //onestopUserRouter.delete("/user/logout",verifyUserRequest,logoutUserValidate,requestValidation,logoutUser);
 
 onestopUserRouter.patch("/user/bug-fix",addBlockedFalseAndNotifPrefs);
