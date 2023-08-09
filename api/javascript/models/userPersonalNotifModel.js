@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const { sendToDevice } = require("../controllers/notificationController");
-const userModel = require("./userModel");
 
 const userPersonalNotifSchema = new mongoose.Schema({
     userid: {

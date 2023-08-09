@@ -89,10 +89,11 @@ exports.sendToUser = async (userid,category,title,body) => {
   };
 
   const options = { priority: "high" };
+  
   let userNotifTokens = await userNotifTokenModel.find({ userid: userid });
   console.log(userNotifTokens);
 
-  let userPersonalNotif = userPersonalNotifModel(userid,category,title,body);
+  let userPersonalNotif = userPersonalNotifModel({userid,category,title,body});
   await userPersonalNotif.save();
 
   for (let i = 0; i < userNotifTokens.length; i++) {
