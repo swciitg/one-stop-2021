@@ -52,21 +52,11 @@ exports.sendTestNotifToDevice = async (req, res) => {
 
 exports.sendNotifByEmail = async (req,res) => {
   let outlookEmail=req.body.outlookEmail;
-  let onestopUser=await userModel.findOne({outlookEmail: outlookEmail});
+  let onestopUser=await userModel.find({outlookEmail: outlookEmail});
 
-  if(onestopUser) await this.sendToUser(onestopUser._id,req.body.category,req.body.title,req.body.body);
+  await this.sendToUser(onestopUser._id,req.body.category,req.body.title,req.body.body);
   console.log("SENT TO EMAIL NOTIFS");
-  res.json({success: true});
-}
-
-exports.sendNotifByEmailList = async (req,res) => {
-  let outlookEmails=req.body.outlookEmails;
-  for(let i=0;i<outlookEmails.length;i++){
-    let outlookEmail = req.body.outlookEmails[i];
-    let onestopUser = await userModel.findOne({outlookEmail: outlookEmail});
-    if(onestopUser) await this.sendToUser(onestopUser._id,"swc",req.body.title,req.body.body);
-  }
-  res.json({success: true});
+  re.json({success: true});
 }
 
 exports.updateTopicSubscriptionOfUser = async (notifPref,userid) => {
