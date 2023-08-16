@@ -64,7 +64,7 @@ exports.sendNotifByEmailList = async (req,res) => {
   for(let i=0;i<outlookEmails.length;i++){
     let outlookEmail = req.body.outlookEmails[i];
     let onestopUser = await userModel.findOne({outlookEmail: outlookEmail});
-    if(onestopUser) await this.sendToUser(onestopUser._id,"swc",req.body.title,req.body.body);
+    if(onestopUser) await this.sendToUser(onestopUser._id,req.body.category,req.body.title,req.body.body);
   }
   res.json({success: true});
 }
