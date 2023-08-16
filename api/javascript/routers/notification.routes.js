@@ -8,7 +8,7 @@ notificationRouter.get("/notification",verifyUserRequest,restrictIfGuest,getAllT
 
 // notificationRouter.post("/notification/send/test",sendTestNotifToDevice);
 
-notificationRouter.post("/notification/send",sendNotifByEmail);
+notificationRouter.post("/notification/sendone",sendNotifByEmail);
 // notificationRouter.post("/notification/send/all",sendToAllValidate,requestValidation, sendToAll);
 notificationRouter.post("/notifications/send",sendNotifByEmailList);
 
