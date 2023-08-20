@@ -60,6 +60,8 @@ exports.sendNotifByEmail = async (req,res) => {
 }
 
 exports.sendNotifByEmailList = async (req,res) => {
+  console.log(req.body);
+  console.log(req.headers);
   let outlookEmails=req.body.outlookEmails;
   for(let i=0;i<outlookEmails.length;i++){
     let outlookEmail = req.body.outlookEmails[i];
