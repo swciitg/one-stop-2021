@@ -153,7 +153,7 @@ exports.sendToATopic = async (topic,notification,data) => {
 };
 
 exports.getAllTopicNotifs = async (req,res) => {
-  let topicNotifs = await topicNotifModel.find().sort({createdAt:1});
+  let topicNotifs = await topicNotifModel.find().sort({createdAt:-1});
   res.json({"allTopicNotifs" : topicNotifs});
 }
 
