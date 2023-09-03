@@ -26,5 +26,4 @@ jobs:
             git checkout dev
             git pull origin dev
             git status
-            cd api/javascript
             docker-compose -f docker-compose.test.prod.yaml up -d --build
