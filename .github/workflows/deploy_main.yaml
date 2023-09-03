@@ -3,7 +3,7 @@ on:
     workflow_dispatch:
     push:
         paths:
-            - "api/javascript/**"
+            - "./"
         branches:
             - "main"
 
@@ -25,6 +25,5 @@ jobs:
             cd /webapps/one-stop-2021
             git pull
             git status
-            cd api/javascript
             docker-compose -f docker-compose.prod.yaml up -d --build
 

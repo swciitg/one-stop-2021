@@ -3,7 +3,7 @@ on:
     workflow_dispatch:
     push:
         paths:
-            - "api/javascript/**"
+            - "./"
         branches:
             - "dev"
 

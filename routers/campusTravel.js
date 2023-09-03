@@ -1,0 +1,12 @@
+const express = require("express");
+const campusTravelRouter = express.Router();
+const campusTravelController = require("../controllers/campusTravelController");
+const { restrictIfGuest, verifyUserRequest } = require("../middlewares/user.auth");
+campusTravelRouter.get("/campus-travel",verifyUserRequest,campusTravelController.getTravelPosts);
+campusTravelRouter.get("/campus-travel/myads",verifyUserRequest,restrictIfGuest,campusTravelController.getMyAds);
+campusTravelRouter.post("/campus-travel",verifyUserRequest,restrictIfGuest,campusTravelController.postTravel);
+campusTravelRouter.get("/campus-travel/chat",verifyUserRequest,campusTravelController.getTravelPostChatReplies);
+campusTravelRouter.post("/campus-travel/chat",verifyUserRequest,restrictIfGuest,campusTravelController.postReplyChat);
+campusTravelRouter.delete("/campus-travel",verifyUserRequest,restrictIfGuest,campusTravelController.deleteTravelPost);
+campusTravelRouter.delete("/campus-travel/all",verifyUserRequest,restrictIfGuest,campusTravelController.deleteAllTravelPosts);
+module.exports = {campusTravelRouter : campusTravelRouter};
