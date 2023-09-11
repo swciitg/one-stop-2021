@@ -79,7 +79,7 @@ web_modules/
 .yarn-integrity
 
 # firabse config file
-.config/push-notification-key.json
+config/push-notification-key.json
 
 # dotenv environment variable files
 .env
