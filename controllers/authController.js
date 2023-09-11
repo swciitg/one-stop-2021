@@ -60,14 +60,12 @@ exports.microsoftLoginRedirect = (req, res) => {
       console.log("here");
       if (err) {
         console.log(err);
-        res.render('authSuccessView.ejs', { userInfo: "ERROR OCCURED" });
-        return;
+        return res.render('authSuccessView.ejs', { userTokens: "ERROR OCCURED" });
       }
       const userInfo = JSON.parse(body);
       console.log(userInfo);
       if(!userInfo.displayName || !userInfo.mail || !userInfo.surname){
         return res.render('authSuccessView.ejs', { userTokens: "ERROR OCCURED" });
-        return;
       }
       let userid = await createOrFindOnestopUserID(userInfo.displayName, userInfo.mail, userInfo.surname);
       const userTokensString = await getUserTokens(userid);
