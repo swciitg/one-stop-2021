@@ -92,6 +92,9 @@
     - Integrating Firebase SDK in Flutter causes the app to perform slow compared to directly making API requests to your server.
     - Also, now application & backend's code remain separated and development can be done easily, scaling application & backend side.
     - Most modern applications follow same practice of separating their different services.
+- How Staging environment works ?
+    - We have setup a CD pipeline on dev branch and with push, the changes are deployed on our staging server.
+    - We perform proper testing for each release and then, merge dev into main branch for publishing our changes to production.
 
 # 🧛 Future Advancements
 - Shift to Typescript instead of Javascript because of various advantages.
