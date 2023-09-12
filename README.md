@@ -100,9 +100,9 @@
 - Generate API documentation using tools like Swagger.
 
 # 🐛 Bug Reporting
-#### Feel free to [open an issue](https://github.com/Kunalpal215/helpzz/issues) on GitHub if you find any bug.
+#### Feel free to [open an issue](https://github.com/swciitg/one-stop-2021/issues) on GitHub if you find any bug.
 
 <br />
 
 # ⭐ Feature Suggestion
-#### Feel free to [open an issue](https://github.com/Kunalpal215/helpzz/issues) on GitHub if you have feature idea to be added 🙌.
+#### Feel free to [open an issue](https://github.com/swciitg/one-stop-2021/issues) on GitHub if you have feature idea to be added 🙌.
