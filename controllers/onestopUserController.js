@@ -264,7 +264,9 @@ exports.updateOnestopUserNotifPrefsValidate = [
 exports.updateOnestopUserNotifPrefs = async (req,res) => {
   let data = matchedData(req, { locations: ["body"] });
   await updateTopicSubscriptionOfUser(data,req.userid);
+  console.log("UPDATED SUBSCRIPTION");
   await onestopUserModel.findByIdAndUpdate(req.userid, {notifPref : data}, {runValidators: true});
+  console.log("UPDATED Notifpref");
   res.json({success: true});
 }
 
