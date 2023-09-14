@@ -88,7 +88,8 @@ const userSchema = new mongoose.Schema({
         default: false
     },
     notifPref: {
-        type: NotifPrefSchema
+        type: NotifPrefSchema,
+        default: defaultNotifCategoriesMap
     }
 });
 

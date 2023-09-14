@@ -6,12 +6,13 @@ const LastUpdate = require("./models/lastUpdate");
 const { BASEURL, ADMINPANELROOT } = require("./helpers/constants");
 const { adminJsRouter } = require("./admin_panel/admin-config");
 const app = express();
-
 const bcrypt = require("bcrypt");
 const { errorHandler } = require("./middlewares/error.handler");
 const { NotFoundError } = require("./errors/not.found.error");
 const { createLastUpdateDocument } = require("./controllers/lastUpdateController");
 
+
+console.log(bcrypt.hash("123",10));
 //for serving static files
 app.use(express.static("public"));
 
