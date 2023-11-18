@@ -50,6 +50,7 @@ app.use((req, res, next) => {
 });
 
 app.get(BASEURL + 'my-file', (req, res) => {
+    console.log("INSIDE my-file");
     const stream = fs.createReadStream('./public/images/confirm.svg');
   
     res.header('Content-Type', 'image/svg+xml');
