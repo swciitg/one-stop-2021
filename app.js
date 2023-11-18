@@ -49,7 +49,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get(BASEURL + '/my-file', (req, res) => {
+app.get(BASEURL + 'my-file', (req, res) => {
     const stream = fs.createReadStream('./public/images/confirm.svg');
   
     res.header('Content-Type', 'image/svg+xml');
