@@ -49,7 +49,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get(BASEURL + 'my-file', (req, res) => {
+app.post(BASEURL + 'my-file', (req, res) => {
     console.log("INSIDE my-file");
     const stream = fs.createReadStream('./public/images/confirm.svg');
   
