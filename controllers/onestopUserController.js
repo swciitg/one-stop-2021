@@ -244,7 +244,7 @@ exports.getUserByEmail = async (req, res, next) => {
 };
 
 exports.getUserPersonalNotifs = async (req,res) => {
-  let userPersonalNotifs = await userPersonalNotifModel.find({userid: req.userid});
+  let userPersonalNotifs = await userPersonalNotifModel.find({userid: req.userid}).sort({ createdAt: -1 });
   res.json({userPersonalNotifs});
 }
 

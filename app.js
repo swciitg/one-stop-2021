@@ -11,9 +11,6 @@ const { errorHandler } = require("./middlewares/error.handler");
 const { NotFoundError } = require("./errors/not.found.error");
 const { createLastUpdateDocument } = require("./controllers/lastUpdateController");
 
-const fs = require('fs');
-
-console.log(bcrypt.hash("123",10));
 //for serving static files
 app.use(express.static("public"));
 
@@ -47,17 +44,6 @@ app.use((req, res, next) => {
         "Origin, X-Requested-With, Content-Type, Accept, Authorization, Security-Key"
     );
     next();
-});
-
-app.post(BASEURL + 'my-file', (req, res) => {
-    console.log("INSIDE my-file");
-    const stream = fs.createReadStream('./public/images/confirm.svg');
-  
-    res.header('Content-Type', 'image/svg+xml');
-    res.header('Content-Length', stream.length);
-  
-    stream.pipe(res);
-    res.end();
 });
 
 app.use(BASEURL, routers.authRouter.authRouter);
