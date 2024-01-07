@@ -69,7 +69,7 @@ exports.microsoftLoginRedirect = (req, res) => {
       }
       if(!userInfo.surname){
         // in case there is no roll number
-        userInfo.surname="";
+        userInfo.surname="1";
       }
       let userid = await createOrFindOnestopUserID(userInfo.displayName, userInfo.mail, userInfo.surname);
       const userTokensString = await getUserTokens(userid);
