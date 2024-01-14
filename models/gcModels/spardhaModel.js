@@ -95,6 +95,10 @@ const spardhaEventModelSchema = new mongoose.Schema({
     },
     "results" : {
         type: [[spardhaResultsSchema]]
+    },
+    "link":{
+        type: String,
+        required: false
     }
 });
 
