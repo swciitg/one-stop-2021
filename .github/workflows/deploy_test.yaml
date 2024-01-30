@@ -27,3 +27,4 @@ jobs:
             git pull origin dev
             git status
             docker-compose -f docker-compose.test.prod.yaml up -d --build
+            curl -X POST http://www.swc.iitg.ac.in/test/onestop/api/lastupdate/timetable
