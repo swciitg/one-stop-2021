@@ -31,9 +31,3 @@ exports.updateContactInLastUpdateDocument = async function(){
     let updatesList = await LastUpdate.find();
     await LastUpdate.findByIdAndUpdate(updatesList[0]._id,{contact : new Date},{runValidators: true});
 }
-
-exports.updatetimetableInLastUpdateDocument = async function(){
-    console.log("UPDATED TIME TABLE IN LAST UPDATE DOCUMENT");
-    let updatesList = await LastUpdate.find();
-    await LastUpdate.findByIdAndUpdate(updatesList[0]._id,{timetable : new Date},{runValidators: true});
-}
