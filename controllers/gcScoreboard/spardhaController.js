@@ -125,7 +125,7 @@ exports.getSpardhaOverallStandings = async (req,res) => {
 exports.getSpardhaEventStandings = async (req,res) => {
     try{
         let eventsGcStandings = await spardhaOverallStandingsModel.find();
-        if(await checkIfAdmin(req.body.email,"spardha")){
+        if(req.query.forAdmin==="true" && await checkIfAdmin(req.body.email,"spardha")){
             eventsGcStandings = eventsGcStandings.filter((eventStanding) => eventStanding["posterEmail"]===req.body.email);
         }
         res.json({"success" : true,"details" : eventsGcStandings});
