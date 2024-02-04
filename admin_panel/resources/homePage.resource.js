@@ -1,8 +1,5 @@
-const verifyRoles = require("../utils");
 const roles = require("../roles");
 const homePage = require("../../models/homePage");
-const AdminBro = require('admin-bro')
-const AdminBroExpress = require('@admin-bro/express')
 const uploadFeature = require('@admin-bro/upload')
 
 let allowedRoles = [roles.SUPERADMIN, roles.LOST];
@@ -11,11 +8,11 @@ module.exports = {
     resources: [{
         resource: homePage,
         features: [uploadFeature({
-          provider: { local: { bucket: 'images_folder/homePage' } },
+          provider: { local: { bucket: 'images_folder' } },
           properties: {
             key: 'fileUrl',
             mimeType: 'mimeType',
-            filename: 'homeimage',
+            filename: 'homeimage1234567',
           },
           validation: {
             mimeTypes: 'application/png'
