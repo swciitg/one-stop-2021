@@ -1,5 +1,6 @@
 const homePage = require("../../models/homePageModel");
 const roles = require("../roles");
+const verifyRoles = require("../utils");
 
 let allowedRoles = [roles.SUPERADMIN];
 
