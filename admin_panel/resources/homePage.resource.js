@@ -18,26 +18,26 @@ const options = {
         list: AdminBro.bundle('../ui/components/upload-image.list.tsx'),
       },
     },
-    actions: {
-      new: {
-        after: async (response, request, context) => {
-          return uploadAfterHook(modifiedResponse, request, context);
-        },
-        before: async (request, context) => {
-          return uploadBeforeHook(modifiedRequest, context);
-        },
+  },
+  actions: {
+    new: {
+      after: async (response, request, context) => {
+        return uploadAfterHook(modifiedResponse, request, context);
       },
-      edit: {
-        after: async (response, request, context) => {
-          return uploadAfterHook(modifiedResponse, request, context);
-        },
-        before: async (request, context) => {
-          return uploadBeforeHook(modifiedRequest, context);
-        },
+      before: async (request, context) => {
+        return uploadBeforeHook(modifiedRequest, context);
       },
-      show: {
-        isVisible: false,
+    },
+    edit: {
+      after: async (response, request, context) => {
+        return uploadAfterHook(modifiedResponse, request, context);
       },
+      before: async (request, context) => {
+        return uploadBeforeHook(modifiedRequest, context);
+      },
+    },
+    show: {
+      isVisible: false,
     },
   },
 };
