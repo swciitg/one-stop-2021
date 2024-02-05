@@ -7,6 +7,8 @@ const {
   before: uploadBeforeHook,
 } = require('../ui/actions/upload-image.hook');
 
+const { Components } = require('../ui/loader');
+
 // let allowedRoles = [roles.SUPERADMIN, roles.LOST];
 
 /** @type {AdminBro.ResourceOptions} */
@@ -14,8 +16,8 @@ const options = {
   properties: {
     uploadImage: {
       components: {
-        edit: AdminBro.bundle('../ui/components/upload-image.edit.tsx'),
-        list: AdminBro.bundle('../ui/components/upload-image.list.tsx'),
+        edit: Components.UploadImageEdit,
+        list: Components.UploadImageList,
       },
     },
   },
