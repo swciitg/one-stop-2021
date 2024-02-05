@@ -1,10 +1,10 @@
 import React from 'react'
 import { Label, Box, DropZone, BasePropertyProps, DropZoneProps, DropZoneItem } from 'admin-bro'
 
-const Edit: React.FC<BasePropertyProps> = (props) => {
+const Edit = (props) => {
   const { property, onChange, record } = props
 
-  const handleDropZoneChange: DropZoneProps['onChange'] = (files) => {
+  const handleDropZoneChange = (files) => {
     onChange(property.name, files[0])
   }
 

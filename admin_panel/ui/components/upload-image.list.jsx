@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, BasePropertyProps } from 'admin-bro'
 
-const Edit: React.FC<BasePropertyProps> = (props) => {
+const Edit = (props) => {
   const { record } = props
 
   const srcImg = record.params['profilePhotoLocation']
