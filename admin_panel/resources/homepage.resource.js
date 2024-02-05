@@ -2,12 +2,12 @@ const uploadFeature = require('@adminjs/upload');
 const homePage = require("../../models/homePageModel");
 const componentLoader = require("../ui/loader");
 
-const localProvider = {
-  bucket: 'images_folder',
-  opts: {
-    baseUrl: 'images_folder',
-  },
-};
+// const localProvider = {
+//   bucket: 'public',
+//   opts: {
+//     baseUrl: 'public',
+//   },
+// };
 
 module.exports = {
   resource: homePage,
@@ -31,9 +31,14 @@ module.exports = {
   features: [
     uploadFeature({
       componentLoader, 
-      provider: { local: localProvider },
+      provider: { local: { bucket: 'public' } },
       properties : { file: 'file', key: 's3Key', bucket: 'bucket', mimeType: 'mime'  },
       validation: { mimeTypes: ['image/png'] },
+      uploadPath: (record, filename) => {
+        console.log(record.id());
+        console.log(filename);
+        return `${record.id()}/${filename}`
+      },
     }),
   ],
 };
