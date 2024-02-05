@@ -8,9 +8,8 @@ const quickLink = new mongoose.Schema({
 });
 
 const homePage = new mongoose.Schema({
-  compressedImageURL: { type: String, required: true },
-  height : { type: String, required: true },
-  width : { type: String, required: true },
+  imagePath: { type: String, required: true },
+  ratio : { type: Number, required: true },
   filename : { type: String, required: true },
   quickLinks : [quickLink],
 });
