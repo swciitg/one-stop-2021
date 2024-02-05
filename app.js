@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const { errorHandler } = require("./middlewares/error.handler");
 const { NotFoundError } = require("./errors/not.found.error");
 const { createLastUpdateDocument } = require("./controllers/lastUpdateController");
+const authenticate = require("./admin_panel/auth");
 
 
 console.log(bcrypt.hash("123",10));
@@ -33,6 +34,7 @@ console.log(BASEURL,ADMINPANELROOT);
 
 // adminjs routes
 app.use(ADMINPANELROOT, adminJsRouter);
+app.use(BASEURL, authenticate, routers.homePage.homePageRouter);
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -80,7 +82,6 @@ app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
 app.use(BASEURL, routers.upspRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
-app.use(BASEURL, routers.homePage.homePageRouter);
 
 app.use("*",(req,res) => {
     throw new NotFoundError("Route not found");
