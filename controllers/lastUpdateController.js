@@ -31,3 +31,9 @@ exports.updateContactInLastUpdateDocument = async function(){
     let updatesList = await LastUpdate.find();
     await LastUpdate.findByIdAndUpdate(updatesList[0]._id,{contact : new Date},{runValidators: true});
 }
+
+exports.updateHomePageInLastUpdateDocument = async function(){
+    console.log("UPDATED HOME PAGE IN LAST UPDATE DOCUMENT");
+    let updatesList = await LastUpdate.find();
+    await LastUpdate.findByIdAndUpdate(updatesList[0]._id,{homePage : new Date},{runValidators: true});
+}

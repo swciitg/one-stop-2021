@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { updateHomePageInLastUpdateDocument } = require("../controllers/lastUpdateController");
 
 const quickLink = new mongoose.Schema({
     priorityNumber : { type: Number, required : true},
@@ -8,13 +9,21 @@ const quickLink = new mongoose.Schema({
 });
 
 const homePage = new mongoose.Schema({
-    id : { type: String},
-    s3Key : { type: String},
-    bucket : { type: String},
-    mime : { type: String},
-    comment : { type: String },
+    url : { type: String, required : true, default : "https://www.nitdgp.ac.in/"},
     ratio : { type: Number, required : true},
     quickLinks : [quickLink]
+});
+
+homePage.pre('save',async function(){
+    await updateHomePageInLastUpdateDocument();
+});
+  
+homePage.pre('findOneAndRemove',async function(){ // adminjs calls findOneAndRemove internally
+    await updateHomePageInLastUpdateDocument();
+});
+  
+homePage.pre('findOneAndUpdate',async function(){ // adminjs calls findOneAndUpdate internally
+    await updateHomePageInLastUpdateDocument();
 });
 
 module.exports = mongoose.model("homePage", homePage);
