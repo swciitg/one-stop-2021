@@ -1,8 +1,9 @@
 const roles = require("../roles");
 const homePage = require("../../models/homePage");
 const uploadFeature = require('@admin-bro/upload')
-import { ComponentLoader } from "adminjs";
-const componentLoader = new ComponentLoader()
+const { ComponentLoader } = require("adminjs");
+
+const componentLoader = new ComponentLoader();
 
 let allowedRoles = [roles.SUPERADMIN, roles.LOST];
 
