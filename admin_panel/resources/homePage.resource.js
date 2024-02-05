@@ -25,7 +25,7 @@ const options = {
         return uploadAfterHook(response, request, context);
       },
       before: async (request, context) => {
-        return uploadBeforeHook(response, context);
+        return uploadBeforeHook(request, context);
       },
     },
     edit: {
@@ -33,7 +33,7 @@ const options = {
         return uploadAfterHook(response, request, context);
       },
       before: async (request, context) => {
-        return uploadBeforeHook(response, context);
+        return uploadBeforeHook(request, context);
       },
     },
     show: {
