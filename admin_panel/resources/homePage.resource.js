@@ -22,18 +22,18 @@ const options = {
   actions: {
     new: {
       after: async (response, request, context) => {
-        return uploadAfterHook(modifiedResponse, request, context);
+        return uploadAfterHook(response, request, context);
       },
       before: async (request, context) => {
-        return uploadBeforeHook(modifiedRequest, context);
+        return uploadBeforeHook(response, context);
       },
     },
     edit: {
       after: async (response, request, context) => {
-        return uploadAfterHook(modifiedResponse, request, context);
+        return uploadAfterHook(response, request, context);
       },
       before: async (request, context) => {
-        return uploadBeforeHook(modifiedRequest, context);
+        return uploadBeforeHook(response, context);
       },
     },
     show: {
