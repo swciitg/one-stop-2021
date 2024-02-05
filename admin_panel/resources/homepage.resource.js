@@ -9,8 +9,8 @@ module.exports = {
   options: {
     listProperties: ["url", "ratio"],
     filterProperties: ["url", "ratio"],
-    editProperties: ["url", "ratio", "quickLinks"],
-    showProperties: ["url", "ratio", "quickLinks"],
+    editProperties: ["ratio", "quickLinks"],
+    showProperties: ["path", "ratio", "quickLinks"],
     actions: {
         list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
         new: { isAccessible: ({ currentAdmin }) => false }, // don't let admin create new lost item
