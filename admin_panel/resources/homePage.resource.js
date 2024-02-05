@@ -5,7 +5,6 @@ const uploadFeature = require('@admin-bro/upload')
 let allowedRoles = [roles.SUPERADMIN, roles.LOST];
 
 module.exports = {
-    resources: [{
         resource: homePage,
         features: [uploadFeature({
           provider: { local: { bucket: 'images_folder' } },
@@ -18,6 +17,4 @@ module.exports = {
             mimeTypes: 'application/png'
           }
         })],
-        
-    }]
 };
