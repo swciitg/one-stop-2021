@@ -10,8 +10,6 @@ const bcrypt = require("bcrypt");
 const { errorHandler } = require("./middlewares/error.handler");
 const { NotFoundError } = require("./errors/not.found.error");
 const { createLastUpdateDocument } = require("./controllers/lastUpdateController");
-const authenticate = require("./admin_panel/auth");
-
 
 console.log(bcrypt.hash("123",10));
 //for serving static files
@@ -34,7 +32,7 @@ console.log(BASEURL,ADMINPANELROOT);
 
 // adminjs routes
 app.use(ADMINPANELROOT, adminJsRouter);
-app.use(BASEURL, authenticate, routers.homePage.homePageRouter);
+app.use(BASEURL, routers.homePage.homePageRouter);
 
 app.use(express.urlencoded({ extended: true }));
 

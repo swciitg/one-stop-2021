@@ -36,7 +36,7 @@ const ImageUploadButton = () => {
 
         const currentUrl = window.location.href;
         const currentUrlParts = currentUrl.split('/');
-        const postUrl = currentUrlParts.slice(0, currentUrlParts.length - 2).join('/') + '/homepage';
+        const postUrl = currentUrlParts.slice(0, currentUrlParts.length - 1).join('/') + '/homepage';
         console.log(postUrl);
         const response = await fetch(postUrl, {
           method: 'POST',
