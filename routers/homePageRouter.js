@@ -17,7 +17,7 @@ homePageRouter.get("/homepage",(req,res) => {
     res.sendFile(path.resolve(__dirname, "../public/images/appLogo.svg"));
 });
 
-homePageRouter.post("/homepage", upload.single('homePageIcon'), function (req, res, next) {
+homePageRouter.post("/homepage", upload.single('image'), function (req, res, next) {
     // req.file is the `profile-file` file
     // req.body will hold the text fields, if there were any
     console.log(JSON.stringify(req.file))
