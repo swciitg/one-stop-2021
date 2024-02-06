@@ -9,7 +9,7 @@ const quickLink = new mongoose.Schema({
 });
 
 const homePage = new mongoose.Schema({
-    path : { type: String, required : true, default : "https://www.nitdgp.ac.in/"},
+    path : { type: String },
     ratio : { type: Number, required : true},
     quickLinks : [quickLink]
 });

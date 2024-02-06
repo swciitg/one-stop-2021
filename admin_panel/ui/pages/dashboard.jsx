@@ -18,7 +18,12 @@ const pageHeaderPaddingY = 74;
 const pageHeaderPaddingX = 250;
 
 const ImageUploadButton = () => {
-    const [selectedImage, setSelectedImage] = useState(null);
+
+    const currentUrl = window.location.href;
+    const currentUrlParts = currentUrl.split('/');
+    const postUrl = currentUrlParts.slice(0, currentUrlParts.length - 1).join('/') + '/homepage';
+    const imageUrl = currentUrlParts.slice(0, currentUrlParts.length - 1).join('/') + '/homeImage';
+    const [selectedImage, setSelectedImage] = useState(imageUrl);
   
     const handleImageChange = (event) => {
       const file = event.target.files[0];
@@ -29,34 +34,33 @@ const ImageUploadButton = () => {
   
     const handleUpload = async () => {
       // You can implement the logic to upload the selectedImage here
-      console.log("Upload logic goes here:", selectedImage);
-      try {
+        console.log("Upload logic goes here:", selectedImage);
         const formData = new FormData();
         formData.append('image', selectedImage);
 
-        const currentUrl = window.location.href;
-        const currentUrlParts = currentUrl.split('/');
-        const postUrl = currentUrlParts.slice(0, currentUrlParts.length - 1).join('/') + '/homepage';
+        
         console.log(postUrl);
         const response = await fetch(postUrl, {
-          method: 'POST',
-          body: formData,
+            method: 'POST',
+            body: formData,
         });
-  
-        if (response.ok) {
-          const responseData = await response.json();
-          console.log('Image uploaded successfully:', responseData);
-        } else {
-          console.error('Error uploading image:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error uploading image:', error);
-      }
 
+        if (response.ok) {
+            const responseData = await response.json();
+            console.log('Image uploaded successfully:', responseData);
+        } else {
+            console.error('Error uploading image:', response.statusText);
+        }
+      
     };
   
     return (
-      <div>
+      <div style={{
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        marginTop:"32px"
+      }}>
         <input
           type="file"
           accept="image/*"
