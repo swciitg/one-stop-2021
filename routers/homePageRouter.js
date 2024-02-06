@@ -1,4 +1,4 @@
-const multer  = require('multer')
+const multer = require('multer');
 const express = require('express');
 const path = require("path");
 const homePageController = require("../controllers/homePageController");
@@ -18,7 +18,7 @@ var upload = multer({ storage: storage })
 homePageRouter.get("/homepage", homePageController.getHomePageData);
 
 homePageRouter.post("/homepage", upload.single('image'), async (req, res, next)  => {
-    console.log(JSON.stringify(req.file));
+    console.log("dfdv  errg "+JSON.stringify(req.file));
     let homePageDoc = await homePage.find();
     await homePage.findByIdAndUpdate(homePageDoc[0]._id,{path : req.file.path},{runValidators: true});
     return res.send(req.file.path)
