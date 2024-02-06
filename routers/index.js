@@ -18,5 +18,5 @@ exports.onestopUserRouter = require("./onsetopUser.routes");
 exports.notificationRouter = require("./notification.routes");
 exports.gcScoreboardRouter = require("./gcScoreboardRouter");
 exports.upspRouter = require("./upspRouter");
-// exports.lastUpdateRouter = require("./lastUpdateRouter");
+exports.lastUpdateRouter = require("./lastUpdateRouter");
 exports.homePage = require("./homePage");

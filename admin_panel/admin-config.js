@@ -41,10 +41,7 @@ const adminjs = new AdminJs({
         styles: styleAssets
     },
     componentLoader,
-    Components,
     dashboard: { component: Components.Dashboard },
-    UploadImageEdit: { component: Components.UploadImageEdit },
-    UploadImageList: { component: Components.UploadImageList },
     rootPath: ADMINPANELROOT,
     loginPath: ADMINPANELROOT + "/login",
     logoutPath: ADMINPANELROOT + "/logout"
