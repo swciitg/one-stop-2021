@@ -19,6 +19,13 @@ const pageHeaderPaddingX = 250;
 
 const ImageUploadButton = () => {
     const [selectedImage, setSelectedImage] = useState(null);
+
+    useEffect(() => {
+      const currentUrl = window.location.href;
+      const currentUrlParts = currentUrl.split('/');
+      const imageUrl = currentUrlParts.slice(0, currentUrlParts.length - 1).join('/') + '/homeImage';
+      setSelectedImage(imageUrl);
+    }, []);
   
     const handleImageChange = (event) => {
       const file = event.target.files[0];
