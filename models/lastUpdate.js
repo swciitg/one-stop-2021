@@ -20,7 +20,11 @@ const lastUpdateSchema = new Schema({
   contact: {
     type: Date,
     default: new Date
-  }
+  },
+  homePage: {
+    type: Date,
+    default: new Date
+  },
 });
 
 const LastUpdate = mongoose.model("lastupdate", lastUpdateSchema);

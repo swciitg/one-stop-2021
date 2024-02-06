@@ -7,3 +7,4 @@ exports.messMenuController = require("./messMenuController");
 exports.foodItemsController = require("./foodItemsController");
 exports.foodOutletsController = require("./foodOutletsController");
 exports.updateController = require("./updateController");
+exports.homePageController = require("./homePageController");
