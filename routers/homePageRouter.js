@@ -2,7 +2,7 @@ const multer  = require('multer')
 const express = require('express');
 const path = require("path");
 const homePageController = require("../controllers/homePageController");
-const { homePage } = require("../models/homePageModel");
+const homePage = require("../models/homePageModel");
 const homePageRouter = express.Router();
 
 var storage = multer.diskStorage({
