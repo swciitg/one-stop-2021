@@ -7,13 +7,13 @@ let allowedRoles = [roles.SUPERADMIN];
 module.exports = {
   resource: homePage,
   options: {
-    listProperties: ["url", "ratio"],
-    filterProperties: ["url", "ratio"],
+    listProperties: ["path", "ratio"],
+    filterProperties: ["path", "ratio"],
     editProperties: ["ratio", "quickLinks"],
     showProperties: ["path", "ratio", "quickLinks"],
     actions: {
         list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
-        new: { isAccessible: ({ currentAdmin }) => false }, // don't let admin create new lost item
+        new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) }, // don't let admin create new lost item
         filter: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
         edit: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
         delete: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) }
