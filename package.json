@@ -24,6 +24,7 @@
   "dependencies": {
     "@adminjs/express": "^5.1.0",
     "@adminjs/mongoose": "^3.0.3",
+    "@adminjs/upload": "^3.0.1",
     "@azure/msal-node": "^1.16.0",
     "adminjs": "^6.8.7",
     "bcrypt": "^5.1.0",
