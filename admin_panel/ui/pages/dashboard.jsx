@@ -27,9 +27,7 @@ const ImageUploadButton = () => {
   
     const handleImageChange = (event) => {
       const file = event.target.files[0];
-      // You can perform additional validation or processing here if needed
-  
-      setSelectedImage(file);
+      setSelectedImage(URL.createObjectURL(file));
     };
   
     const handleUpload = async () => {
@@ -72,7 +70,7 @@ const ImageUploadButton = () => {
           <div>
             <p>Selected Image:</p>
             <img
-              src={URL.createObjectURL(selectedImage)}
+              src={selectedImage}
               alt="Selected"
               style={{ maxWidth: '100%', maxHeight: '200px' }}
             />
