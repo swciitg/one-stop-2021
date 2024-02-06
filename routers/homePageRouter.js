@@ -18,13 +18,10 @@ var upload = multer({ storage: storage })
 homePageRouter.get("/homepage", homePageController.getHomePageData);
 
 homePageRouter.post("/homepage", upload.single('image'), async (req, res, next)  => {
-    console.log("Svsfv   " + JSON.stringify(req.file))
-    var response = '<a href="/">Home</a><br>'
-    response += "Files uploaded successfully.<br>"
-    response += `<img src="${req.file.path}" /><br>`
+    console.log("Saved Image " + JSON.stringify(req.file))
     let homePageDoc = await homePage.find();
-    await homePage.findByIdAndUpdate(homePageDoc[0]._id,{path : req.file.path},{runValidators: true});
-    return res.send(response)
+    await homePage.findByIdAndUpdate(homePageDoc[0]._id, {path : req.file.path}, {runValidators: true});
+    return res.send(req.file.path)
 });
 
 homePageRouter.get("/homeImage",async (req,res) => {

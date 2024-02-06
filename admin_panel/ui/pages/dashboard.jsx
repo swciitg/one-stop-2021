@@ -56,7 +56,12 @@ const ImageUploadButton = () => {
     };
   
     return (
-      <div>
+      <div style={{
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        marginTop:"64px"
+      }}>
         <input
           type="file"
           accept="image/*"
