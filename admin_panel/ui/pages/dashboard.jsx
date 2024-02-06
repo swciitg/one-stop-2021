@@ -1,7 +1,3 @@
-changes
-6954869
-admin_panel\ui\pages\dashboard.jsx
-@@ -1,127 +1,127 @@
 import React, {useState} from "react";
 import styled from "styled-components";
 import {
