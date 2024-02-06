@@ -66,6 +66,10 @@ const kritiEventSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    "link":{
+        type: String,
+        required: false,
+    },
     "results" : {
         type: [kritiHostelResultSchema],
         default: [],

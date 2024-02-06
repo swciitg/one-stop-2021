@@ -244,7 +244,7 @@ exports.getUserByEmail = async (req, res, next) => {
 };
 
 exports.getUserPersonalNotifs = async (req,res) => {
-  let userPersonalNotifs = await userPersonalNotifModel.find({userid: req.userid});
+  let userPersonalNotifs = await userPersonalNotifModel.find({userid: req.userid}).sort({ createdAt: -1 });
   res.json({userPersonalNotifs});
 }
 
@@ -264,7 +264,9 @@ exports.updateOnestopUserNotifPrefsValidate = [
 exports.updateOnestopUserNotifPrefs = async (req,res) => {
   let data = matchedData(req, { locations: ["body"] });
   await updateTopicSubscriptionOfUser(data,req.userid);
+  console.log("UPDATED SUBSCRIPTION");
   await onestopUserModel.findByIdAndUpdate(req.userid, {notifPref : data}, {runValidators: true});
+  console.log("UPDATED Notifpref");
   res.json({success: true});
 }
 

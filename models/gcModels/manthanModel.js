@@ -59,6 +59,10 @@ const manthanEventSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  link:{
+    type: String,
+    required: false,
+  }
 });
 
 module.exports = {

@@ -4,9 +4,6 @@
 # OneStop : IIT Guwahati campus application
 #### OneStop is developed wih motivation of assisting IIT Guwahati students in daily life utilities like Academic timetable, Food menus, Bus/Ferry timings and more. Students' Web Committee took the lead for this product, involved in its development from ideation, user research to deployment and release.
 
-## Demo
-#### Getting started demo of OneStop Applicaiton - [See from here](https://youtu.be/AQkenxZxChY).
-
 ## Download Links
 #### [Follow for PlayStore](https://play.google.com/store/apps/details?id=com.swciitg.onestop2) || [Follow for AppStore](https://apps.apple.com/in/app/onestop-iitg/id1642792642)
 
@@ -41,6 +38,15 @@
 
 ## 🍁 Mobile Application
 - Follow [this link](https://github.com/swciitg/onestop_flutter) to app codebase repository.
+
+
+## App views
+<div align="center">
+  <img src="./public/screenshots/home-page.png" alt="Image 1" width="200" />
+  <img src="./public/screenshots/food-page.png" alt="Image 1" width="200" />
+  <img src="./public/screenshots/profile-setup.png" alt="Image 2" width="200" />
+  <img src="./public/screenshots/academic-timetable.png" alt="Image 3" width="200" />
+</div>
 
 ## Setting up project on your machine ⚙️
 - [Follow this guide](https://swciitg.notion.site/Day-1-f6ea19b1d7ff410e8ec03683772f4cd0) to setup Android Studio & Flutter SDK on your machine

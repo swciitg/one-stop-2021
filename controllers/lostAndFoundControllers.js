@@ -21,34 +21,6 @@ function errorFxn(res, err) {
   return res.json({ saved_successfully: false, image_safe: true, error: err });
 }
 
-// exports.getImage = async (req, res) => {
-//   console.log("Get image par");
-//   const imagePath = path.resolve(
-//     __dirname +
-//     "/../" +
-//     "images_folder" +
-//     "/" +
-//     req.query.photo_id +
-//     "-compressed.jpg"
-//   );
-//   console.log(imagePath);
-//   res.sendFile(imagePath);
-// };
-
-// exports.getCompressedImage = async (req, res) => {
-//   console.log("Get image par");
-//   const imagePath = path.resolve(
-//     __dirname +
-//     "/../" +
-//     "images_folder" +
-//     "/" +
-//     req.query.photo_id +
-//     "-ultracompressed.jpg"
-//   );
-//   console.log(imagePath);
-//   res.sendFile(imagePath);
-// };
-
 exports.getLostPageDetails = async (req, res) => {
   let page = req.query.page;
   const toSkip = (page - 1) * 5;
@@ -72,20 +44,6 @@ exports.getLostDetails = async (req, res) => {
   }
 };
 
-exports.addLostForm = async (req, res) => {
-  try {
-    return res.render("add_user");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-exports.deleteLostAll = async (req, res) => {
-  await LostModel.deleteMany({});
-  res.json({ success: true });
-}
-
-
 async function sendLostNotif(title,username,outlookEmail){
 
   let notification = {
@@ -100,6 +58,7 @@ async function sendLostNotif(title,username,outlookEmail){
   }
 
   await sendToATopic(NotificationCategories.lost,notification, data);
+  
 }
 
 exports.postLostDetails = async (req, res) => {
@@ -113,11 +72,6 @@ exports.postLostDetails = async (req, res) => {
       email,
       username,
     } = req.body;
-    console.log(title);
-    console.log(location);
-    console.log(phonenumber);
-    console.log(description);
-    console.log(imageString);
     const imageName = uuid.v4();
     const imagePath = path.resolve(
       __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
@@ -153,7 +107,6 @@ exports.postLostDetails = async (req, res) => {
       imageName +
       "-ultracompressed.jpg"
     );
-    //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
     await sharp(imagePath)
       .resize({
         width: Math.floor(metadata.width / 2),
@@ -174,12 +127,7 @@ exports.postLostDetails = async (req, res) => {
       .withMetadata()
       .toFormat("jpg", { mozjpeg: true })
       .toFile(compressedImagePath);
-    console.log("Here 1");
-    console.log(imageURL);
-    console.log("Here 2");
-    console.log(process.env.NSFW_API_KEY);
-    console.log(imagePath);
-    const newLostDetail = await new LostModel({
+    await new LostModel({
       title,
       location,
       phonenumber,

@@ -5,4 +5,3 @@ exports.getLastUpdate = (req, res) => {
     res.json(data[0]);
   });
 };
-

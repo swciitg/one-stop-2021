@@ -24,6 +24,7 @@ exports.verifyUserRequest = async (req,res,next) => {
     if (onestopUser !== undefined && !onestopUser.blocked) {
         console.log(decoded);
         req.userid = decoded.userid;
+        req.body.email=onestopUser.outlookEmail;
         console.log(req.userid);
         console.log("Token Verified");
         next();

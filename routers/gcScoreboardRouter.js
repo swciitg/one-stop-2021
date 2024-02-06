@@ -60,6 +60,7 @@ const {
   deleteSahyogEventResult,
 } = require("../controllers/gcScoreboard/sahyogController");
 const { postManthanEvents, getManthanEventStandings, addManthanEventResult, deleteManthanEventResult, deleteManthanEventSchedule, getManthanEvents, getManthanEventsSchdedules, getManthanOverallStandings, getManthanResults, postManthanEventSchedule, updateManthanEventSchedule } = require("../controllers/gcScoreboard/manthanController");
+const { verifyUserRequest } = require("../middlewares/user.auth");
 
 async function getAuthEvents(email) {
   let gcCompetitionsStore = await getGcScoreboardStore();
@@ -177,7 +178,7 @@ gcScoreboardRouter.get("/gc/sahyog/all-events", getSahyogEvents);
 
 gcScoreboardRouter.get("/gc/manthan/all-events", getManthanEvents);
 
-gcScoreboardRouter.use(gcScoreboardAuthMiddleware); // check tokens for all below routes with this middleware
+gcScoreboardRouter.use(verifyUserRequest); // check tokens for all below routes with this middleware
 
 gcScoreboardRouter.get("/gc/overall/standings", getGcOverallStandings);
 
