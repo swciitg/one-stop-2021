@@ -2,7 +2,7 @@ const multer  = require('multer')
 const express = require('express');
 const path = require("path");
 const homePageController = require("../controllers/homePageController");
-const {homePage} = require("../models/homePageModel");
+const { homePage } = require("../models/homePageModel");
 const homePageRouter = express.Router();
 
 var storage = multer.diskStorage({
@@ -25,8 +25,8 @@ homePageRouter.post("/homepage", upload.single('image'), async (req, res, next) 
 });
 
 homePageRouter.get("/homeImage",async (req,res) => {
-    let homePage = await homePage.find();
-    res.sendFile(path.resolve(__dirname, "../" + homePage[0].path));
+    let homePageData = await homePage.find();
+    res.sendFile(path.resolve(__dirname, "../" + homePageData[0].path));
 });
 
 module.exports = {
