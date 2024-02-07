@@ -17,6 +17,8 @@ var upload = multer({ storage: storage })
 
 homePageRouter.get("/quickLinks", homePageController.getQuickLinksData);
 
+homePageRouter.get("/homepage", homePageController.getHomePageData);
+
 homePageRouter.post("/homepage", upload.single('image'), async (req, res, next)  => {
     console.log("Saved Image " + JSON.stringify(req.file))
     let homePageDoc = await homePage.find();
@@ -27,6 +29,22 @@ homePageRouter.post("/homepage", upload.single('image'), async (req, res, next) 
 homePageRouter.get("/homeImage",async (req,res) => {
     let homePageDoc2 = await homePage.find();
     res.sendFile(path.resolve(__dirname, "../" + homePageDoc2[0].path));
+});
+
+// Remove this after college Cupid 
+homePageRouter.get("/collegeCupid",async (req,res) => {
+    let homePageDoc = await homePage.find();
+    res.json(homePageDoc[0]);
+
+    const userAgent = req.headers['user-agent'];
+
+    if (userAgent.includes('Android')) {
+      res.redirect('https://swc.iitg.ac.in/swc/cards/apk/College_Cupid.apk');
+    } else if (userAgent.includes('iPhone') || userAgent.includes('iPad')) {
+      res.redirect('https://apps.apple.com/in/app/collegecupid-iitg/id6475586355');
+    } else {
+      res.redirect('https://swc.iitg.ac.in/swc/cards/apk/College_Cupid.apk');
+    }
 });
 
 module.exports = {

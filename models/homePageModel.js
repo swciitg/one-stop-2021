@@ -10,7 +10,7 @@ const quickLink = new mongoose.Schema({
 
 const homePage = new mongoose.Schema({
     path : { type: String },
-    ratio : { type: Number, required : true},
+    clickableImageRedirectUrl : { type: String, required : true},
     quickLinks : [quickLink]
 });
 
