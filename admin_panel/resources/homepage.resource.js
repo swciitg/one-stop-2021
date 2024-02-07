@@ -7,10 +7,10 @@ let allowedRoles = [roles.SUPERADMIN];
 module.exports = {
   resource: homePage,
   options: {
-    listProperties: ["path", "ratio"],
-    filterProperties: ["path", "ratio"],
-    editProperties: ["path", "ratio", "quickLinks"],
-    showProperties: ["path", "ratio", "quickLinks"],
+    listProperties: ["path", "clickableImageRedirectUrl"],
+    filterProperties: ["path", "clickableImageRedirectUrl"],
+    editProperties: ["path", "clickableImageRedirectUrl", "quickLinks"],
+    showProperties: ["path", "clickableImageRedirectUrl", "quickLinks"],
     actions: {
         list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
         new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) }, // don't let admin create new lost item
