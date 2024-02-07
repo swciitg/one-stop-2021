@@ -15,7 +15,7 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage })
 
-homePageRouter.get("/homepage", homePageController.getHomePageData);
+homePageRouter.get("/quicklinks", homePageController.getQuickLinksData);
 
 homePageRouter.post("/homepage", upload.single('image'), async (req, res, next)  => {
     console.log("Saved Image " + JSON.stringify(req.file))
