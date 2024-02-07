@@ -9,7 +9,7 @@ module.exports = {
   options: {
     listProperties: ["path", "ratio"],
     filterProperties: ["path", "ratio"],
-    editProperties: ["ratio", "quickLinks"],
+    editProperties: ["path", "ratio", "quickLinks"],
     showProperties: ["path", "ratio", "quickLinks"],
     actions: {
         list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
@@ -17,6 +17,14 @@ module.exports = {
         filter: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
         edit: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
         delete: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) }
+    },
+    properties : {
+      quickLinks : {
+        description : "In Icon number add the number of the icon from https://fonts.google.com/icons - then convert code point to Decimal",
+      },
+      path : {
+        description : "Dont chnage this field, it is used to store the path of the image uploaded for the home page. To change the image, upload a new image and then delete the old one. If the path wont exist it will show the map image.",
+      },
     }
   }
 };

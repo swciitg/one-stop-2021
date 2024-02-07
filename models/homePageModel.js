@@ -4,7 +4,7 @@ const { updateHomePageInLastUpdateDocument } = require("../controllers/lastUpdat
 const quickLink = new mongoose.Schema({
     priorityNumber : { type: Number, required : true},
     title : { type: String, required : true},
-    logo : { type: String, required : true},
+    logo : { type: Number, required : true},
     url : { type: String, required : true},
 });
 
