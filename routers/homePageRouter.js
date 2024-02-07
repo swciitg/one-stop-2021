@@ -26,16 +26,13 @@ homePageRouter.post("/homepage", upload.single('image'), async (req, res, next) 
     return res.send(req.file.path)
 });
 
-homePageRouter.get("/homeImage",async (req,res) => {
+homePageRouter.get("/homeImage", async (req,res) => {
     let homePageDoc2 = await homePage.find();
     res.sendFile(path.resolve(__dirname, "../" + homePageDoc2[0].path));
 });
 
 // Remove this after college Cupid 
-homePageRouter.get("/collegeCupid",async (req,res) => {
-    let homePageDoc = await homePage.find();
-    res.json(homePageDoc[0]);
-
+homePageRouter.get("/collegeCupid", async (req,res) => {
     const userAgent = req.headers['user-agent'];
 
     if (userAgent.includes('Android')) {
