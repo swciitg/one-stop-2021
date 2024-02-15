@@ -4,11 +4,17 @@ exports.getHomePageData = (req, res) => {
   homePage
     .find()
     .then((data) => {
-      if(data[0].clickableImageRedirectUrl === undefined || data[0].clickableImageRedirectUrl === null || data[0].clickableImageRedirectUrl === ""){
-        res.json({homeImageUrl : ""});
-      }else{
-        res.json({homeImageUrl : data[0].clickableImageRedirectUrl});
-      }
+      let quickLinks  = data[0].quickLinks;
+      quickLinks.sort((a, b) => a.priorityNumber - b.priorityNumber);
+      let response = { homeImageUrl : data[0].clickableImageRedirectUrl };
+      quickLinks = quickLinks.map((item) => {
+        return {
+          "name": item.title,
+          "icon": item.logo,
+          "link": item.url
+        }
+      });
+      res.json({ ...response, quickLinks });
     })
     .catch((err) => {
       console.log(err);
