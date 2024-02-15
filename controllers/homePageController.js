@@ -6,7 +6,7 @@ exports.getHomePageData = (req, res) => {
     .then((data) => {
       let quickLinks  = data[0].quickLinks;
       quickLinks.sort((a, b) => a.priorityNumber - b.priorityNumber);
-      let response = { homeImageUrl : data[0].clickableImageRedirectUrl };
+      let response = { homeImageUrl : data[0].clickableImageRedirectUrl ? data[0].clickableImageRedirectUrl : "" };
       quickLinks = quickLinks.map((item) => {
         return {
           "name": item.title,
