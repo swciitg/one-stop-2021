@@ -25,7 +25,7 @@ const kritiEventSchema = new mongoose.Schema({
     },
     "difficulty" : {
         type: String,
-        enum: ["High","Mid","Low"],
+        enum: ["High","Mid","Low","No Prep"],
         required: true
     },
     "points": {
