@@ -2,7 +2,7 @@ const homePage = require("../../models/homePageModel");
 const roles = require("../roles");
 const verifyRoles = require("../utils");
 
-let allowedRoles = [roles.SUPERADMIN];
+let allowedRoles = [roles.SUPERADMIN]; // Only super admin allowed to change homepage image
 
 module.exports = {
   resource: homePage,
@@ -13,7 +13,7 @@ module.exports = {
     showProperties: ["path", "clickableImageRedirectUrl", "quickLinks"],
     actions: {
         list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
-        new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) }, // don't let admin create new lost item
+        new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
         filter: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
         edit: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
         delete: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) }
