@@ -41,9 +41,15 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.2",
     "mongoose-double": "^0.0.1",
+    "jimp": "^0.22.12",
+
     "multer": "^1.4.4",
     "nodejs-nodemailer-outlook": "^1.2.4",
     "nodemon": "^3.0.1",
+    "qrcode": "^1.5.3",
+    "qrcode-reader": "^1.0.4",
+    "socket.io": "^4.7.4",
+    "socket.io-client": "^4.7.4",
     "request": "^2.88.2",
     "sharp": "^0.31.3",
     "uuid": "^9.0.0"

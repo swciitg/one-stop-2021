@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>KHOKHA ENTRY/EXIT</h1>
+
+    <div id="qrCodeContainer">
+        <img id="qrCodeImage" src="" alt="QR Code">
+    </div>
+</body>
+<!-- <script src="/socket.io/socket.io.js"></script> -->
+<script src="/socket.io/socket.io.js"></script>
+<script>const socket = io();
+    //   fetch('/generate-qr-code')
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 const qrCodeDataURL = data.qrCodeDataURL;
+    //                 document.getElementById('qrCodeImage').src = qrCodeDataURL;
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error fetching QR code data:', error);
+    //             });
+
+    const formdata = {
+        hostel: 'Lohit',
+        name: 'ayushlohia',
+        outlook: 'l.ayush@iitg.ac.in'
+        
+    };
+    socket.on('connect', () => {
+        console.log('Connected to server!');
+    });
+
+    socket.emit('requestQRCodeDataURL', formdata);
+
+    // Listen for the response from the server
+    socket.on('qrCodeDataURL', (data) => {
+        const qrCodeDataURL = data.qrCodeDataURL;
+        console.log("qr is", qrCodeDataURL);
+        document.getElementById('qrCodeImage').src = qrCodeDataURL;
+    });
+</script>
+
+</html>
