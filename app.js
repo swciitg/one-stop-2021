@@ -10,10 +10,16 @@ const bcrypt = require("bcrypt");
 const { errorHandler } = require("./middlewares/error.handler");
 const { NotFoundError } = require("./errors/not.found.error");
 const { createLastUpdateDocument } = require("./controllers/lastUpdateController");
-
+const exitRouter = require('./routes/khokhaEntryRouter');
 console.log(bcrypt.hash("123",10));
+const { Server } = require('socket.io');
+const http = require('http');
 //for serving static files
 app.use(express.static("public"));
+app.use(express.static(path.resolve("./public")));
+
+const server = http.createServer(app);
+const io = new Server(server);
 
 // setting ejs as view engine
 app.set("view engine", "ejs");
@@ -87,6 +93,30 @@ app.use("*",(req,res) => {
 
 app.use(errorHandler);
 
+
+
+
+app.use('/', exitRouter);
+
+
+
+app.get("/",(req,res)=>{
+  return res.sendFile("/public/index.html");
+}); 
+
+io.use((socket, next) => {
+    authenticateSocket(socket, next);
+  });
+  
+  
+  io.on('connection', (socket) => {
+    console.log('A user connected',socket.id);
+  
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });
+  }); 
+  
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
     console.log(bcrypt.hashSync("123", 10));
