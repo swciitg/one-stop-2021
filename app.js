@@ -8,8 +8,29 @@ const { adminJsRouter } = require("./admin_panel/admin-config");
 const app = express();
 const bcrypt = require("bcrypt");
 const { errorHandler } = require("./middlewares/error.handler");
+const { authenticateSocket } = require("./middleware/user.auth.js");
 const { NotFoundError } = require("./errors/not.found.error");
 const { createLastUpdateDocument } = require("./controllers/lastUpdateController");
+const http=require('http');
+const jwt = require("jsonwebtoken");
+const { Server } = require('socket.io');
+const io =new Server(server);
+
+
+// io.use((socket, next) => {
+//     authenticateSocket(socket, next);
+// });
+
+
+
+io.on('connection', (socket) => {
+    console.log('A user connected',socket.id);
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });
+}); 
+
 
 console.log(bcrypt.hash("123",10));
 //for serving static files
@@ -80,6 +101,7 @@ app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
 app.use(BASEURL, routers.upspRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
+app.use(BASEURL, routers.khokhaExit);
 
 app.use("*",(req,res) => {
     throw new NotFoundError("Route not found");
@@ -88,7 +110,7 @@ app.use("*",(req,res) => {
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, async () => {
+const server=app.listen(PORT, async () => {
     console.log(bcrypt.hashSync("123", 10));
     console.log(`Express server listening on port ${PORT} see docs at /docs`);
     await mongoose.connect(process.env.DATABASE_URI);
