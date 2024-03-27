@@ -10,8 +10,13 @@ const { UserBlockedError } = require("../errors/user.blocked.error");
 exports.verifyUserRequest = async (req,res,next) => {
     if(req.originalUrl.split('/').includes('public')) next();
     console.log(req.originalUrl);
+    if(req.headers.authorization === undefined){
+        next(new RequestValidationError("Access token not passed"));
+    }
     let accessToken = req.headers.authorization.split(' ').slice(-1)[0];
-    if(!accessToken) throw new RequestValidationError("Access token not passed");
+    if(!accessToken) {
+        next(new RequestValidationError("Access token not passed"));
+    }
     let decoded;
     jwt.verify(accessToken, accessjwtsecret,(err,dec) => {
         if(err){
@@ -41,7 +46,7 @@ exports.restrictIfGuest = async (req,res,next) => {
     let decoded;
     jwt.verify(accessToken, accessjwtsecret,(err,dec) => {
         if(err){
-            throw new AccessTokenError(err.message);
+            next(new AccessTokenError(err.message));
         }
         decoded=dec;
     });
