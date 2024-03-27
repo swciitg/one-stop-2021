@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const { errorHandler } = require("./middlewares/error.handler");
 const { NotFoundError } = require("./errors/not.found.error");
 const { createLastUpdateDocument } = require("./controllers/lastUpdateController");
+const { UnauthorizedRequestError } = require("./errors/unauthorized.request.error");
 
 console.log(bcrypt.hash("123",10));
 //for serving static files
@@ -56,8 +57,7 @@ app.use((req, res, next) => {
     console.log(req.path);
     console.log(req.body);
     if (req.headers["security-key"] !== process.env.SECURITY_KEY) {
-        res.json({ message: "You are not authorized app.js" });
-        return;
+        next(new UnauthorizedRequestError("You are not authorized app.js"));
     }
     next();
 });
