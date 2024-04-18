@@ -12,16 +12,16 @@ exports.verifyUserRequest = async (req,res,next) => {
         if(req.originalUrl.split('/').includes('public')) next();
         console.log(req.originalUrl);
         if(req.headers.authorization === undefined){
-            next(new RequestValidationError("Access token not passed"));
+            throw new RequestValidationError("Access token not passed");
         }
         let accessToken = req.headers.authorization.split(' ').slice(-1)[0];
         if(!accessToken) {
-            next(new RequestValidationError("Access token not passed"));
+            throw new RequestValidationError("Access token not passed");
         }
         let decoded;
         jwt.verify(accessToken, accessjwtsecret,(err,dec) => {
             if(err){
-                next(new AccessTokenError(err.message));
+                throw new AccessTokenError(err.message);
             }
             decoded=dec;
         });
@@ -36,9 +36,9 @@ exports.verifyUserRequest = async (req,res,next) => {
             next();
         }
         else if(onestopUser !== undefined && onestopUser.blocked){
-            next(new UserBlockedError("user has been blocked due to spamming"));
+            throw new UserBlockedError("user has been blocked due to spamming");
         }
-        else next(new RequestValidationError("invalid user id found"));
+        else throw new RequestValidationError("invalid user id found");
     }catch(err){
         next(err);
     }
