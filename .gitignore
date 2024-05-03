@@ -1,4 +1,5 @@
 config/push-notification-key.json
+.idea/
 # Logs
 logs
 *.log
