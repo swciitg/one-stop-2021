@@ -142,7 +142,7 @@ exports.postLostDetails = async (req, res) => {
             .then((result) => {
                 console.log(result);
             });
-        // await sendLostNotif(title,username,email);
+        await sendLostNotif(title, username, email);
         return res.json({saved_successfully: true, image_safe: true});
     } catch (error) {
         return errorFxn(res, error);
@@ -343,7 +343,7 @@ exports.postfoundDetails = async (req, res) => {
             .then((result) => {
                 console.log(result);
             });
-        // await sendFoundNotif(title,username,email);
+        await sendFoundNotif(title, username, email);
         return res.json({saved_successfully: true, image_safe: true});
     } catch (error) {
         return errorFxn(res, error);

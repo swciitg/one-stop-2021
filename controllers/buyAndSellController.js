@@ -189,7 +189,7 @@ exports.postSellDetails = async (req, res) => {
                     .then((result) => {
                         console.log(result);
                     });
-                // await sendSellNotif(title,username,email);
+                await sendSellNotif(title, username, email);
                 return res.json({
                     saved_successfully: true,
                     image_safe: true
@@ -380,7 +380,7 @@ exports.postBuyDetails = async (req, res) => {
                     .then((result) => {
                         console.log(result);
                     });
-                // await sendBuyNotif(title, username, email);
+                await sendBuyNotif(title, username, email);
                 return res.json({
                     saved_successfully: true,
                     image_safe: true
