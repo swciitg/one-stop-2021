@@ -6,9 +6,14 @@ exports.getHomePageData = (req, res) => {
         .then((data) => {
             let quickLinks = data[0].quickLinks;
             quickLinks.sort((a, b) => a.priorityNumber - b.priorityNumber);
-            let response = {
-                cardsDataList: data[0].cardsDataList
-            };
+            let cardsDataList = data[0].cardsDataList;
+            cardsDataList.sort((a, b) => a.priorityNumber - b.priorityNumber);
+            cardsDataList = cardsDataList.map((item) => {
+                return {
+                    "imagePath": item.imagePath,
+                    "redirectUrl": item.redirectUrl
+                }
+            });
             quickLinks = quickLinks.map((item) => {
                 return {
                     "name": item.title,
@@ -16,7 +21,7 @@ exports.getHomePageData = (req, res) => {
                     "link": item.url
                 }
             });
-            res.json({...response, quickLinks});
+            res.json({cardsDataList, quickLinks});
         })
         .catch((err) => {
             console.log(err);
