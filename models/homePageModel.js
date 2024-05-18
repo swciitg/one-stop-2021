@@ -1,28 +1,32 @@
 const mongoose = require("mongoose");
-const { updateHomePageInLastUpdateDocument } = require("../controllers/lastUpdateController");
+const {updateHomePageInLastUpdateDocument} = require("../controllers/lastUpdateController");
 
 const quickLink = new mongoose.Schema({
-    priorityNumber : { type: Number, required : true},
-    title : { type: String, required : true},
-    logo : { type: Number, required : true},
-    url : { type: String, required : true},
+    priorityNumber: {type: Number, required: true},
+    title: {type: String, required: true},
+    logo: {type: Number, required: true},
+    url: {type: String, required: true},
+});
+
+const homeScreenCard = new mongoose.Schema({
+    imagePath: {type: String},
+    redirectUrl: {type: String, default: ""}
 });
 
 const homePage = new mongoose.Schema({
-    path : { type: String },
-    clickableImageRedirectUrl : { type: String},
-    quickLinks : [quickLink]
+    cardsDataList: [homeScreenCard],
+    quickLinks: [quickLink]
 });
 
-homePage.pre('save',async function(){
+homePage.pre('save', async function () {
     await updateHomePageInLastUpdateDocument();
 });
-  
-homePage.pre('findOneAndRemove',async function(){ // adminjs calls findOneAndRemove internally
+
+homePage.pre('findOneAndRemove', async function () { // adminjs calls findOneAndRemove internally
     await updateHomePageInLastUpdateDocument();
 });
-  
-homePage.pre('findOneAndUpdate',async function(){ // adminjs calls findOneAndUpdate internally
+
+homePage.pre('findOneAndUpdate', async function () { // adminjs calls findOneAndUpdate internally
     await updateHomePageInLastUpdateDocument();
 });
 
