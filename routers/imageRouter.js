@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require("path");
-const {getImage, getCompressedImage} = require('../controllers/imageController');
+const {getImage, getCompressedImage, uploadImage} = require('../controllers/imageController');
 const homePage = require("../models/homePageModel");
 const multer = require("multer");
 const imageRouter = express.Router();
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
     filename: (req, file, callback) => {
         const imageId = uuid.v4();
         const imageUrl = process.env.API_URL + "/v3/getImage?photo_id=" + imageId;
-        callback(null, imageId + '-compressed.jpg');
+        callback(null, imageId + '.jpg');
         req.imageUrl = imageUrl;
         req.imageId = imageId;
     }
@@ -32,10 +32,6 @@ imageRouter.get("/getImage", getImage);
 
 imageRouter.get("/getCompressedImage", getCompressedImage);
 
-imageRouter.post("/uploadImage", upload.single('image'), async (req, res, next) => {
-    res.json({imageUrl: req.imageUrl});
-});
+imageRouter.post("/uploadImage", upload.single('image'), uploadImage);
 
-module.exports = {
-    imageRouter
-};
+module.exports = {imageRouter};
