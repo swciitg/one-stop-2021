@@ -50,5 +50,5 @@ exports.uploadImage = async (req, res) => {
         .withMetadata()
         .toFile(compressedImagePath);
     fs.unlinkSync(imagePath);
-    res.json({imageUrl: compressedImageURL});
+    res.json({imageUrl: req.imageUrl});
 };
