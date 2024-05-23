@@ -73,9 +73,11 @@ const ImageUploadButton = () => {
                      alt="Preview"
                      style={{maxWidth: '100%', maxHeight: '300px', marginBottom: '10px'}}
                 />
-                <Button variant="primary" onClick={handleUpload} style={{marginTop: '10px'}}>
-                    Upload Image
-                </Button>
+                <Box display="block" marginTop="10px">
+                    <Button variant="primary" onClick={handleUpload}>
+                        Upload Image
+                    </Button>
+                </Box>
             </Box>
         )}
         {imageUrl && (
@@ -103,7 +105,7 @@ const ImageUploadButton = () => {
 
 export const Dashboard = () => {
     return (
-        <Box>
+        <Box marginBottom="200px">
             <section
                 style={{
                     display: "flex",
