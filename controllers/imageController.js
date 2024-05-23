@@ -32,7 +32,6 @@ exports.getCompressedImage = async (req, res) => {
 
 exports.uploadImage = async (req, res) => {
     const imagePath = path.resolve(__dirname + '/../images_folder/' + req.imageId + '.jpg');
-    const compressedImageURL = req.imageUrl + '-compressed';
     const compressedImagePath = path.resolve(
         __dirname +
         "/../images_folder/" +
