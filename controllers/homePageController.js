@@ -10,7 +10,7 @@ exports.getHomePageData = (req, res) => {
             cardsDataList.sort((a, b) => a.priorityNumber - b.priorityNumber);
             cardsDataList = cardsDataList.map((item) => {
                 return {
-                    "imagePath": item.imagePath,
+                    "imageUrl": item.imageUrl,
                     "redirectUrl": item.redirectUrl
                 }
             });

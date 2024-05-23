@@ -9,7 +9,7 @@ const quickLink = new mongoose.Schema({
 });
 
 const homeScreenCard = new mongoose.Schema({
-    imagePath: {type: String},
+    imageUrl: {type: String},
     redirectUrl: {type: String, default: ""},
     priorityNumber: {type: Number, required: true},
 });
