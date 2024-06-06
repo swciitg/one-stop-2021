@@ -84,7 +84,7 @@ exports.getUserInfo = async (req, res, next) => {
 };
 
 exports.getUserId = async (req, res, next) => {
-    res.json({userId: req.userId});
+    res.json({userId: req.userid});
 };
 
 exports.regenerateUserAccessToken = asyncHandler(async (req, res, next) => {
