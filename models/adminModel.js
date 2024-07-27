@@ -18,7 +18,7 @@ const adminSchema = new mongoose.Schema({
         type: [
             { 
                 type: String, 
-                enum: roleValues
+                enum: Object.values(roleValues)
             }
         ]
     }
