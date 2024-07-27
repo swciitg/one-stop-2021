@@ -2,9 +2,6 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const roles = require("../admin_panel/roles");
 
-var roleValues = [];
-for(var k in roles) roleValues.push(roles[k]);
-
 const adminSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -18,7 +15,7 @@ const adminSchema = new mongoose.Schema({
         type: [
             { 
                 type: String, 
-                enum: Object.values(roleValues)
+                enum: Object.values(roles)
             }
         ]
     }
