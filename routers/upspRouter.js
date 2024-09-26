@@ -8,6 +8,6 @@ upspRouter.post("/upsp/file-upload",verifyUserRequest,upload.single("file"),(req
     res.json({"sucess" : true,"filename" : req.body.filename});
 });
 
-upspRouter.post("/upsp/submit-request",verifyUserRequest,restrictIfGuest,submitUpspForm);
+upspRouter.post("/upsp/submit-request", verifyUserRequest, restrictIfGuest, submitUpspForm);
 
 module.exports = upspRouter;
