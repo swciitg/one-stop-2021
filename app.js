@@ -11,6 +11,7 @@ const { errorHandler } = require("./middlewares/error.handler");
 const { NotFoundError } = require("./errors/not.found.error");
 const { createLastUpdateDocument } = require("./controllers/lastUpdateController");
 const { UnauthorizedRequestError } = require("./errors/unauthorized.request.error");
+const { scheduleOPIEmails } = require("./helpers/cronJobs/opiEmails");
 
 console.log(bcrypt.hash("123",10));
 //for serving static files
@@ -80,12 +81,16 @@ app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
 app.use(BASEURL, routers.upspRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
+app.use(BASEURL, routers.opiRouter.opiRouter);
 
 app.use("*",(req,res) => {
     throw new NotFoundError("Route not found");
 });
 
 app.use(errorHandler);
+
+// schedule cron jobs
+scheduleOPIEmails();
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
