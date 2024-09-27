@@ -36,6 +36,10 @@ exports.IITGAdminDepts = {
     "Medical Related Issues": "Grp_sgc_mug@iitg.ac.in"
 }
 
+exports.IITGHostelWardens = {
+
+}
+
 exports.miscellaneousRecievers = []
 
 exports.totalSpardhaWomenPoints = 190;
