@@ -40,6 +40,10 @@ exports.IITGHostelWardens = {
 
 }
 
+exports.IITGHostelGSs = {
+    
+}
+
 exports.miscellaneousRecievers = []
 
 exports.totalSpardhaWomenPoints = 190;

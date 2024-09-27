@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const { IITGHostelWardens, miscellaneousRecievers } = require("../helpers/constants");
+const { IITGHostelWardens, miscellaneousRecievers, IITGHostelGSs } = require("../helpers/constants");
 
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
@@ -24,6 +24,7 @@ exports.submitHabComplaint = async (req,res) => {
 
     
     req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelWardens[element]))
+    req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelGSs[element]))
 
     if(req.body.complaint_type === "Service"){
         recieverEmailsForCc.concat(serviceCCs)
