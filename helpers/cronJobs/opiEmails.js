@@ -10,7 +10,7 @@ require('dotenv').config();
 const __filename = fileURLToPath(__filename);
 const __dirname = path.dirname(__filename);
 
-const { opiMailRecipients, opiStartDate, opiEndDate } = require("../../helpers/constants");
+const { opiMailRecipients, opiStartDate, opiEndDate } = require("../constants");
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',

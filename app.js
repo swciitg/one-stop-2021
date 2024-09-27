@@ -90,7 +90,12 @@ app.use("*",(req,res) => {
 app.use(errorHandler);
 
 // schedule cron jobs
-scheduleOPIEmails();
+try {
+    scheduleOPIEmails();
+}
+catch (e) {
+    console.log("Error in scheduling OPI emails", e);
+}
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
