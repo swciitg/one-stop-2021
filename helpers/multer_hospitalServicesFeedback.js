@@ -3,7 +3,7 @@ const fs = require("fs");
 const uuid= require("uuid");
 const fileStorageEngine = multer.diskStorage({
     destination: (req,file,cb) => {
-        cb(null,__dirname + "/../files_folder/pharmacyForms_files/");
+        cb(null,__dirname + "/../files_folder/servicesFeedbackForms_files/");
     },
     filename: (req,file,cb) => {
       console.log(file);
@@ -11,7 +11,7 @@ const fileStorageEngine = multer.diskStorage({
       let parts = file.originalname.split(".");
       let fileExtension = "." + parts[parts.length-1];
       parts.pop();
-      if (fs.existsSync(__dirname + "/../files_folder/pharmacyForms_files/" + file.originalname)) {
+      if (fs.existsSync(__dirname + "/../files_folder/servicesFeedbackForms_files/" + file.originalname)) {
         fileSaveName = parts.join('.')+uuid.v4()+fileExtension;
       }else{
         fileSaveName = file.originalname;
