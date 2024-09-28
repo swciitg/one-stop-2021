@@ -14,7 +14,7 @@ hospitalFeedbackRouter.post("/feedback/pharmacyFeedback-submit", verifyUserReque
 hospitalFeedbackRouter.post("/feedback/servicesFeedback-submit", verifyUserRequest, restrictIfGuest, uploadServices.single("file") , servicesFeedbackSubmit)
 
 // to fetch doctors list
-hospitalFeedbackRouter.get("/feedback/doctors", verifyUserRequest, fetchDoctorsList )
+hospitalFeedbackRouter.get("/feedback/getDoctors", verifyUserRequest, fetchDoctorsList )
 
 //doctor feedback 
 hospitalFeedbackRouter.post("/feedback/doctorsFeedback-submit", verifyUserRequest, restrictIfGuest ,uploadDoctor.single("file"), doctorsFeedbackSubmit)

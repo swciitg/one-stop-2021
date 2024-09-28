@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
-const doctorModel = require("../models/doctorModel")
+const contactModel = require("../models/hospitalContact")
 
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
@@ -18,9 +18,8 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
             patientEmail, 
             patientName, 
             prescDate, 
-            prescMedicineNumber, 
-            availableMedicine, 
-            notProvidedMedicineInADay, 
+            numNotAvailableMedicines, 
+            notAvailableMedicines,
             patientHostel, 
             mobile,
             remarks
@@ -46,19 +45,17 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
                         <h3 style="margin: 0 0 10px 10px; padding: 0;">Medical Details : </h3>
                         <ul style="list-style-type: none; padding: 0; margin: 0 0 0 10px;">
                             <li><strong>Date of Prescription: </strong> ${prescDate}</li>
-                            <li><strong>Number of Medicines Prescribed: </strong> ${prescMedicineNumber}</li>
-                            <li><strong>Number of Medicines Available:</strong> ${availableMedicine}</li>
-                            <li><strong>Number of Medicines not Available at the time of consulting:</strong> ${availableMedicine}</li>
-                            <li><strong>Medicines Not Made Available within 24 Hours:</strong> ${notProvidedMedicineInADay}</li>
+                            <li><strong>No. of Prescribed Medication Not Available at the Pharmacy : </strong> ${numNotAvailableMedicines}</li>
+                            <li><strong>Names of Prescribed Medication Not Available at the Pharmacy :</strong> ${notAvailableMedicines}</li>
                         </ul>
                         <p style="margin: 0 0 0 10px ; padding: 0;"><strong>Remarks: </strong>${remarks}</p>
                     </div>
                     <div>
                         <h3 style="margin: 0 0 5px 10px; padding: 0;">Patient's Details : </h3>
                         <ul style="list-style-type: none; padding: 0; margin: 0 0 0 10px;">
-                            <li><strong>Patient Name:</strong> ${patientName}</li>
-                            <li><strong>Email:</strong> ${patientEmail}</li>
-                            <li><strong>Hostel:</strong> ${patientHostel},   <strong>Phone No:</strong> ${mobile}</li>
+                            <li><strong>Patient Name :</strong> ${patientName}</li>
+                            <li><strong>Email :</strong> ${patientEmail}</li>
+                            <li><strong>Hostel :</strong> ${patientHostel},   <strong>Phone No :</strong> ${mobile}</li>
                         </ul>
                     </div>
                 </div>
@@ -78,18 +75,21 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
 
 
 //Doctor Feedback Section
+
 exports.fetchDoctorsList = async (req, res) => {
     try {
-        const doctors  = await doctorModel.find();
+        const allContacts = await contactModel.find();
+        const doctors = allContacts.filter(contact => contact.category !== 'Miscellaneous')
         res.json(doctors);
     } catch (error) {
-        res.status(500).json({ error: "Unable to fetch doctors" });
+        console.error("Error fetching doctors list:", err.message);
+        res.status(500).json({ error: "Failed to fetch doctors list" });
     }
 }
 
 exports.doctorsFeedbackSubmit = async(req, res) => {
     try {
-        const {doctorname, doctorDegree, patientName, patientEmail, patientHostel, mobile, remarks} = req.body;
+        const {doctorname, doctorDegree, remarks, patientName, patientEmail, patientHostel, mobile} = req.body;
 
         // For sending attatchments along with mail
         let selectedAttachments = [];
