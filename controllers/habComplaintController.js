@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const { allIITGGymkhanaBoards, IITGAdminDepts, miscellaneousRecievers } = require("../helpers/constants");
+const { IITGHostelWardens, miscellaneousRecievers, IITGHostelGSs, IITGHostelSSs, IITGHostelOffices } = require("../helpers/constants");
 
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
@@ -10,20 +10,37 @@ let mailTransporter = nodemailer.createTransport({
     }
 });
 
+// const serviceCCs = ["hostelservices_complaints@iitg.ac.in"]    
+const serviceCCs = ["m.geetanjay@iitg.ac.in", "shubhkarjha533@gmail.com"]  
+// const infraCCs = [""]   
+const infraCCs = ["shubhkarjha533@gmail.com", "m.geetanjay@iitg.ac.in"]
 
-exports.submitUpspForm = async (req,res) => {
+
+exports.submitHabComplaint = async (req,res) => {
     console.log(req.body);
-    let recieverEmailsForTo = [];
-    let recieverEmailsForCc = ["vp@iitg.ac.in",req.body.email]; // vp recieves every email
-    req.body.boards.forEach((element) => {
-        if(element!=='Miscellaneous') recieverEmailsForTo.push(allIITGGymkhanaBoards[element]);
-        else recieverEmailsForTo = recieverEmailsForTo.concat(miscellaneousRecievers);
-    });
-    req.body.subcommittees.forEach((element) => recieverEmailsForTo.push(IITGAdminDepts[element]));
+
+    let recieverEmailsForTo = [req.body.email];
+    
+    let recieverEmailsForCc = ["shubham.jha@iitg.ac.in"];
+    //let recieverEmailsForCc = ["vp@iitg.ac.in",req.body.email]; // vp recieves every email
+
+    // req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelGSs[element]))
+    // req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelWardens[element]))
+    // req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelOffices[element]))
+
+
+    if(req.body.complaint_type !== "Infra"){
+        // req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
+        recieverEmailsForCc.concat(serviceCCs)
+    }
+    else{
+        recieverEmailsForCc.concat(infraCCs)
+    }
 
     let selectedAttachments = [];
+
     req.body.files.forEach((element,index) => {
-        let filepath = __dirname + "/../files_folder/upsp_files/" + element;
+        let filepath = __dirname + "/../files_folder/hab_complaint_files/" + element;
         if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
         else console.log("not exists");
     });
@@ -34,12 +51,15 @@ exports.submitUpspForm = async (req,res) => {
     console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
 
     let mailDetails = {
+        //Need to setup a new HAB_EMAIL in .env file
         from: process.env.UPSP_EMAIL,
-        subject: 'UPSP Request',
+        //right now working on UPSP_EMAIL
+        subject: `${req.body.complaint_type} Feedback/Complaint from ${req.body.hostel} by ${req.body.name}`,
         to: recieverEmailsForTo,
         cc: recieverEmailsForCc,
         attachments: selectedAttachments,
-        html: `<!DOCTYPE html>
+        html: `
+        <!DOCTYPE html>
         <html>
         <body>
             <table border="0" cellspacing="0" cellpadding="0" style="font-family: Arial, sans-serif; width: 100%; max-width: 600px; border-collapse: collapse; border: 1px solid #dddddd; margin: 0 auto;">
@@ -56,7 +76,8 @@ exports.submitUpspForm = async (req,res) => {
                 </tr>
                 <tr>
                     <td style="padding: 20px; border-bottom: 1px solid #dddddd;">
-                        <h3>UPSP Request Received:</h3>
+                        <h3>Complaint/Feedback Received for:</h3>
+                        <p>${req.body.complaint_type}</p>
                     </td>
                 </tr>
                 <tr>
@@ -83,7 +104,7 @@ exports.submitUpspForm = async (req,res) => {
                 <tr>
                     <td style="padding: 20px; border-top: 1px solid #dddddd;">
                         <p>Requesting the Hostel office to please follow up with the Service Secretary and General Secretary to ensure a response to the pending query if it remains unanswered.</p>
-                        <p style="margin-top: 40px; text-align: start;">
+                        <p style="margin-top: 40px; text-align: center;">
                             Thanks and Regards,<br>
                             <strong>Team SWC</strong><br>
                             Indian Institute of Technology, Guwahati<br>
@@ -93,7 +114,8 @@ exports.submitUpspForm = async (req,res) => {
                 </tr>
             </table>
         </body>
-        </html>`
+        </html>
+    `
     }
 
     mailTransporter.sendMail(mailDetails,(err,res) => {
