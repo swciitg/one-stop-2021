@@ -1,20 +1,20 @@
 const mongoose = require('mongoose');
 const contactModel = require('./hospitalContact');
 
-const slotSchema = new mongoose.Schema({
-    date: {
-        type: Date,
-        required: true
-    },
-    startTime: {
-        type: String, // Storing time as string, e.g., '09:00'
-        required: true
-    },
-    endTime: {
-        type: String, // Storing time as string, e.g., '10:00'
-        required: true
-    }
-});
+// const slotSchema = new mongoose.Schema({
+//     date: {
+//         type: Date,
+//         required: true
+//     },
+//     startTime: {
+//         type: String, // Storing time as string, e.g., '09:00'
+//         required: true
+//     },
+//     endTime: {
+//         type: String, // Storing time as string, e.g., '10:00'
+//         required: true
+//     }
+// });
 
 const timetableSchema = new mongoose.Schema({
     doctor: {
@@ -38,7 +38,18 @@ const timetableSchema = new mongoose.Schema({
         enum: ['OPD', 'Visiting Consultant'],
         required: true
     },
-    slots: [slotSchema], // Multiple slots for a doctor on a specific day
+    date: {
+        type: Date,
+        required: true
+    },
+    startTime: {
+        type: Date, // Storing time as string, e.g., '09:00'
+        required: true
+    },
+    endTime: {
+        type: Date, // Storing time as string, e.g., '10:00'
+        required: true
+    }
 });
 
 const Timetable = mongoose.model('Timetable', timetableSchema);

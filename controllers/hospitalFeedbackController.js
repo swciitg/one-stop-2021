@@ -12,6 +12,7 @@ let mailTransporter = nodemailer.createTransport({
 });
 
 //Pharmacy Feedback section
+//Tested and working
 exports.pharmacyFeedbackSubmit = async (req, res) => {
     try {
         const {
@@ -24,14 +25,29 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
             mobile,
             remarks
         } = req.body;
+        console.log(req.files);
+        if (!req.files) {
+            return res.status(400).send("No file uploaded.");
+        }
+        // console.log("body se pahle...")
+        console.log(req.body);
+        // console.log("body ke baad...")
         
-        // For sending attatchments along with mail
         let selectedAttachments = [];
-        req.body.files.forEach((element,index) => {
-        let filepath = path.join(__dirname, "../files_folder/pharmacyForms_files/", element);
-        if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
-        else console.log("not exists");
-        });
+        if (req.files && req.files.length > 0) {
+            req.files.forEach((file) => {
+                let filepath = path.join(__dirname, "../files_folder/pharmacyForms_files/", file.filename);
+                if (fs.existsSync(filepath)) {
+                    selectedAttachments.push({ path: filepath });
+                } else {
+                    console.log("File not exists:", file.filename);
+                }
+            });
+        } else {
+            console.log("No files uploaded.");
+        }
+
+        console.log(selectedAttachments)
 
         let mailDetails = {
             from : process.env.UPSP_EMAIL ,
@@ -74,8 +90,6 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
 }
 
 
-//Doctor Feedback Section
-
 exports.fetchDoctorsList = async (req, res) => {
     try {
         const allContacts = await contactModel.find();
@@ -87,17 +101,26 @@ exports.fetchDoctorsList = async (req, res) => {
     }
 }
 
+//Doctor Feedback Section
+//Tested And working
 exports.doctorsFeedbackSubmit = async(req, res) => {
     try {
-        const {doctorname, doctorDegree, remarks, patientName, patientEmail, patientHostel, mobile} = req.body;
+        const {doctorName, doctorDegree, remarks, patientName, patientEmail, patientHostel, mobile} = req.body;
 
         // For sending attatchments along with mail
         let selectedAttachments = [];
-        req.body.files.forEach((element,index) => {
-        let filepath = path.join(__dirname, "../files_folder/doctorFeedbackForms_files/", element);
-        if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
-        else console.log("not exists");
-        });
+        if (req.files && req.files.length > 0) {
+            req.files.forEach((file) => {
+                let filepath = path.join(__dirname, "../files_folder/pharmacyForms_files/", file.filename);
+                if (fs.existsSync(filepath)) {
+                    selectedAttachments.push({ path: filepath });
+                } else {
+                    console.log("File not exists:", file.filename);
+                }
+            });
+        } else {
+            console.log("No files uploaded.");
+        }
 
         let mailDetails = {
             from: process.env.UPSP_EMAIL,
@@ -110,7 +133,7 @@ exports.doctorsFeedbackSubmit = async(req, res) => {
                     <div style="margin-bottom: 20px;">
                         <h3 style="margin: 0 0 10px 10px; padding: 0;">Doctor Feedback :  </h3>
                         <ul style="list-style-type: none; padding: 0; margin: 0 0 0 10px;">
-                            <li><strong>${doctorname}, ${doctorDegree} </strong></li>
+                            <li><strong>${doctorName}, ${doctorDegree} </strong></li>
                         </ul>
                         <p style="margin: 0 0 0 10px ; padding: 0;"><strong>Remarks: </strong>${remarks}</p>
                     </div>
@@ -138,17 +161,34 @@ exports.doctorsFeedbackSubmit = async(req, res) => {
 }
 
 // Services Feedback Section
+// Tested and working
 exports.servicesFeedbackSubmit = async(req, res) => {
     try {
         const {remarks, userEmail, userName, userHostel, mobile} = req.body;
+        console.log(req.files);
+        if (!req.files) {
+            return res.status(400).send("No file uploaded.");
+        }
+        console.log("body se pahle..")
+        console.log(req.body);
+        console.log("body ke bad..")
 
         // For sending attatchments along with mail
         let selectedAttachments = [];
-        req.body.files.forEach((element,index) => {
-        let filepath = path.join(__dirname, "../files_folder/servicesFeedbackForms_files/", element);
-        if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
-        else console.log("not exists");
-        });
+        if (req.files && req.files.length > 0) {
+            req.files.forEach((file) => {
+                let filepath = path.join(__dirname, "../files_folder/pharmacyForms_files/", file.filename);
+                if (fs.existsSync(filepath)) {
+                    selectedAttachments.push({ path: filepath });
+                } else {
+                    console.log("File not exists:", file.filename);
+                }
+            });
+        } else {
+            console.log("No files uploaded.");
+        }
+
+        console.log(selectedAttachments)
 
         let mailDetails = {
             from : process.env.UPSP_EMAIL ,

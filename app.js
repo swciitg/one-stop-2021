@@ -53,14 +53,14 @@ app.use(BASEURL, routers.authRouter.authRouter);
 app.use(BASEURL, routers.imageRouter.imageRouter);
 
 // Validate API Call
-app.use((req, res, next) => {
-    console.log(req.path);
-    console.log(req.body);
-    if (req.headers["security-key"] !== process.env.SECURITY_KEY) {
-        next(new UnauthorizedRequestError("You are not authorized app.js"));
-    }
-    next();
-});
+// app.use((req, res, next) => {
+//     console.log(req.path);
+//     console.log(req.body);
+//     if (req.headers["security-key"] !== process.env.SECURITY_KEY) {
+//         next(new UnauthorizedRequestError("You are not authorized app.js"));
+//     }
+//     next();
+// });
 
 app.use(BASEURL, routers.notificationRouter);
 

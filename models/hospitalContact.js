@@ -3,20 +3,19 @@ const mongoose = require('mongoose');
 const contactSchema = new mongoose.Schema({
     name: {
         type: String,
-        enum : ["Dr. A k Baruah", "Dr. L Baruah", "Dr. S Majumdar", "Dr. P Sarmah", "Dr. H Baishya", "Dr. P Bortamuly", "Dr. Bhaskar S Neog", "Dr. Ridip Kumar Baruah", "Mr. Kandarpa Jyoti Das", "Mrs. Rashmi Rekha Das", "Dentist"],
+        enum : ["Dr. A k Baruah; MD(Internal Medicine); Designation", "Dr. L Baruah", "Dr. S Majumdar; MBBS, DCH; Sr. Medical Officier & HoS", "Dr. P Sarmah", "Dr. H Baishya", "Dr. P Bortamuly", "Dr. Bhaskar S Neog", "Dr. Ridip Kumar Baruah", "Mr. Kandarpa Jyoti Das", "Mrs. Rashmi Rekha Das", "Dentist"],
         required: true
     },
-    degree: {
-        type: String,
-        required: true
-    },
-    designation: {
-        type: String,
-        required: true
-    },
+    // degree: {
+    //     type: String,
+    //     required: true
+    // },
+    // designation: {
+    //     type: String,
+    //     required: true
+    // },
     email: {
         type: String,
-        required: true,
         unique: true
     },
     phone: {

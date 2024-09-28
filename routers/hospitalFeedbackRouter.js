@@ -8,15 +8,15 @@ const { verifyUserRequest } = require("../middlewares/user.auth");
 const hospitalFeedbackRouter = express.Router();
 
 // pharmacy
-hospitalFeedbackRouter.post("/feedback/pharmacyFeedback-submit", verifyUserRequest, restrictIfGuest, uploadPharmacy.single("file") , pharmacyFeedbackSubmit)
+hospitalFeedbackRouter.post("/feedback/pharmacyFeedback-submit", verifyUserRequest,  uploadPharmacy.array("files", 3) , pharmacyFeedbackSubmit)
 
 // services
-hospitalFeedbackRouter.post("/feedback/servicesFeedback-submit", verifyUserRequest, restrictIfGuest, uploadServices.single("file") , servicesFeedbackSubmit)
+hospitalFeedbackRouter.post("/feedback/servicesFeedback-submit", verifyUserRequest, uploadServices.array("files", 3) , servicesFeedbackSubmit)
 
 // to fetch doctors list
 hospitalFeedbackRouter.get("/feedback/getDoctors", verifyUserRequest, fetchDoctorsList )
 
 //doctor feedback 
-hospitalFeedbackRouter.post("/feedback/doctorsFeedback-submit", verifyUserRequest, restrictIfGuest ,uploadDoctor.single("file"), doctorsFeedbackSubmit)
+hospitalFeedbackRouter.post("/feedback/doctorsFeedback-submit", verifyUserRequest, uploadDoctor.array("files", 3), doctorsFeedbackSubmit)
 
 module.exports = hospitalFeedbackRouter; 

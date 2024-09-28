@@ -39,7 +39,7 @@ var sessiontStore = new MongoDBStore(
 });
 
 const adminjs = new AdminJs({
-    resources: [announcementResource, messMenuResouce, foodOutletResource, adminResource, userResource, timingResource, contactsResource, cabSharingResource, lostItemResource, foundItemResource, buyItemResource, sellItemResource, homePageResource, hospitalContactResource, hospitalTimetableResource],
+    resources: [ hospitalContactResource, hospitalTimetableResource],
     assets: {
         styles: styleAssets
     },
@@ -52,18 +52,18 @@ const adminjs = new AdminJs({
 
 adminjs.watch();
 
-exports.adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(
+exports.adminJsRouter = AdminJsExpress.buildRouter(
     adminjs,
-    {
-        cookiePassword: process.env.ADMIN_PANEL_COOKIE_SECRET,
-        authenticate
-    },
-    null,
-    {
-        store: sessiontStore,
-        cookie: {
-            maxAge: 1000 * 60 * 60 * 24 // 1 day
-          },
-        resave: false, saveUninitialized: true
-    }
+    // {
+    //     cookiePassword: process.env.ADMIN_PANEL_COOKIE_SECRET,
+    //     authenticate
+    // },
+    // null,
+    // {
+    //     store: sessiontStore,
+    //     cookie: {
+    //         maxAge: 1000 * 60 * 60 * 24 // 1 day
+    //       },
+    //     resave: false, saveUninitialized: true
+    // }
 );
