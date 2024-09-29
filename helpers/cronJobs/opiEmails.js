@@ -7,8 +7,7 @@ const path = require("path");
 const { fileURLToPath } = require('url');
 require('dotenv').config();
 
-const __filename = fileURLToPath(__filename);
-const __dirname = path.dirname(__filename);
+const dirname = __dirname;
 
 const { opiMailRecipients, opiStartDate, opiEndDate } = require("../constants");
 
@@ -26,7 +25,7 @@ const convertToExcel = (data, fileName) => {
   const ws = XLSX.utils.json_to_sheet(data);
   XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
 
-  const filesDir = path.join(__dirname, "../../public/files");
+  const filesDir = path.join(dirname, "../../public/files");
   if (!fs.existsSync(filesDir)) {
     fs.mkdirSync(filesDir);
   }

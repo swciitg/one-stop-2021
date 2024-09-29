@@ -1,5 +1,5 @@
-const { Response } = require("../models/habModels/opiResponseModel.js");
-const { oneStopUserModel } = require("../models/userModel.js");
+const { Response } = require("../../models/habModels/opiResponseModel.js");
+const { oneStopUserModel } = require("../../models/userModel.js");
 const { opiStartDate, opiEndDate } = require("../../helpers/constants.js");
 
 const createNew = async (req, res) => {
