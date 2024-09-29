@@ -57,6 +57,6 @@ const fileStorageEngine = multer.diskStorage({
     }
 });
 
-const upload = multer({storage: fileStorageEngine});
+const upload = multer({storage: fileStorageEngine}).array("file",5);
 
 module.exports = upload
