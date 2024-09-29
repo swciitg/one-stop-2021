@@ -31,10 +31,10 @@ exports.submitHabComplaint = async (req,res) => {
 
     if(req.body.complaint_type !== "Infra"){
         // req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
-        recieverEmailsForCc.concat(serviceCCs)
+        recieverEmailsForCc = recieverEmailsForCc.concat(serviceCCs)
     }
     else{
-        recieverEmailsForCc.concat(infraCCs)
+        recieverEmailsForCc = recieverEmailsForCc.concat(infraCCs)
     }
 
     let selectedAttachments = [];
@@ -54,7 +54,7 @@ exports.submitHabComplaint = async (req,res) => {
         //Need to setup a new HAB_EMAIL in .env file
         from: process.env.UPSP_EMAIL,
         //right now working on UPSP_EMAIL
-        subject: `${req.body.complaint_type} Feedback/Complaint from ${req.body.hostel} by ${req.body.name}`,
+        subject: `${req.body.complaint_type} Feedback/Complaint from ${req.body.hostel} hostel by ${req.body.name}`,
         to: recieverEmailsForTo,
         cc: recieverEmailsForCc,
         attachments: selectedAttachments,
