@@ -12,7 +12,6 @@ lerna-debug.log*
 # igonoring upload files folder
 files_folder
 
-.env
 
 # igonoring lostFound images folder
 images_folder
