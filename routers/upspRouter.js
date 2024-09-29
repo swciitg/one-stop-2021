@@ -5,6 +5,9 @@ const { restrictIfGuest, verifyUserRequest } = require("../middlewares/user.auth
 const upspRouter = express.Router();
 
 upspRouter.post("/upsp/file-upload",verifyUserRequest,upload.array("files",3),(req,res) => {
+    console.log(req.body)
+    console.log(req.files)
+    console.log(req)
     res.json({"sucess" : true,"filename" : req.body.filename});
 });
 
