@@ -3,17 +3,14 @@ const mongoose = require('mongoose');
 const contactSchema = new mongoose.Schema({
     name: {
         type: mongoose.Schema.Types.ObjectId,
-        // enum : ["Dr. A k Baruah; MD(Internal Medicine); Designation", "Dr. L Baruah", "Dr. S Majumdar; MBBS, DCH; Sr. Medical Officier & HoS", "Dr. P Sarmah", "Dr. H Baishya", "Dr. P Bortamuly", "Dr. Bhaskar S Neog", "Dr. Ridip Kumar Baruah", "Mr. Kandarpa Jyoti Das", "Mrs. Rashmi Rekha Das", "Dentist"],
         ref : 'Doctor',
         required: true
     },
     degree: {
         type: String,
-        required: true
     },
     designation: {
         type:String,
-        required: true
     },
     email: {
         type: String,

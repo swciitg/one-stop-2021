@@ -53,14 +53,14 @@ app.use(BASEURL, routers.authRouter.authRouter);
 app.use(BASEURL, routers.imageRouter.imageRouter);
 
 // Validate API Call
-// app.use((req, res, next) => {
-//     console.log(req.path);
-//     console.log(req.body);
-//     if (req.headers["security-key"] !== process.env.SECURITY_KEY) {
-//         next(new UnauthorizedRequestError("You are not authorized app.js"));
-//     }
-//     next();
-// });
+app.use((req, res, next) => {
+    console.log(req.path);
+    console.log(req.body);
+    if (req.headers["security-key"] !== process.env.SECURITY_KEY) {
+        next(new UnauthorizedRequestError("You are not authorized app.js"));
+    }
+    next();
+});
 
 app.use(BASEURL, routers.notificationRouter);
 
@@ -80,6 +80,8 @@ app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
 app.use(BASEURL, routers.upspRouter);
 app.use(BASEURL, routers.pharmacyFeedbackRouter);
+app.use(BASEURL, routers.hospitalContactRouter);
+app.use(BASEURL, routers.hospitalTimetableRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
 
 app.use("*",(req,res) => {

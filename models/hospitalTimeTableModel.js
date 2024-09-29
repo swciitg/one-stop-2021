@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const contactModel = require('./hospitalContact');
 
 
 const timetableSchema = new mongoose.Schema({

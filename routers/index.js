@@ -19,4 +19,6 @@ exports.notificationRouter = require("./notification.routes");
 exports.gcScoreboardRouter = require("./gcScoreboardRouter");
 exports.upspRouter = require("./upspRouter");
 exports.pharmacyFeedbackRouter = require("./hospitalFeedbackRouter")
+exports.hospitalContactRouter = require("./hospitalContactsRouter")
+exports.hospitalTimetableRouter = require("./hospitalTimetableRouter")
 exports.homePage = require("./homePageRouter");
