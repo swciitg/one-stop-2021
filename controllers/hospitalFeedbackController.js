@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
-const contactModel = require("../models/hospitalContact")
+const doctorModel = require("../models/doctorModel")
 
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
@@ -92,8 +92,8 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
 
 exports.fetchDoctorsList = async (req, res) => {
     try {
-        const allContacts = await contactModel.find();
-        const doctors = allContacts.filter(contact => contact.category !== 'Miscellaneous')
+        const doctors = await doctorModel.find();
+        // const doctors = allContacts.filter(contact => contact.category !== 'Miscellaneous')
         res.json(doctors);
     } catch (error) {
         console.error("Error fetching doctors list:", err.message);

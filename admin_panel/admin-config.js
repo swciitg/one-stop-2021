@@ -23,7 +23,8 @@ const buyItemResource = require("./resources/buyItem.resource");
 const sellItemResource = require("./resources/sellItem.resource");
 const homePageResource = require("./resources/homepage.resource");
 const hospitalContactResource = require("./resources/hospitalContact.resource")
-const hospitalTimetableResource = require("./resources/hospitalTimeTable.resource")
+const hospitalTimetableResource = require("./resources/hospitalTimeTable.resource");
+const doctorResource = require("./resources/doctor.resource");
 
 AdminJs.registerAdapter(AdminJsMongoose);
 
@@ -39,7 +40,7 @@ var sessiontStore = new MongoDBStore(
 });
 
 const adminjs = new AdminJs({
-    resources: [ hospitalContactResource, hospitalTimetableResource],
+    resources: [  doctorResource, hospitalContactResource, hospitalTimetableResource],
     assets: {
         styles: styleAssets
     },
