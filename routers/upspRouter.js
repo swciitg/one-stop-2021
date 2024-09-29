@@ -4,7 +4,7 @@ const upload = require("../helpers/multer_single");
 const { restrictIfGuest, verifyUserRequest } = require("../middlewares/user.auth");
 const upspRouter = express.Router();
 
-upspRouter.post("/upsp/file-upload",verifyUserRequest,upload.array("files",3),(req,res) => {
+upspRouter.post("/upsp/file-upload",verifyUserRequest,upload.single("file"),(req,res) => {
     console.log(req.body)
     console.log(req.files)
     console.log(req)
