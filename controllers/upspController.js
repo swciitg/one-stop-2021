@@ -22,7 +22,7 @@ exports.submitUpspForm = async (req,res) => {
     req.body.subcommittees.forEach((element) => recieverEmailsForTo.push(IITGAdminDepts[element]));
 
     let selectedAttachments = [];
-    req.files.forEach((element,index) => {
+    req.body.files.forEach((element,index) => {
         let filepath = __dirname + "/../files_folder/upsp_files/" + element;
         if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
         else console.log("not exists");
