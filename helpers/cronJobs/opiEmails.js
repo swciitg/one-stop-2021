@@ -21,17 +21,37 @@ const transporter = nodemailer.createTransport({
 });
 
 const convertToExcel = (data, fileName) => {
+  // Flatten the nested fields to ensure clean structure
+  const flattenedData = data.map(item => ({
+    outlookEmail: item.outlookEmail,
+    subscribedMess: item.subscribedMess,
+    opiLunch: item.satisfaction.opiLunch,
+    opiBreakfast: item.satisfaction.opiBreakfast,
+    opiDinner: item.satisfaction.opiDinner,
+    opiComments: item.opiComments,
+    dateSubmitted: item.createdAt,
+  }));
+
   const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.json_to_sheet(data);
+  const ws = XLSX.utils.json_to_sheet(flattenedData);
   XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
 
   const filesDir = path.join(dirname, "../../public/files");
+  
   if (!fs.existsSync(filesDir)) {
-    fs.mkdirSync(filesDir);
+    fs.mkdirSync(filesDir, { recursive: true });
   }
+  
   const filePath = path.join(filesDir, fileName);
+  
   XLSX.writeFile(wb, filePath);
-  return filePath;
+
+  if (fs.existsSync(filePath)) {
+    console.log(`OPI File successfully saved at ${filePath}`);
+    return filePath;
+  } else {
+    throw new Error("File could not be saved.");
+  }
 };
 
 const groupDataBySubscribedMess = (data) => {
@@ -158,7 +178,7 @@ const scheduleOPIEmails = (startDate = opiStartDate, endDate = opiEndDate) => {
     return;
   }
   const recipients = opiMailRecipients.join(", ");
-  cron.schedule("40 23 * * *", async () => {
+    cron.schedule("40 23 * * *", async () => {
     console.log("Running scheduled date processing at 11:40 PM...");
     await processDateList(startDate, endDate, recipients);
   });
