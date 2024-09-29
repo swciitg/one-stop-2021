@@ -1,6 +1,15 @@
 const multer = require("multer");
 const fs = require("fs");
 const uuid= require("uuid");
+
+const path = require("path");
+
+const uploadDir = path.join(__dirname, "/../files_folder/upsp_files/");
+
+if(!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir, {recursive: true});
+}
+
 const fileStorageEngine = multer.diskStorage({
     destination: (req,file,cb) => {
         cb(null,__dirname + "/../files_folder/upsp_files/");
