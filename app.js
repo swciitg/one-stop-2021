@@ -82,6 +82,7 @@ app.use(BASEURL, routers.upspRouter);
 app.use(BASEURL, routers.pharmacyFeedbackRouter);
 app.use(BASEURL, routers.hospitalContactRouter);
 app.use(BASEURL, routers.hospitalTimetableRouter);
+//app.use(BASEURL, routers.habComplaintRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
 
 app.use("*",(req,res) => {
