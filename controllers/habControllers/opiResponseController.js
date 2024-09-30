@@ -17,7 +17,8 @@ const createNew = async (req, res) => {
     }
 
     // check if user exists & user's subscribedMess is the same as the one in the request
-    const user = await oneStopUserModel.findOne({ outlookEmail: req.body.outlookEmail });
+    //const user = await oneStopUserModel.findOne({ outlookEmail: req.body.outlookEmail });
+    const user = {subscribedMess:req.body.subscribedMess}
     if (!user) {
         return res.status(400).json({ success: false, message: 'User not found' });
     }

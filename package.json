@@ -42,11 +42,13 @@
     "mongoose": "^7.0.2",
     "mongoose-double": "^0.0.1",
     "multer": "^1.4.4",
+    "node-cron": "^3.0.3",
     "nodejs-nodemailer-outlook": "^1.2.4",
-    "nodemon": "^3.0.1",
+    "nodemon": "^3.1.7",
     "request": "^2.88.2",
     "sharp": "^0.31.3",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "xlsx": "^0.18.5"
   },
   "license": "MIT",
   "bugs": {
