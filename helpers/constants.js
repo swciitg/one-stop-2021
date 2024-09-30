@@ -6,10 +6,6 @@ exports.guestUserEmail = "guest@onestop.swc.iitg.ac.in";
 exports.guestUserName = "Guest";
 exports.guestUserRollNo = '2110000000';
 
-exports.opiMailRecipients = [];
-exports.opiStartDate = "2024-09-28";
-exports.opiEndDate = "2024-10-01";
-
 exports.adminRoles = ["super", "board", "mmc", "hmc", "club"]
 
 exports.allIITGHostelsGC = ["Brahmaputra", "Kameng", "Dihing", "Barak", "Kapili", "Lohit", "Manas", "Married Scholars (Men)", "Married Scholars (Women)", "Siang", "Subansiri", "Umiam", "Dhansiri", "Disang (Men)", "Disang (Women)"];
