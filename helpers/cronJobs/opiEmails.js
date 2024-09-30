@@ -12,8 +12,9 @@ require('dotenv').config();
 const dirname = __dirname;
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  secure: false,
+  // service: 'gmail',
+  // secure: false,
+  host: "smtp-mail.outlook.com",
   auth: {
     user: process.env.UPSP_EMAIL,
     pass: process.env.UPSP_EMAIL_PASSWORD,
@@ -177,7 +178,7 @@ const scheduleOPIEmails = async () => {
     const startDate = opiStartDate ? moment.tz(opiStartDate, 'Asia/Kolkata').format('YYYY-MM-DD') : moment.tz('Asia/Kolkata').format('YYYY-MM-DD');
     const endDate = opiEndDate ? moment.tz(opiEndDate, 'Asia/Kolkata').format('YYYY-MM-DD') : moment.tz('Asia/Kolkata').add(5, 'days').format('YYYY-MM-DD');
 
-      cron.schedule("40 23 * * *", async () => {
+      cron.schedule("57 23 * * *", async () => {
       // cron.schedule("* * * * *", async () => {
       console.log("Running scheduled date processing at 11:40 PM IST...");
       await processDateList(startDate, endDate, recipients);
