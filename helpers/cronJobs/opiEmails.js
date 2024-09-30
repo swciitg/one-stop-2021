@@ -87,7 +87,7 @@ const sendEmailForDate = async (date, recipients) => {
           from: process.env.UPSP_EMAIL,
           to: recipients,
           subject: `Data for ${mess} on ${date}`,
-          text: `Please find attached the OPI data for ${mess} on ${date}. Regards, Team SWC`,
+          text: `Please find attached the OPI data for ${mess} on ${date}.\nRegards,\nTeam SWC`,
           attachments: [{ filename: fileName, path: filePath }],
         };
 
@@ -125,7 +125,7 @@ const sendSummaryEmail = async (startDate, endDate, recipients) => {
         from: process.env.UPSP_EMAIL,
         to: recipients,
         subject: `Summary Data for ${mess} from ${startDate} to ${endDate}`,
-        text: `Please find attached the OPI data for ${mess} from ${startDate} to ${endDate}. Regards, Team SWC`,
+        text: `Please find attached the OPI data for ${mess} from ${startDate} to ${endDate}.\nRegards,\nTeam SWC`,
         attachments: [{ filename: fileName, path: filePath }],
       };
 
