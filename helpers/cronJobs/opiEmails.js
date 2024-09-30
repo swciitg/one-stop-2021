@@ -12,8 +12,9 @@ require('dotenv').config();
 const dirname = __dirname;
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  secure: false,
+  // service: 'gmail',
+  // secure: false,
+  host: "smtp-mail.outlook.com",
   auth: {
     user: process.env.UPSP_EMAIL,
     pass: process.env.UPSP_EMAIL_PASSWORD,
