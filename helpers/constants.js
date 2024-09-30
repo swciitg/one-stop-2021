@@ -12,6 +12,7 @@ exports.opiEndDate = "2024-10-01";
 
 exports.adminRoles = ["super", "board", "mmc", "hmc", "club"];
 
+
 exports.allIITGHostelsGC = [
   "Brahmaputra",
   "Kameng",
