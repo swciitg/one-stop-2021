@@ -84,7 +84,6 @@ exports.submitHabComplaint = async (req,res) => {
                     <td style="padding: 20px; border-bottom: 1px solid #dddddd;">
                         <h3>Complainant Information or Feedback Provider</h3>
                         <p><strong>Name:</strong> ${req.body.name} (${req.body.email})<br>
-                        <strong>Roll No.</strong>  ${req.body.roll_number}<br>
                         <strong>Hostel:</strong> ${req.body.hostel}<br>
                         <strong>Room No.:</strong> ${req.body.room_number}<br>
                         <strong>Phone No.:</strong> ${req.body.phone}</p>
