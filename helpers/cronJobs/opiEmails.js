@@ -15,10 +15,9 @@ const transporter = nodemailer.createTransport({
   // service: 'gmail',
   // secure: false,
   host: "smtp-mail.outlook.com",
-  secure: false,
   auth: {
-    user: process.env.EMAIL_ID,
-    pass: process.env.PASSWORD,
+    user: process.env.UPSP_EMAIL,
+    pass: process.env.UPSP_EMAIL_PASSWORD,
   }
 });
 
@@ -85,7 +84,7 @@ const sendEmailForDate = async (date, recipients) => {
         const filePath = convertToExcel(records, fileName);
 
         const mailOptions = {
-          from: process.env.EMAIL_ID,
+          from: process.env.UPSP_EMAIL,
           to: recipients,
           subject: `Data for ${mess} on ${date}`,
           text: `Please find attached the OPI data for ${mess} on ${date}. Regards, Team SWC`,
@@ -123,7 +122,7 @@ const sendSummaryEmail = async (startDate, endDate, recipients) => {
       const filePath = convertToExcel(records, fileName);
 
       const mailOptions = {
-        from: process.env.EMAIL_ID,
+        from: process.env.UPSP_EMAIL,
         to: recipients,
         subject: `Summary Data for ${mess} from ${startDate} to ${endDate}`,
         text: `Please find attached the OPI data for ${mess} from ${startDate} to ${endDate}. Regards, Team SWC`,
@@ -180,8 +179,8 @@ const scheduleOPIEmails = async () => {
     const endDate = opiEndDate ? moment.tz(opiEndDate, 'Asia/Kolkata').format('YYYY-MM-DD') : moment.tz('Asia/Kolkata').add(5, 'days').format('YYYY-MM-DD');
 
       // schedule cron job acc to 11:45 pm IST (6:10 pm UTC). Server is in UTC.
-      cron.schedule("15 18 * * *", async () => {
-      // cron.schedule("* * * * *", async () => {
+      // cron.schedule("15 18 * * *", async () => {
+      cron.schedule("40 21 * * *", async () => {
       console.log("Running scheduled date processing at 11:45 PM IST...");
       await processDateList(startDate, endDate, recipients);
     }, {
