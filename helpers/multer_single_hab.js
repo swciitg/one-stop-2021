@@ -2,7 +2,7 @@ const multer = require("multer");
 const fs = require("fs");
 const uuid= require("uuid");
 
-const directoryPath = __dirname + "/../files_folder/hab_complaints_files/";
+const directoryPath = __dirname + "/../files_folder/hab_complaint_files/";
 
 const fileStorageEngine = multer.diskStorage({
     destination: (req,file,cb) => {
