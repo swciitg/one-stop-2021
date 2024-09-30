@@ -14,7 +14,7 @@ exports.allIITGWomenHostels = ["Married Scholars (Women)", "Subansiri", "Dhansir
 exports.allIITGTechClubs = ["Coding Club", "CnA Club", "E-Cell", "Robotics Club", "Aeromodelling Club", "Automobile Club", "Electronics Club", "IITG.AI", "Gamedev and ESports", "Equinox", "FEC", "Whitespace", "Acumen", "4i Labs"];
 exports.allIITGWelfareClubs = ["Academic Initiatives Club", "Rights and Responsibilities Club", "Red Ribbon Club", "Youth Empowerment Club", "Saathi", "Social Service Club", "Substance Abuse Awareness Club"];
 exports.allIITGHostels = ["LOHIT", "BRAHMAPUTRA", "DISANG", "KAMENG", "BARAK", "MANAS", "DIHING", "UMIAM", "SIANG", "KAPILI", "DHANSIRI", "SUBANSIRI", "MSH", "GAURANG", "DIBANG", "NON-HOSTELLER"];
-exports.allIITGMess = ["LOHIT", "BRAHMAPUTRA", "DISANG", "KAMENG", "BARAK", "MANAS", "DIHING", "UMIAM", "SIANG", "KAPILI", "DHANSIRI", "SUBANSIRI", "GAURANG", "DIBANG"];
+exports.allIITGMess = ["LOHIT", "BRAHMAPUTRA", "DISANG", "KAMENG", "BARAK", "MANAS", "DIHING", "UMIAM", "SIANG", "KAPILI", "DHANSIRI", "SUBANSIRI", "GAURANG", "DIBANG", "NONE"];
 exports.allIITGGymkhanaBoards = {
     "Sports Board": "sportsec@iitg.ac.in",
     "Students Web Committee (SWC)": "swc@iitg.ac.in",
