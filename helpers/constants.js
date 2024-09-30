@@ -41,7 +41,7 @@ exports.IITGHostelSSs = {
     "Brahmaputra" : "ss.brahmaputra@iitg.ac.in",
     "Dhansiri" : "ss.dhansiri@iitg.ac.in",
     "Dihing" : "ss.dihing@iitg.ac.in",
-    "Disang" : "ss.disang@iitg.ac.in",
+    "Disang" : "ss.disangB@iitg.ac.in",
     "Gaurang" : "ss.gaurang@iitg.ac.in",
     "Kameng" : "ss.kameng@iitg.ac.in",
     "Kapili" : "ss.kapili@iitg.ac.in",
@@ -51,7 +51,7 @@ exports.IITGHostelSSs = {
     "Subansiri" : "ss.subansiri@iitg.ac.in",
     "Umiam" : "ss.umiam@iitg.ac.in",
 
-    "Disang Women" : "ss.disangg@iitg.ac.in"
+    "Disang Women" : "ss.disangG@iitg.ac.in"
 }
 
 exports.IITGHostelGSs = {
@@ -106,6 +106,24 @@ exports.IITGHostelOffices = {
     "Umiam" : "umiam_off@iitg.ac.in",
 
     "Disang Women" : "disang.gw_off@iitg.ac.in"
+}
+
+exports.IITGHostelMSs = {
+    "Barak" : "ms.barak@iitg.ac.in",
+    "Brahmaputra" : "ms.brahmaputra@iitg.ac.in",
+    "Dhansiri" : "ms.dhansiri@iitg.ac.in",
+    "Dihing" : "ms.dihing@iitg.ac.in",
+    "Disang" : "ms.disangB@iitg.ac.in",
+    "Gaurang" : "ms.gaurang@iitg.ac.in",
+    "Kameng" : "ms.kameng@iitg.ac.in",
+    "Kapili" : "ms.kapili@iitg.ac.in",
+    "Lohit" : "ms.lohit@iitg.ac.in",
+    "Manas" : "ms.manas@iitg.ac.in",
+    "Siang" : "ms.siang@iitg.ac.in",
+    "Subansiri" : "ms.subansiri@iitg.ac.in",
+    "Umiam" : "ms.umiam@iitg.ac.in",
+
+    "Disang Women" : "ms.disangG@iitg.ac.in"
 }
 
 exports.miscellaneousRecievers = []

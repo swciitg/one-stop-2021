@@ -1,19 +1,17 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const { IITGHostelWardens, miscellaneousRecievers, IITGHostelGSs, IITGHostelSSs, IITGHostelOffices } = require("../helpers/constants");
+const { IITGHostelWardens, IITGHostelGSs, IITGHostelSSs, IITGHostelOffices, IITGHostelMSs } = require("../helpers/constants");
 
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
     auth: {
-        user: process.env.UPSP_EMAIL,
-        pass: process.env.UPSP_EMAIL_PASSWORD
+        user: process.env.HAB_EMAIL,
+        pass: process.env.HAB_EMAIL_PASSWORD
     }
 });
 
-// const serviceCCs = ["hostelservices_complaints@iitg.ac.in"]    
-const serviceCCs = ["m.geetanjay@iitg.ac.in", "shubhkarjha533@gmail.com"]  
-// const infraCCs = [""]   
-const infraCCs = ["shubhkarjha533@gmail.com", "m.geetanjay@iitg.ac.in"]
+const serviceCCs = ["hostelservices_complaints@iitg.ac.in"]  
+const infraCCs = ["hostelinfra_complaints@iitg.ac.in"]
 
 
 exports.submitHabComplaint = async (req,res) => {
@@ -21,19 +19,19 @@ exports.submitHabComplaint = async (req,res) => {
 
     let recieverEmailsForTo = [req.body.email];
     
-    let recieverEmailsForCc = ["shubham.jha@iitg.ac.in"];
-    //let recieverEmailsForCc = ["vp@iitg.ac.in",req.body.email]; // vp recieves every email
+    let recieverEmailsForCc = [];
 
-    // req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelGSs[element]))
-    // req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelWardens[element]))
-    // req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelOffices[element]))
+    req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelGSs[element]))
+    req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelWardens[element]))
+    req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelOffices[element]))
 
 
     if(req.body.services !== "Infra"){
-        // req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
+        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
         recieverEmailsForCc = recieverEmailsForCc.concat(serviceCCs)
     }
     else{
+        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelMSs[element]))
         recieverEmailsForCc = recieverEmailsForCc.concat(infraCCs)
     }
 
@@ -52,7 +50,7 @@ exports.submitHabComplaint = async (req,res) => {
 
     let mailDetails = {
         //Need to setup a new HAB_EMAIL in .env file
-        from: process.env.UPSP_EMAIL,
+        from: process.env.HAB_EMAIL,
         //right now working on UPSP_EMAIL
         subject: `${req.body.services} Feedback/Complaint from ${req.body.hostel} hostel by ${req.body.name}`,
         to: recieverEmailsForTo,
