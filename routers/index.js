@@ -20,3 +20,4 @@ exports.gcScoreboardRouter = require("./gcScoreboardRouter");
 exports.upspRouter = require("./upspRouter");
 exports.habComplaintRouter = require("./habComplaintRouter");
 exports.homePage = require("./homePageRouter");
+exports.opiRouter = require("./habRoutes/opiRouter");
