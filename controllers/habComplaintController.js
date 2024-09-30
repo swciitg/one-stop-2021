@@ -29,12 +29,12 @@ exports.submitHabComplaint = async (req,res) => {
     // req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelOffices[element]))
 
 
-    if(req.body.complaint_type !== "Infra"){
+    if(req.body.services !== "Infra"){
         // req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
-        recieverEmailsForCc.concat(serviceCCs)
+        recieverEmailsForCc = recieverEmailsForCc.concat(serviceCCs)
     }
     else{
-        recieverEmailsForCc.concat(infraCCs)
+        recieverEmailsForCc = recieverEmailsForCc.concat(infraCCs)
     }
 
     let selectedAttachments = [];
@@ -54,7 +54,7 @@ exports.submitHabComplaint = async (req,res) => {
         //Need to setup a new HAB_EMAIL in .env file
         from: process.env.UPSP_EMAIL,
         //right now working on UPSP_EMAIL
-        subject: `${req.body.complaint_type} Feedback/Complaint from ${req.body.hostel} by ${req.body.name}`,
+        subject: `${req.body.services} Feedback/Complaint from ${req.body.hostel} hostel by ${req.body.name}`,
         to: recieverEmailsForTo,
         cc: recieverEmailsForCc,
         attachments: selectedAttachments,
@@ -77,15 +77,15 @@ exports.submitHabComplaint = async (req,res) => {
                 <tr>
                     <td style="padding: 20px; border-bottom: 1px solid #dddddd;">
                         <h3>Complaint/Feedback Received for:</h3>
-                        <p>${req.body.complaint_type}</p>
+                        <p>${req.body.services}</p>
                     </td>
                 </tr>
                 <tr>
                     <td style="padding: 20px; border-bottom: 1px solid #dddddd;">
                         <h3>Complainant Information or Feedback Provider</h3>
                         <p><strong>Name:</strong> ${req.body.name} (${req.body.email})<br>
-                        <strong>Roll No.</strong>  ${req.body.roll_number}<br>
                         <strong>Hostel:</strong> ${req.body.hostel}<br>
+                        <strong>Room No.:</strong> ${req.body.room_number}<br>
                         <strong>Phone No.:</strong> ${req.body.phone}</p>
                     </td>
                 </tr>
