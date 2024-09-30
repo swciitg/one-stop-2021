@@ -1,13 +1,10 @@
-const { Response } = require("../../models/habModels/opiResponseModel.js");
-const { oneStopUserModel } = require("../../models/userModel.js");
-const { HabAdmin } = require("../../models/habModels/habAdminModel.js");
+const { Response } = require("../../models/habModels/opiResponseModel");
+const oneStopUserModel= require("../../models/userModel");
+const { HabAdmin } = require("../../models/habModels/habAdminModel");
 const moment = require('moment-timezone');
 
 const createNew = async (req, res) => {
   try {
-    console.log("This is running...");
-
-    // Fetch opiStartDate and opiEndDate from HabAdmin
     const admin = await HabAdmin.findOne();
 
     if (!admin) {
