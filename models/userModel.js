@@ -90,7 +90,15 @@ const userSchema = new mongoose.Schema({
     notifPref: {
         type: NotifPrefSchema,
         default: defaultNotifCategoriesMap
-    }
+    },
+    cyclereg: {       
+        type: String,       
+        maxLength: 20}
+    ,    
+    subscribedMess: {        
+        type: String, 
+        enum: allIITGHostels   
+     }
 });
 
 module.exports = mongoose.model("onestopUser", userSchema);
