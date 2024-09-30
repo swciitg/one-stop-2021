@@ -49,14 +49,9 @@ exports.submitUpspForm = async (req,res) => {
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding: 20px;">
-                        <p>Dear Service Secretary of ${req.body.hostel} Hostel,</p>
-                        <p>This is an auto-generated email based on the response submitted by <strong>${req.body.name}</strong>.</p>
-                    </td>
-                </tr>
-                <tr>
                     <td style="padding: 20px; border-bottom: 1px solid #dddddd;">
-                        <h3>UPSP Request Received:</h3>
+                        <h3>Problem</h3>
+                        <p>${req.body.problem}</p>
                     </td>
                 </tr>
                 <tr>
@@ -69,12 +64,6 @@ exports.submitUpspForm = async (req,res) => {
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding: 20px; border-bottom: 1px solid #dddddd;">
-                        <h3>Problem</h3>
-                        <p>${req.body.problem}</p>
-                    </td>
-                </tr>
-                <tr>
                     <td style="padding: 20px;">
                         <p><strong>Note:</strong> PFA relevant complaint proofs (if uploaded by ${req.body.name}).</p>
                     </td>
@@ -82,7 +71,6 @@ exports.submitUpspForm = async (req,res) => {
                 <!-- Footer -->
                 <tr>
                     <td style="padding: 20px; border-top: 1px solid #dddddd;">
-                        <p>Requesting the Hostel office to please follow up with the Service Secretary and General Secretary to ensure a response to the pending query if it remains unanswered.</p>
                         <p style="margin-top: 40px; text-align: start;">
                             Thanks and Regards,<br>
                             <strong>Team SWC</strong><br>
