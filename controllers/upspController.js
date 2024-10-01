@@ -1,6 +1,11 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const { allIITGGymkhanaBoards, IITGAdminDepts, miscellaneousRecievers } = require("../helpers/constants");
+// const { allIITGGymkhanaBoards, IITGAdminDepts, miscellaneousRecievers } = require("../helpers/constants");
+const allIITGGymkhanaBoards = {
+}
+const IITGAdminDepts = {
+}
+const miscellaneousRecievers = []
 
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
