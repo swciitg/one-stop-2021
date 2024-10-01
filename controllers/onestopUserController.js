@@ -140,6 +140,8 @@ exports.updateOnestopUserValidate = [
         .exists()
         .isInt({min: 1000000000, max: 9999999999}),
     body("linkedin", "linkedin is required").optional(),
+    body("cycleReg", "Cycle Registration number is required").optional(),
+    body("subscribedMess", "subscribed mess is requiresd").exists(),
 ];
 
 exports.updateOnestopUser = asyncHandler(async (req, res) => {
