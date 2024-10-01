@@ -180,7 +180,7 @@ const scheduleOPIEmails = async () => {
 
       // schedule cron job acc to 11:45 pm IST (6:10 pm UTC). Server is in UTC.
       // cron.schedule("15 18 * * *", async () => {
-      cron.schedule("* * * * *", async () => {
+      cron.schedule("45 18 * * *", async () => {
       console.log("Running scheduled date processing at 11:45 PM IST...");
       await processDateList(startDate, endDate, recipients);
     }, {
