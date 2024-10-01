@@ -44,7 +44,8 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
 
         let mailDetails = {
             from : process.env.UPSP_EMAIL ,
-            to : ["vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in" ] , //hospital-section and pharmacy mail to be added
+            // to : ["vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in" ] , //hospital-section and pharmacy mail to be added
+            to : ["r.kareddy@iitg.ac.in", "m.raza@iitg.ac.in"] , //hospital-section and pharmacy mail to be added
             cc : patientEmail,
             subject : "New Pharmacy Feedback",
             attachments: selectedAttachments,
@@ -110,7 +111,8 @@ exports.doctorsFeedbackSubmit = async(req, res) => {
 
         let mailDetails = {
             from: process.env.UPSP_EMAIL,
-            to : ["vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in" ] , //hospital-section mail to be added  
+            // to : ["vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in" ] , //hospital-section mail to be added  
+            to : ["r.kareddy@iitg.ac.in", "m.raza@iitg.ac.in"] ,
             cc: patientEmail, // Send a copy to the patient
             subject: "New Doctor's Feedback",
             attachments: selectedAttachments,
@@ -171,7 +173,8 @@ exports.servicesFeedbackSubmit = async(req, res) => {
 
         let mailDetails = {
             from : process.env.UPSP_EMAIL ,
-            to : ["vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in" ] , //hospital-section mail to be added
+            // to : ["vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in" ] , //hospital-section mail to be added
+            to : ["r.kareddy@iitg.ac.in", "m.raza@iitg.ac.in"] ,
             cc : userEmail,
             subject : "New Hospital Feedback",
             attachments: selectedAttachments,
