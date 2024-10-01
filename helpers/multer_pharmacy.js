@@ -34,7 +34,7 @@ const uuid = require("uuid");
 const path = require("path");
 
 // Define the destination directory
-const uploadDir = path.join(__dirname, "../files_folder/pharmacyForms_files");
+const uploadDir = path.join(__dirname, "../files_folder/pharmacyFeedbackForms_files");
 
 // Create the directory if it doesn't exist
 if (!fs.existsSync(uploadDir)) {

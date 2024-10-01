@@ -8,18 +8,22 @@ const contactSchema = new mongoose.Schema({
     },
     degree: {
         type: String,
+        default : ""
     },
     designation: {
         type:String,
+        default : ""
     },
     email: {
         type: String,
         required : true,
-        unique: true
+        unique: true,
+        default : "Unknown"
     },
     phone: {
         type: String,
-        required: true
+        required: true,
+        default : "123456789"
     },
     category: {           
         type : String,

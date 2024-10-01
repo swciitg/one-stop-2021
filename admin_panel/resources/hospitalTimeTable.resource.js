@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const roles = require("../roles");
 const verifyRoles = require("../utils");
 
-let allowedRoles = [roles.SUPERADMIN]; 
+let allowedRoles = [roles.SUPERADMIN, roles.MEDICAL]; 
 
 module.exports = {
     resource: hospitalTimeTableModel,
