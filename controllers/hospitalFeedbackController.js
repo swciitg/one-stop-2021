@@ -35,7 +35,7 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
         
         let selectedAttachments = [];
         req.body.files.forEach((element,index) => {
-            let filepath = __dirname + "/../files_folder/pharmacyFeedback_files/" + element;
+            let filepath = __dirname + "/../files_folder/pharmacyFeedbackForms_files/" + element;
             if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
             else console.log("not exists");
         });
@@ -45,7 +45,7 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
         let mailDetails = {
             from : process.env.UPSP_EMAIL ,
             // to : ["vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in" ] , //hospital-section and pharmacy mail to be added
-            to : ["r.kareddy@iitg.ac.in", "m.raza@iitg.ac.in"] , //hospital-section and pharmacy mail to be added
+            to : ["r.kareddy@iitg.ac.in", "m.raza@iitg.ac.in"] ,
             cc : patientEmail,
             subject : "New Pharmacy Feedback",
             attachments: selectedAttachments,
@@ -164,7 +164,7 @@ exports.servicesFeedbackSubmit = async(req, res) => {
         // For sending attatchments along with mail
         let selectedAttachments = [];
         req.body.files.forEach((element,index) => {
-            let filepath = __dirname + "/../files_folder/doctorFeedbackForms_files/" + element;
+            let filepath = __dirname + "/../files_folder/servicesFeedbackForms_files/" + element;
             if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
             else console.log("not exists");
         });
