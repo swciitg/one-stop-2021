@@ -14,7 +14,7 @@ let mailTransporter = nodemailer.createTransport({
 exports.submitUpspForm = async (req,res) => {
     console.log(req.body);
     let recieverEmailsForTo = [];
-    let recieverEmailsForCc = ["vp@iitg.ac.in",req.body.email]; // vp recieves every email
+    // let recieverEmailsForCc = ["vp@iitg.ac.in",req.body.email]; // vp recieves every email
     req.body.boards.forEach((element) => {
         if(element!=='Miscellaneous') recieverEmailsForTo.push(allIITGGymkhanaBoards[element]);
         else recieverEmailsForTo = recieverEmailsForTo.concat(miscellaneousRecievers);
@@ -29,15 +29,15 @@ exports.submitUpspForm = async (req,res) => {
     });
 
     recieverEmailsForTo = [...new Set(recieverEmailsForTo)]; // removing redundant items from array
-    recieverEmailsForCc = [...new Set(recieverEmailsForCc)];
+    // recieverEmailsForCc = [...new Set(recieverEmailsForCc)];
 
-    console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
+    // console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
 
     let mailDetails = {
         from: process.env.UPSP_EMAIL,
         subject: 'UPSP Request',
         to: recieverEmailsForTo,
-        cc: recieverEmailsForCc,
+        // cc: recieverEmailsForCc,
         attachments: selectedAttachments,
         html: `${req.body.problem}<br> <br> Name: ${req.body.name} <br> Roll no.: ${req.body.roll_number}, Email: ${req.body.email} <br> Hostel: ${req.body.hostel}, Ph no. :  ${req.body.phone}<br>`
     }
