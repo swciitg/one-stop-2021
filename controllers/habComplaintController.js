@@ -10,29 +10,33 @@ let mailTransporter = nodemailer.createTransport({
     }
 });
 
-const serviceCCs = ["hostelservices_complaints@iitg.ac.in"]  
-const infraCCs = ["hostelinfra_complaints@iitg.ac.in"]
+const serviceTos = ["hostelservices_complaints@iitg.ac.in"]  
+const infraTos = ["hostelinfra_complaints@iitg.ac.in"]
+const generalTos = ["hostel_complaints@iitg.ac.in"]
 
 
 exports.submitHabComplaint = async (req,res) => {
     console.log(req.body);
 
-    let recieverEmailsForTo = [req.body.email];
+    let recieverEmailsForCc = [req.body.email];
     
-    let recieverEmailsForCc = [];
+    let recieverEmailsForTo = [];
 
-    req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelGSs[element]))
-    req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelWardens[element]))
-    req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelOffices[element]))
+    req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelGSs[element]))
+    req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelWardens[element]))
+    req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelOffices[element]))
 
 
-    if(req.body.services !== "Infra"){
-        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
-        recieverEmailsForCc = recieverEmailsForCc.concat(serviceCCs)
+    if(req.body.services === "Infra"){
+        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelMSs[element]))
+        recieverEmailsForTo = recieverEmailsForTo.concat(infraTos)
+    }
+    else if(req.body.services === "General"){
+        recieverEmailsForTo = recieverEmailsForTo.concat(generalTos)
     }
     else{
-        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelMSs[element]))
-        recieverEmailsForCc = recieverEmailsForCc.concat(infraCCs)
+        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
+        recieverEmailsForTo = recieverEmailsForTo.concat(serviceTos)
     }
 
     let selectedAttachments = [];
@@ -68,7 +72,7 @@ exports.submitHabComplaint = async (req,res) => {
                 </tr>
                 <tr>
                     <td style="padding: 20px;">
-                        <p>Dear ${req.body.services==="Infra" ? "Maintenance" : "Service"} Secretary of ${req.body.hostel} Hostel,</p>
+                        <p>Dear ${req.body.services==="Infra" ? "Maintenance" : (req.body.services==="General" ? "General" : "Service")} Secretary of ${req.body.hostel} Hostel,</p>
                         <p>This is an auto-generated email based on the response submitted by <strong>${req.body.name}</strong>.</p>
                     </td>
                 </tr>
@@ -101,7 +105,7 @@ exports.submitHabComplaint = async (req,res) => {
                 <!-- Footer -->
                 <tr>
                     <td style="padding: 20px; border-top: 1px solid #dddddd;">
-                        <p>Requesting the Hostel office to please follow up with the ${req.body.services==="Infra" ? "Maintenance" : "Service"} Secretary and General Secretary to ensure a response to the pending query if it remains unanswered.</p>
+                        <p>Requesting the Hostel office to please follow up with the ${req.body.services==="Infra" ? "Maintenance" : (req.body.services==="General" ? "General" : "Service")} Secretary and General Secretary to ensure a response to the pending query if it remains unanswered.</p>
                         <p style="margin-top: 40px; text-align: center;">
                             Thanks and Regards,<br>
                             <strong>Team SWC</strong><br>
