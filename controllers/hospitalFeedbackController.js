@@ -129,7 +129,7 @@ exports.fetchDoctorsList = async (req, res) => {
 //Tested And working
 exports.doctorsFeedbackSubmit = async(req, res) => {
     try {
-        const {doctorName, doctorDegree, remarks, patientName, patientEmail, patientHostel, mobile} = req.body;
+        const {doctorName, doctorDegree, remarks, patientName, patientEmail, patientHostel, mobile, rollNo} = req.body;
 
         // For sending attatchments along with mail
         let selectedAttachments = [];
