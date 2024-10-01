@@ -26,17 +26,21 @@ const timetableSchema = new mongoose.Schema({
     },
     startTime1 : {
         type:String,
-        required: true
+        required: true,
+        default : ""
     },
     endTime1 : {
         type:String,
-        required: true
+        required: true,
+        default : ""
     },
     startTime2 : {
         type:String,
+        default : ""
     },
     endTime2 : {
         type:String,
+        default : ""
     },
 
 });
