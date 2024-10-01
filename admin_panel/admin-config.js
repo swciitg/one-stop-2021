@@ -40,7 +40,6 @@ var sessiontStore = new MongoDBStore(
 });
 
 const adminjs = new AdminJs({
-    // resources: [ doctorResource, hospitalContactResource, hospitalTimetableResource],
     resources: [announcementResource, messMenuResouce, foodOutletResource, adminResource, userResource, timingResource, contactsResource, cabSharingResource, lostItemResource, foundItemResource, buyItemResource, sellItemResource, homePageResource, doctorResource, hospitalContactResource, hospitalTimetableResource],
     assets: {
         styles: styleAssets
