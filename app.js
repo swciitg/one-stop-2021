@@ -54,7 +54,7 @@ app.use((req, res, next) => {
 app.use(BASEURL, routers.authRouter.authRouter);
 app.use(BASEURL, routers.imageRouter.imageRouter);
 
-Validate API Call
+//Validate API Call
 app.use((req, res, next) => {
     console.log(req.path);
     console.log(req.body);
