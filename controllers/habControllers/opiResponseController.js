@@ -60,6 +60,55 @@ const createNew = async (req, res) => {
   }
 };
 
+// GET function to check if OPI is active, or if the user has already submitted a response
+const checkOPIStatus = async (req, res) => {
+  try {
+    // Fetch the OPI start and end dates from the HabAdmin
+    const admin = await HabAdmin.findOne();
+    if (!admin) {
+      return res.status(500).json({ success: false, message: "Admin settings not found" });
+    }
+
+    const { opiStartDate, opiEndDate } = admin;
+
+    // Get current date in IST timezone
+    const currentDate = moment.tz(new Date(), 'Asia/Kolkata');
+
+    const newopiStartDate = moment.tz(opiStartDate, 'Asia/Kolkata').startOf('day');
+    const newopiEndDate = moment.tz(opiEndDate, 'Asia/Kolkata').endOf('day');
+
+    // Check if the current date is within the OPI active period
+    if (currentDate.isBefore(newopiStartDate) || currentDate.isAfter(newopiEndDate)) {
+      return res.status(400).json({ success: false, message: 'OPI is not active' });
+    }
+
+    // Retrieve `outlookEmail` and `subscribedMess` from query parameters
+    const { outlookEmail } = req.query;
+
+    if (!outlookEmail) {
+      return res.status(400).json({ success: false, message: 'Missing required outlookEmail query parameters' });
+    }
+
+    // Check if user exists and if their subscribed mess matches
+    const user = await oneStopUserModel.findOne({ outlookEmail });
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'User not found' });
+    }
+
+    // Check if user has already submitted a response
+    const userCheck = await Response.findOne({ outlookEmail });
+    if (userCheck) {
+      return res.status(400).json({ success: false, message: 'User has already submitted a response' });
+    }
+
+    res.status(200).json({ success: true, message: "OPI response can be submitted" });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+  }
+};
+
 module.exports = {
   createNew,
+  checkOPIStatus
 };

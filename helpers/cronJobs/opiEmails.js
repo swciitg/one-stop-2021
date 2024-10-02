@@ -12,8 +12,9 @@ require('dotenv').config();
 const dirname = __dirname;
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  secure: false,
+  // service: 'gmail',
+  // secure: false,
+  host: "smtp-mail.outlook.com",
   auth: {
     user: process.env.UPSP_EMAIL,
     pass: process.env.UPSP_EMAIL_PASSWORD,
@@ -78,21 +79,38 @@ const sendEmailForDate = async (date, recipients) => {
     if (data && data.length > 0) {
       const groupedData = groupDataBySubscribedMess(data);
 
+      // Array to hold the attachments for the email
+      const attachments = [];
+
       for (const [mess, records] of Object.entries(groupedData)) {
         const fileName = `OPIdata_${mess}_${date}.xlsx`;
         const filePath = convertToExcel(records, fileName);
 
+        attachments.push({
+          filename: fileName,
+          path: filePath,
+        });
+
+        console.log(`File for ${mess} generated: ${filePath}`);
+      }
+
+      if (attachments.length > 0) {
         const mailOptions = {
-          from: process.env.EMAIL_ID,
+          from: process.env.UPSP_EMAIL,
           to: recipients,
-          subject: `Data for ${mess} on ${date}`,
-          text: `Please find attached the OPI data for ${mess} on ${date}. Regards, Team SWC`,
-          attachments: [{ filename: fileName, path: filePath }],
+          subject: `OPI Data for all Messes on ${date}`,
+          text: `Please find attached the OPI data for all messes on ${date}.\nRegards,\nTeam SWC`,
+          attachments: attachments,
         };
 
+        // Send the email with all attachments
         await transporter.sendMail(mailOptions);
-        console.log(`Data for ${mess} on ${date} sent to emails`);
-        fs.unlinkSync(filePath);
+        console.log(`OPI data for ${date} sent to recipients`);
+
+        // Clean up files after sending email
+        attachments.forEach((attachment) => {
+          fs.unlinkSync(attachment.path);
+        });
       }
     } else {
       console.log(`No data found for ${date}`);
@@ -103,45 +121,68 @@ const sendEmailForDate = async (date, recipients) => {
 };
 
 const sendSummaryEmail = async (startDate, endDate, recipients) => {
-  const start = moment.tz(startDate, 'Asia/Kolkata').startOf('day').utc();
-  const end = moment.tz(endDate, 'Asia/Kolkata').endOf('day').utc();
+  try {
+    // Convert start and end dates to IST and then to UTC
+    const start = moment.tz(startDate, 'Asia/Kolkata').startOf('day').utc();
+    const end = moment.tz(endDate, 'Asia/Kolkata').endOf('day').utc();
 
-  const data = await Response.find({
-    createdAt: {
-      $gte: start.toDate(),
-      $lte: end.toDate(),
-    },
-  });
-
-  if (data.length > 0) {
-    const groupedData = groupDataBySubscribedMess(data);
-
-    for (const [mess, records] of Object.entries(groupedData)) {
-      const fileName = `OPIdata_${mess}_${startDate}_to_${endDate}.xlsx`;
-      const filePath = convertToExcel(records, fileName);
-
-      const mailOptions = {
-        from: process.env.EMAIL_ID,
-        to: recipients,
-        subject: `Summary Data for ${mess} from ${startDate} to ${endDate}`,
-        text: `Please find attached the OPI data for ${mess} from ${startDate} to ${endDate}. Regards, Team SWC`,
-        attachments: [{ filename: fileName, path: filePath }],
-      };
-
-      await transporter.sendMail(mailOptions);
-      console.log(`Summary data for ${mess} from ${startDate} to ${endDate} sent to emails`);
-      fs.unlinkSync(filePath);
-    }
-
-    await Response.deleteMany({
+    const data = await Response.find({
       createdAt: {
         $gte: start.toDate(),
         $lte: end.toDate(),
       },
     });
-    console.log(`Data from ${startDate} to ${endDate} deleted from database`);
-  } else {
-    console.log(`No summary data found from ${startDate} to ${endDate}`);
+
+    if (data.length > 0) {
+      const groupedData = groupDataBySubscribedMess(data);
+
+      // Array to hold all attachments
+      const attachments = [];
+
+      for (const [mess, records] of Object.entries(groupedData)) {
+        const fileName = `OPIdata_${mess}_${startDate}_to_${endDate}.xlsx`;
+        const filePath = convertToExcel(records, fileName);
+
+        attachments.push({
+          filename: fileName,
+          path: filePath,
+        });
+
+        console.log(`File for ${mess} generated: ${filePath}`);
+      }
+
+      if (attachments.length > 0) {
+        const mailOptions = {
+          from: process.env.UPSP_EMAIL,
+          to: recipients,
+          subject: `Summary Data for all Messes from ${startDate} to ${endDate}`,
+          text: `Please find attached the OPI summary data for all messes from ${startDate} to ${endDate}.\nRegards,\nTeam SWC`,
+          attachments: attachments,
+        };
+
+        // Send the email with all attachments
+        await transporter.sendMail(mailOptions);
+        console.log(`Summary data from ${startDate} to ${endDate} sent to recipients`);
+
+        // Clean up files after sending
+        attachments.forEach((attachment) => {
+          fs.unlinkSync(attachment.path);
+        });
+      }
+
+      // Delete data after sending the summary email
+      await Response.deleteMany({
+        createdAt: {
+          $gte: start.toDate(),
+          $lte: end.toDate(),
+        },
+      });
+      console.log(`Data from ${startDate} to ${endDate} deleted from database`);
+    } else {
+      console.log(`No summary data found from ${startDate} to ${endDate}`);
+    }
+  } catch (error) {
+    console.error(`Error in sending summary email: ${error.message}`);
   }
 };
 
@@ -177,9 +218,10 @@ const scheduleOPIEmails = async () => {
     const startDate = opiStartDate ? moment.tz(opiStartDate, 'Asia/Kolkata').format('YYYY-MM-DD') : moment.tz('Asia/Kolkata').format('YYYY-MM-DD');
     const endDate = opiEndDate ? moment.tz(opiEndDate, 'Asia/Kolkata').format('YYYY-MM-DD') : moment.tz('Asia/Kolkata').add(5, 'days').format('YYYY-MM-DD');
 
-      cron.schedule("40 23 * * *", async () => {
-      // cron.schedule("* * * * *", async () => {
-      console.log("Running scheduled date processing at 11:40 PM IST...");
+    // schedule cron job at 11:45 pm IST.
+    cron.schedule("45 23 * * *", async () => {
+    // cron.schedule("* * * * *", async () => {
+      console.log("Running scheduled date processing at 11:45 PM IST...");
       await processDateList(startDate, endDate, recipients);
     }, {
       timezone: 'Asia/Kolkata'
