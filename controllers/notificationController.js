@@ -22,37 +22,38 @@ exports.sendTestNotifToDevice = async (req, res) => {
   }
 
   let user = await userModel.findOne({ outlookEmail: req.body.sendTo });
-
-  const payload = {
-    "notification": {
-      "body": "test body",
-      "OrganizationId": "2",
-      "priority": "high",
-      "subtitle": "test header",
-      "Title": "hello"
-    },
-    data: {
-      category: req.body.category,
-      model: "",
-      header: "test header",
-      body: "test body"
-    }
-  };
-
-  const options = { priority: "high" };
   let userNotifTokens = await userNotifTokenModel.find({ userid: user._id });
   console.log(userNotifTokens);
   for (let i = 0; i < userNotifTokens.length; i++) {
-    await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload);
-    console.log("NOTIFICATION SENT");
+    console.log(userNotifTokens[i])
+    const message = {
+        "notification": {
+            "title": "Test Notification",
+            "body": "This is a test notification",
+        },
+        "token": userNotifTokens[i].deviceToken,
+    };
+
+    try {
+        await firebase.messaging().send(message);
+        res.status(200).json({ message: "Notification sent successfully" });
+    } catch (error) {
+        console.log("Error sending notification", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
   }
-  res.json({"success" : true});
+
 
 };
 
 exports.sendNotifByEmail = async (req,res) => {
   let outlookEmail=req.body.outlookEmail;
   let onestopUser=await userModel.findOne({outlookEmail: outlookEmail});
+
+  if(!onestopUser){
+    res.json({success: false});
+    return;
+  }
 
   if(onestopUser) await this.sendToUser(onestopUser._id,req.body.category,req.body.title,req.body.body);
   console.log("SENT TO EMAIL NOTIFS");
@@ -66,6 +67,11 @@ exports.sendNotifByEmailList = async (req,res) => {
   for(let i=0;i<outlookEmails.length;i++){
     let outlookEmail = req.body.outlookEmails[i];
     let onestopUser = await userModel.findOne({outlookEmail: outlookEmail});
+
+    if(!onestopUser){
+      continue;
+    }
+
     if(onestopUser) await this.sendToUser(onestopUser._id,req.body.category,req.body.title,req.body.body);
   }
   res.json({success: true});
@@ -88,18 +94,6 @@ exports.updateTopicSubscriptionOfUser = async (notifPref,userid) => {
 
 exports.sendToUser = async (userid,category,title,body) => {
 
-  const payload = {
-    notification: {
-      title: title,
-      body: body
-    },
-    data: {
-      category: category,
-      title: title,
-      body: body
-    }
-  };
-
   const options = { priority: "high" };
   
   let userNotifTokens = await userNotifTokenModel.find({ userid: userid });
@@ -109,7 +103,20 @@ exports.sendToUser = async (userid,category,title,body) => {
   await userPersonalNotif.save();
 
   for (let i = 0; i < userNotifTokens.length; i++) {
-    await firebase.messaging().sendToDevice(userNotifTokens[i].deviceToken, payload,options);
+      let message = {
+        "notification": {
+            "title": title,
+            "body": body,
+        },
+        "data": {
+            "category": category,
+            "title": title,
+            "body": body
+        },
+        "token": userNotifTokens[i].deviceToken,
+    };
+
+    await firebase.messaging().send(message);
     console.log("NOTIFICATION SENT");
   }
 };
