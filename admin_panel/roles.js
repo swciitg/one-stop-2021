@@ -1,5 +1,6 @@
 module.exports = {
     MESS: "mess",
+    MEDICAL: "medical",
     FOODOUTLET: "food outlet",
     TRANSPORTTIMING: "transport",
     CABSHARING: "cab sharing",
