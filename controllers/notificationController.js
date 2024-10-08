@@ -143,18 +143,30 @@ exports.sendToATopic = async (topic,notification,data) => {
   // });
 
   // if (inactiveDeviceTokens.length > 0) await firebase.messaging().unsubscribeFromTopic(inactiveDeviceTokens, topic);
+    const message = {
+        "notification": notification,
+        "data": data,
+        "topic": topic,
+    };
 
-  const payload = {
-    notification: notification,
-    data: data
-  };
+    try {
+        await firebase.messaging().send(message);
+        console.log("Notification sent successfully");
+    } catch (error) {
+        console.log("Error sending notification", error);
+    }
 
-  let topicNotif = topicNotifModel(data);
-  await topicNotif.save();
+  // const payload = {
+  //   notification: notification,
+  //   data: data
+  // };
 
-  console.log(payload);
-  const options = { priority: "high" };
-  await firebase.messaging().sendToTopic(topic,payload,options);
+  // let topicNotif = topicNotifModel(data);
+  // await topicNotif.save();
+
+  // console.log(payload);
+  // const options = { priority: "high" };
+  // await firebase.messaging().sendToTopic(topic,payload,options);
 
   console.log(`SENT TO TOPIC: ${topic}`);
 };
