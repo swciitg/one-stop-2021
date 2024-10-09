@@ -56,7 +56,7 @@ exports.submitHabComplaint = async (req,res) => {
         //Need to setup a new HAB_EMAIL in .env file
         from: process.env.HAB_EMAIL,
         //right now working on UPSP_EMAIL
-        subject: `${req.body.services} Feedback/Complaint from ${req.body.hostel} hostel by ${req.body.name}`,
+        subject: `${req.body.services} Feedback/Complaint ${req.body.services!=="General" ? `with complaint ID: ${req.body.complaintID}` : "" } from ${req.body.hostel} hostel by ${req.body.name} ${req.body.services==="Infra" ? `on ${req.body.complaintDate}`: ""}`,
         to: recieverEmailsForTo,
         cc: recieverEmailsForCc,
         attachments: selectedAttachments,
@@ -85,10 +85,14 @@ exports.submitHabComplaint = async (req,res) => {
                 <tr>
                     <td style="padding: 20px; border-bottom: 1px solid #dddddd;">
                         <h3>Complainant Information or Feedback Provider</h3>
-                        <p><strong>Name:</strong> ${req.body.name} (${req.body.email})<br>
+                        <p>
+                        <strong>Name:</strong> ${req.body.name} (${req.body.email})<br>
                         <strong>Hostel:</strong> ${req.body.hostel}<br>
                         <strong>Room No.:</strong> ${req.body.room_number}<br>
-                        <strong>Phone No.:</strong> ${req.body.phone}</p>
+                        <strong>Phone No.:</strong> ${req.body.phone}<br>
+                        ${req.body.services!=="General" ? `<strong>Complaint ID:</strong> ${req.body.complaintID}` : "" }
+                        ${req.body.services==="Infra" ? `<strong>Complait Date:</strong> ${req.body.complaintDate}`: ""}
+                        </p>
                     </td>
                 </tr>
                 <tr>
