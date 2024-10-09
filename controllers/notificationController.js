@@ -149,6 +149,9 @@ exports.sendToATopic = async (topic,notification,data) => {
         "topic": topic,
     };
 
+    let topicNotif = topicNotifModel(data);
+    await topicNotif.save();
+
     try {
         await firebase.messaging().send(message);
         console.log("Notification sent successfully");
