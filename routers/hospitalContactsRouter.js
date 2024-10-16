@@ -4,6 +4,6 @@ const { getHospitalContacts } = require("../controllers/hospitalContactControlle
 
 const hospitalContactRouter = express.Router();
 
-hospitalContactRouter.get('/hospital/getContacts',verifyUserRequest, getHospitalContacts);
+hospitalContactRouter.get('/hospital/getContacts', verifyUserRequest, getHospitalContacts);
 
 module.exports = hospitalContactRouter;
