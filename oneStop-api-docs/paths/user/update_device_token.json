@@ -1,0 +1,32 @@
+{
+    "tags": ["users"],
+    "summary": "Update an existing device token",
+    "operationId": "updateOnestopUserDeviceToken",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/DeviceToken"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Device token updated successfully"
+      },
+      "400": {
+        "description": "Validation error"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+  

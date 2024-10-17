@@ -1,0 +1,19 @@
+{
+    "tags": ["users"],
+    "summary": "Apply bug fix for blocked user and notification preferences",
+    "operationId": "addBlockedFalseAndNotifPrefs",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Bug fix applied"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+  

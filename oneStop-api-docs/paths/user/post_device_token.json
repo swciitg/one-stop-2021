@@ -1,0 +1,33 @@
+
+{
+    "tags": ["users"],
+    "summary": "Post a new device token",
+    "operationId": "postOnestopUserDeviceToken",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/DeviceToken"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Device token added successfully"
+      },
+      "400": {
+        "description": "Validation error"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+  
