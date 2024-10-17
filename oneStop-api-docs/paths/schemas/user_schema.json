@@ -1,0 +1,28 @@
+{
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "example": "12345"
+      },
+      "name": {
+        "type": "string",
+        "example": "John Doe"
+      },
+      "email": {
+        "type": "string",
+        "format": "email",
+        "example": "user@example.com"
+      },
+      "role": {
+        "type": "string",
+        "example": "user"
+      },
+      "createdAt": {
+        "type": "string",
+        "format": "date-time",
+        "example": "2023-01-01T12:00:00Z"
+      }
+    }
+  }
+  

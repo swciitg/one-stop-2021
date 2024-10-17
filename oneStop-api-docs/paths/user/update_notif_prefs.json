@@ -1,0 +1,32 @@
+{
+    "tags": ["users"],
+    "summary": "Update notification preferences",
+    "operationId": "updateOnestopUserNotifPrefs",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/NotificationPrefs"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Notification preferences updated successfully"
+      },
+      "400": {
+        "description": "Validation error"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+  

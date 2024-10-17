@@ -1,0 +1,13 @@
+{
+    "servers": [
+      {
+        "url": "https://api.onestop.com/v1",
+        "description": "Production server"
+      },
+      {
+        "url": "https://staging-api.onestop.com/v1",
+        "description": "Staging server"
+      }
+    ]
+  }
+  
