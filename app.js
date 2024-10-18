@@ -80,6 +80,7 @@ app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
 app.use(BASEURL, routers.upspRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
+app.use(BASEURL, routers.docsRouter.docsRouter);
 
 app.use("*",(req,res) => {
     throw new NotFoundError("Route not found");
