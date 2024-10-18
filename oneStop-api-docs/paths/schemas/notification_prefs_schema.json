@@ -1,0 +1,18 @@
+{
+    "type": "object",
+    "properties": {
+      "emailNotifications": {
+        "type": "boolean",
+        "example": true
+      },
+      "pushNotifications": {
+        "type": "boolean",
+        "example": true
+      },
+      "smsNotifications": {
+        "type": "boolean",
+        "example": false
+      }
+    }
+  }
+  
