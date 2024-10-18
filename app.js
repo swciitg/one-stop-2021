@@ -80,6 +80,10 @@ app.use(BASEURL, routers.buyAndSellRouter.buyAndSellRouter);
 app.use(BASEURL, routers.newsRouter.newsRouter);
 app.use(BASEURL, routers.campusTravelRouter.campusTravelRouter);
 app.use(BASEURL, routers.upspRouter);
+app.use(BASEURL, routers.hospitalFeedbackRouter);
+app.use(BASEURL, routers.hospitalContactRouter);
+app.use(BASEURL, routers.hospitalTimetableRouter);
+app.use(BASEURL, routers.habComplaintRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
 app.use(BASEURL, routers.opiRouter.opiRouter);
 
