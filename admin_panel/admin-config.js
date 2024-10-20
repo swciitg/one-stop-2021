@@ -26,6 +26,8 @@ const hospitalContactResource = require("./resources/hospitalContact.resource")
 const hospitalTimetableResource = require("./resources/hospitalTimeTable.resource");
 const doctorResource = require("./resources/doctor.resource");
 const habAdminResource = require("./resources/hab.resource");
+const privatekeyResource = require("./resources/privateKey.resource");
+
 
 AdminJs.registerAdapter(AdminJsMongoose);
 
