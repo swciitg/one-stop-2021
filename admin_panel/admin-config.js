@@ -28,6 +28,7 @@ const doctorResource = require("./resources/doctor.resource");
 const habAdminResource = require("./resources/hab.resource");
 const privatekeyResource = require("./resources/privateKey.resource");
 
+
 AdminJs.registerAdapter(AdminJsMongoose);
 
 
@@ -42,7 +43,7 @@ var sessiontStore = new MongoDBStore(
 });
 
 const adminjs = new AdminJs({
-    resources: [announcementResource, messMenuResouce, foodOutletResource, adminResource, userResource, timingResource, contactsResource, cabSharingResource, lostItemResource, foundItemResource, buyItemResource, sellItemResource, homePageResource,  habAdminResource, doctorResource, hospitalContactResource, hospitalTimetableResource , privatekeyResource],
+    resources: [announcementResource, messMenuResouce, foodOutletResource, adminResource, userResource, timingResource, contactsResource, cabSharingResource, lostItemResource, foundItemResource, buyItemResource, sellItemResource, homePageResource,  habAdminResource, doctorResource, hospitalContactResource, hospitalTimetableResource],
     assets: {
         styles: styleAssets
     },

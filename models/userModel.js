@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { allIITGHostelsGC, NotificationCategories, defaultNotifCategoriesMap, allIITGHostels } = require("../helpers/constants");
+const { allIITGHostelsGC, NotificationCategories, defaultNotifCategoriesMap, allIITGHostels, allIITGMess } = require("../helpers/constants");
 
 const NotifPrefSchema = new mongoose.Schema({
     "lost": {
@@ -96,7 +96,7 @@ const userSchema = new mongoose.Schema({
     },
     subscribedMess: {
         type: String,
-        enum: allIITGHostels
+        enum: allIITGMess
     }
 });
 
