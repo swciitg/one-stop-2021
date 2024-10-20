@@ -50,6 +50,9 @@ app.use((req, res, next) => {
     next();
 });
 
+// docs route
+app.use(BASEURL, routers.docsRouter.docsRouter);
+
 app.use(BASEURL, routers.authRouter.authRouter);
 app.use(BASEURL, routers.imageRouter.imageRouter);
 
@@ -85,7 +88,6 @@ app.use(BASEURL, routers.hospitalContactRouter);
 app.use(BASEURL, routers.hospitalTimetableRouter);
 app.use(BASEURL, routers.habComplaintRouter);
 app.use(BASEURL, routers.gcScoreboardRouter.gcScoreboardRouter);
-app.use(BASEURL, routers.docsRouter.docsRouter);
 app.use(BASEURL, routers.opiRouter.opiRouter);
 
 app.use("*",(req,res) => {

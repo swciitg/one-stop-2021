@@ -1,11 +1,11 @@
 {
-    "tags": ["users"],
+  "get": {
+    "tags": ["users", "microservices dev"],
     "summary": "Get user ID",
     "operationId": "getUserId",
-    "security": [
-      {
-        "bearerAuth": []
-      }
+    "parameters": [
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
     ],
     "responses": {
       "200": {
@@ -29,4 +29,4 @@
       }
     }
   }
-  
+}

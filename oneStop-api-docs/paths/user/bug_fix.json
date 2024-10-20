@@ -1,11 +1,11 @@
 {
+  "patch": {
     "tags": ["users"],
     "summary": "Apply bug fix for blocked user and notification preferences",
     "operationId": "addBlockedFalseAndNotifPrefs",
-    "security": [
-      {
-        "bearerAuth": []
-      }
+    "parameters": [
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
     ],
     "responses": {
       "200": {
@@ -16,4 +16,4 @@
       }
     }
   }
-  
+}

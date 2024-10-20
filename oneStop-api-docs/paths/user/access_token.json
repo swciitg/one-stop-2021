@@ -1,4 +1,5 @@
 {
+  "post": {
     "tags": ["users"],
     "summary": "Regenerate access token",
     "operationId": "regenerateUserAccessToken",
@@ -41,4 +42,4 @@
       }
     }
   }
-  
+}

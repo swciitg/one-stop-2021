@@ -1,5 +1,6 @@
 {
-    "tags": ["users"],
+  "get": {
+    "tags": ["users", "microservices dev"],
     "summary": "Get user by email",
     "operationId": "getUserByEmail",
     "parameters": [
@@ -11,7 +12,9 @@
           "type": "string",
           "format": "email"
         }
-      }
+      },
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
     ],
     "responses": {
       "200": {
@@ -29,4 +32,5 @@
       }
     }
   }
+}
   

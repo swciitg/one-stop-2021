@@ -1,11 +1,11 @@
 {
+  "patch": {
     "tags": ["users"],
     "summary": "Update notification preferences",
     "operationId": "updateOnestopUserNotifPrefs",
-    "security": [
-      {
-        "bearerAuth": []
-      }
+    "parameters": [
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
     ],
     "requestBody": {
       "required": true,
@@ -29,4 +29,5 @@
       }
     }
   }
+}
   
