@@ -1,0 +1,45 @@
+{ 
+  "post": {
+      "tags": ["users"],
+      "summary": "Guest user login",
+      "operationId": "guestUserLogin",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "example": "guest@example.com"
+                },
+                "password": {
+                  "type": "string",
+                  "format": "password",
+                  "example": "guest123"
+                }
+              },
+              "required": ["email", "password"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Successful login",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Unauthorized"
+        }
+      }
+  }
+}

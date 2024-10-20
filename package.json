@@ -50,6 +50,7 @@
     "nodemon": "^3.0.1",
     "request": "^2.88.2",
     "sharp": "^0.31.3",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.0",
     "xlsx": "^0.18.5"
   },

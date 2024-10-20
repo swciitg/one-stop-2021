@@ -23,4 +23,5 @@ exports.hospitalContactRouter = require("./hospitalContactsRouter")
 exports.hospitalTimetableRouter = require("./hospitalTimetableRouter")
 exports.habComplaintRouter = require("./habComplaintRouter");
 exports.homePage = require("./homePageRouter");
+exports.docsRouter = require("./docsRouter");
 exports.opiRouter = require("./habRoutes/opiRouter");
