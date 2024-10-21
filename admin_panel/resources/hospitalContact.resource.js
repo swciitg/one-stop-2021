@@ -6,15 +6,15 @@ let allowedRoles = [roles.SUPERADMIN, roles.MEDICAL];
 module.exports = {
     resource: hospitalContactModel,
     options: {
-        listProperties: ["name", "degree", "designation", "email", "phone", "category"],
-        filterProperties: ["name", "degree", "designation", "email", "phone", "category"],
-        editProperties:["name", "degree", "designation", "email", "phone", "category"],
-        showProperties: ["name", "degree", "designation", "email", "phone", "category"],
+        listProperties: ["name", "miscellaneous_contact", "email", "phone", "category"],
+        filterProperties: ["name", "miscellaneous_contact", "email", "phone", "category"],
+        editProperties:["name", "miscellaneous_contact", "email", "phone", "category"],
+        showProperties: ["name", "miscellaneous_contact", "email", "phone", "category"],
         actions: {
-            list: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
-            new: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
+            list: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},  
+            new: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},  
             filter: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
-            edit: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
+            edit: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)}, 
             delete: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)}
         },
     }

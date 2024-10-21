@@ -55,6 +55,9 @@ app.use((req, res, next) => {
     next();
 });
 
+// docs route
+app.use(BASEURL, routers.docsRouter.docsRouter);
+
 app.use(BASEURL, routers.authRouter.authRouter);
 app.use(BASEURL, routers.imageRouter.imageRouter);
 

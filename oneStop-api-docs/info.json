@@ -1,0 +1,8 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "OneStop API",
+    "description": "This is the API documentation for OneStop, an application that provides various user services.",
+    "version": "1.0.0"
+  }
+}

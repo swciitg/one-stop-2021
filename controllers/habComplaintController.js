@@ -1,40 +1,42 @@
 const nodemailer = require("nodemailer");
 const fs = require("fs");
-const { IITGHostelWardens, miscellaneousRecievers, IITGHostelGSs, IITGHostelSSs, IITGHostelOffices } = require("../helpers/constants");
+const { IITGHostelWardens, IITGHostelGSs, IITGHostelSSs, IITGHostelOffices, IITGHostelMSs } = require("../helpers/constants");
 
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
     auth: {
-        user: process.env.UPSP_EMAIL,
-        pass: process.env.UPSP_EMAIL_PASSWORD
+        user: process.env.HAB_EMAIL,
+        pass: process.env.HAB_EMAIL_PASSWORD
     }
 });
 
-// const serviceCCs = ["hostelservices_complaints@iitg.ac.in"]    
-const serviceCCs = ["m.geetanjay@iitg.ac.in", "shubhkarjha533@gmail.com"]  
-// const infraCCs = [""]   
-const infraCCs = ["shubhkarjha533@gmail.com", "m.geetanjay@iitg.ac.in"]
+const serviceTos = ["hostelservices_complaints@iitg.ac.in"]  
+const infraTos = ["hostelinfra_complaints@iitg.ac.in"]
+const generalTos = ["hostel_complaints@iitg.ac.in"]
 
 
 exports.submitHabComplaint = async (req,res) => {
     console.log(req.body);
 
-    let recieverEmailsForTo = [req.body.email];
+    let recieverEmailsForCc = [req.body.email];
     
-    let recieverEmailsForCc = ["shubham.jha@iitg.ac.in"];
-    //let recieverEmailsForCc = ["vp@iitg.ac.in",req.body.email]; // vp recieves every email
+    let recieverEmailsForTo = [];
 
-    // req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelGSs[element]))
-    // req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelWardens[element]))
-    // req.body.hostel.forEach((element) => recieverEmailsForCc.push(IITGHostelOffices[element]))
+    req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelGSs[element]))
+    req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelWardens[element]))
+    req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelOffices[element]))
 
 
-    if(req.body.services !== "Infra"){
-        // req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
-        recieverEmailsForCc = recieverEmailsForCc.concat(serviceCCs)
+    if(req.body.services === "Infra"){
+        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelMSs[element]))
+        recieverEmailsForTo = recieverEmailsForTo.concat(infraTos)
+    }
+    else if(req.body.services === "General"){
+        recieverEmailsForTo = recieverEmailsForTo.concat(generalTos)
     }
     else{
-        recieverEmailsForCc = recieverEmailsForCc.concat(infraCCs)
+        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
+        recieverEmailsForTo = recieverEmailsForTo.concat(serviceTos)
     }
 
     let selectedAttachments = [];
@@ -51,10 +53,8 @@ exports.submitHabComplaint = async (req,res) => {
     console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
 
     let mailDetails = {
-        //Need to setup a new HAB_EMAIL in .env file
-        from: process.env.UPSP_EMAIL,
-        //right now working on UPSP_EMAIL
-        subject: `${req.body.services} Feedback/Complaint from ${req.body.hostel} hostel by ${req.body.name}`,
+        from: process.env.HAB_EMAIL,
+        subject: `${req.body.services} Feedback/Complaint ${req.body.services==="Infra" ? `with complaint ID: ${req.body.complaintID}` : "" } from ${req.body.hostel} hostel by ${req.body.name} ${req.body.services==="Infra" ? `on ${req.body.complaintDate}`: ""}`,
         to: recieverEmailsForTo,
         cc: recieverEmailsForCc,
         attachments: selectedAttachments,
@@ -70,7 +70,7 @@ exports.submitHabComplaint = async (req,res) => {
                 </tr>
                 <tr>
                     <td style="padding: 20px;">
-                        <p>Dear Service Secretary of ${req.body.hostel} Hostel,</p>
+                        <p>Dear ${req.body.services==="Infra" ? "Maintenance" : (req.body.services==="General" ? "General" : "Service")} Secretary of ${req.body.hostel} Hostel,</p>
                         <p>This is an auto-generated email based on the response submitted by <strong>${req.body.name}</strong>.</p>
                     </td>
                 </tr>
@@ -83,10 +83,14 @@ exports.submitHabComplaint = async (req,res) => {
                 <tr>
                     <td style="padding: 20px; border-bottom: 1px solid #dddddd;">
                         <h3>Complainant Information or Feedback Provider</h3>
-                        <p><strong>Name:</strong> ${req.body.name} (${req.body.email})<br>
+                        <p>
+                        <strong>Name:</strong> ${req.body.name} (${req.body.email})<br>
                         <strong>Hostel:</strong> ${req.body.hostel}<br>
                         <strong>Room No.:</strong> ${req.body.room_number}<br>
-                        <strong>Phone No.:</strong> ${req.body.phone}</p>
+                        <strong>Phone No.:</strong> ${req.body.phone}<br>
+                        ${req.body.services==="Infra" ? `<strong>Complaint ID:</strong> ${req.body.complaintID}` : "" }
+                        ${req.body.services==="Infra" ? `<strong>Complait Date:</strong> ${req.body.complaintDate}`: ""}
+                        </p>
                     </td>
                 </tr>
                 <tr>
@@ -103,10 +107,11 @@ exports.submitHabComplaint = async (req,res) => {
                 <!-- Footer -->
                 <tr>
                     <td style="padding: 20px; border-top: 1px solid #dddddd;">
-                        <p>Requesting the Hostel office to please follow up with the Service Secretary and General Secretary to ensure a response to the pending query if it remains unanswered.</p>
+                        <p>Requesting the Hostel office to please follow up with the ${req.body.services==="Infra" ? "Maintenance" : (req.body.services==="General" ? "General" : "Service")} Secretary and General Secretary to ensure a response to the pending query if it remains unanswered.</p>
                         <p style="margin-top: 40px; text-align: center;">
                             Thanks and Regards,<br>
-                            <strong>Team SWC</strong><br>
+                            <strong>${req.body.services==="Infra" ? "Aniket Banerjee" : (req.body.services==="General" ? "" : "Himanshu Sharma")}</strong><br>
+                            <strong>Joint Secretary, HAB(${req.body.services==="Infra" ? "Infrastructure" : (req.body.services==="General" ? "General" : "Services")})</strong><br>
                             Indian Institute of Technology, Guwahati<br>
                             Guwahati, Assam, 781039
                         </p>

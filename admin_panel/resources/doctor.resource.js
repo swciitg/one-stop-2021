@@ -2,7 +2,7 @@ const doctorModel = require("../../models/doctorModel");
 const roles = require("../roles");
 const verifyRoles = require("../utils");
 
-let allowedRoles = [roles.SUPERADMIN, roles.MEDICAL]; // Only super admin allowed to change homepage image
+let allowedRoles = [roles.SUPERADMIN, roles.MEDICAL]; 
 
 module.exports = {
     resource: doctorModel,

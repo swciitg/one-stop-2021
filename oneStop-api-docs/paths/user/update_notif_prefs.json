@@ -1,0 +1,33 @@
+{
+  "patch": {
+    "tags": ["users"],
+    "summary": "Update notification preferences",
+    "operationId": "updateOnestopUserNotifPrefs",
+    "parameters": [
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/NotificationPrefs"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Notification preferences updated successfully"
+      },
+      "400": {
+        "description": "Validation error"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+}
+  

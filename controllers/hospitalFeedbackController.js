@@ -120,7 +120,7 @@ exports.fetchDoctorsList = async (req, res) => {
         // const doctors = allContacts.filter(contact => contact.category !== 'Miscellaneous')
         res.json(doctors);
     } catch (error) {
-        console.error("Error fetching doctors list:", err.message);
+        console.error("Error fetching doctors list:", error.message);
         res.status(500).json({ error: "Failed to fetch doctors list" });
     }
 }
@@ -204,7 +204,7 @@ exports.doctorsFeedbackSubmit = async(req, res) => {
         res.json({"success" : true});
 
     } catch (error) {
-        console.log(err.message)
+        console.log(error.message)
     }
 }
 
