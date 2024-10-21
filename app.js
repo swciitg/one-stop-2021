@@ -43,6 +43,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use(BASEURL, routers.messmenuUploadRouter);
+
 // enable CORS
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -74,7 +76,6 @@ app.use((req, res, next) => {
 app.use(BASEURL, routers.notificationRouter);
 
 // API routers
-app.use(BASEURL, routers.messmenuUploadRouter);
 app.use(BASEURL, routers.onestopUserRouter);
 app.use(BASEURL, routers.contactRouter.contactRouter);
 app.use(BASEURL, routers.timingRouter);
