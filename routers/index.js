@@ -25,3 +25,4 @@ exports.habComplaintRouter = require("./habComplaintRouter");
 exports.homePage = require("./homePageRouter");
 exports.docsRouter = require("./docsRouter");
 exports.opiRouter = require("./habRoutes/opiRouter");
+exports.messmenuUploadRouter = require("./messmenuUploadRouter");
