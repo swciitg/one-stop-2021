@@ -19,12 +19,6 @@ console.log(bcrypt.hash("123",10));
 //for serving static files
 app.use(express.static("public"));
 
-// setting ejs as view engine
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.set("view engine", "ejs");
-app.set('views', path.join(__dirname, 'views'));
-
 // connect to mongodb
 mongoose.set("strictQuery", false);
 
@@ -40,6 +34,12 @@ console.log(BASEURL,ADMINPANELROOT);
 // adminjs routes
 app.use(ADMINPANELROOT, adminJsRouter);
 app.use(BASEURL, routers.homePage.homePageRouter);
+
+// setting ejs as view engine
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
 
