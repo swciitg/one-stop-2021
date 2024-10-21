@@ -1,0 +1,9 @@
+{
+    "name": "security-key",
+    "in": "header",
+    "description": "Security Key",
+    "required": true,
+    "schema": {
+      "type": "string"
+    }
+}

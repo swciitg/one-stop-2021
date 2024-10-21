@@ -1,18 +1,13 @@
 const mongoose = require('mongoose');
+const doctorModel = require('./doctorModel');
 
 const contactSchema = new mongoose.Schema({
     name: {
         type: mongoose.Schema.Types.ObjectId,
         ref : 'Doctor',
-        required: true
     },
-    degree: {
-        type: String,
-        default : ""
-    },
-    designation: {
-        type:String,
-        default : ""
+    miscellaneous_contact : {
+        type : String,
     },
     email: {
         type: String,
