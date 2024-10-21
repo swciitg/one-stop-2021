@@ -14,9 +14,11 @@ const createMeal = (description, startTime, endTime) => {
 
   const startTiming = new Date(currentDate);
   startTiming.setHours(startHour, startMinute, 0, 0);
+  startTiming.setMinutes(startTiming.getMinutes() - 330);
 
   const endTiming = new Date(currentDate);
   endTiming.setHours(endHour, endMinute, 0, 0);
+  endTiming.setMinutes(endTiming.getMinutes() - 330); 
 
   return {
     mealDescription: description,
