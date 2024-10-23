@@ -5,8 +5,8 @@ const { IITGHostelWardens, IITGHostelGSs, IITGHostelSSs, IITGHostelOffices, IITG
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
     auth: {
-        user: process.env.UPSP_EMAIL,
-        pass: process.env.UPSP_EMAIL_PASSWORD
+        user: process.env.HAB_EMAIL,
+        pass: process.env.HAB_EMAIL_PASSWORD
     }
 });
 
