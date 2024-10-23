@@ -17,40 +17,41 @@ const generalTos = ["hostel_complaints@iitg.ac.in"]
 
 exports.submitHabComplaint = async (req,res) => {
     console.log(req.body);
+    try {
+        let recieverEmailsForCc = [req.body.email];
+        
+        let recieverEmailsForTo = [];
 
-    let recieverEmailsForCc = [req.body.email];
-    
-    let recieverEmailsForTo = [];
-
-    req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelGSs[element]))
-    req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelWardens[element]))
-    req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelOffices[element]))
+        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelGSs[element]))
+        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelWardens[element]))
+        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelOffices[element]))
 
 
-    if(req.body.services === "Infra"){
-        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelMSs[element]))
-        recieverEmailsForTo = recieverEmailsForTo.concat(infraTos)
-    }
-    else if(req.body.services === "General"){
-        recieverEmailsForTo = recieverEmailsForTo.concat(generalTos)
-    }
-    else{
-        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
-        recieverEmailsForTo = recieverEmailsForTo.concat(serviceTos)
-    }
+        if(req.body.services === "Infra"){
+            req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelMSs[element]))
+            recieverEmailsForTo = recieverEmailsForTo.concat(infraTos)
+        }
+        else if(req.body.services === "General"){
+            recieverEmailsForTo = recieverEmailsForTo.concat(generalTos)
+        }
+        else{
+            req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
+            recieverEmailsForTo = recieverEmailsForTo.concat(serviceTos)
+        }
 
-    let selectedAttachments = [];
+        let selectedAttachments = [];
 
-    req.body.files.forEach((element,index) => {
-        let filepath = __dirname + "/../files_folder/hab_complaint_files/" + element;
-        if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
-        else console.log("not exists");
-    });
+        req.body.files.forEach((element,index) => {
+            let filepath = __dirname + "/../files_folder/hab_complaint_files/" + element;
+            if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
+            else console.log("not exists");
+        });
 
-    recieverEmailsForTo = [...new Set(recieverEmailsForTo)]; // removing redundant items from array
-    recieverEmailsForCc = [...new Set(recieverEmailsForCc)];
+        recieverEmailsForTo = [...new Set(recieverEmailsForTo)]; // removing redundant items from array
+        recieverEmailsForCc = [...new Set(recieverEmailsForCc)];
 
-    console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
+        console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
+
 
     let mailDetails = {
         from: process.env.UPSP_EMAIL,
@@ -123,9 +124,13 @@ exports.submitHabComplaint = async (req,res) => {
     `
     }
 
-    mailTransporter.sendMail(mailDetails,(err,res) => {
-        console.log(err);
-    });
+        mailTransporter.sendMail(mailDetails,(err,res) => {
+            console.log(err);
+        });
 
-    res.json({"success" : true});
+        res.json({"success" : true});
+    } catch (error) {
+        res.json({"error": error});
+    }
+    
 }
