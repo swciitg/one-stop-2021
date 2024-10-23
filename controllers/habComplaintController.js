@@ -5,8 +5,8 @@ const { IITGHostelWardens, IITGHostelGSs, IITGHostelSSs, IITGHostelOffices, IITG
 let mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
     auth: {
-        user: process.env.HAB_EMAIL,
-        pass: process.env.HAB_EMAIL_PASSWORD
+        user: process.env.UPSP_EMAIL,
+        pass: process.env.UPSP_EMAIL_PASSWORD
     }
 });
 
@@ -53,7 +53,7 @@ exports.submitHabComplaint = async (req,res) => {
     console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
 
     let mailDetails = {
-        from: process.env.HAB_EMAIL,
+        from: process.env.UPSP_EMAIL,
         subject: `${req.body.services} Feedback/Complaint ${req.body.services==="Infra" ? `with complaint ID: ${req.body.complaintID}` : "" } from ${req.body.hostel} hostel by ${req.body.name} ${req.body.services==="Infra" ? `on ${req.body.complaintDate}`: ""}`,
         to: recieverEmailsForTo,
         cc: recieverEmailsForCc,
