@@ -103,42 +103,65 @@ async function saveMessMenuForHostel(filePath, hostelName) {
       dinner: row[3]
     }));
 
+    const breakf = []
+    const lun = []
+    const din = []
+
+    for(let i=1;i<sheet.length;i+=9){
+      br = "";
+      for(let j=0;j<4;j++){
+        br+= sheet[i+j][1]+" ";
+      }
+      breakf.push(br);
+      lu = "";
+      for(let j=0;j<9;j++){
+        lu+= sheet[i+j][2]+" ";
+      }
+      lun.push(lu);
+      di = "";
+      for(let j=0;j<9;j++){
+        di+= sheet[i+j][3]+" ";
+      }
+      din.push(di);
+    }
+    // console.log(lun)
+
     const messMenu = {
       hostel: hostelName,
       monday: {
-        breakfast: createMeal(days[0].breakfast, timings.breakfast.start, timings.breakfast.end),
-        lunch: createMeal(days[0].lunch, timings.lunch.start, timings.lunch.end),
-        dinner: createMeal(days[0].dinner, timings.dinner.start, timings.dinner.end)
+      breakfast: createMeal(breakf[0], timings.breakfast.start, timings.breakfast.end),
+      lunch: createMeal(lun[0], timings.lunch.start, timings.lunch.end),
+      dinner: createMeal(din[0], timings.dinner.start, timings.dinner.end)
       },
       tuesday: {
-          breakfast: createMeal(days[1].breakfast, timings.breakfast.start, timings.breakfast.end),
-          lunch: createMeal(days[1].lunch, timings.lunch.start, timings.lunch.end),
-          dinner: createMeal(days[1].dinner, timings.dinner.start, timings.dinner.end)
+        breakfast: createMeal(breakf[1], timings.breakfast.start, timings.breakfast.end),
+        lunch: createMeal(lun[1], timings.lunch.start, timings.lunch.end),
+        dinner: createMeal(din[1], timings.dinner.start, timings.dinner.end)
       },
       wednesday: {
-          breakfast: createMeal(days[2].breakfast, timings.breakfast.start, timings.breakfast.end),
-          lunch: createMeal(days[2].lunch, timings.lunch.start, timings.lunch.end),
-          dinner: createMeal(days[2].dinner, timings.dinner.start, timings.dinner.end)
+        breakfast: createMeal(breakf[2], timings.breakfast.start, timings.breakfast.end),
+        lunch: createMeal(lun[2], timings.lunch.start, timings.lunch.end),
+        dinner: createMeal(din[2], timings.dinner.start, timings.dinner.end)
       },
       thursday: {
-          breakfast: createMeal(days[3].breakfast, timings.breakfast.start, timings.breakfast.end),
-          lunch: createMeal(days[3].lunch, timings.lunch.start, timings.lunch.end),
-          dinner: createMeal(days[3].dinner, timings.dinner.start, timings.dinner.end)
+        breakfast: createMeal(breakf[3], timings.breakfast.start, timings.breakfast.end),
+        lunch: createMeal(lun[3], timings.lunch.start, timings.lunch.end),
+        dinner: createMeal(din[3], timings.dinner.start, timings.dinner.end)
       },
       friday: {
-          breakfast: createMeal(days[4].breakfast, timings.breakfast.start, timings.breakfast.end),
-          lunch: createMeal(days[4].lunch, timings.lunch.start, timings.lunch.end),
-          dinner: createMeal(days[4].dinner, timings.dinner.start, timings.dinner.end)
+        breakfast: createMeal(breakf[4], timings.breakfast.start, timings.breakfast.end),
+        lunch: createMeal(lun[4], timings.lunch.start, timings.lunch.end),
+        dinner: createMeal(din[4], timings.dinner.start, timings.dinner.end)
       },
       saturday: {
-          breakfast: createMeal(days[5].breakfast, weekendtimings.breakfast.start, weekendtimings.breakfast.end),
-          lunch: createMeal(days[5].lunch, weekendtimings.lunch.start, weekendtimings.lunch.end),
-          dinner: createMeal(days[5].dinner, weekendtimings.dinner.start, weekendtimings.dinner.end)
+        breakfast: createMeal(breakf[5], weekendtimings.breakfast.start, weekendtimings.breakfast.end),
+        lunch: createMeal(lun[5], weekendtimings.lunch.start, weekendtimings.lunch.end),
+        dinner: createMeal(din[5], weekendtimings.dinner.start, weekendtimings.dinner.end)
       },
       sunday: {
-          breakfast: createMeal(days[6].breakfast, weekendtimings.breakfast.start, weekendtimings.breakfast.end),
-          lunch: createMeal(days[6].lunch, weekendtimings.lunch.start, weekendtimings.lunch.end),
-          dinner: createMeal(days[6].dinner, weekendtimings.dinner.start, weekendtimings.dinner.end)
+        breakfast: createMeal(breakf[6], weekendtimings.breakfast.start, weekendtimings.breakfast.end),
+        lunch: createMeal(lun[6], weekendtimings.lunch.start, weekendtimings.lunch.end),
+        dinner: createMeal(din[6], weekendtimings.dinner.start, weekendtimings.dinner.end)
       }        
      
     };
@@ -158,6 +181,10 @@ exports.uploadmessmenu =  async (req, res) => {
     if (!req.files) {
       console.log('No file uploaded');
       return res.status(400).send('No file uploaded');
+    }
+
+    if(req.body.security != process.env.MESSMENU_SECURITY){
+      return res.status(400).send('Wrong secret key')
     }
 
     req.files.forEach(async(file) => {
