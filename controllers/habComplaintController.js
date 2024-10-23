@@ -110,7 +110,7 @@ exports.submitHabComplaint = async (req,res) => {
                             <p style="margin-top: 40px; text-align: center;">
                                 Thanks and Regards,<br>
                                 <strong>${req.body.services==="Infra" ? "Aniket Banerjee" : (req.body.services==="General" ? "" : "Himanshu Sharma")}</strong><br>
-                                <strong>Joint Secretary, HAB(${req.body.services==="Infra" ? "Infrastructure" : (req.body.services==="General" ? "General" : "Services")})</strong><br>
+                                <strong>${req.body.services==="Infra" ? "Joint Secretary, HAB(Infrastructure)" : (req.body.services==="General" ? "General Secretary, HAB" : "Joint Secretary, HAB(Services)")})</strong><br>
                                 Indian Institute of Technology, Guwahati<br>
                                 Guwahati, Assam, 781039
                             </p>
