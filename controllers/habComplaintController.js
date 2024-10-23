@@ -21,23 +21,22 @@ exports.submitHabComplaint = async (req,res) => {
         let recieverEmailsForCc = [req.body.email];
         
         let recieverEmailsForTo = [];
-
-        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelGSs[element]))
-        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelWardens[element]))
-        req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelOffices[element]))
-
-
+        
         if(req.body.services === "Infra"){
-            req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelMSs[element]))
             recieverEmailsForTo = recieverEmailsForTo.concat(infraTos)
+            recieverEmailsForTo.push(IITGHostelMSs[req.body.hostel])
         }
         else if(req.body.services === "General"){
             recieverEmailsForTo = recieverEmailsForTo.concat(generalTos)
         }
         else{
-            req.body.hostel.forEach((element) => recieverEmailsForTo.push(IITGHostelSSs[element]))
             recieverEmailsForTo = recieverEmailsForTo.concat(serviceTos)
+            recieverEmailsForTo.push(IITGHostelSSs[req.body.hostel])
         }
+
+        recieverEmailsForTo.push(IITGHostelGSs[req.body.hostel])
+        recieverEmailsForTo.push(IITGHostelWardens[req.body.hostel])
+        recieverEmailsForTo.push(IITGHostelOffices[req.body.hostel])
 
         let selectedAttachments = [];
 
@@ -47,8 +46,8 @@ exports.submitHabComplaint = async (req,res) => {
             else console.log("not exists");
         });
 
-        recieverEmailsForTo = [...new Set(recieverEmailsForTo)]; // removing redundant items from array
-        recieverEmailsForCc = [...new Set(recieverEmailsForCc)];
+        // recieverEmailsForTo = [...new Set(recieverEmailsForTo)]; // removing redundant items from array
+        // recieverEmailsForCc = [...new Set(recieverEmailsForCc)];
 
         console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
 
@@ -127,9 +126,9 @@ exports.submitHabComplaint = async (req,res) => {
             console.log(err);
         });
 
-        res.json({"success" : true});
+        res.status(200).json({"success" : true});
     } catch (error) {
-        res.json({"error": error});
+        res.status(500).json({"error": error});
     }
     
 }
