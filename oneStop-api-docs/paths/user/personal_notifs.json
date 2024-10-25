@@ -1,0 +1,71 @@
+{
+  "get": {
+    "tags": ["users"],
+    "summary": "Get personal notifications",
+    "operationId": "getUserPersonalNotifs",
+    "parameters": [
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
+    ],
+    "responses": {
+      "200": {
+        "description": "Notifications retrieved",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "New event happening tomorrow!"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2024-10-01T12:00:00Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  },
+  "delete" : {
+    "tags": ["users"],
+    "summary": "Update notification preferences",
+    "operationId": "updateOnestopUserNotifPrefs",
+    "parameters": [
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/NotificationPrefs"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Notification preferences updated successfully"
+      },
+      "400": {
+        "description": "Validation error"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+}
+  

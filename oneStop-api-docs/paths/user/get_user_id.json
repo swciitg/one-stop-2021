@@ -1,0 +1,32 @@
+{
+  "get": {
+    "tags": ["users", "microservices dev"],
+    "summary": "Get user ID",
+    "operationId": "getUserId",
+    "parameters": [
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
+    ],
+    "responses": {
+      "200": {
+        "description": "User ID retrieved",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "12345"
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+}

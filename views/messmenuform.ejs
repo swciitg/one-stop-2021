@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel Files</title>
+    <style>
+        /* Resetting margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Styling the body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2d2d33;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container styling */
+        .container {
+            background-color: #393939;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        /* Styling the file input and button */
+        input[type="file"] {
+            padding: 10px;
+            background-color: #1c1c1f;
+            color: white;
+            border: 2px solid #4a4a4f;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        input[type="file"]:hover {
+            background-color: #333;
+            border-color: #ff6600;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #e65c00;
+        }
+
+        button:focus {
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Upload Excel Files</h1>
+
+        <h2>Select your file to upload:</h2>
+        <form action="https://swc.iitg.ac.in/test/onestop/api/v3/messmenu" method="POST" enctype="multipart/form-data">
+            <input type="file" name="csv2" accept=".xlsx" multiple required>
+            <br><br>
+            <input type="text" id="security" name="security" required>
+            <br><br>
+            <button type="submit">Upload CSV</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel Files</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        };
+        .container{
+           
+            width: full;
+            height: 100vh;
+            background-color: #2d2d33;
+            display: flex;
+            gap: 20px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Excel Files</h1>
+
+        Form to upload CSV File 1 with a key
+        <h2>Upload Excel Files</h2>
+        <form action="http://localhost:9010/test/onestop/api/v3/messmenu" method="POST" enctype="multipart/form-data">
+            <input type="file" name="csv1" accept=".xlsx" multiple required>
+            <button type="submit">Upload CSV 1</button>
+        </form>
+    
+        <br>
+    </div>
+    
+
+</body>
+</html> -->
