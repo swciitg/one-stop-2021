@@ -53,7 +53,7 @@ exports.submitHabComplaint = async (req,res) => {
 
         let mailDetails = {
             from: process.env.HAB_EMAIL,
-            subject: `${req.body.services} Feedback/Complaint ${req.body.services==="Infra" ? `with complaint ID: ${req.body.complaintID}` : "" } from ${req.body.hostel} hostel by ${req.body.name} ${req.body.services==="Infra" ? `on ${req.body.complaintDate}`: ""}`,
+            subject: `${req.body.services} Feedback/Complaint ${req.body.complaintType==="Infra" ? `with complaint ID: ${req.body.complaintID}` : "" } from ${req.body.hostel} hostel by ${req.body.name} ${req.body.complaintType==="Infra" ? `on ${req.body.complaintDate}`: ""}`,
             to: recieverEmailsForTo,
             cc: recieverEmailsForCc,
             attachments: selectedAttachments,
@@ -69,7 +69,7 @@ exports.submitHabComplaint = async (req,res) => {
                     </tr>
                     <tr>
                         <td style="padding: 20px;">
-                            <p>Dear ${req.body.services==="Infra" ? "Maintenance" : (req.body.services==="General" ? "General" : "Service")} Secretary of ${req.body.hostel} Hostel,</p>
+                            <p>Dear ${req.body.complaintType==="Infra" ? "Maintenance" : (req.body.complaintType==="General" ? "General" : "Service")} Secretary of ${req.body.hostel} Hostel,</p>
                             <p>This is an auto-generated email based on the response submitted by <strong>${req.body.name}</strong>.</p>
                         </td>
                     </tr>
@@ -87,8 +87,8 @@ exports.submitHabComplaint = async (req,res) => {
                             <strong>Hostel:</strong> ${req.body.hostel}<br>
                             <strong>Room No.:</strong> ${req.body.room_number}<br>
                             <strong>Phone No.:</strong> ${req.body.phone}<br>
-                            ${req.body.services==="Infra" ? `<strong>Complaint ID:</strong> ${req.body.complaintID}` : "" }
-                            ${req.body.services==="Infra" ? `<strong>Complait Date:</strong> ${req.body.complaintDate}`: ""}
+                            ${req.body.complaintType==="Infra" ? `<strong>Complaint ID:</strong> ${req.body.complaintID}` : "" }
+                            ${req.body.complaintType==="Infra" ? `<strong>Complait Date:</strong> ${req.body.complaintDate}`: ""}
                             </p>
                         </td>
                     </tr>
@@ -106,11 +106,11 @@ exports.submitHabComplaint = async (req,res) => {
                     <!-- Footer -->
                     <tr>
                         <td style="padding: 20px; border-top: 1px solid #dddddd;">
-                            <p>Requesting the Hostel office to please follow up with the ${req.body.services==="Infra" ? "Maintenance" : (req.body.services==="General" ? "General" : "Service")} Secretary and General Secretary to ensure a response to the pending query if it remains unanswered.</p>
+                            <p>Requesting the Hostel office to please follow up with the ${req.body.complaintType==="Infra" ? "Maintenance" : (req.body.complaintType==="General" ? "General" : "Service")} Secretary and General Secretary to ensure a response to the pending query if it remains unanswered.</p>
                             <p style="margin-top: 40px; text-align: center;">
                                 Thanks and Regards,<br>
-                                <strong>${req.body.services==="Infra" ? "Aniket Banerjee" : (req.body.services==="General" ? "" : "Himanshu Sharma")}</strong><br>
-                                <strong>${req.body.services==="Infra" ? "Joint Secretary, HAB(Infrastructure)" : (req.body.services==="General" ? "General Secretary, HAB" : "Joint Secretary, HAB(Services)")})</strong><br>
+                                <strong>${req.body.complaintType==="Infra" ? "Aniket Banerjee" : (req.body.complaintType==="General" ? "" : "Himanshu Sharma")}</strong><br>
+                                <strong>${req.body.complaintType==="Infra" ? "Joint Secretary, HAB(Infrastructure)" : (req.body.complaintType==="General" ? "General Secretary, HAB" : "Joint Secretary, HAB(Services)")})</strong><br>
                                 Indian Institute of Technology, Guwahati<br>
                                 Guwahati, Assam, 781039
                             </p>
