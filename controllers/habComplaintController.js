@@ -22,11 +22,11 @@ exports.submitHabComplaint = async (req,res) => {
         
         let recieverEmailsForTo = [];
         
-        if(req.body.services === "Infra"){
+        if(req.body.complaintType === "Infra"){
             recieverEmailsForTo = recieverEmailsForTo.concat(infraTos)
             recieverEmailsForTo.push(IITGHostelMSs[req.body.hostel])
         }
-        else if(req.body.services === "General"){
+        else if(req.body.complaintType === "General"){
             recieverEmailsForTo = recieverEmailsForTo.concat(generalTos)
         }
         else{
