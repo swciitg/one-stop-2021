@@ -1,8 +1,20 @@
 const mongoose = require("mongoose");
-const { allIITGHostels } = require("../../helpers/constants");
+const { allIITGMess } = require("../../helpers/constants");
 
-// messName: maxChangesAllowed
-const messChangeLimits = allIITGHostels.map((mess) => [mess, 150]);
+// Remove NONE from allIITGMess if it exists
+const index = allIITGMess.indexOf("NONE");
+if (index > -1) {
+    allIITGMess.splice(index, 1);
+}
+
+
+const smcHABSchemaDefinition = allIITGMess.reduce((acc, hostel) => {
+    acc[hostel] = {
+            type: [String],
+            default: [],
+    };
+    return acc;
+}, {});
 
 const habAdminSchema = new mongoose.Schema({
     opiResponseRecipients: {
@@ -25,11 +37,7 @@ const habAdminSchema = new mongoose.Schema({
         type: Date,
         default: null,
     },
-    // messChangeLimits
-    messChangeLimits: {
-        type: [[String, Number]],
-        default: messChangeLimits,
-    },
+    smcEmails: {...smcHABSchemaDefinition},
 });
     
 

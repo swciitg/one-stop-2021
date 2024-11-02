@@ -13,7 +13,7 @@ module.exports = {
             "opiEndDate", 
             "messChangeStartDate", 
             "messChangeEndDate", 
-            "messChangeLimits"
+            "smcEmails"
         ],
         filterProperties: [
             "opiResponseRecipients", 
@@ -21,23 +21,23 @@ module.exports = {
             "opiEndDate", 
             "messChangeStartDate", 
             "messChangeEndDate", 
-            "messChangeLimits"
+            "smcEmails"
         ],
         editProperties: [
             "opiResponseRecipients", 
             "opiStartDate", 
             "opiEndDate", 
             "messChangeStartDate", 
-            "messChangeEndDate", 
-            "messChangeLimits"
+            "messChangeEndDate",
+            "smcEmails"
         ],
         showProperties: [
             "opiResponseRecipients", 
             "opiStartDate", 
             "opiEndDate", 
             "messChangeStartDate", 
-            "messChangeEndDate", 
-            "messChangeLimits"
+            "messChangeEndDate",
+            "smcEmails"
         ],
         actions: {
             list: { 
