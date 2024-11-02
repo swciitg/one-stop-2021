@@ -1,8 +1,11 @@
 const verifyRoles = require("../utils");
 const roles = require("../roles");
 const { HabAdmin } = require("../../models/habModels/habAdminModel");
+const { allIITGMess } = require("../../helpers/constants");
 
 let allowedRoles = [roles.SUPERADMIN, roles.MESS];
+
+const smcEmailProperties = allIITGMess.map((hostel) => `smcEmails.${hostel}`);
 
 module.exports = {
     resource: HabAdmin,
@@ -12,16 +15,16 @@ module.exports = {
             "opiStartDate", 
             "opiEndDate", 
             "messChangeStartDate", 
-            "messChangeEndDate", 
-            "smcEmails"
+            "messChangeEndDate",
+            ...smcEmailProperties
         ],
         filterProperties: [
             "opiResponseRecipients", 
             "opiStartDate", 
             "opiEndDate", 
             "messChangeStartDate", 
-            "messChangeEndDate", 
-            "smcEmails"
+            "messChangeEndDate",
+            ...smcEmailProperties
         ],
         editProperties: [
             "opiResponseRecipients", 
@@ -29,7 +32,7 @@ module.exports = {
             "opiEndDate", 
             "messChangeStartDate", 
             "messChangeEndDate",
-            "smcEmails"
+            ...smcEmailProperties
         ],
         showProperties: [
             "opiResponseRecipients", 
@@ -37,7 +40,7 @@ module.exports = {
             "opiEndDate", 
             "messChangeStartDate", 
             "messChangeEndDate",
-            "smcEmails"
+            ...smcEmailProperties
         ],
         actions: {
             list: { 
