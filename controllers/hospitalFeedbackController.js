@@ -45,8 +45,8 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
 
         let mailDetails = {
             from : process.env.UPSP_EMAIL ,
-            // to : ["vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in" ] , //hospital-section and pharmacy mail to be added
-            to : ["r.kareddy@iitg.ac.in", "m.raza@iitg.ac.in"] ,
+            to : ["vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in" ] , //hospital-section and pharmacy mail to be added
+            // to : ["r.kareddy@iitg.ac.in", "m.raza@iitg.ac.in"] ,
             cc : patientEmail,
             subject : "New Pharmacy Feedback",
             attachments: selectedAttachments,
