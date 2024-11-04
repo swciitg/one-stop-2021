@@ -46,9 +46,6 @@ exports.submitHabComplaint = async (req,res) => {
             else console.log("not exists");
         });
 
-        // recieverEmailsForTo = [...new Set(recieverEmailsForTo)]; // removing redundant items from array
-        // recieverEmailsForCc = [...new Set(recieverEmailsForCc)];
-
         console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
 
         let mailDetails = {
@@ -87,8 +84,8 @@ exports.submitHabComplaint = async (req,res) => {
                             <strong>Hostel:</strong> ${req.body.hostel}<br>
                             <strong>Room No.:</strong> ${req.body.room_number}<br>
                             <strong>Phone No.:</strong> ${req.body.phone}<br>
-                            ${req.body.complaintType==="Infra" ? `<strong>Complaint ID:</strong> ${req.body.complaintID}` : "" }
-                            ${req.body.complaintType==="Infra" ? `<strong>Complait Date:</strong> ${req.body.complaintDate}`: ""}
+                            ${req.body.complaintType==="Infra" ? `<strong>Complaint ID:</strong> ${req.body.complaintID}<br>` : "" }
+                            ${req.body.complaintType==="Infra" ? `<strong>Complait Date:</strong> ${req.body.complaintDate}<br>`: ""}
                             </p>
                         </td>
                     </tr>
@@ -106,11 +103,11 @@ exports.submitHabComplaint = async (req,res) => {
                     <!-- Footer -->
                     <tr>
                         <td style="padding: 20px; border-top: 1px solid #dddddd;">
-                            <p>Requesting the Hostel office to please follow up with the ${req.body.complaintType==="Infra" ? "Maintenance" : (req.body.complaintType==="General" ? "General" : "Service")} Secretary and General Secretary to ensure a response to the pending query if it remains unanswered.</p>
+                            <p>Requesting the Hostel office to please follow up with the ${req.body.complaintType==="Infra" ? "Maintenance" : (req.body.complaintType==="General" ? "General" : "Service")} Secretary ${req.body.complaintType!=="General" ? "and General Secretary " : ""} to ensure a response to the pending query if it remains unanswered.</p>
                             <p style="margin-top: 40px; text-align: center;">
                                 Thanks and Regards,<br>
                                 <strong>${req.body.complaintType==="Infra" ? "Aniket Banerjee" : (req.body.complaintType==="General" ? "" : "Himanshu Sharma")}</strong><br>
-                                <strong>${req.body.complaintType==="Infra" ? "Joint Secretary, HAB(Infrastructure)" : (req.body.complaintType==="General" ? "General Secretary, HAB" : "Joint Secretary, HAB(Services)")})</strong><br>
+                                <strong>${req.body.complaintType==="Infra" ? "Joint Secretary, HAB(Infrastructure)" : (req.body.complaintType==="General" ? "General Secretary, Hostel Affairs' Board" : "Joint Secretary, HAB(Services)")}</strong><br>
                                 Indian Institute of Technology, Guwahati<br>
                                 Guwahati, Assam, 781039
                             </p>
