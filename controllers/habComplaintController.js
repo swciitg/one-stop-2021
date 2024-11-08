@@ -17,7 +17,14 @@ const generalTos = ["hostel_complaints@iitg.ac.in"]
 
 exports.submitHabComplaint = async (req,res) => {
     console.log(req.body);
+    
+    if(req.body.problem === ""){
+        res.status(400).json({"error": "Feedback can't be empty"});
+        return;
+    }
+
     try {
+
         let recieverEmailsForCc = [req.body.email];
         
         let recieverEmailsForTo = [];
