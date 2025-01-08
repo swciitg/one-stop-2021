@@ -116,8 +116,13 @@ exports.sendToUser = async (userid,category,title,body) => {
         "token": userNotifTokens[i].deviceToken,
     };
 
-    await firebase.messaging().send(message);
-    console.log("NOTIFICATION SENT");
+   try {
+        await firebase.messaging().send(message);
+        res.status(200).json({ message: "Notification sent successfully" });
+    } catch (error) {
+        console.log("Error sending notification", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
   }
 };
 
