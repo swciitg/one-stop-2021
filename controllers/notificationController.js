@@ -116,8 +116,17 @@ exports.sendToUser = async (userid,category,title,body) => {
         "token": userNotifTokens[i].deviceToken,
     };
 
-    await firebase.messaging().send(message);
-    console.log("NOTIFICATION SENT");
+   try {
+        await firebase.messaging().send(message);
+        console.log("Successfully sent message");
+      } catch (error) {
+        console.error("Error sending message:", error);
+     
+        if (error.code === "messaging/registration-token-not-registered") {
+          console.log(`Invalid token found: ${userNotifTokens[i].deviceToken}`);
+          await userNotifTokenModel.deleteOne({ _id: userNotifTokens[i]._id });
+        }
+      }
   }
 };
 
