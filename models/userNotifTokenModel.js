@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const userNotifTokenSchema = new mongoose.Schema({
     userid: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     deviceToken: {
         type: String,
