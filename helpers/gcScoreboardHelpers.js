@@ -28,6 +28,8 @@ exports.checkIfBoardAdmin = async (email,competition) => {
     const gcScoreboardStore = await fetchGcScoreboardStore();
 
 console.log(gcScoreboardStore.spardha_board_admins);
+console.log(competition);
+console.log(email);
 
     if((competition==='spardha' && gcScoreboardStore.spardha_board_admins.includes(email)) || 
     (competition==='manthan' && gcScoreboardStore.manthan_board_admins.includes(email)) || 
