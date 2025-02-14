@@ -24,4 +24,4 @@ jobs:
             cd /webapps/one-stop-2021
             git pull
             git status
-            docker-compose -f docker-compose.prod.yaml up -d --build
+            docker-compose -f docker-compose.prod.yml up -d --build
