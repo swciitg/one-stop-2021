@@ -25,5 +25,5 @@ jobs:
             git checkout dev
             git pull origin dev
             git status
-            docker-compose -f docker-compose.test.prod.yaml up -d --build
+            docker-compose -f docker-compose.dev.yml up -d --build
             mongo ${{ secrets.ONESTOP_TEST_DB_NAME }} --eval 'db.lastupdates.updateOne({},{$set:{timetable: new Date()}})'

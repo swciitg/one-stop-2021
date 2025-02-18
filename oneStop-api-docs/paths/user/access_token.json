@@ -1,0 +1,45 @@
+{
+  "post": {
+    "tags": ["users"],
+    "summary": "Regenerate access token",
+    "operationId": "regenerateUserAccessToken",
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "refreshToken": {
+                "type": "string",
+                "example": "abcdef123456"
+              }
+            },
+            "required": ["refreshToken"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "New access token",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "accessToken": {
+                  "type": "string",
+                  "example": "newaccesstoken12345"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Invalid refresh token"
+      }
+    }
+  }
+}

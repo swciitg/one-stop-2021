@@ -1,0 +1,64 @@
+
+{
+  "post": {
+    "tags": ["users"],
+    "summary": "Post a new device token",
+    "operationId": "postOnestopUserDeviceToken",
+    "parameters": [
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/DeviceToken"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Device token added successfully"
+      },
+      "400": {
+        "description": "Validation error"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  },
+  "patch": {
+    "tags": ["users"],
+    "summary": "Update an existing device token",
+    "operationId": "updateOnestopUserDeviceToken",
+    "parameters": [
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/DeviceToken"
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "Device token updated successfully"
+      },
+      "400": {
+        "description": "Validation error"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+}
+  

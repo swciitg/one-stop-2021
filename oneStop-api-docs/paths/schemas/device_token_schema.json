@@ -1,0 +1,15 @@
+{
+    "type": "object",
+    "properties": {
+      "deviceToken": {
+        "type": "string",
+        "example": "abc123deviceToken"
+      },
+      "deviceType": {
+        "type": "string",
+        "example": "iOS"
+      }
+    },
+    "required": ["deviceToken", "deviceType"]
+  }
+  

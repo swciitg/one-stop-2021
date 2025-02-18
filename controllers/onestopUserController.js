@@ -70,7 +70,7 @@ let getUserTokensString = async (userid) => {
         expiresIn: "10 days",
     });
     const refreshToken = jwt.sign({userid}, refreshjwtsecret, {
-        expiresIn: "30 days",
+        expiresIn: "150 days",
     });
     return `${accessToken}/${refreshToken}`; // for outlook login
 };
@@ -117,7 +117,7 @@ exports.guestUserLogin = asyncHandler(async (req, res) => {
         expiresIn: "10 days",
     });
     const refreshToken = jwt.sign({userid: guestUserID}, refreshjwtsecret, {
-        expiresIn: "30 days",
+        expiresIn: "150 days",
     });
     res.json({accessToken, refreshToken});
 });
@@ -141,9 +141,8 @@ exports.updateOnestopUserValidate = [
         .isInt({min: 1000000000, max: 9999999999}),
     body("linkedin", "linkedin is required").optional(),
     body("cycleReg", "Cycle Registration number is required").optional(),
-    body("subscribedMess", "subscribed mess is requiresd").exists(),
+    body("subscribedMess", "subscribed mess is required").exists(),
 ];
-
 exports.updateOnestopUser = asyncHandler(async (req, res) => {
     let userid = req.userid;
     let data = matchedData(req, {locations: ["body"]});

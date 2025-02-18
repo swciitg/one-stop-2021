@@ -1,0 +1,19 @@
+{
+  "patch": {
+    "tags": ["users"],
+    "summary": "Apply bug fix for blocked user and notification preferences",
+    "operationId": "addBlockedFalseAndNotifPrefs",
+    "parameters": [
+      {"$ref": "#/components/schemas/SecurityHeaderAuth"},
+      {"$ref": "#/components/schemas/SecurityHeaderKey"}
+    ],
+    "responses": {
+      "200": {
+        "description": "Bug fix applied"
+      },
+      "401": {
+        "description": "Unauthorized"
+      }
+    }
+  }
+}

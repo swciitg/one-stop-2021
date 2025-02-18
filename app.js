@@ -12,13 +12,12 @@ const { NotFoundError } = require("./errors/not.found.error");
 const { createLastUpdateDocument } = require("./controllers/lastUpdateController");
 const { UnauthorizedRequestError } = require("./errors/unauthorized.request.error");
 const { scheduleOPIEmails } = require("./helpers/cronJobs/opiEmails");
+const bodyParser = require("body-parser");
+const path = require("path");
 
 console.log(bcrypt.hash("123",10));
 //for serving static files
 app.use(express.static("public"));
-
-// setting ejs as view engine
-app.set("view engine", "ejs");
 
 // connect to mongodb
 mongoose.set("strictQuery", false);
@@ -36,7 +35,15 @@ console.log(BASEURL,ADMINPANELROOT);
 app.use(ADMINPANELROOT, adminJsRouter);
 app.use(BASEURL, routers.homePage.homePageRouter);
 
+// setting ejs as view engine
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
+app.set('views', path.join(__dirname, 'views'));
+
 app.use(express.urlencoded({ extended: true }));
+
+app.use(BASEURL, routers.messmenuUploadRouter);
 
 // enable CORS
 app.use((req, res, next) => {
@@ -49,6 +56,9 @@ app.use((req, res, next) => {
     );
     next();
 });
+
+// docs route
+app.use(BASEURL, routers.docsRouter.docsRouter);
 
 app.use(BASEURL, routers.authRouter.authRouter);
 app.use(BASEURL, routers.imageRouter.imageRouter);

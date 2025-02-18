@@ -1,0 +1,9 @@
+{
+      "name": "authorization",
+      "in": "header",
+      "description": "Bearer Token",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+}
