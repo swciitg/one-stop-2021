@@ -4,7 +4,7 @@ exports.getHospitalTimetable = async (req, res) => {
     console.log('Request received to fetch hospital timetable.');
     try {
         const timetable = await hospitalTimetableModel.find().populate('doctor');
-        console.log("yaha pa aya flow..")
+        console.log("timetable fetch ke bad flow..")
         res.status(200).json(timetable);
     } catch (error) {
         console.error('Error fetching hospital timetable:', error);
