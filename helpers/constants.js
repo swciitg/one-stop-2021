@@ -132,7 +132,7 @@ exports.totalSpardhaWomenPoints = 190;
 exports.totalSpardhaMenPoints = 230;
 exports.totalKritiPoints = 5800;
 exports.totalSahyogPoints = 4400;
-exports.totalManthanPoints = 1400;
+exports.totalManthanPoints = 1290;
 
 
 exports.NotificationCategories = {
