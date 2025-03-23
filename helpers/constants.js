@@ -130,7 +130,7 @@ exports.miscellaneousRecievers = []
 
 exports.totalSpardhaWomenPoints = 190;
 exports.totalSpardhaMenPoints = 230;
-exports.totalKritiPoints = 5800;
+exports.totalKritiPoints = 9350;
 exports.totalSahyogPoints = 4400;
 exports.totalManthanPoints = 1290;
 
