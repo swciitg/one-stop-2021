@@ -21,6 +21,7 @@ exports.verifyUserRequest = async (req,res,next) => {
         let decoded;
         jwt.verify(accessToken, accessjwtsecret,(err,dec) => {
             if(err){
+                console.log(err.message);
                 throw new AccessTokenError(err.message);
             }
             decoded=dec;
