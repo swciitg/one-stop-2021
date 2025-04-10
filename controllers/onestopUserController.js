@@ -67,7 +67,7 @@ exports.getGuestUserID = async function () {
 
 let getUserTokensString = async (userid) => {
     const accessToken = jwt.sign({userid}, accessjwtsecret, {
-        expiresIn: "10000",
+        expiresIn: 10,
     });
     const refreshToken = jwt.sign({userid}, refreshjwtsecret);
     return `${accessToken}/${refreshToken}`; // for outlook login
@@ -102,7 +102,7 @@ exports.regenerateUserAccessToken = asyncHandler(async (req, res, next) => {
     if (await onestopUserModel.findById(decoded.userid)) {
         // if someone found JWT refresh secrets and tries to generate access token
         const accessToken = jwt.sign({userid: decoded.userid}, accessjwtsecret, {
-            expiresIn: "10000",
+            expiresIn: 10,
         });
         console.log(accessToken);
         res.json({success: true, accessToken});
@@ -112,7 +112,7 @@ exports.regenerateUserAccessToken = asyncHandler(async (req, res, next) => {
 exports.guestUserLogin = asyncHandler(async (req, res) => {
     const guestUserID = await this.getGuestUserID();
     const accessToken = jwt.sign({userid: guestUserID}, accessjwtsecret, {
-        expiresIn: "10000",
+        expiresIn: 10,
     });
     const refreshToken = jwt.sign({userid: guestUserID}, refreshjwtsecret);
     res.json({accessToken, refreshToken});
