@@ -70,12 +70,15 @@ let getUserTokensString = async (userid) => {
         expiresIn: 10,
     });
     const refreshToken = jwt.sign({userid}, refreshjwtsecret);
-   jwt.verify(accessToken, accessjwtsecret, function (error, decoded){
-    console.log(`Decoded (Access Token): ${decoded}`);
-   });
-   jwt.verify(refreshToken, refreshjwtsecret, function (error, decoded){
-    console.log(`Decoded (Refresh Token): ${decoded}`);
-   });
+    var decodedProp;
+    jwt.verify(accessToken, accessjwtsecret, function (error, decoded){
+        decodedProp = decoded;
+    });
+    console.log(`Decoded (Access Token): ${decodedProp}`);
+    jwt.verify(refreshToken, refreshjwtsecret, function (error, decoded){
+       decodedProp = decoded;
+    });
+    console.log(`Decoded (Refresh Token): ${decodedProp}`);
    return `${accessToken}/${refreshToken}`; // for outlook login
 };
 
