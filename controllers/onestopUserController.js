@@ -69,7 +69,8 @@ let getUserTokensString = async (userid) => {
     const accessToken = jwt.sign({userid}, accessjwtsecret, {
         expiresIn: "10000",
     });
-    const refreshToken = jwt.sign({userid}, refreshjwtsecret);
+    const refreshToken = jwt.sign({userid}, refreshjwtsecret, {
+    });
     return `${accessToken}/${refreshToken}`; // for outlook login
 };
 
@@ -112,9 +113,11 @@ exports.regenerateUserAccessToken = asyncHandler(async (req, res, next) => {
 exports.guestUserLogin = asyncHandler(async (req, res) => {
     const guestUserID = await this.getGuestUserID();
     const accessToken = jwt.sign({userid: guestUserID}, accessjwtsecret, {
-        expiresIn: "10000",
+        expiresIn: "10 days",
     });
-    const refreshToken = jwt.sign({userid: guestUserID}, refreshjwtsecret);
+    const refreshToken = jwt.sign({userid: guestUserID}, refreshjwtsecret, {
+        expiresIn: "150 days",
+    });
     res.json({accessToken, refreshToken});
 });
 
