@@ -67,7 +67,7 @@ exports.getGuestUserID = async function () {
 
 let getUserTokensString = async (userid) => {
     const accessToken = jwt.sign({userid}, accessjwtsecret, {
-        expiresIn: "10000",
+        expiresIn: "1 minute",
     });
     const refreshToken = jwt.sign({userid}, refreshjwtsecret, {
     });
@@ -103,7 +103,7 @@ exports.regenerateUserAccessToken = asyncHandler(async (req, res, next) => {
     if (await onestopUserModel.findById(decoded.userid)) {
         // if someone found JWT refresh secrets and tries to generate access token
         const accessToken = jwt.sign({userid: decoded.userid}, accessjwtsecret, {
-            expiresIn: "10000",
+            expiresIn: "1 minute",
         });
         console.log(accessToken);
         res.json({success: true, accessToken});
