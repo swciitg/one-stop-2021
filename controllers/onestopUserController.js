@@ -70,13 +70,7 @@ let getUserTokensString = async (userid) => {
         expiresIn: 10,
     });
     const refreshToken = jwt.sign({userid}, refreshjwtsecret);
-   jwt.verify(accessToken, accessjwtsecret, function (error, decoded){
-    console.log(`Decoded (Access Token): ${decoded}`);
-   });
-   jwt.verify(refreshToken, refreshjwtsecret, function (error, decoded){
-    console.log(`Decoded (Refresh Token): ${decoded}`);
-   });
-   return `${accessToken}/${refreshToken}`; // for outlook login
+    return `${accessToken}/${refreshToken}`; // for outlook login
 };
 
 exports.getUserTokens = getUserTokensString;
