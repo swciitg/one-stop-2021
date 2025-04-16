@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const userNotifTokenSchema = new mongoose.Schema({
     userid: {
@@ -16,4 +16,4 @@ const userNotifTokenSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("userNotifTokens",userNotifTokenSchema);
+export default mongoose.model("userNotifTokens", userNotifTokenSchema);

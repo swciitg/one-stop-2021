@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const BuyDetailsSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -12,4 +12,6 @@ const BuyDetailsSchema = new mongoose.Schema({
   username: { type: String, required: true },
 });
 
-module.exports = mongoose.model("buyItem", BuyDetailsSchema);
+const BuyItem = mongoose.model("buyItem", BuyDetailsSchema);
+
+export default BuyItem;

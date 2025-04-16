@@ -1,16 +1,16 @@
-const messMenu = require("../../models/messMenuModel");
-const verifyRoles = require("../utils");
-const roles = require("../roles");
+import messMenu from "../../models/messMenuModel.js";
+import verifyRoles from "../utils.js";
+import roles from "../roles.js";
 
-let allowedRoles = [roles.SUPERADMIN, roles.MESS];
+const allowedRoles = [roles.SUPERADMIN, roles.MESS];
 
-module.exports = {
+export default {
     resource: messMenu,
     options: {
-        listProperties: ["hostel", "monday","tuesday","wednesday","thursday","friday","saturday","sunday"],
-        filterProperties: ["hostel", "monday","tuesday","wednesday","thursday","friday","saturday","sunday"],
-        editProperties: ["hostel", "monday","tuesday","wednesday","thursday","friday","saturday","sunday"],
-        showProperties: ["hostel", "monday","tuesday","wednesday","thursday","friday","saturday","sunday"],
+        listProperties: ["hostel", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+        filterProperties: ["hostel", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+        editProperties: ["hostel", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+        showProperties: ["hostel", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },

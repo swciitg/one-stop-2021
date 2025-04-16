@@ -1,11 +1,11 @@
-const path = require("path");
-const sharp = require('sharp');
-const fs = require('fs');
+import path from "path";
+import sharp from "sharp";
+import fs from "fs";
 
-exports.getImage = async (req, res) => {
+export const getImage = async (req, res) => {
     console.log("Get image par");
     const imagePath = path.resolve(
-        __dirname +
+        new URL('.', import.meta.url).pathname +
         "/../" +
         "images_folder" +
         "/" +
@@ -16,10 +16,10 @@ exports.getImage = async (req, res) => {
     res.sendFile(imagePath);
 };
 
-exports.getCompressedImage = async (req, res) => {
+export const getCompressedImage = async (req, res) => {
     console.log("Get image par");
     const imagePath = path.resolve(
-        __dirname +
+        new URL('.', import.meta.url).pathname +
         "/../" +
         "images_folder" +
         "/" +
@@ -30,10 +30,10 @@ exports.getCompressedImage = async (req, res) => {
     res.sendFile(imagePath);
 };
 
-exports.uploadImage = async (req, res) => {
-    const imagePath = path.resolve(__dirname + '/../images_folder/' + req.imageId + '.jpg');
+export const uploadImage = async (req, res) => {
+    const imagePath = path.resolve(new URL('.', import.meta.url).pathname + '/../images_folder/' + req.imageId + '.jpg');
     const compressedImagePath = path.resolve(
-        __dirname +
+        new URL('.', import.meta.url).pathname +
         "/../images_folder/" +
         req.imageId +
         "-compressed.jpg"

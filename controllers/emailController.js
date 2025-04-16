@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 /**
  * @swagger
@@ -28,7 +28,7 @@ const nodemailer = require('nodemailer');
  *         description: Error message(s)
  */
 
-const sendEmail = (req, res) => {
+export const sendEmail = (req, res) => {
   const output = `<p>${req.body.emailbody}</p>`;
 
   // create reusable transporter object using the default SMTP transport
@@ -60,5 +60,3 @@ const sendEmail = (req, res) => {
     // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
   });
 };
-
-module.exports = { sendEmail };

@@ -1,6 +1,6 @@
-const homePage = require("../models/homePageModel");
+import homePage from "../models/homePageModel.js";
 
-exports.getHomePageData = (req, res) => {
+export const getHomePageData = (req, res) => {
     homePage
         .find()
         .then((data) => {
@@ -29,9 +29,9 @@ exports.getHomePageData = (req, res) => {
                 "message": err.message || "Error Occurred",
             });
         });
-}
+};
 
-exports.getQuickLinksData = (req, res) => {
+export const getQuickLinksData = (req, res) => {
     homePage
         .find()
         .then((data) => {

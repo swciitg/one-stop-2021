@@ -1,37 +1,40 @@
-const AdminJsMongoose = require("@adminjs/mongoose");
-const AdminJs = require("adminjs");
-const AdminJsExpress = require("@adminjs/express");
-var session = require('express-session');
-var MongoDBStore = require('connect-mongodb-session')(session);
-const { ADMINPANELROOT } = require("../helpers/constants");
-const authenticate = require("./auth");
+import * as AdminJsMongoose from "@adminjs/mongoose";
+import AdminJs from "adminjs";
+import AdminJsExpress from "@adminjs/express";
+import session from "express-session";
+import MongoDBStore from "connect-mongodb-session";
+import { ADMINPANELROOT } from "../helpers/constants.js";
+import authenticate from "./auth.js";
 
-const messMenuResouce = require("./resources/messMenu.resource");
-const userResource = require("./resources/user.resource");
-const timingResource = require("./resources/transportTming.resource");
-const ui = require("./ui/loader");
+import messMenuResouce from "./resources/messMenu.resource.js";
+import userResource from "./resources/user.resource.js";
+import timingResource from "./resources/transportTming.resource.js";
+import * as ui from "./ui/loader.js";
+import styleAssets from "./ui/style-assets.js";
+import cabSharingResource from "./resources/campusTravel.resource.js";
+import lostItemResource from "./resources/lostItem.resource.js";
+import foundItemResource from "./resources/foundItem.resource.js";
+import adminResource from "./resources/admin.resource.js";
+import contactsResource from "./resources/contacts.resource.js";
+import foodOutletResource from "./resources/foodOutlet.resource.js";
+import announcementResource from "./resources/announcement.resource.js";
+import buyItemResource from "./resources/buyItem.resource.js";
+import sellItemResource from "./resources/sellItem.resource.js";
+import homePageResource from "./resources/homepage.resource.js";
+import hospitalContactResource from "./resources/hospitalContact.resource.js";
+import hospitalTimetableResource from "./resources/hospitalTimeTable.resource.js";
+import doctorResource from "./resources/doctor.resource.js";
+import habAdminResource from "./resources/hab.resource.js";
+import privatekeyResource from "./resources/privateKey.resource.js";
+
+// Create MongoDB session store
+const SessionStore = MongoDBStore(session);
+
 const { componentLoader, Components } = ui;
-const styleAssets = require("./ui/style-assets");
-const cabSharingResource = require("./resources/campusTravel.resource");
-const lostItemResource = require("./resources/lostItem.resource");
-const foundItemResource = require("./resources/foundItem.resource");
-const adminResource = require("./resources/admin.resource");
-const contactsResource = require("./resources/contacts.resource");
-const foodOutletResource = require("./resources/foodOutlet.resource");
-const announcementResource = require("./resources/announcement.resource");
-const buyItemResource = require("./resources/buyItem.resource");
-const sellItemResource = require("./resources/sellItem.resource");
-const homePageResource = require("./resources/homepage.resource");
-const hospitalContactResource = require("./resources/hospitalContact.resource")
-const hospitalTimetableResource = require("./resources/hospitalTimeTable.resource");
-const doctorResource = require("./resources/doctor.resource");
-const habAdminResource = require("./resources/hab.resource");
-const privatekeyResource = require("./resources/privateKey.resource");
 
 AdminJs.registerAdapter(AdminJsMongoose);
 
-
-var sessiontStore = new MongoDBStore(
+var sessiontStore = new SessionStore(
     {
       uri: process.env.DATABASE_URI,
       databaseName: process.env.DATABASE_NAME,
@@ -55,7 +58,7 @@ const adminjs = new AdminJs({
 
 adminjs.watch();
 
-exports.adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(
+export const adminJsRouter = AdminJsExpress.buildAuthenticatedRouter(
     adminjs,
     {
         cookiePassword: process.env.ADMIN_PANEL_COOKIE_SECRET,

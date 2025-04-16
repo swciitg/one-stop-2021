@@ -1,4 +1,4 @@
-const { HabAdmin } = require("../../models/habModels/habAdminModel");
+import { HabAdmin } from "../../models/habModels/habAdminModel.js";
 
 const getAllSMCEmails = async (req, res) => {
     try {
@@ -20,4 +20,4 @@ const getAllSMCEmails = async (req, res) => {
     }
 };
 
-module.exports = { getAllSMCEmails };
+export { getAllSMCEmails };

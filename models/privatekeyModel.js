@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const privateKeySchema = new mongoose.Schema({
     privateKey: {
@@ -9,4 +9,4 @@ const privateKeySchema = new mongoose.Schema({
 
 const PrivateKey = mongoose.model('PrivateKey', privateKeySchema);
 
-module.exports = PrivateKey;
+export default PrivateKey;

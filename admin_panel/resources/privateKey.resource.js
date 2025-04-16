@@ -1,10 +1,10 @@
-const privatekey = require("../../models/privatekeyModel");
-const verifyRoles = require("../utils");
-const roles = require("../roles");
+import privatekey from "../../models/privatekeyModel.js";
+import verifyRoles from "../utils.js";
+import roles from "../roles.js";
 
-let allowedRoles = [roles.SUPERADMIN,roles.MESS];
+const allowedRoles = [roles.SUPERADMIN, roles.MESS];
 
-module.exports = {
+export default {
     resource: privatekey,
     options: {
         actions: {

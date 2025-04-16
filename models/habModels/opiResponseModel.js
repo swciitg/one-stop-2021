@@ -1,5 +1,5 @@
-const { Schema, model } = require("mongoose");
-const { allIITGHostels } = require("../../helpers/constants");
+import { Schema, model } from "mongoose";
+import { allIITGHostels } from "../../helpers/constants.js";
 
 const responseSchema = new Schema(
   {
@@ -38,4 +38,4 @@ const responseSchema = new Schema(
 
 const Response = model("response", responseSchema);
 
-module.exports = { Response };
+export { Response };

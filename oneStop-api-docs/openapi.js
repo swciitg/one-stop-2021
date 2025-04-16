@@ -1,23 +1,23 @@
-const server = require('./servers.js');
-const info = require('./info.json');
+import server from './servers.js';
+import info from './info.json' assert { type: 'json' };
 
-//paths
-const user_guest_login = require('./paths/user/guest_login.json');
-const user_access_token = require('./paths/user/access_token.json');
-const user_get_user_info = require('./paths/user/get_user_info.json');
-const user_device_token = require('./paths/user/device_token.json');
-const user_get_user_by_email = require('./paths/user/get_user_by_email.json');
-const user_personal_notifs = require('./paths/user/personal_notifs.json');
-const user_update_notif_prefs = require('./paths/user/update_notif_prefs.json');
-const user_get_user_id = require('./paths/user/get_user_id.json');
-const user_bug_fix = require('./paths/user/bug_fix.json');
+// paths
+import user_guest_login from './paths/user/guest_login.json' assert { type: 'json' };
+import user_access_token from './paths/user/access_token.json' assert { type: 'json' };
+import user_get_user_info from './paths/user/get_user_info.json' assert { type: 'json' };
+import user_device_token from './paths/user/device_token.json' assert { type: 'json' };
+import user_get_user_by_email from './paths/user/get_user_by_email.json' assert { type: 'json' };
+import user_personal_notifs from './paths/user/personal_notifs.json' assert { type: 'json' };
+import user_update_notif_prefs from './paths/user/update_notif_prefs.json' assert { type: 'json' };
+import user_get_user_id from './paths/user/get_user_id.json' assert { type: 'json' };
+import user_bug_fix from './paths/user/bug_fix.json' assert { type: 'json' };
 
-//schemas
-const user_schema = require('./paths/schemas/user_schema.json');
-const device_token_schema = require('./paths/schemas/device_token_schema.json');
-const notification_prefs_schema = require('./paths/schemas/notification_prefs_schema.json');
-const security_header_auth_schema = require('./paths/schemas/securityHeaderAuthSchema.json');
-const security_header_key_schema = require('./paths/schemas/securityHeaderKeySchema.json');
+// schemas
+import user_schema from './paths/schemas/user_schema.json' assert { type: 'json' };
+import device_token_schema from './paths/schemas/device_token_schema.json' assert { type: 'json' };
+import notification_prefs_schema from './paths/schemas/notification_prefs_schema.json' assert { type: 'json' };
+import security_header_auth_schema from './paths/schemas/securityHeaderAuthSchema.json' assert { type: 'json' };
+import security_header_key_schema from './paths/schemas/securityHeaderKeySchema.json' assert { type: 'json' };
 
 const openAPI = {
   "openapi": "3.0.3",
@@ -43,6 +43,6 @@ const openAPI = {
       "SecurityHeaderKey": security_header_key_schema
     }
   }
-}
+};
 
-module.exports = openAPI;
+export default openAPI;

@@ -1,14 +1,10 @@
-// let sw = require("swagger-node-express");
-const _ = require('lodash');
+// import _ from 'lodash';
+import { omit } from 'lodash-es';
 
-const writeResponse = function writeResponse(res, response, status) {
-  // sw.setHeaders(res);
+export const writeResponse = function writeResponse(res, response, status) {
   res.status(status || 200).send(JSON.stringify(response));
 };
 
-const writeError = function writeError(res, error, status) {
-  // sw.setHeaders(res);
-  res.status(error.status || status || 400).send(JSON.stringify(_.omit(error, ['status'])));
+export const writeError = function writeError(res, error, status) {
+  res.status(error.status || status || 400).send(JSON.stringify(omit(error, ['status'])));
 };
-
-module.exports = { writeError, writeResponse };

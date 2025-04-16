@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
-const foodItems = require("./foodItems");
-var Scraper = require("images-scraper");
-const { updateFoodOutletInLastUpdateDocument } = require("../controllers/lastUpdateController");
+import mongoose from "mongoose";
+import foodItems from "./foodItems.js";
+import Scraper from "images-scraper";
+import { updateFoodOutletInLastUpdateDocument } from "../controllers/lastUpdateController.js";
 
 const foodItemSchema = new mongoose.Schema({
   itemName: {
@@ -59,11 +59,11 @@ const foodOutletsSchema = new mongoose.Schema({
   }
 });
 
-foodOutletsSchema.pre('findOneAndRemove',async function(){ // adminjs calls findOneAndRemove internally
+foodOutletsSchema.pre('findOneAndRemove', async function () { // adminjs calls findOneAndRemove internally
   await updateFoodOutletInLastUpdateDocument();
 });
 
-foodOutletsSchema.pre('save',async function(){
+foodOutletsSchema.pre('save', async function () {
   await updateFoodOutletInLastUpdateDocument();
   console.log(this.menu);
   const google = new Scraper({
@@ -78,12 +78,12 @@ foodOutletsSchema.pre('save',async function(){
       ]
     }
   });
-  for(let i=0;i<this.menu.length;i++){
+  for (let i = 0; i < this.menu.length; i++) {
     console.log(this.menu[i]);
     console.log(this.menu[i]["imageURL"]);
-    if(!this.menu[i]["imageURL"] || this.menu[i]["imageURL"].length==0){
+    if (!this.menu[i]["imageURL"] || this.menu[i]["imageURL"].length == 0) {
       console.log("INSIDE HERE");
-      const imageResults = await google.scrape(this.menu[i]["itemName"],1);
+      const imageResults = await google.scrape(this.menu[i]["itemName"], 1);
       console.log(imageResults);
       this.menu[i]["imageURL"] = imageResults[0]["url"];
       console.log(imageResults);
@@ -91,7 +91,7 @@ foodOutletsSchema.pre('save',async function(){
   }
 });
 
-foodOutletsSchema.pre('findOneAndUpdate',async function(){ // // adminjs calls findOneAndUpdate internally
+foodOutletsSchema.pre('findOneAndUpdate', async function () { // adminjs calls findOneAndUpdate internally
   await updateFoodOutletInLastUpdateDocument();
   const google = new Scraper({
     puppeteer: {
@@ -105,11 +105,11 @@ foodOutletsSchema.pre('findOneAndUpdate',async function(){ // // adminjs calls f
       ]
     }
   });
-  for(let i=0;i<this["_update"]['$set']['menu'].length;i++){
+  for (let i = 0; i < this["_update"]['$set']['menu'].length; i++) {
     console.log(this["_update"]['$set']['menu']);
     console.log(this["_update"]['$set']['menu'][i]["imageURL"]);
-    if(!this["_update"]['$set']['menu'][i]["imageURL"].length===0 || this["_update"]['$set']['menu'][i]["imageURL"].length===0){
-      const imageResults = await google.scrape(this["_update"]['$set']['menu'][i]["itemName"],1);
+    if (!this["_update"]['$set']['menu'][i]["imageURL"].length === 0 || this["_update"]['$set']['menu'][i]["imageURL"].length === 0) {
+      const imageResults = await google.scrape(this["_update"]['$set']['menu'][i]["itemName"], 1);
       this["_update"]['$set']['menu'][i]["imageURL"] = imageResults[0]["url"];
       console.log(imageResults);
     }
@@ -118,4 +118,4 @@ foodOutletsSchema.pre('findOneAndUpdate',async function(){ // // adminjs calls f
 
 const foodOutlets = mongoose.model("foodOutlet", foodOutletsSchema);
 
-module.exports = foodOutlets;
+export default foodOutlets;

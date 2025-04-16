@@ -1,16 +1,15 @@
-const foodItemsModel = require("../models/foodItems");
-const foodOutletsModel = require("../models/foodOutlets");
-const LastUpadte = require("../models/lastUpdate");
-const csv = require("csvtojson");
-const LastUpdate = require("../models/lastUpdate");
-const {uploadFilePath} = require("../constants");
-var Scraper = require("images-scraper");
+import foodItemsModel from "../models/foodItems.js";
+import foodOutletsModel from "../models/foodOutlets.js";
+import LastUpdate from "../models/lastUpdate.js";
+import csv from "csvtojson";
+import { uploadFilePath } from "../constants.js";
+import Scraper from "images-scraper";
 
 function isImage(url) {
   return /\.(jpg|jpeg|png)$/.test(url);
 }
 
-exports.createItem = async (req, res) => {
+export const createItem = async (req, res) => {
   try {
     // const files = req.files;
     // let file = Object.keys(files)[0];
@@ -99,7 +98,7 @@ exports.createItem = async (req, res) => {
   }
 };
 
-exports.getOutletMenu = async (req,res) => {
+export const getOutletMenu = async (req,res) => {
   try{
     const outletId = req.params.outletId;
     if(outletId === undefined){

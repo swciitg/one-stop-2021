@@ -1,10 +1,10 @@
-const verifyRoles = require("../utils");
-const roles = require("../roles");
-const foodOutlets = require("../../models/foodOutlets");
+import verifyRoles from "../utils.js";
+import roles from "../roles.js";
+import foodOutlets from "../../models/foodOutlets.js";
 
-let allowedRoles = [roles.SUPERADMIN, roles.FOODOUTLET];
+const allowedRoles = [roles.SUPERADMIN, roles.FOODOUTLET];
 
-module.exports = {
+export default {
     resource: foodOutlets,
     options: {
         listProperties: ["outletName","caption","closingTime","phoneNumber","location","latitude","longitude","tags","menu","imageURL"],

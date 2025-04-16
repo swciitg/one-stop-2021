@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
@@ -23,4 +23,4 @@ const timeSchema = new Schema({
 
 const Time = mongoose.model('time', timeSchema);
 
-module.exports = Time;
+export default Time;

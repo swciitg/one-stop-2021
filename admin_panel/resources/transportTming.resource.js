@@ -1,13 +1,13 @@
-const verifyRoles = require("../utils");
-const roles = require("../roles");
-const transportTiming = require("../../models/transportTimings");
+import verifyRoles from "../utils.js";
+import roles from "../roles.js";
+import transportTiming from "../../models/transportTimings.js";
 
-let allowedRoles = [roles.SUPERADMIN, roles.TRANSPORTTIMING];
+const allowedRoles = [roles.SUPERADMIN, roles.TRANSPORTTIMING];
 
-module.exports = {
+export default {
     resource: transportTiming,
     options: {
-        filterProperties: ["type","stop"],
+        filterProperties: ["type", "stop"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },

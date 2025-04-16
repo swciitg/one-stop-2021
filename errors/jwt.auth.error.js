@@ -1,13 +1,13 @@
-const { CustomError } = require("./custom.error");
+import { CustomError } from "./custom.error.js";
 
-exports.AccessTokenError =  class AccessTokenError extends CustomError{
-    constructor(message){
-        super(message,401,"Access token error");
+export class AccessTokenError extends CustomError {
+    constructor(message) {
+        super(message, 401, "Access token error");
     }
 }
 
-exports.RefreshTokenError = class RefreshTokenError extends CustomError{
-    constructor(message){
-        super(message,401,"Refresh token error");
+export class RefreshTokenError extends CustomError {
+    constructor(message) {
+        super(message, 401, "Refresh token error");
     }
 }

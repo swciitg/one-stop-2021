@@ -1,16 +1,16 @@
-const verifyRoles = require("../utils");
-const roles = require("../roles");
-const foundModel = require("../../models/foundModel");
+import verifyRoles from "../utils.js";
+import roles from "../roles.js";
+import foundModel from "../../models/foundModel.js";
 
-let allowedRoles = [roles.SUPERADMIN, roles.FOUND];
+const allowedRoles = [roles.SUPERADMIN, roles.FOUND];
 
-module.exports = {
+export default {
     resource: foundModel,
     options: {
-        listProperties: ["title", "date","location","submittedat","description","photo_id","imageURL","compressedImageURL","email","username","claimed","claimerEmail","claimerName"],
-        filterProperties: ["title", "date","location","submittedat","description","photo_id","imageURL","compressedImageURL","email","username","claimed","claimerEmail","claimerName"],
-        editProperties: ["title", "date","location","submittedat","description","photo_id","imageURL","compressedImageURL","email","username","claimed","claimerEmail","claimerName"],
-        showProperties: ["title", "date","location","submittedat","description","photo_id","imageURL","compressedImageURL","email","username","claimed","claimerEmail","claimerName"],
+        listProperties: ["title", "date", "location", "submittedat", "description", "photo_id", "imageURL", "compressedImageURL", "email", "username", "claimed", "claimerEmail", "claimerName"],
+        filterProperties: ["title", "date", "location", "submittedat", "description", "photo_id", "imageURL", "compressedImageURL", "email", "username", "claimed", "claimerEmail", "claimerName"],
+        editProperties: ["title", "date", "location", "submittedat", "description", "photo_id", "imageURL", "compressedImageURL", "email", "username", "claimed", "claimerEmail", "claimerName"],
+        showProperties: ["title", "date", "location", "submittedat", "description", "photo_id", "imageURL", "compressedImageURL", "email", "username", "claimed", "claimerEmail", "claimerName"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => false }, // don't let admin create new lost item

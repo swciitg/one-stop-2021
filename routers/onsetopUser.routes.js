@@ -1,5 +1,5 @@
-const express = require("express");
-const {
+import express from "express";
+import {
     updateOnestopUserValidate,
     updateOnestopUser,
     regenerateUserAccessToken,
@@ -14,12 +14,13 @@ const {
     getUserPersonalNotifs,
     deleteUserPersonalNotifs,
     updateOnestopUserNotifPrefsValidate,
-    updateOnestopUserNotifPrefs, getUserId
-} = require("../controllers/onestopUserController");
-const {requestValidation} = require("../middlewares/validate.request");
-const {verifyUserRequest, restrictIfGuest} = require("../middlewares/user.auth");
+    updateOnestopUserNotifPrefs,
+    getUserId
+} from "../controllers/onestopUserController.js";
+import { requestValidation } from "../middlewares/validate.request.js";
+import { verifyUserRequest, restrictIfGuest } from "../middlewares/user.auth.js";
+
 const onestopUserRouter = express.Router();
-const {body, matchedData} = require("express-validator");
 
 // onestopUserRouter.get("/onestop-user",)
 // onestopUserRouter.post("/onestop-user", createOnestopUser);
@@ -39,4 +40,4 @@ onestopUserRouter.delete("/user/notifs", verifyUserRequest, restrictIfGuest, del
 
 onestopUserRouter.patch("/user/bug-fix", addBlockedFalseAndNotifPrefs);
 
-module.exports = onestopUserRouter;
+export default onestopUserRouter;

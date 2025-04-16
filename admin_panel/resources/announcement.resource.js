@@ -1,15 +1,15 @@
-const verifyRoles = require("../utils");
-const roles = require("../roles");
-const announcementModel = require("../../models/announcementModel");
+import verifyRoles from "../utils.js";
+import roles from "../roles.js";
+import announcementModel from "../../models/announcementModel.js";
 
-let allowedRoles = [roles.SUPERADMIN,roles.ANNOUNCEMENT];
+const allowedRoles = [roles.SUPERADMIN, roles.ANNOUNCEMENT];
 
-module.exports = {
+export default {
     resource: announcementModel,
     options: {
-        listProperties: ["title","body"],
-        filterProperties: ["title","body"],
-        showProperties: ["title","body"],
+        listProperties: ["title", "body"],
+        filterProperties: ["title", "body"],
+        showProperties: ["title", "body"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },

@@ -1,5 +1,6 @@
-const onestopAdmin = require("../models/adminModel");
-module.exports = async function authenticate(email, password) {
+import onestopAdmin from "../models/adminModel.js";
+
+export default async function authenticate(email, password) {
     try {
         console.log(email, password);
         const user = await onestopAdmin.findOne({ email });

@@ -1,11 +1,11 @@
-const {
+import {
   getGcScoreboardStore,
   checkIfAdmin,
   checkIfBoardAdmin,
   ifValidEvent,
-} = require("../../helpers/gcScoreboardHelpers");
+} from "../../helpers/gcScoreboardHelpers.js";
 
-const { manthanEventModel } = require("../../models/gcModels/manthanModel");
+import { manthanEventModel } from "../../models/gcModels/manthanModel.js";
 
 async function ifAuthorizedForManthanEventSchedules(eventId, email) {
   let manthanEventSchedule = await manthanEventModel.findById(eventId);
@@ -19,7 +19,7 @@ async function ifAuthorizedForManthanEventSchedules(eventId, email) {
   return true;
 }
 
-exports.getManthanEvents = async (req, res) => {
+export const getManthanEvents = async (req, res) => {
   try {
     let gcCompetitionsStore = await getGcScoreboardStore();
     res.json({ success: true, details: gcCompetitionsStore.manthan_events });
@@ -28,7 +28,7 @@ exports.getManthanEvents = async (req, res) => {
   }
 };
 
-exports.postManthanEvents = async (req, res) => {
+export const postManthanEvents = async (req, res) => {
   try {
     let manthanEvents = req.body.events;
     if (manthanEvents === undefined) {
@@ -50,7 +50,7 @@ exports.postManthanEvents = async (req, res) => {
   }
 };
 
-exports.getManthanOverallStandings = async (req, res) => {
+export const getManthanOverallStandings = async (req, res) => {
   try {
     let gcCompetitionsStore = await getGcScoreboardStore();
     let gcStandings = [];
@@ -68,7 +68,7 @@ exports.getManthanOverallStandings = async (req, res) => {
   }
 };
 
-exports.getManthanEventStandings = async (req, res) => {
+export const getManthanEventStandings = async (req, res) => {
   try {
     let eventsSchedules = await manthanEventModel.find({ resultAdded: true });
     res.json({ success: true, details: eventsSchedules });
@@ -77,7 +77,7 @@ exports.getManthanEventStandings = async (req, res) => {
   }
 };
 
-exports.postManthanEventSchedule = async (req, res) => {
+export const postManthanEventSchedule = async (req, res) => {
   try {
     req.body.posterEmail = req.body.email;
 
@@ -108,7 +108,7 @@ exports.postManthanEventSchedule = async (req, res) => {
   }
 };
 
-exports.getManthanEventsSchdedules = async (req, res) => {
+export const getManthanEventsSchdedules = async (req, res) => {
   try {
     console.log(
       await checkIfAdmin(req.body.email, "manthan"),
@@ -129,13 +129,12 @@ exports.getManthanEventsSchdedules = async (req, res) => {
   }
 };
 
-exports.updateManthanEventSchedule = async (req, res) => {
-  // this is used for event posting and updation
+export const updateManthanEventSchedule = async (req, res) => {
   console.log("here fasdfad");
   try {
     const id = req.params.id;
     req.body.posterEmail = req.body.email;
-    console.log(req.body,id);
+    console.log(req.body, id);
     if (
       (await ifAuthorizedForManthanEventSchedules(id, req.body.email)) === false
     ) {
@@ -184,34 +183,33 @@ exports.updateManthanEventSchedule = async (req, res) => {
   }
 };
 
-exports.addManthanEventResult = async (req, res) => {
-  // for result added and updation
-
+export const addManthanEventResult = async (req, res) => {
   try {
     const id = req.params.id;
     let manthanEventSchedule = await manthanEventModel.findById(id);
-    
+
     if (
       (await ifAuthorizedForManthanEventSchedules(id, req.body.email)) === false
-      ) {
-        res
+    ) {
+      res
         .status(403)
         .json({ success: false, message: "You are not authorized admin" });
-        return;
-      }
-      
-      req.body.resultAdded = true;
-      req.body.results.forEach((result) => {
-        result["points"]=result["primaryScore"];
-      });
-      console.log(manthanEventSchedule);
-      await manthanEventModel.findOneAndUpdate({ _id: id }, req.body, { runValidators: true});
-      let gcCompetitionsStore = await getGcScoreboardStore();
-      console.log(manthanEventSchedule);
-      console.log("HELLO THERE")
-      
-      for (let i = 0; i < manthanEventSchedule["results"].length; i++) {
+      return;
+    }
 
+    req.body.resultAdded = true;
+    req.body.results.forEach((result) => {
+      result["points"] = result["primaryScore"];
+    });
+    console.log(manthanEventSchedule);
+    await manthanEventModel.findOneAndUpdate({ _id: id }, req.body, {
+      runValidators: true,
+    });
+    let gcCompetitionsStore = await getGcScoreboardStore();
+    console.log(manthanEventSchedule);
+    console.log("HELLO THERE");
+
+    for (let i = 0; i < manthanEventSchedule["results"].length; i++) {
       for (
         let j = 0;
         j < gcCompetitionsStore["overallGcStandings"].length;
@@ -221,9 +219,8 @@ exports.addManthanEventResult = async (req, res) => {
           manthanEventSchedule["results"][i]["hostelName"] ===
           gcCompetitionsStore["overallGcStandings"][j]["hostelName"]
         ) {
-          // hostel found in gc competitions store
           gcCompetitionsStore["overallGcStandings"][j]["manthan_points"] -=
-            manthanEventSchedule["results"][i]["primaryScore"]; // subtract old points
+            manthanEventSchedule["results"][i]["primaryScore"];
         }
       }
     }
@@ -237,10 +234,8 @@ exports.addManthanEventResult = async (req, res) => {
           req.body["results"][i]["hostelName"] ===
           gcCompetitionsStore["overallGcStandings"][j]["hostelName"]
         ) {
-          // hostel found in gc competitions store
-
           gcCompetitionsStore["overallGcStandings"][j]["manthan_points"] +=
-            req.body["results"][i]["primaryScore"]; // add new points
+            req.body["results"][i]["primaryScore"];
         }
       }
     }
@@ -255,7 +250,7 @@ exports.addManthanEventResult = async (req, res) => {
   }
 };
 
-exports.deleteManthanEventSchedule = async (req, res) => {
+export const deleteManthanEventSchedule = async (req, res) => {
   try {
     const id = req.params.id;
     let manthanEventSchedule = await manthanEventModel.findById(id);
@@ -274,7 +269,7 @@ exports.deleteManthanEventSchedule = async (req, res) => {
   }
 };
 
-exports.getManthanResults = async (req, res) => {
+export const getManthanResults = async (req, res) => {
   try {
     console.log(
       await checkIfAdmin(req.body.email, "manthan"),
@@ -290,14 +285,13 @@ exports.getManthanResults = async (req, res) => {
 
     const events = await manthanEventModel.find(filters).sort({ date: -1 });
 
-// send all event schedules if no email passed or passed email belongs to board admin
     res.status(200).json({ success: true, details: events });
   } catch (err) {
     res.status(500).json({ success: false, message: err.toString() });
   }
 };
 
-exports.deleteManthanEventResult = async (req, res) => {
+export const deleteManthanEventResult = async (req, res) => {
   try {
     const id = req.params.id;
     console.log(id);
@@ -322,9 +316,8 @@ exports.deleteManthanEventResult = async (req, res) => {
           manthanEventSchedule["results"][i]["hostelName"] ===
           gcCompetitionsStore["overallGcStandings"][j]["hostelName"]
         ) {
-          // hostel found in gc competitions store
           gcCompetitionsStore["overallGcStandings"][j]["manthan_points"] -=
-            manthanEventSchedule["results"][i]["points"]; // subtract old points
+            manthanEventSchedule["results"][i]["points"];
         }
       }
     }

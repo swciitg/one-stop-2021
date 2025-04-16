@@ -1,11 +1,15 @@
-const fs = require('fs');
-const xlsx = require('node-xlsx');
-const path = require('path');
-const MessMenu = require('../models/messMenuModel');
-const User = require('../models/userModel');
-const PrivateKey = require('../models/privatekeyModel');
-const crypto = require('crypto');
+import fs from 'fs';
+import xlsx from 'node-xlsx';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import MessMenu from '../models/messMenuModel.js';
+import User from '../models/userModel.js';
+import PrivateKey from '../models/privatekeyModel.js';
+import crypto from 'crypto';
 
+// Setup __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const createMeal = (description, startTime, endTime) => {
   const currentDate = new Date();
@@ -38,7 +42,6 @@ const weekendtimings = {
   lunch: { start: '12:15', end: '14:30' },
   dinner: { start: '20:00', end: '22:15' }
 }
-
 
 async function UpdateUser(filePath) {
   try {
@@ -173,8 +176,14 @@ async function saveMessMenuForHostel(filePath, hostelName) {
   }
 }
 
+function wrapWithRSAKeys(data) {
+  const publicKeyHeader = '-----BEGIN RSA PRIVATE KEY-----\n';
+  const privateKeyFooter = '\n-----END RSA PRIVATE KEY-----';
+  
+  return publicKeyHeader + data + privateKeyFooter;
+}
 
-exports.uploadmessmenu =  async (req, res) => {
+export const uploadmessmenu = async (req, res) => {
   try {
     console.log('File upload request received');
 
@@ -208,16 +217,9 @@ exports.uploadmessmenu =  async (req, res) => {
     console.error('Error during upload and processing:', error.message);
     res.status(500).send('An error occurred while processing the hostel menu');
   }
-}
+};
 
-function wrapWithRSAKeys(data) {
-  const publicKeyHeader = '-----BEGIN RSA PRIVATE KEY-----\n';
-  const privateKeyFooter = '\n-----END RSA PRIVATE KEY-----';
-  
-  return publicKeyHeader + data + privateKeyFooter;
-}
-
-exports.uploaduserHostel = async (req,res) => {
+export const uploaduserHostel = async (req,res) => {
   try {
 
     if(!req.file){
@@ -228,8 +230,8 @@ exports.uploaduserHostel = async (req,res) => {
     const publicKey = `${req.body.publicKey}`;
     console.log(publicKey);
     const privateKeyModel = await PrivateKey.findOne({});
-    const private = `${privateKeyModel.privateKey}`;
-    const privateKey = wrapWithRSAKeys(private);
+    const privateString = `${privateKeyModel.privateKey}`;
+    const privateKey = wrapWithRSAKeys(privateString);
     console.log(privateKey);
 
     const message = "This is a test message";
@@ -273,8 +275,7 @@ exports.uploaduserHostel = async (req,res) => {
   }
 }
 
-
-exports.uploaduserMess = async (req,res) => {
+export const uploaduserMess = async (req,res) => {
   try {
 
     if(!req.file){
@@ -285,8 +286,8 @@ exports.uploaduserMess = async (req,res) => {
     const publicKey = `${req.body.publicKey}`;
     console.log(publicKey);
     const privateKeyModel = await PrivateKey.findOne({});
-    const private = `${privateKeyModel.privateKey}`;
-    const privateKey = wrapWithRSAKeys(private);
+    const privateString = `${privateKeyModel.privateKey}`;
+    const privateKey = wrapWithRSAKeys(privateString);
     console.log(privateKey);
 
     const message = "This is a test message";

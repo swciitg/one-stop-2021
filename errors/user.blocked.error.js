@@ -1,7 +1,7 @@
-const { CustomError } = require("./custom.error");
+import { CustomError } from "./custom.error.js";
 
-exports.UserBlockedError = class UserBlockedError extends CustomError{
-    constructor(message){
-        super(message,418,"Blocked user request error");
+export class UserBlockedError extends CustomError {
+    constructor(message) {
+        super(message, 418, "Blocked user request error");
     }
 }

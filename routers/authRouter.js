@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 // const passport = require('passport');
-const controllers = require('../controllers');
-const { microsoftLogin, microsoftLoginRedirect } = require('../controllers/authController');
+import * as controllers from '../controllers/index.js';
+import { microsoftLogin, microsoftLoginRedirect } from '../controllers/authController.js';
 
 const authRouter = express.Router();
 
@@ -14,4 +14,4 @@ authRouter.get("/auth/microsoft/redirect", microsoftLoginRedirect);
 //   controllers.authController.postMicrosoftLogin,
 // );
 
-module.exports = { authRouter };
+export default authRouter;

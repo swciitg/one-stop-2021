@@ -1,9 +1,7 @@
+import LastUpdate from "../models/lastUpdate.js";
+import transportTiming from "../models/transportTimings.js";
 
-const LastUpdate = require("../models/lastUpdate");
-
-const transportTiming = require("../models/transportTimings");
-
-exports.getferrytiming = async (req, res) => {
+export const getferrytiming = async (req, res) => {
   try {
     let ferryTimings = await transportTiming.find({ type: "FERRY" });
 
@@ -19,7 +17,7 @@ exports.getferrytiming = async (req, res) => {
   }
 };
 
-exports.getbusStop = async (req, res) => {
+export const getbusStop = async (req, res) => {
   try {
     let busTimings = await transportTiming.find({ type: "BUS" });
 

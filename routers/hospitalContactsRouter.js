@@ -1,9 +1,9 @@
-const express = require("express");
-const { verifyUserRequest } = require("../middlewares/user.auth");
-const { getHospitalContacts } = require("../controllers/hospitalContactController");
+import express from "express";
+import { verifyUserRequest } from "../middlewares/user.auth.js";
+import { getHospitalContacts } from "../controllers/hospitalContactController.js";
 
 const hospitalContactRouter = express.Router();
 
 hospitalContactRouter.get('/hospital/getContacts', verifyUserRequest, getHospitalContacts);
 
-module.exports = hospitalContactRouter;
+export default hospitalContactRouter;

@@ -28,10 +28,15 @@
 
 // module.exports = upload
 
-const multer = require("multer");
-const fs = require("fs");
-const uuid = require("uuid");
-const path = require("path");
+import multer from "multer";
+import fs from "fs";
+import { v4 as uuidv4 } from "uuid";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Get __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Define the destination directory
 const uploadDir = path.join(__dirname, "../files_folder/pharmacyFeedbackForms_files");
@@ -46,7 +51,7 @@ const fileStorageEngine = multer.diskStorage({
         cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
-        console.log("file ye hai ")
+        console.log("file ye hai ");
         console.log(file);
         let fileSaveName;
         let parts = file.originalname.split(".");
@@ -55,7 +60,7 @@ const fileStorageEngine = multer.diskStorage({
 
         // Check if the file already exists
         if (fs.existsSync(path.join(uploadDir, file.originalname))) {
-            fileSaveName = parts.join('.') + uuid.v4() + fileExtension;
+            fileSaveName = parts.join('.') + uuidv4() + fileExtension;
         } else {
             fileSaveName = file.originalname;
         }
@@ -67,4 +72,4 @@ const fileStorageEngine = multer.diskStorage({
 
 const upload = multer({ storage: fileStorageEngine });
 
-module.exports = upload;
+export default upload;

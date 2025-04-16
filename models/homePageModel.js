@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const {updateHomePageInLastUpdateDocument} = require("../controllers/lastUpdateController");
+import mongoose from "mongoose";
+import { updateHomePageInLastUpdateDocument } from "../controllers/lastUpdateController.js";
 
 const quickLink = new mongoose.Schema({
     priorityNumber: {type: Number, required: true},
@@ -31,4 +31,4 @@ homePage.pre('findOneAndUpdate', async function () { // adminjs calls findOneAnd
     await updateHomePageInLastUpdateDocument();
 });
 
-module.exports = mongoose.model("homePage", homePage);
+export default mongoose.model("homePage", homePage);

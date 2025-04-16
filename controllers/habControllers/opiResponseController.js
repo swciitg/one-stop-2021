@@ -1,9 +1,9 @@
-const { Response } = require("../../models/habModels/opiResponseModel");
-const oneStopUserModel= require("../../models/userModel");
-const { HabAdmin } = require("../../models/habModels/habAdminModel");
-const moment = require('moment-timezone');
+import { Response } from "../../models/habModels/opiResponseModel.js";
+import oneStopUserModel from "../../models/userModel.js";
+import { HabAdmin } from "../../models/habModels/habAdminModel.js";
+import moment from 'moment-timezone';
 
-const createNew = async (req, res) => {
+export const createNew = async (req, res) => {
   try {
     const admin = await HabAdmin.findOne();
 
@@ -27,7 +27,6 @@ const createNew = async (req, res) => {
     // Check if user exists & user's subscribedMess is the same as the one in the request
     const user = await oneStopUserModel.findOne({ outlookEmail: req.body.outlookEmail });
 
-    // const user = { subscribedMess: req.body.subscribedMess };
     if (!user) {
       return res.status(400).json({ success: false, message: 'User not found' });
     }
@@ -59,7 +58,7 @@ const createNew = async (req, res) => {
 };
 
 // GET function to check if OPI is active, or if the user has already submitted a response
-const checkOPIStatus = async (req, res) => {
+export const checkOPIStatus = async (req, res) => {
   try {
     // Fetch the OPI start and end dates from the HabAdmin
     const admin = await HabAdmin.findOne();
@@ -104,9 +103,4 @@ const checkOPIStatus = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
   }
-};
-
-module.exports = {
-  createNew,
-  checkOPIStatus
 };
