@@ -24,6 +24,7 @@
   ],
   "dependencies": {
     "@adminjs/express": "^6.1.1",
+    "@adminjs/import-export": "^3.0.0",
     "@adminjs/mongoose": "^4.1.0",
     "@adminjs/upload": "^4.0.2",
     "@azure/msal-node": "^3.5.1",

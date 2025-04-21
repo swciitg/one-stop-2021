@@ -1,11 +1,16 @@
 import verifyRoles from "../utils.js";
 import roles from "../roles.js";
 import contactSection from "../../models/contactSection.js";
+import importExportFeature from '@adminjs/import-export';
+import {componentLoader} from '../ui/loader.js';
 
 const allowedRoles = [roles.SUPERADMIN, roles.CONTACTS];
 
 export default {
     resource: contactSection,
+    features: [
+        importExportFeature({componentLoader}),
+    ],
     options: {
         listProperties: ["sectionName", "contacts"],
         filterProperties: ["sectionName", "contacts"],
