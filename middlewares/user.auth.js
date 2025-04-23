@@ -41,6 +41,7 @@ export const verifyUserRequest = async (req, res, next) => {
         }
         else throw new RequestValidationError("invalid user id found");
     } catch (err) {
+        console.log(`Unexpected error in verifyUserRequest: ${err}`);
         next(err);
     }
 }
