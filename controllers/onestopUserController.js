@@ -72,7 +72,7 @@ export const getUserTokens = async (userid) => {
 
 export const getUserInfo = async (req, res, next) => {
     let onestopuser = await onestopUserModel.findById(req.userid);
-    console.log(`User found: ${onestopuser.email}`);
+    console.log(`User found: ${onestopuser.outlookEmail}`);
     res.json(onestopuser);
 };
 
