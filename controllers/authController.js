@@ -58,7 +58,6 @@ export const microsoftLoginRedirect = (req, res) => {
         "Authorization": "Bearer " + response.accessToken
       }
     }, async function (err, resp, body) {
-      console.log("here");
       if (err) {
         console.log(err);
         return res.render('authSuccessView.ejs', { userTokens: "ERROR OCCURED" });

@@ -26,9 +26,7 @@ export const verifyUserRequest = async (req, res, next) => {
             }
             decoded = dec;
         });
-        console.log(`Decoded token details: ${decoded}`);
-        // let onestopUser = await onestopUserModel.findById(decoded.userid);
-        let onestopUser = await onestopUserModel.findOne({ outlookEmail: "k.anirudha@iitg.ac.in"});
+        let onestopUser = await onestopUserModel.findById(decoded.userid);
         if (onestopUser !== undefined && !onestopUser.blocked) {
             console.log(decoded);
             req.userid = decoded.userid;
