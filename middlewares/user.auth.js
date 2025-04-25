@@ -26,7 +26,7 @@ export const verifyUserRequest = async (req, res, next) => {
             }
             decoded = dec;
         });
-        console.log(decoded);
+        console.log(`Decoded token details: ${decoded}`);
         let onestopUser = await onestopUserModel.findById(decoded.userid);
         if (onestopUser !== undefined && !onestopUser.blocked) {
             console.log(decoded);
