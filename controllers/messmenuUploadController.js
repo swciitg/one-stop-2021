@@ -28,15 +28,15 @@ const createMeal = (description, startTime, endTime) => {
 };
 
 const timings = {
-  breakfast: { start: '07:00', end: '09:30' },
-  lunch: { start: '12:00', end: '14:15' },
-  dinner: { start: '19:30', end: '21:45' }
+  breakfast: { start: '07:15', end: '09:30' },
+  lunch: { start: '12:00', end: '14:00' },
+  dinner: { start: '19:30', end: '21:30' }
 };
 
 const weekendtimings = {
-  breakfast: { start: '08:00', end: '10:30' },
-  lunch: { start: '12:15', end: '14:30' },
-  dinner: { start: '20:00', end: '22:15' }
+  breakfast: { start: '07:30', end: '09:30' },
+  lunch: { start: '12:00', end: '14:00' },
+  dinner: { start: '19:30', end: '21:30' }
 }
 
 
@@ -96,76 +96,68 @@ async function saveMessMenuForHostel(filePath, hostelName) {
   try {
     const workSheetsFromFile = xlsx.parse(fs.readFileSync(filePath));
     const sheet = workSheetsFromFile[0].data;
-    const days = sheet.slice(1).map(row => ({
-      day: row[0],
-      breakfast: row[1],
-      lunch: row[2],
-      dinner: row[3]
-    }));
 
-    const breakf = []
-    const lun = []
-    const din = []
+    const days = [];
+    const breakf = [];
+    const lun = [];
+    const din = [];
 
-    for(let i=1;i<sheet.length;i+=9){
-      br = "";
-      for(let j=0;j<4;j++){
-        br+= sheet[i+j][1]+" ";
+    let currentDay = "";
+    let br = "", lu = "", di = "";
+
+    for (let i = 1; i < sheet.length; i++) {
+      const row = sheet[i];
+      const day = row[0];
+      const breakfast = row[1] || "";
+      const lunch = row[2] || "";
+      const dinner = row[3] || "";
+
+      if (day && day.trim() !== "") {
+        // Save previous day's meals if any
+        if (currentDay !== "") {
+          days.push(currentDay.toLowerCase());
+          breakf.push(br.trim());
+          lun.push(lu.trim());
+          din.push(di.trim());
+        }
+        // New day starts
+        currentDay = day;
+        br = breakfast + " ";
+        lu = lunch + " ";
+        di = dinner + " ";
+      } else {
+        br += breakfast + " ";
+        lu += lunch + " ";
+        di += dinner + " ";
       }
-      breakf.push(br);
-      lu = "";
-      for(let j=0;j<9;j++){
-        lu+= sheet[i+j][2]+" ";
-      }
-      lun.push(lu);
-      di = "";
-      for(let j=0;j<9;j++){
-        di+= sheet[i+j][3]+" ";
-      }
-      din.push(di);
     }
-    // console.log(lun)
 
-    const messMenu = {
-      hostel: hostelName,
-      monday: {
-      breakfast: createMeal(breakf[0], timings.breakfast.start, timings.breakfast.end),
-      lunch: createMeal(lun[0], timings.lunch.start, timings.lunch.end),
-      dinner: createMeal(din[0], timings.dinner.start, timings.dinner.end)
-      },
-      tuesday: {
-        breakfast: createMeal(breakf[1], timings.breakfast.start, timings.breakfast.end),
-        lunch: createMeal(lun[1], timings.lunch.start, timings.lunch.end),
-        dinner: createMeal(din[1], timings.dinner.start, timings.dinner.end)
-      },
-      wednesday: {
-        breakfast: createMeal(breakf[2], timings.breakfast.start, timings.breakfast.end),
-        lunch: createMeal(lun[2], timings.lunch.start, timings.lunch.end),
-        dinner: createMeal(din[2], timings.dinner.start, timings.dinner.end)
-      },
-      thursday: {
-        breakfast: createMeal(breakf[3], timings.breakfast.start, timings.breakfast.end),
-        lunch: createMeal(lun[3], timings.lunch.start, timings.lunch.end),
-        dinner: createMeal(din[3], timings.dinner.start, timings.dinner.end)
-      },
-      friday: {
-        breakfast: createMeal(breakf[4], timings.breakfast.start, timings.breakfast.end),
-        lunch: createMeal(lun[4], timings.lunch.start, timings.lunch.end),
-        dinner: createMeal(din[4], timings.dinner.start, timings.dinner.end)
-      },
-      saturday: {
-        breakfast: createMeal(breakf[5], weekendtimings.breakfast.start, weekendtimings.breakfast.end),
-        lunch: createMeal(lun[5], weekendtimings.lunch.start, weekendtimings.lunch.end),
-        dinner: createMeal(din[5], weekendtimings.dinner.start, weekendtimings.dinner.end)
-      },
-      sunday: {
-        breakfast: createMeal(breakf[6], weekendtimings.breakfast.start, weekendtimings.breakfast.end),
-        lunch: createMeal(lun[6], weekendtimings.lunch.start, weekendtimings.lunch.end),
-        dinner: createMeal(din[6], weekendtimings.dinner.start, weekendtimings.dinner.end)
-      }        
-     
-    };
-    await MessMenu.findOneAndUpdate({ hostel: hostelName }, messMenu, { upsert: true, new: true });
+    // Push last day
+    if (currentDay !== "") {
+      days.push(currentDay.toLowerCase());
+      breakf.push(br.trim());
+      lun.push(lu.trim());
+      din.push(di.trim());
+    }
+
+    // Build the mess menu dynamically
+    const messMenu = { hostel: hostelName };
+
+    days.forEach((day, i) => {
+      const timingSet = ["saturday", "sunday"].includes(day) ? weekendtimings : timings;
+
+      messMenu[day] = {
+        breakfast: createMeal(breakf[i], timingSet.breakfast.start, timingSet.breakfast.end),
+        lunch: createMeal(lun[i], timingSet.lunch.start, timingSet.lunch.end),
+        dinner: createMeal(din[i], timingSet.dinner.start, timingSet.dinner.end)
+      };
+    });
+
+    await MessMenu.findOneAndUpdate(
+      { hostel: hostelName },
+      messMenu,
+      { upsert: true, new: true }
+    );
 
     console.log(`Menu for ${hostelName} processed successfully`, messMenu);
   } catch (error) {
