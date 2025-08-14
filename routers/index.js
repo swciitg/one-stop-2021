@@ -26,7 +26,7 @@ import {homePageRouter} from "./homePageRouter.js";
 import {docsRouter} from "./docsRouter.js";
 import {opiRouter} from "./habRoutes/opiRouter.js";
 import messmenuUploadRouter from "./messmenuUploadRouter.js";
-
+import gatelogRouter from "./gatelogRouter.js";
 export default {
   emailRouter,
   contactRouter,
@@ -53,5 +53,6 @@ export default {
   homePageRouter,
   docsRouter,
   opiRouter,
-  messmenuUploadRouter
+  messmenuUploadRouter,
+  gatelogRouter
 };

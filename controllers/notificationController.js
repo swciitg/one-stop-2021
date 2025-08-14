@@ -1,5 +1,5 @@
 import firebase from "firebase-admin";
-import serviceAccount from "../config/push-notification-key.json" assert { type: "json" };
+import serviceAccount from "../config/push-notification-key.json" with { type: "json" };
 import { body, matchedData } from "express-validator";
 import userNotifTokenModel from "../models/userNotifTokenModel.js";
 import { sendToAllFirebaseTopicName } from "../helpers/constants.js";
