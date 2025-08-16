@@ -1,12 +1,12 @@
-const express = require('express');
-const { createNew, checkOPIStatus} = require('../../controllers/habControllers/opiResponseController');
-const { getAllSMCEmails } = require('../../controllers/habControllers/habAdminController');
-const { restrictIfGuest, verifyUserRequest } = require('../../middlewares/user.auth');
+import express from 'express';
+import { createNew, checkOPIStatus } from '../../controllers/habControllers/opiResponseController.js';
+import { getAllSMCEmails } from '../../controllers/habControllers/habAdminController.js';
+import { restrictIfGuest, verifyUserRequest } from '../../middlewares/user.auth.js';
 
 const opiRouter = express.Router();
 
 opiRouter.post('/mess/opi', verifyUserRequest, restrictIfGuest, createNew);
 opiRouter.get('/mess/opi/status', verifyUserRequest, restrictIfGuest, checkOPIStatus);
-opiRouter.get('/mess/opi/smc',verifyUserRequest, getAllSMCEmails);
+opiRouter.get('/mess/opi/smc', verifyUserRequest, getAllSMCEmails);
 
-module.exports = { opiRouter };
+export { opiRouter };

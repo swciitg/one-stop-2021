@@ -1,8 +1,8 @@
-const contactModel = require("../models/hospitalContact");
+import Hospital from "../models/hospitalContact.js";
 
-exports.getHospitalContacts = async (req, res) => {
+export async function getHospitalContacts(req, res) {
     try {
-        const contacts = await contactModel.find().populate('name');  // name is coming form contactModel
+        const contacts = await Hospital.find().populate('name');  // name is coming form contactModel
         res.status(200).json(contacts);
     } catch (error) {
         console.log(error.message)

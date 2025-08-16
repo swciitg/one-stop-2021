@@ -1,6 +1,6 @@
-const roleModel = require("../models/role");
+import roleModel from "../models/role.js";
 
-exports.createRole = (req, res) => {
+export const createRole = (req, res) => {
   roleModel.findOne({ role: req.body.role }).then((role) => {
     if (role) {
       res.send({ message: "Role already exits" });
@@ -18,13 +18,13 @@ exports.createRole = (req, res) => {
   });
 };
 
-exports.getAllRoles = (req, res) => {
+export const getAllRoles = (req, res) => {
   roleModel.find().then((data) => {
     res.json(data);
   });
 };
 
-exports.updateRole = (req, res) => {
+export const updateRole = (req, res) => {
   const id = req.params.id;
   roleModel.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
@@ -32,7 +32,7 @@ exports.updateRole = (req, res) => {
     });
 };
 
-exports.deletemanyRoles = (req,res) => {
+export const deletemanyRoles = (req,res) => {
   const arr= req.body.id;
 
   if(typeof(arr) != "string"){

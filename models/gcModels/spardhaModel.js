@@ -1,6 +1,8 @@
-const mongoose = require("mongoose");
-require('mongoose-double')(mongoose);
-const { allIITGHostelsGC } = require("../../helpers/constants");
+import mongoose from "mongoose";
+import mongooseDouble from "mongoose-double";
+import { allIITGHostelsGC } from "../../helpers/constants.js";
+
+mongooseDouble(mongoose);
 
 const hostelOverallStandingsPointsSchema = new mongoose.Schema({
     "hostelName" : {
@@ -102,5 +104,8 @@ const spardhaEventModelSchema = new mongoose.Schema({
     }
 });
 
-module.exports = {"spardhaEventModel" : mongoose.model("spardhaEventSchedule",spardhaEventModelSchema),"spardhaResultModel":mongoose.model("spardhaResults",spardhaResultsSchema),"spardhaOverallStandingsModel" : mongoose.model("spardhaOverallStandingsModel",spardhaOverallStandingSchema)};
+const spardhaEventModel = mongoose.model("spardhaEventSchedule", spardhaEventModelSchema);
+const spardhaResultModel = mongoose.model("spardhaResults", spardhaResultsSchema);
+const spardhaOverallStandingsModel = mongoose.model("spardhaOverallStandingsModel", spardhaOverallStandingSchema);
 
+export { spardhaEventModel, spardhaResultModel, spardhaOverallStandingsModel };

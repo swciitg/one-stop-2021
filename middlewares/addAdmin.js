@@ -1,14 +1,14 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
 
-const mongoose = require("mongoose");
-const express = require("express");
-const jwt = require("jsonwebtoken");
+import mongoose from "mongoose";
+import express from "express";
+import jwt from "jsonwebtoken";
 const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
 // console.log({super_admins})
 
-exports.checkIfModeratorMiddleware = (req,res,next) => {
+export const checkIfModeratorMiddleware = (req,res,next) => {
     if(req.headers["moderator-key"]===process.env.MODERATOR_KEY){
         next();
     }
@@ -17,7 +17,7 @@ exports.checkIfModeratorMiddleware = (req,res,next) => {
     }
 }
 
-exports.checkSuperAdmin = async (req, res, next) => {
+export const checkSuperAdmin = async (req, res, next) => {
     try {
         const email = req.body.email;
         console.log("email = ", email);

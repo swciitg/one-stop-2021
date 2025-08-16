@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { allIITGHostels } = require("../../helpers/constants");
+import mongoose from "mongoose";
+import { allIITGHostels } from "../../helpers/constants.js";
 
 const messSchema = new mongoose.Schema({
   messName: {
@@ -21,4 +21,4 @@ const messSchema = new mongoose.Schema({
 
 const Mess = mongoose.model("Mess", messSchema);
 
-module.exports = { Mess };
+export { Mess };

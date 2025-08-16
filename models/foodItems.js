@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-var Scraper = require("images-scraper");
+import mongoose from "mongoose";
+import Scraper from "images-scraper";
 
 const foodItemsSchema = new mongoose.Schema({
   name: {
@@ -13,9 +13,9 @@ const foodItemsSchema = new mongoose.Schema({
   image: String
 });
 
-// foodItemsSchema.pre('save',async function(){
+// foodItemsSchema.pre('save', async function () {
 //   console.log(this.image);
-//   if(this.image === null){
+//   if (this.image === null) {
 //     const google = new Scraper({
 //       puppeteer: {
 //         headless: true,
@@ -28,4 +28,4 @@ const foodItemsSchema = new mongoose.Schema({
 
 const foodItems = mongoose.model("foodItem", foodItemsSchema);
 
-module.exports = foodItems;
+export default foodItems;

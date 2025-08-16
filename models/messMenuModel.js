@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const { allIITGHostels } = require("../helpers/constants");
-const { updateMessMenuInLastUpdateDocument } = require("../controllers/lastUpdateController");
+import mongoose from "mongoose";
+import { allIITGHostels } from "../helpers/constants.js";
+import { updateMessMenuInLastUpdateDocument } from "../controllers/lastUpdateController.js";
 
 const mealSchema = new mongoose.Schema({
     mealDescription: { 
@@ -18,15 +18,14 @@ const mealSchema = new mongoose.Schema({
     }
 });
 
-mealSchema.post('validate',async function(next){
+mealSchema.post('validate', async function(next) {
     console.log(this);
-    if(this.startTiming.getTime()>this.endTiming.getTime()){
-        throw new Error("Start time cannot be ahead of End time")
-    }
-    else if(this.endTiming.getTime()-this.startTiming.getTime()>4*60*60*1000){ // 4 hours
+    if (this.startTiming.getTime() > this.endTiming.getTime()) {
+        throw new Error("Start time cannot be ahead of End time");
+    } else if (this.endTiming.getTime() - this.startTiming.getTime() > 4 * 60 * 60 * 1000) { // 4 hours
         throw new Error("meal duration cannot be more than 4 hours");
     }
-    this.startTiming
+    this.startTiming;
 });
 
 const dayMenuSchema = new mongoose.Schema({
@@ -80,17 +79,16 @@ const messMenuSchema = new mongoose.Schema({
     }
 });
 
-messMenuSchema.pre('save',async function(){
+messMenuSchema.pre('save', async function() {
     await updateMessMenuInLastUpdateDocument();
 });
 
-messMenuSchema.pre('findOneAndRemove',async function(){ // adminjs calls findOneAndRemove internally
+messMenuSchema.pre('findOneAndRemove', async function() { // adminjs calls findOneAndRemove internally
     await updateMessMenuInLastUpdateDocument();
 });
 
-messMenuSchema.pre('findOneAndUpdate',async function(){ // // adminjs calls findOneAndUpdate internally
+messMenuSchema.pre('findOneAndUpdate', async function() { // adminjs calls findOneAndUpdate internally
     await updateMessMenuInLastUpdateDocument();
 });
 
-
-module.exports = mongoose.model("messMenu", messMenuSchema);
+export default mongoose.model("messMenu", messMenuSchema);

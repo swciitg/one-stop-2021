@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const roles = require("../admin_panel/roles");
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import roles from "../admin_panel/roles.js";
 
 const adminSchema = new mongoose.Schema({
     email: {
@@ -60,4 +60,4 @@ adminSchema.methods.comparePassword = async function (candidatePassword) {
 
 const adminModel = mongoose.model("onestopAdmin", adminSchema);
 
-module.exports = adminModel;
+export default adminModel;

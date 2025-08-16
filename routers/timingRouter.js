@@ -1,10 +1,10 @@
-const express = require("express");
+import express from "express";
+import * as Controller from "../controllers/timingController.js";
+import { verifyUserRequest } from "../middlewares/user.auth.js";
 
 const timingRouter = express.Router();
-const Controller = require("../controllers/timingController");
-const { verifyUserRequest } = require("../middlewares/user.auth");
-timingRouter.get("/ferrytimings",verifyUserRequest, Controller.getferrytiming);
 
-timingRouter.get("/busStops",verifyUserRequest, Controller.getbusStop);
+timingRouter.get("/ferrytimings", verifyUserRequest, Controller.getferrytiming);
+timingRouter.get("/busStops", verifyUserRequest, Controller.getbusStop);
 
-module.exports =  timingRouter ;
+export default timingRouter;

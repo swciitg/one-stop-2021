@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
-require('mongoose-double')(mongoose);
+import mongoose from 'mongoose';
+import mongooseDouble from 'mongoose-double';
+mongooseDouble(mongoose);
 
 const gcHostelWisePointsSchema = new mongoose.Schema({
-    "hostelName" : {
+    "hostelName": {
         type: String,
         required: true
     },
@@ -26,58 +27,59 @@ const gcHostelWisePointsSchema = new mongoose.Schema({
 
 const gcCompetitionsStoreSchema = new mongoose.Schema({
     // store all the event names, overall gc points, admins emails for gc
-    "overallGcStandings" : {
+    "overallGcStandings": {
         type: [gcHostelWisePointsSchema],
-        default:[]
+        default: []
     },
-    "spardha_events" : {
+    "spardha_events": {
         type: Array,
-        default:[]
+        default: []
     },
-    "kriti_events" : {
+    "kriti_events": {
         type: Array,
-        default:[]
+        default: []
     },
-    "manthan_events" : {
+    "manthan_events": {
         type: Array,
-        default:[]
+        default: []
     },
-    "sahyog_events" : {
+    "sahyog_events": {
         type: Array,
-        default:[]
+        default: []
     },
     "spardha_admins": {
         type: Array,
-        default:[]
+        default: []
     },
     "kriti_admins": {
         type: Array,
-        default:[]
+        default: []
     },
     "manthan_admins": {
         type: Array,
-        default:[]
+        default: []
     },
     "sahyog_admins": {
         type: Array,
-        default:[]
+        default: []
     },
     "spardha_board_admins": {
         type: Array,
-        default:[]
+        default: []
     },
     "kriti_board_admins": {
         type: Array,
-        default:[]
+        default: []
     },
     "manthan_board_admins": {
         type: Array,
-        default:[]
+        default: []
     },
     "sahyog_board_admins": {
         type: Array,
-        default:[]
+        default: []
     }
 });
 
-module.exports = {"gcCompetitionsStoreModel" : mongoose.model("gcCompetitionsStore",gcCompetitionsStoreSchema),"gcHostelWisePoints" : mongoose.model("gcOverallHostelWisePoints",gcHostelWisePointsSchema)};
+export const gcCompetitionsStoreModel = mongoose.model("gcCompetitionsStore", gcCompetitionsStoreSchema);
+export const gcHostelWisePoints = mongoose.model("gcOverallHostelWisePoints", gcHostelWisePointsSchema);

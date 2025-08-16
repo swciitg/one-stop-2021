@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { allIITGHostelsGC, allIITGWelfareClubs } = require("../../helpers/constants");
+import mongoose from "mongoose";
+import { allIITGHostelsGC, allIITGWelfareClubs } from "../../helpers/constants.js";
 
 const sahyogHostelResultSchema = new mongoose.Schema({
     "hostelName": {
@@ -87,4 +87,4 @@ sahyogEventSchema.pre('save',function(){
     else this.points = 200;
 });
 
-module.exports = {"sahyogEventModel" : mongoose.model("sahyogEventSchedule",sahyogEventSchema)}
+export const sahyogEventModel = mongoose.model("sahyogEventSchedule", sahyogEventSchema);

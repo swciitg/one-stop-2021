@@ -1,8 +1,8 @@
-const nodemailer = require("nodemailer");
-const fs = require("fs");
-const { IITGHostelWardens, IITGHostelGSs, IITGHostelSSs, IITGHostelOffices, IITGHostelMSs } = require("../helpers/constants");
+import nodemailer from "nodemailer";
+import fs from "fs";
+import { IITGHostelWardens, IITGHostelGSs, IITGHostelSSs, IITGHostelOffices, IITGHostelMSs } from "../helpers/constants.js";
 
-let mailTransporter = nodemailer.createTransport({
+const mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
     auth: {
         user: process.env.HAB_EMAIL,
@@ -10,54 +10,49 @@ let mailTransporter = nodemailer.createTransport({
     }
 });
 
-const serviceTos = ["hostelservices_complaints@iitg.ac.in"]  
-const infraTos = ["hostelinfra_complaints@iitg.ac.in"]
-const generalTos = ["hostel_complaints@iitg.ac.in"]
+const serviceTos = ["hostelservices_complaints@iitg.ac.in"];
+const infraTos = ["hostelinfra_complaints@iitg.ac.in"];
+const generalTos = ["hostel_complaints@iitg.ac.in"];
 
-
-exports.submitHabComplaint = async (req,res) => {
+export const submitHabComplaint = async (req, res) => {
     console.log(req.body);
-    
-    if(req.body.problem === ""){
-        res.status(400).json({"error": "Feedback can't be empty"});
+
+    if (req.body.problem === "") {
+        res.status(400).json({ "error": "Feedback can't be empty" });
         return;
     }
 
     try {
-
         let recieverEmailsForCc = [req.body.email];
-        
         let recieverEmailsForTo = [];
-        
-        if(req.body.complaintType === "Infra"){
-            recieverEmailsForTo = recieverEmailsForTo.concat(infraTos)
-            recieverEmailsForTo.push(IITGHostelMSs[req.body.hostel])
-        }
-        else if(req.body.complaintType === "General"){
-            recieverEmailsForTo = recieverEmailsForTo.concat(generalTos)
-        }
-        else{
-            recieverEmailsForTo = recieverEmailsForTo.concat(serviceTos)
-            recieverEmailsForTo.push(IITGHostelSSs[req.body.hostel])
+
+        if (req.body.complaintType === "Infra") {
+            recieverEmailsForTo = recieverEmailsForTo.concat(infraTos);
+            recieverEmailsForTo.push(IITGHostelMSs[req.body.hostel]);
+        } else if (req.body.complaintType === "General") {
+            recieverEmailsForTo = recieverEmailsForTo.concat(generalTos);
+        } else {
+            recieverEmailsForTo = recieverEmailsForTo.concat(serviceTos);
+            recieverEmailsForTo.push(IITGHostelSSs[req.body.hostel]);
         }
 
-        recieverEmailsForTo.push(IITGHostelGSs[req.body.hostel])
-        recieverEmailsForTo.push(IITGHostelWardens[req.body.hostel])
-        recieverEmailsForTo.push(IITGHostelOffices[req.body.hostel])
+        recieverEmailsForTo.push(IITGHostelGSs[req.body.hostel]);
+        recieverEmailsForTo.push(IITGHostelWardens[req.body.hostel]);
+        recieverEmailsForTo.push(IITGHostelOffices[req.body.hostel]);
 
         let selectedAttachments = [];
 
-        req.body.files.forEach((element,index) => {
-            let filepath = __dirname + "/../files_folder/hab_complaint_files/" + element;
-            if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
+        req.body.files.forEach((element, index) => {
+            let filepath = new URL(`../files_folder/hab_complaint_files/${element}`, import.meta.url).pathname;
+            if (fs.existsSync(filepath)) selectedAttachments.push({ path: filepath });
             else console.log("not exists");
         });
 
-        console.log(recieverEmailsForTo,recieverEmailsForCc,selectedAttachments);
+        console.log(recieverEmailsForTo, recieverEmailsForCc, selectedAttachments);
 
         let mailDetails = {
             from: process.env.HAB_EMAIL,
-            subject: `${req.body.services} Feedback/Complaint ${req.body.complaintType==="Infra" ? `with complaint ID: ${req.body.complaintID}` : "" } from ${req.body.hostel} hostel by ${req.body.name} ${req.body.complaintType==="Infra" ? `on ${req.body.complaintDate}`: ""}`,
+            subject: `${req.body.services} Feedback/Complaint ${req.body.complaintType === "Infra" ? `with complaint ID: ${req.body.complaintID}` : ""} from ${req.body.hostel} hostel by ${req.body.name} ${req.body.complaintType === "Infra" ? `on ${req.body.complaintDate}` : ""}`,
             to: recieverEmailsForTo,
             cc: recieverEmailsForCc,
             attachments: selectedAttachments,
@@ -73,7 +68,7 @@ exports.submitHabComplaint = async (req,res) => {
                     </tr>
                     <tr>
                         <td style="padding: 20px;">
-                            <p>Dear ${req.body.complaintType==="Infra" ? "Maintenance" : (req.body.complaintType==="General" ? "General" : "Service")} Secretary of ${req.body.hostel} Hostel,</p>
+                            <p>Dear ${req.body.complaintType === "Infra" ? "Maintenance" : (req.body.complaintType === "General" ? "General" : "Service")} Secretary of ${req.body.hostel} Hostel,</p>
                             <p>This is an auto-generated email based on the response submitted by <strong>${req.body.name}</strong>.</p>
                         </td>
                     </tr>
@@ -91,8 +86,8 @@ exports.submitHabComplaint = async (req,res) => {
                             <strong>Hostel:</strong> ${req.body.hostel}<br>
                             <strong>Room No.:</strong> ${req.body.room_number}<br>
                             <strong>Phone No.:</strong> ${req.body.phone}<br>
-                            ${req.body.complaintType==="Infra" ? `<strong>Complaint ID:</strong> ${req.body.complaintID}<br>` : "" }
-                            ${req.body.complaintType==="Infra" ? `<strong>Complait Date:</strong> ${req.body.complaintDate}<br>`: ""}
+                            ${req.body.complaintType === "Infra" ? `<strong>Complaint ID:</strong> ${req.body.complaintID}<br>` : ""}
+                            ${req.body.complaintType === "Infra" ? `<strong>Complait Date:</strong> ${req.body.complaintDate}<br>` : ""}
                             </p>
                         </td>
                     </tr>
@@ -110,11 +105,11 @@ exports.submitHabComplaint = async (req,res) => {
                     <!-- Footer -->
                     <tr>
                         <td style="padding: 20px; border-top: 1px solid #dddddd;">
-                            <p>Requesting the Hostel office to please follow up with the ${req.body.complaintType==="Infra" ? "Maintenance" : (req.body.complaintType==="General" ? "General" : "Service")} Secretary ${req.body.complaintType!=="General" ? "and General Secretary " : ""} to ensure a response to the pending query if it remains unanswered.</p>
+                            <p>Requesting the Hostel office to please follow up with the ${req.body.complaintType === "Infra" ? "Maintenance" : (req.body.complaintType === "General" ? "General" : "Service")} Secretary ${req.body.complaintType !== "General" ? "and General Secretary " : ""} to ensure a response to the pending query if it remains unanswered.</p>
                             <p style="margin-top: 40px; text-align: center;">
                                 Thanks and Regards,<br>
-                                <strong>${req.body.complaintType==="Infra" ? "Aniket Banerjee" : (req.body.complaintType==="General" ? "" : "Himanshu Sharma")}</strong><br>
-                                <strong>${req.body.complaintType==="Infra" ? "Joint Secretary, HAB(Infrastructure)" : (req.body.complaintType==="General" ? "General Secretary, Hostel Affairs' Board" : "Joint Secretary, HAB(Services)")}</strong><br>
+                                <strong>${req.body.complaintType === "Infra" ? "Aniket Banerjee" : (req.body.complaintType === "General" ? "" : "Himanshu Sharma")}</strong><br>
+                                <strong>${req.body.complaintType === "Infra" ? "Joint Secretary, HAB(Infrastructure)" : (req.body.complaintType === "General" ? "General Secretary, Hostel Affairs' Board" : "Joint Secretary, HAB(Services)")}</strong><br>
                                 Indian Institute of Technology, Guwahati<br>
                                 Guwahati, Assam, 781039
                             </p>
@@ -124,16 +119,14 @@ exports.submitHabComplaint = async (req,res) => {
             </body>
             </html>
         `
-        }
+        };
 
-
-        mailTransporter.sendMail(mailDetails,(err,res) => {
+        mailTransporter.sendMail(mailDetails, (err, res) => {
             console.log(err);
         });
 
-        res.status(200).json({"success" : true});
+        res.status(200).json({ "success": true });
     } catch (error) {
-        res.status(500).json({"error": error});
+        res.status(500).json({ "error": error });
     }
-    
-}
+};

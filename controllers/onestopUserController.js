@@ -1,30 +1,32 @@
-const {body, matchedData, query} = require("express-validator");
-const onestopUserModel = require("../models/userModel");
-const jwt = require("jsonwebtoken");
-const {RefreshTokenError} = require("../errors/jwt.auth.error");
-const {
+import { body, matchedData, query } from "express-validator";
+import onestopUserModel from "../models/userModel.js";
+import jwt from "jsonwebtoken";
+import { RefreshTokenError } from "../errors/jwt.auth.error.js";
+import {
     guestUserName,
     guestUserEmail,
     guestUserRollNo,
     sendToAllFirebaseTopicName,
     defaultNotifCategoriesMap,
     NotificationCategories,
-} = require("../helpers/constants");
-const {
+} from "../helpers/constants.js";
+import {
     RequestValidationError,
-} = require("../errors/request.validation.error");
-const userNotifTokenModel = require("../models/userNotifTokenModel");
+} from "../errors/request.validation.error.js";
+import userNotifTokenModel from "../models/userNotifTokenModel.js";
+import firebase from "firebase-admin";
+import serviceAccount from "../config/push-notification-key.json" assert { type: "json" };
+import asyncHandler from "../middlewares/async.controllers.handler.js";
+import userPersonalNotifModel from "../models/userPersonalNotifModel.js";
+import { updateTopicSubscriptionOfUser } from "./notificationController.js";
+
 const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
-const firebase = require("firebase-admin");
-const serviceAccount = require("../config/push-notification-key.json");
+
 if (!firebase.apps.length)
     firebase.initializeApp({
         credential: firebase.credential.cert(serviceAccount),
     });
-const asyncHandler = require("../middlewares/async.controllers.handler");
-const userPersonalNotifModel = require("../models/userPersonalNotifModel");
-const {updateTopicSubscriptionOfUser} = require("./notificationController");
 
 let titleCase = (str) => {
     var splitStr = str.toLowerCase().split(" ");
@@ -35,26 +37,19 @@ let titleCase = (str) => {
     return splitStr.join(" ");
 };
 
-exports.titleCase = titleCase;
-
-let createOrFindOnestopUserID = async (name, outlookEmail, rollNo) => {
+export const createOrFindOnestopUserID = async (name, outlookEmail, rollNo) => {
     console.log(name, outlookEmail, rollNo);
     let onestopuser = await onestopUserModel.findOne({outlookEmail});
     console.log(onestopuser);
     if (onestopuser !== null) return onestopuser._id.toString(); // already a user exists
-    console.log("here");
     name = titleCase(name);
     onestopuser = onestopUserModel({name, outlookEmail, rollNo});
-    console.log(onestopuser);
     console.log("Created new user");
     await onestopuser.save();
-    console.log(onestopuser);
     return onestopuser._id.toString();
 };
 
-exports.createOrFindOnestopUserID = createOrFindOnestopUserID;
-
-exports.getGuestUserID = async function () {
+export const getGuestUserID = async function () {
     console.log(typeof createOrFindOnestopUserID);
     let id = await createOrFindOnestopUserID(
         guestUserName,
@@ -65,7 +60,7 @@ exports.getGuestUserID = async function () {
     return id;
 };
 
-let getUserTokensString = async (userid) => {
+export const getUserTokens = async (userid) => {
     const accessToken = jwt.sign({userid}, accessjwtsecret, {
         expiresIn: "10 days",
     });
@@ -75,19 +70,17 @@ let getUserTokensString = async (userid) => {
     return `${accessToken}/${refreshToken}`; // for outlook login
 };
 
-exports.getUserTokens = getUserTokensString;
-
-exports.getUserInfo = async (req, res, next) => {
+export const getUserInfo = async (req, res, next) => {
     let onestopuser = await onestopUserModel.findById(req.userid);
-    console.log(onestopuser);
+    console.log(`User found: ${onestopuser.outlookEmail}`);
     res.json(onestopuser);
 };
 
-exports.getUserId = async (req, res, next) => {
+export const getUserId = async (req, res, next) => {
     res.json({userId: req.userid});
 };
 
-exports.regenerateUserAccessToken = asyncHandler(async (req, res, next) => {
+export const regenerateUserAccessToken = asyncHandler(async (req, res, next) => {
     let refreshToken = req.headers.authorization.split(" ").slice(-1)[0];
     if (!refreshToken)
         next(new RequestValidationError("Refresh token not passed"));
@@ -111,8 +104,8 @@ exports.regenerateUserAccessToken = asyncHandler(async (req, res, next) => {
     } else next(new RequestValidationError("invalid user id found"));
 });
 
-exports.guestUserLogin = asyncHandler(async (req, res) => {
-    const guestUserID = await this.getGuestUserID();
+export const guestUserLogin = asyncHandler(async (req, res) => {
+    const guestUserID = await getGuestUserID();
     const accessToken = jwt.sign({userid: guestUserID}, accessjwtsecret, {
         expiresIn: "10 days",
     });
@@ -122,7 +115,7 @@ exports.guestUserLogin = asyncHandler(async (req, res) => {
     res.json({accessToken, refreshToken});
 });
 
-exports.updateOnestopUserValidate = [
+export const updateOnestopUserValidate = [
     query("deviceToken", "device Token").optional(), // every time profile update happens
     body("altEmail", "alt email is required").exists(),
     body("rollNo", "roll no is required").exists(),
@@ -143,7 +136,7 @@ exports.updateOnestopUserValidate = [
     body("cycleReg", "Cycle Registration number is required").optional(),
     body("subscribedMess", "subscribed mess is required").exists(),
 ];
-exports.updateOnestopUser = asyncHandler(async (req, res) => {
+export const updateOnestopUser = asyncHandler(async (req, res) => {
     let userid = req.userid;
     let data = matchedData(req, {locations: ["body"]});
     console.log(data);
@@ -167,11 +160,11 @@ exports.updateOnestopUser = asyncHandler(async (req, res) => {
     res.json({success: true, message: "Updated user data correctly"});
 });
 
-exports.postOnestopUserDeviceTokenValidate = [
+export const postOnestopUserDeviceTokenValidate = [
     body("deviceToken", "A device token is reqd").exists(),
 ];
 
-exports.postOnestopUserDeviceToken = asyncHandler(async (req, res) => {
+export const postOnestopUserDeviceToken = asyncHandler(async (req, res) => {
     // creates new device token model or update
     let body = matchedData(req, {locations: ["body"]});
     console.log(body);
@@ -205,12 +198,12 @@ exports.postOnestopUserDeviceToken = asyncHandler(async (req, res) => {
     res.json({success: true});
 });
 
-exports.updateOnestopUserDeviceTokenValidate = [
+export const updateOnestopUserDeviceTokenValidate = [
     body("oldToken", "old token is reqd").exists(),
     body("newToken", "new token is reqd").exists(),
 ];
 
-exports.updateOnestopUserDeviceToken = asyncHandler(async (req, res) => {
+export const updateOnestopUserDeviceToken = asyncHandler(async (req, res) => {
     // updates token already stored
     let body = matchedData(req, {locations: ["body"]});
     if (body.oldToken !== body.newToken) {
@@ -233,7 +226,7 @@ exports.updateOnestopUserDeviceToken = asyncHandler(async (req, res) => {
     res.json({success: true});
 });
 
-exports.getUserByEmail = async (req, res, next) => {
+export const getUserByEmail = async (req, res, next) => {
     const {email} = req.params;
     try {
         const onestopuser = await onestopUserModel.findOne({outlookEmail: email});
@@ -248,17 +241,17 @@ exports.getUserByEmail = async (req, res, next) => {
     }
 };
 
-exports.getUserPersonalNotifs = async (req, res) => {
+export const getUserPersonalNotifs = async (req, res) => {
     let userPersonalNotifs = await userPersonalNotifModel.find({userid: req.userid}).sort({createdAt: -1});
     res.json({userPersonalNotifs});
 }
 
-exports.deleteUserPersonalNotifs = async (req, res) => {
+export const deleteUserPersonalNotifs = async (req, res) => {
     await userPersonalNotifModel.deleteMany({userid: req.userid});
     res.json({success: true});
 }
 
-exports.updateOnestopUserNotifPrefsValidate = [
+export const updateOnestopUserNotifPrefsValidate = [
     body(NotificationCategories.lost, "lost pref is required").exists(),
     body(NotificationCategories.found, "found pref is required").exists(),
     body(NotificationCategories.buy, "buy pref is required").exists(),
@@ -266,7 +259,7 @@ exports.updateOnestopUserNotifPrefsValidate = [
     body(NotificationCategories.cabSharing, "cab sharing pref is required").exists(),
 ];
 
-exports.updateOnestopUserNotifPrefs = async (req, res) => {
+export const updateOnestopUserNotifPrefs = async (req, res) => {
     let data = matchedData(req, {locations: ["body"]});
     await updateTopicSubscriptionOfUser(data, req.userid);
     console.log("UPDATED SUBSCRIPTION");
@@ -275,7 +268,7 @@ exports.updateOnestopUserNotifPrefs = async (req, res) => {
     res.json({success: true});
 }
 
-exports.addBlockedFalseAndNotifPrefs = async (req, res) => {
+export const addBlockedFalseAndNotifPrefs = async (req, res) => {
     try {
         const onestopusers = await onestopUserModel.find();
         console.log(onestopusers);

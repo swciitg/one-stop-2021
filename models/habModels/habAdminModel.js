@@ -1,12 +1,11 @@
-const mongoose = require("mongoose");
-const { allIITGMess } = require("../../helpers/constants");
+import mongoose from "mongoose";
+import { allIITGMess } from "../../helpers/constants.js";
 
 // Remove NONE from allIITGMess if it exists
 const index = allIITGMess.indexOf("NONE");
 if (index > -1) {
     allIITGMess.splice(index, 1);
 }
-
 
 const smcHABSchemaDefinition = allIITGMess.reduce((acc, hostel) => {
     acc[hostel] = {
@@ -40,6 +39,5 @@ const habAdminSchema = new mongoose.Schema({
     smcEmails: {...smcHABSchemaDefinition},
 });
     
-
 const HabAdmin = mongoose.model("HabAdmin", habAdminSchema);
-module.exports = { HabAdmin };
+export { HabAdmin };

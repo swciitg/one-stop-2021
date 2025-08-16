@@ -1,10 +1,10 @@
-const homePage = require("../../models/homePageModel");
-const roles = require("../roles");
-const verifyRoles = require("../utils");
+import homePage from "../../models/homePageModel.js";
+import roles from "../roles.js";
+import verifyRoles from "../utils.js";
 
-let allowedRoles = [roles.SUPERADMIN]; // Only super admin allowed to change homepage image
+const allowedRoles = [roles.SUPERADMIN]; // Only super admin allowed to change homepage image
 
-module.exports = {
+export default {
     resource: homePage,
     options: {
         listProperties: ["cardsDataList"],

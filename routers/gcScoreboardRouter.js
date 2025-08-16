@@ -1,14 +1,7 @@
-const express = require("express");
-const gcScoreboardRouter = express.Router();
-const jwt = require("jsonwebtoken");
-const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
-const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
-console.log(accessjwtsecret, refreshjwtsecret);
-const {
-  gcScoreboardAuthMiddleware,
-} = require("../middlewares/gcScoreboardAuth");
-const { checkIfModeratorMiddleware } = require("../middlewares/addAdmin");
-const {
+import express from "express";
+import jwt from "jsonwebtoken";
+import { checkIfModeratorMiddleware } from "../middlewares/addAdmin.js";
+import {
   deleteAnEventSchedule,
   postSpardhaEvents,
   getSpardhaEvents,
@@ -24,16 +17,14 @@ const {
   postSpardhaOverallStandings,
   deleteSpardhaStanding,
   getSpardhaEventStandings,
-} = require("../controllers/gcScoreboard/spardhaController");
-const {
-  gcRequestsMiddleware,
-} = require("../middlewares/gcChampionshipMiddlewares");
-const { getGcScoreboardStore } = require("../helpers/gcScoreboardHelpers");
-const {
+} from "../controllers/gcScoreboard/spardhaController.js";
+import { gcRequestsMiddleware } from "../middlewares/gcChampionshipMiddlewares.js";
+import { getGcScoreboardStore } from "../helpers/gcScoreboardHelpers.js";
+import {
   postCompetitionAdmins,
   postCompetitionBoardAdmins,
-} = require("../controllers/gcScoreboard/gcController");
-const {
+} from "../controllers/gcScoreboard/gcController.js";
+import {
   getKritiEvents,
   postKritiEvents,
   getKritiEventsSchdedules,
@@ -45,8 +36,8 @@ const {
   deleteKritiEventResult,
   getKritiOverallStandings,
   getKritiEventStandings,
-} = require("../controllers/gcScoreboard/kritiController");
-const {
+} from "../controllers/gcScoreboard/kritiController.js";
+import {
   getSahyogEvents,
   postSahyogEvents,
   getSahyogOverallStandings,
@@ -58,9 +49,27 @@ const {
   getSahyogResults,
   addSahyogEventResult,
   deleteSahyogEventResult,
-} = require("../controllers/gcScoreboard/sahyogController");
-const { postManthanEvents, getManthanEventStandings, addManthanEventResult, deleteManthanEventResult, deleteManthanEventSchedule, getManthanEvents, getManthanEventsSchdedules, getManthanOverallStandings, getManthanResults, postManthanEventSchedule, updateManthanEventSchedule } = require("../controllers/gcScoreboard/manthanController");
-const { verifyUserRequest } = require("../middlewares/user.auth");
+} from "../controllers/gcScoreboard/sahyogController.js";
+import { 
+  postManthanEvents, 
+  getManthanEventStandings, 
+  addManthanEventResult, 
+  deleteManthanEventResult, 
+  deleteManthanEventSchedule, 
+  getManthanEvents, 
+  getManthanEventsSchdedules, 
+  getManthanOverallStandings, 
+  getManthanResults, 
+  postManthanEventSchedule, 
+  updateManthanEventSchedule 
+} from "../controllers/gcScoreboard/manthanController.js";
+import { verifyUserRequest } from "../middlewares/user.auth.js";
+
+const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
+const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
+console.log(accessjwtsecret, refreshjwtsecret);
+
+const gcScoreboardRouter = express.Router();
 
 async function getAuthEvents(email) {
   let gcCompetitionsStore = await getGcScoreboardStore();
@@ -391,4 +400,4 @@ gcScoreboardRouter.delete(
   deleteManthanEventResult
 );
 
-module.exports = { gcScoreboardRouter };
+export { gcScoreboardRouter };

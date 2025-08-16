@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { allIITGHostelsGC, allIITGTechClubs } = require("../../helpers/constants");
+import mongoose from "mongoose";
+import { allIITGHostelsGC, allIITGTechClubs } from "../../helpers/constants.js";
 
 const kritiHostelResultSchema = new mongoose.Schema({
     "hostelName": {
@@ -92,4 +92,4 @@ kritiEventSchema.pre('save',function(){
     else this.points = 150;
 });
 
-module.exports = {"kritiEventModel" : mongoose.model("kritiEventSchedule",kritiEventSchema)}
+export const kritiEventModel = mongoose.model("kritiEventSchedule", kritiEventSchema);

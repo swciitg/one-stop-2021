@@ -1,13 +1,13 @@
-const { TravelPostModel, TravelChatModel, ReplyPostModel } = require("../models/campusTravelModel");
-const nodeoutlook = require('nodejs-nodemailer-outlook');
-const { sendToDevice, sendToUser } = require("./notificationController");
-const userModel = require("../models/userModel");
-const asyncHandler = require("../middlewares/async.controllers.handler");
-const { NotificationCategories } = require("../helpers/constants");
+import { TravelPostModel, TravelChatModel, ReplyPostModel } from "../models/campusTravelModel.js";
+import { sendEmail } from 'nodejs-nodemailer-outlook';
+import { sendToUser } from "./notificationController.js";
+import * as onestopUserModel from "../models/userModel.js";
+import asyncHandler from "../middlewares/async.controllers.handler.js";
+import { NotificationCategories } from "../helpers/constants.js";
 
 const sendMailForTravelPostReply = async (replier_name, reciever_email, reciever_name, from, to, travelDateTime) => {
     console.log(reciever_name, replier_name, travelDateTime);
-    await nodeoutlook.sendEmail({
+    await sendEmail({
         auth: {
             user: process.env.SWC_EMAIL,
             pass: process.env.SWC_EMAIL_PASSWORD
@@ -19,7 +19,7 @@ const sendMailForTravelPostReply = async (replier_name, reciever_email, reciever
     });
 }
 
-exports.postTravel = async (req, res) => {
+export async function postTravel(req, res) {
     try {
         let travelDateTime = new Date(req.body.travelDateTime);
         let chatModel = new TravelChatModel();
@@ -65,7 +65,7 @@ function getFormattedDate(travelDateTime) {
     return date;
 }
 
-exports.getTravelPosts = async (req, res) => {
+export async function getTravelPosts(req, res) {
     try {
         if (req.query.travelDateTime === undefined) { // default when no filter selected
             let date = new Date();
@@ -108,7 +108,7 @@ exports.getTravelPosts = async (req, res) => {
     }
 }
 
-exports.deleteTravelPost = async (req, res) => {
+export async function deleteTravelPost(req, res) {
     try {
         console.log("FSJDFJKSDFJK");
         const id = req.query.travelPostId;
@@ -130,7 +130,7 @@ exports.deleteTravelPost = async (req, res) => {
     }
 }
 
-exports.deleteAllTravelPosts = async (req, res) => {
+export async function deleteAllTravelPosts(req, res) {
     try {
         await TravelPostModel.deleteMany();
         res.json({ "success": true });
@@ -140,7 +140,7 @@ exports.deleteAllTravelPosts = async (req, res) => {
     }
 }
 
-exports.getMyAds = async (req, res) => {
+export async function getMyAds(req, res) {
     try {
         const email = req.query.email;
         let myTravelPosts = await TravelPostModel.find({ "email": email });
@@ -151,7 +151,7 @@ exports.getMyAds = async (req, res) => {
     }
 }
 
-exports.getTravelPostChatReplies = async (req, res) => {
+export async function getTravelPostChatReplies(req, res) {
     try {
         const id = req.query.chatId;
         console.log(id);
@@ -166,12 +166,12 @@ exports.getTravelPostChatReplies = async (req, res) => {
 
 async function sendPostReplyNotif(title, replier, senderOutlook, recieverOutlook) {
     if (senderOutlook !== recieverOutlook){
-        let user = await userModel.findOne({ outlookEmail: recieverOutlook});
+        let user = await onestopUserModel.findOne({ outlookEmail: recieverOutlook});
         await sendToUser(user._id,NotificationCategories.cabSharing,title,`${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`);
     }
 }
 
-exports.postReplyChat = asyncHandler(async (req, res) => {
+export const postReplyChat = asyncHandler(async (req, res) => {
     console.log(req.body);
     const id = req.query.chatId;
     const data = req.body;

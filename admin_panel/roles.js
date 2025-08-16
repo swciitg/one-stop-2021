@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     MESS: "mess",
     MEDICAL: "medical",
     FOODOUTLET: "food outlet",

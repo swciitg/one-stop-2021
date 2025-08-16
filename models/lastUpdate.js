@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const {
   Schema
@@ -29,4 +29,4 @@ const lastUpdateSchema = new Schema({
 
 const LastUpdate = mongoose.model("lastupdate", lastUpdateSchema);
 
-module.exports = LastUpdate;
+export default LastUpdate;

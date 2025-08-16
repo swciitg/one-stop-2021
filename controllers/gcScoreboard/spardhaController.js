@@ -1,78 +1,93 @@
-const { getGcScoreboardStore, checkIfAdmin, checkIfBoardAdmin, ifValidEvent } = require("../../helpers/gcScoreboardHelpers");
-const { spardhaEventModel, spardhaOverallStandingsModel} = require("../../models/gcModels/spardhaModel");
-const mongoose = require("mongoose");
-const {totalSpardhaWomenPoints, allIITGWomenHostels, totalKritiPoints, totalSpardhaMenPoints, totalSahyogPoints, totalManthanPoints } = require("../../helpers/constants");
-require('mongoose-double')(mongoose);
+import mongoose from "mongoose";
+import mongooseDouble from "mongoose-double";
+import { 
+    getGcScoreboardStore, 
+    checkIfAdmin, 
+    checkIfBoardAdmin, 
+    ifValidEvent 
+} from "../../helpers/gcScoreboardHelpers.js";
+import { 
+    spardhaEventModel, 
+    spardhaOverallStandingsModel 
+} from "../../models/gcModels/spardhaModel.js";
+import { 
+    totalSpardhaWomenPoints, 
+    allIITGWomenHostels, 
+    totalKritiPoints, 
+    totalSpardhaMenPoints, 
+    totalSahyogPoints, 
+    totalManthanPoints 
+} from "../../helpers/constants.js";
 
-async function ifAuthorizedForSpardhaEventSchedules(eventId, email){
+mongooseDouble(mongoose);
+
+async function ifAuthorizedForSpardhaEventSchedules(eventId, email) {
     let spardhaEventSchedule = await spardhaEventModel.findById(eventId);
-    if(spardhaEventSchedule["posterEmail"] !== email && await checkIfBoardAdmin(email,"spardha")===false){
+    if (spardhaEventSchedule["posterEmail"] !== email && await checkIfBoardAdmin(email, "spardha") === false) {
         return false;
     }
     return true;
 }
 
-async function ifAuthorizedForSpardhaStandings(eventId, email){
+async function ifAuthorizedForSpardhaStandings(eventId, email) {
     let spardhaStanding = await spardhaOverallStandingsModel.findById(eventId);
-    if(spardhaStanding["posterEmail"] !== email && await checkIfBoardAdmin(email,"spardha")===false){
+    if (spardhaStanding["posterEmail"] !== email && await checkIfBoardAdmin(email, "spardha") === false) {
         return false;
     }
     return true;
 }
 
-exports.postSpardhaEvents= async (req, res) => {
+export async function postSpardhaEvents(req, res) {
     try {
         let spardhaEvents = req.body.events;
-        if(spardhaEvents===undefined){
-            res.status(400).json({ "success": false, "message": "Not valid parameters in request"});
+        if (spardhaEvents === undefined) {
+            res.status(400).json({ "success": false, "message": "Not valid parameters in request" });
             return;
         }
         const gcScoreboardStore = await getGcScoreboardStore();
         gcScoreboardStore.spardha_events = spardhaEvents;
         await gcScoreboardStore.save();
-        res.json({"success" : true, "message" : "Spardha events posted successfully","details" : gcScoreboardStore.spardha_events});
+        res.json({ "success": true, "message": "Spardha events posted successfully", "details": gcScoreboardStore.spardha_events });
     } catch (err) {
         res.status(500).json({ "success": false, "message": err.toString() });
     }
 }
 
-exports.getSpardhaEvents = async (req,res) => {
-    try{
+export async function getSpardhaEvents(req, res) {
+    try {
         let gcCompetitionsStore = await getGcScoreboardStore();
-        res.json({"success" : true, "details" : gcCompetitionsStore.spardha_events});
-    }
-    catch(err){
-        res.status(500).json({"success" : false,"message" : err.toString()});
+        res.json({ "success": true, "details": gcCompetitionsStore.spardha_events });
+    } catch (err) {
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
 }
 
-exports.getSpardhaEventsSchdedules = async (req, res) => {
-    try{
-        // console.log(typeof(req.query.forAdmin));
-        // console.log(req.body.email);
-        console.log(await checkIfAdmin(req.body.email,"spardha"), await checkIfBoardAdmin(req.body.email,"spardha"));
-        let filters = {"resultAdded" : false}; // filters for event schedules
-        if(req.query.forAdmin==="true" && await checkIfBoardAdmin(req.body.email,"spardha")===false){
-            filters["posterEmail"]=req.body.email;
+export async function getSpardhaEventsSchdedules(req, res) {
+    try {
+        console.log(await checkIfAdmin(req.body.email, "spardha"), await checkIfBoardAdmin(req.body.email, "spardha"));
+        let filters = { "resultAdded": false }; // filters for event schedules
+        if (req.query.forAdmin === "true" && await checkIfBoardAdmin(req.body.email, "spardha") === false) {
+            filters["posterEmail"] = req.body.email;
         }
         console.log(filters);
         const eventschedules = await spardhaEventModel.find(filters).sort({ "date": 1 }); // send all event schedules if no email passed or passed email belongs to board admin
         res.status(200).json({ "success": true, "details": eventschedules });
+    } catch (err) {
+        res.status(500).json({ "success": false, "message": err.toString() });
     }
-    catch(err){
-        res.status(500).json({ "success": false, "message" : err.toString() });
-    }
-};
+}
 
-exports.postSpardhaEventSchedule = async (req, res) => {
+// Continue migrating the rest of the functions similarly...
+
+export async function postSpardhaEventSchedule(req, res) {
     try {
-        if(await ifValidEvent(req.body.event,"spardha")===false){
-            res.status(406).json({ "success": false, "message": "Event not in list of spardha events"});
+        if (await ifValidEvent(req.body.event, "spardha") === false) {
+            res.status(406).json({ "success": false, "message": "Event not in list of spardha events" });
             return;
         }
         req.body.hostels.sort(); // sort hostel list
-        if((await spardhaEventModel.find({"event" : req.body.event,"category" : req.body.category,"stage":req.body.stage,"hostels":req.body.hostels})).length!==0){
-            res.status(406).json({ "success": false, "message" : "Schedule already added for these details"});
+        if ((await spardhaEventModel.find({ "event": req.body.event, "category": req.body.category, "stage": req.body.stage, "hostels": req.body.hostels })).length !== 0) {
+            res.status(406).json({ "success": false, "message": "Schedule already added for these details" });
             return;
         }
         req.body.date = new Date(req.body.date);
@@ -80,13 +95,11 @@ exports.postSpardhaEventSchedule = async (req, res) => {
         let spardhaEvent = new spardhaEventModel(req.body);
         await spardhaEvent.save();
         res.json({ "success": true });
-    }
-    catch (err) {
+    } catch (err) {
         res.status(500).json({ "success": false, "message": err.toString() });
     }
-};
-
-exports.getGcOverallStandings = async (req,res) => {
+}
+export async function getGcOverallStandings(req, res) {
     try{
         let gcCompetitionsStore = await getGcScoreboardStore();
         let gcStandings = [];
@@ -106,7 +119,7 @@ exports.getGcOverallStandings = async (req,res) => {
     }
 }
 
-exports.getSpardhaOverallStandings = async (req,res) => {
+export async function getSpardhaOverallStandings(req, res) { 
     try{
         let gcCompetitionsStore = await getGcScoreboardStore();
         let gcStandings = [];
@@ -122,7 +135,7 @@ exports.getSpardhaOverallStandings = async (req,res) => {
     }
 }
 
-exports.getSpardhaEventStandings = async (req,res) => {
+export async function getSpardhaEventStandings(req, res) {
     try{
         let eventsGcStandings = await spardhaOverallStandingsModel.find();
         if(req.query.forAdmin==="true" && await checkIfAdmin(req.body.email,"spardha")){
@@ -135,7 +148,7 @@ exports.getSpardhaEventStandings = async (req,res) => {
     }
 }
 
-exports.postSpardhaOverallStandings = async (req, res) => {
+export async function postSpardhaOverallStandings(req, res) {
     try {
         req.body.posterEmail = req.body.email;
         if(await ifValidEvent(req.body.event,"spardha")===false){
@@ -165,7 +178,7 @@ exports.postSpardhaOverallStandings = async (req, res) => {
     }
 }
 
-exports.updateSpardhaOverallStanding = async (req,res) => {
+export async function updateSpardhaOverallStanding(req,res) { // corrected function declaration
     try{
         let id = req.params.id;
         if(await ifAuthorizedForSpardhaStandings(id,req.body.email)===false){
@@ -204,7 +217,7 @@ exports.updateSpardhaOverallStanding = async (req,res) => {
     }
 }
 
-exports.deleteSpardhaStanding = async (req,res) => {
+export async function deleteSpardhaStanding(req,res) { // corrected function declaration
     try {
         const id = req.params.id;
         if(await ifAuthorizedForSpardhaStandings(id,req.body.email)===false){
@@ -228,7 +241,7 @@ exports.deleteSpardhaStanding = async (req,res) => {
     }
 }
 
-exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for updation
+export async function updateSpardhaEventSchedule(req, res) { // this is used for updation
     try {
         const id = req.params.id;
         console.log(req.body.email,id);
@@ -263,7 +276,7 @@ exports.updateSpardhaEventSchedule = async (req, res) => { // this is used for u
     }
 }
 
-exports.deleteAnEventSchedule = async (req, res) => {
+export async function deleteAnEventSchedule(req, res) { // corrected function declaration
     try {
         const id = req.params.id;
         let spardhaEventSchedule = await spardhaEventModel.findById(id);
@@ -278,7 +291,7 @@ exports.deleteAnEventSchedule = async (req, res) => {
     }
 }
 
-exports.getSpardhaResults = async (req,res) => {
+export async function getSpardhaResults(req,res) { // corrected function declaration
     try{
         console.log(await checkIfAdmin(req.body.email,"spardha"), await checkIfBoardAdmin(req.body.email,"spardha"));
         let filters = {"resultAdded" : true}; // filters for event schedules
@@ -294,7 +307,7 @@ exports.getSpardhaResults = async (req,res) => {
     }
 }
 
-exports.addSpardhaEventResult = async (req,res) => { // for result added and updation
+export async function addSpardhaEventResult(req,res) { // for result added and updation
     try{
         const id = req.params.id;
         if(await ifAuthorizedForSpardhaEventSchedules(id,req.body.email)===false){
@@ -312,7 +325,7 @@ exports.addSpardhaEventResult = async (req,res) => { // for result added and upd
     }
 }
 
-exports.deleteSpardhaEventResult = async (req,res) => {
+export async function deleteSpardhaEventResult(req,res) { // corrected function declaration
     try{
         const id = req.params.id;
         console.log(id);

@@ -1,24 +1,28 @@
-const express = require('express');
-const {routes} = require('../routes');
-const Controller = require('../controllers/foodOutletsController');
+import express from 'express';
+import * as Controller from '../controllers/foodOutletsController.js';
+import multer from "multer";
+import { restrictIfGuest, verifyUserRequest } from '../middlewares/user.auth.js';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const foodOutletsRouter = express.Router();
-const multer = require("multer");
-const { restrictIfGuest, verifyUserRequest } = require('../middlewares/user.auth');
+
 const fileStorageEngine = multer.diskStorage({
-    destination: (req,file,cb) => {
-        cb(null,__dirname + "/../files_folder/");
+    destination: (req, file, cb) => {
+        cb(null, __dirname + "/../files_folder/");
     },
-    filename: (req,file,cb) => {
+    filename: (req, file, cb) => {
       console.log(file);
         let parts = file.originalname.split(".");
         let fileExtension = parts[parts.length-1];
-        cb(null, "file." +  fileExtension);
+        cb(null, "file." + fileExtension);
     }
 });
+
 const upload = multer({storage: fileStorageEngine});
 
-foodOutletsRouter.get('/getAllOutlets',verifyUserRequest, Controller.getAllOutlets);
-foodOutletsRouter.post('/createOutletsList',verifyUserRequest,restrictIfGuest, upload.single("file"),Controller.createOutlet);
-module.exports = {
-    foodOutletsRouter
-};
+foodOutletsRouter.get('/getAllOutlets', verifyUserRequest, Controller.getAllOutlets);
+foodOutletsRouter.post('/createOutletsList', verifyUserRequest, restrictIfGuest, upload.single("file"), Controller.createOutlet);
+
+export { foodOutletsRouter };

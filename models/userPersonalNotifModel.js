@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const userPersonalNotifSchema = new mongoose.Schema({
     userid: {
@@ -17,6 +17,6 @@ const userPersonalNotifSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-},{timestamps: true});
+}, {timestamps: true});
 
-module.exports = mongoose.model("userPersonalNotifs",userPersonalNotifSchema);
+export default mongoose.model("userPersonalNotifs", userPersonalNotifSchema);

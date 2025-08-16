@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const topicNotifModelSchema = new mongoose.Schema({
     category: {
@@ -13,6 +13,6 @@ const topicNotifModelSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-},{timestamps: true});
+}, {timestamps: true});
 
-module.exports = mongoose.model("topicNotifs",topicNotifModelSchema);
+export default mongoose.model("topicNotifs", topicNotifModelSchema);

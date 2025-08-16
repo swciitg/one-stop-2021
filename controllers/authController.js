@@ -1,6 +1,9 @@
-const msal = require('@azure/msal-node');
-const request = require('request');
-const { createOrFindOnestopUserID, getUserTokens } = require('./onestopUserController');
+import * as msal from '@azure/msal-node';
+import request from 'request';
+import { createOrFindOnestopUserID, getUserTokens } from './onestopUserController.js';
+import dotenv from 'dotenv';
+dotenv.config();
+
 const REDIRECT_URI = process.env.API_URL+"/v3/auth/microsoft/redirect";
 const clientID = process.env.MICROSOFT_GRAPH_CLIENT_ID;
 const tenantID = "https://login.microsoftonline.com/" + process.env.MICROSOFT_GRAPH_TENANT_ID;
@@ -25,7 +28,7 @@ const config = {
 // Create msal application object
 const pca = new msal.ConfidentialClientApplication(config);
 
-exports.microsoftLogin = (req, res) => {
+export const microsoftLogin = (req, res) => {
   const authCodeUrlParameters = {
     scopes: ["user.read"],
     redirectUri: REDIRECT_URI,
@@ -38,7 +41,7 @@ exports.microsoftLogin = (req, res) => {
   }).catch((error) => console.log(JSON.stringify(error)));
 };
 
-exports.microsoftLoginRedirect = (req, res) => {
+export const microsoftLoginRedirect = (req, res) => {
   const tokenRequest = {
     code: req.query.code,
     scopes: ["user.read"],
@@ -55,7 +58,6 @@ exports.microsoftLoginRedirect = (req, res) => {
         "Authorization": "Bearer " + response.accessToken
       }
     }, async function (err, resp, body) {
-      console.log("here");
       if (err) {
         console.log(err);
         return res.render('authSuccessView.ejs', { userTokens: "ERROR OCCURED" });

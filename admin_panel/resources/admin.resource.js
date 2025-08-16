@@ -1,16 +1,16 @@
-const verifyRoles = require("../utils");
-const roles = require("../roles");
-const adminModel = require("../../models/adminModel");
+import verifyRoles from "../utils.js";
+import roles from "../roles.js";
+import adminModel from "../../models/adminModel.js";
 
-let allowedRoles = [roles.SUPERADMIN];
+const allowedRoles = [roles.SUPERADMIN];
 
-module.exports = {
+export default {
     resource: adminModel,
     options: {
-        listProperties: ["email","password","roles"],
-        filterProperties: ["email","password","roles"],
-        editProperties: ["email","password","roles"],
-        showProperties: ["email","password","roles"],
+        listProperties: ["email", "password", "roles"],
+        filterProperties: ["email", "password", "roles"],
+        editProperties: ["email", "password", "roles"],
+        showProperties: ["email", "password", "roles"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },

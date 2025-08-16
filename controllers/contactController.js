@@ -1,4 +1,5 @@
-const contactParentModel = require("../models/contactSection");
+import contactParentModel from "../models/contactSection.js";
+
 // const csv = require("csvtojson");
 // var multiparty = require("multiparty");
 // var form = new multiparty.Form();
@@ -76,7 +77,7 @@ const contactParentModel = require("../models/contactSection");
 //     });
 // };
 //get all contacts
-exports.getAllContacts = (req, res) => {
+export const getAllContacts = (req, res) => {
   contactParentModel
     .find()
     .then((data) => {

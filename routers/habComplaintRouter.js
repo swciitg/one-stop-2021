@@ -1,13 +1,14 @@
-const express = require("express");
-const upload = require("../helpers/multer_single_hab");
-const { submitHabComplaint } = require("../controllers/habComplaintController");
-const { restrictIfGuest, verifyUserRequest } = require("../middlewares/user.auth");
+import express from "express";
+import upload from "../helpers/multer_single_hab.js";
+import { submitHabComplaint } from "../controllers/habComplaintController.js";
+import { restrictIfGuest, verifyUserRequest } from "../middlewares/user.auth.js";
+
 const habComplaintRouter = express.Router();
 
-habComplaintRouter.post("/hab-complaint/file-upload",verifyUserRequest,upload.single("file"),(req,res) => {
-    res.json({"sucess" : true,"filename" : req.body.filename});
+habComplaintRouter.post("/hab-complaint/file-upload", verifyUserRequest, upload.single("file"), (req, res) => {
+    res.json({"sucess" : true, "filename" : req.body.filename});
 });
 
-habComplaintRouter.post("/hab-complaint/submit-request",verifyUserRequest,restrictIfGuest,submitHabComplaint);
+habComplaintRouter.post("/hab-complaint/submit-request", verifyUserRequest, restrictIfGuest, submitHabComplaint);
 
-module.exports = habComplaintRouter;
+export default habComplaintRouter;

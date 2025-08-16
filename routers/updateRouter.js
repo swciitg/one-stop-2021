@@ -1,8 +1,8 @@
-const express = require("express");
+import express from "express";
+import * as Controller from "../controllers/updateController.js";
 
 const updateRouter = express.Router();
-const Controller = require("../controllers/updateController");
 
 updateRouter.get("/lastDataUpdate", Controller.getLastUpdate);
 
-module.exports = { updateRouter };
+export { updateRouter };

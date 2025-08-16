@@ -1,16 +1,21 @@
-const verifyRoles = require("../utils");
-const roles = require("../roles");
-const contactSection = require("../../models/contactSection");
+import verifyRoles from "../utils.js";
+import roles from "../roles.js";
+import contactSection from "../../models/contactSection.js";
+import importExportFeature from '@adminjs/import-export';
+import {componentLoader} from '../ui/loader.js';
 
-let allowedRoles = [roles.SUPERADMIN, roles.CONTACTS];
+const allowedRoles = [roles.SUPERADMIN, roles.CONTACTS];
 
-module.exports = {
+export default {
     resource: contactSection,
+    features: [
+        importExportFeature({componentLoader}),
+    ],
     options: {
-        listProperties: ["sectionName","contacts"],
-        filterProperties: ["sectionName","contacts"],
-        editProperties: ["sectionName","contacts"],
-        showProperties: ["sectionName","contacts"],
+        listProperties: ["sectionName", "contacts"],
+        filterProperties: ["sectionName", "contacts"],
+        editProperties: ["sectionName", "contacts"],
+        showProperties: ["sectionName", "contacts"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },

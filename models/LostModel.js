@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const LostItemSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    date: { type: Date, default: Date.now},
+    date: { type: Date, default: Date.now },
     location: { type: String, required: true },
     phonenumber: { type: String, required: true },
     description: { type: String, required: true },
@@ -13,19 +13,4 @@ const LostItemSchema = new mongoose.Schema({
     username: { type: String, required: true },
 });
 
-module.exports = mongoose.model("LostItem", LostItemSchema);
-
-// const mongoose = require("mongoose");
-
-// const LostandFoundDetailsSchema = new mongoose.Schema({
-//     title: { type: String, required: true },
-//     date: { type: Date, default: Date.now},
-//     location: { type: String, required: true },
-//     phonenumber: { type: String, required: true },
-//     description: { type: String, required: true },
-//     link: { type: String, required: true },
- 
-    
-// });
-
-// module.exports = mongoose.model("LostandFoundDetails", LostandFoundDetailsSchema);
+export default mongoose.model("LostItem", LostItemSchema);

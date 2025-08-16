@@ -1,6 +1,8 @@
-const mongoose = require("mongoose");
-const { updateTimingInLastUpdateDocument } = require("../controllers/lastUpdateController");
+import mongoose from "mongoose";
+import { updateTimingInLastUpdateDocument } from "../controllers/lastUpdateController.js";
+
 const { Schema } = mongoose;
+
 const timingSchema = new Schema({
   type: {
     type: String,
@@ -33,18 +35,18 @@ const timingSchema = new Schema({
   },
 });
 
-timingSchema.pre('save',async function(){
+timingSchema.pre('save', async function () {
   await updateTimingInLastUpdateDocument();
 });
 
-timingSchema.pre('findOneAndRemove',async function(){ // adminjs calls findOneAndRemove internally
+timingSchema.pre('findOneAndRemove', async function () { // adminjs calls findOneAndRemove internally
   await updateTimingInLastUpdateDocument();
 });
 
-timingSchema.pre('findOneAndUpdate',async function(){ // // adminjs calls findOneAndUpdate internally
+timingSchema.pre('findOneAndUpdate', async function () { // adminjs calls findOneAndUpdate internally
   await updateTimingInLastUpdateDocument();
 });
 
 const transportTiming = mongoose.model("transportTiming", timingSchema);
 
-module.exports = transportTiming;
+export default transportTiming;

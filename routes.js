@@ -1,3 +1,4 @@
+
 // Global
 const HOME = '/';
 
@@ -19,4 +20,4 @@ const routes = {
   microsoftCallback: MICROSOFT_CALLBACK,
 };
 
-module.exports = { routes };
+export default routes;

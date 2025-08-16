@@ -1,7 +1,7 @@
-const { CustomError } = require("./custom.error");
+import { CustomError } from "./custom.error.js";
 
-exports.RequestValidationError = class RequestValidationError extends CustomError{
-    constructor(message){
-        super(message,400,"Bad request error");
+export class RequestValidationError extends CustomError {
+    constructor(message) {
+        super(message, 400, "Bad request error");
     }
 }

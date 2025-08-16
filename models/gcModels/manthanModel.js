@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { allIITGHostelsGC } = require("../../helpers/constants");
+import mongoose from "mongoose";
+import { allIITGHostelsGC } from "../../helpers/constants.js";
 
 const manthanHostelResultSchema = new mongoose.Schema({
   hostelName: {
@@ -12,11 +12,11 @@ const manthanHostelResultSchema = new mongoose.Schema({
     required: true,
   },
   secondaryScore: {
-    type: String
+    type: String,
   },
   points: {
-    type: mongoose.Schema.Types.Double
-  }
+    type: mongoose.Schema.Types.Double,
+  },
 });
 
 const manthanEventSchema = new mongoose.Schema({
@@ -27,7 +27,18 @@ const manthanEventSchema = new mongoose.Schema({
   module: {
     type: String,
     required: true,
-    enum: ["Dance","Music","Content Creation","Photography","Literary","Dramatics","Film","Fine Arts","Debating","Culinary"],
+    enum: [
+      "Dance",
+      "Music",
+      "Content Creation",
+      "Photography",
+      "Literary",
+      "Dramatics",
+      "Film",
+      "Fine Arts",
+      "Debating",
+      "Culinary",
+    ],
   },
   date: {
     type: Date,
@@ -59,12 +70,15 @@ const manthanEventSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  link:{
+  link: {
     type: String,
     required: false,
-  }
+  },
 });
 
-module.exports = {
-  manthanEventModel: mongoose.model("manthanEventSchedule", manthanEventSchema),
-};
+const manthanEventModel = mongoose.model(
+  "manthanEventSchedule",
+  manthanEventSchema
+);
+
+export { manthanEventModel };

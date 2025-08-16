@@ -1,7 +1,7 @@
-const LastUpadte = require("../models/lastUpdate");
+import LastUpdate from "../models/lastUpdate.js";
 
-exports.getLastUpdate = (req, res) => {
-  LastUpadte.find().then((data) => {
+export const getLastUpdate = (req, res) => {
+  LastUpdate.find().then((data) => {
     res.json(data[0]);
   });
 };

@@ -1,13 +1,17 @@
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
+// Setup __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const uploadPath = path.join(__dirname, "/../files_folder/mess_menu_files/");
+      const uploadPath = path.join(__dirname, "../files_folder/mess_menu_files/");
       if (!fs.existsSync(uploadPath)) {
-        fs.mkdirSync(uploadPath); 
+        fs.mkdirSync(uploadPath, { recursive: true }); 
       }
       cb(null, uploadPath); 
     },
@@ -16,7 +20,7 @@ const storage = multer.diskStorage({
     }
   });
   
-  const upload = multer({
+const upload = multer({
     storage: storage,
     fileFilter: (req, file, cb) => {
       if (path.extname(file.originalname) !== '.xlsx') {
@@ -26,4 +30,4 @@ const storage = multer.diskStorage({
     }
 });
 
-module.exports = upload;
+export default upload;

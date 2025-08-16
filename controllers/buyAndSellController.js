@@ -1,12 +1,12 @@
-const buyModel = require("../models/buyModel");
-const sellModel = require("../models/sellModel");
-const fs = require("fs");
-const path = require("path");
-const uuid = require("uuid");
-const sharp = require("sharp");
-const mongoose = require("mongoose");
-const {NotificationCategories} = require("../helpers/constants");
-const {sendToAll, sendToATopic} = require("./notificationController");
+import buyModel from "../models/buyModel.js";
+import sellModel from "../models/sellModel.js";
+import fs from "fs";
+import path from "path";
+import * as uuid from "uuid";
+import sharp from "sharp";
+import mongoose from "mongoose";
+import {NotificationCategories} from "../helpers/constants.js";
+import {sendToAll, sendToATopic} from "./notificationController.js";
 
 function errorFxn(res, err) {
     console.log(err);
@@ -44,7 +44,7 @@ function errorFxn(res, err) {
 //   res.sendFile(imagePath);
 // };
 
-exports.getSellDetails = async (req, res) => {
+export const getSellDetails = async (req, res) => {
     try {
         console.log(req);
         const details = await sellModel.find();
@@ -57,7 +57,7 @@ exports.getSellDetails = async (req, res) => {
     }
 };
 
-exports.getSellPageDetails = async (req, res) => {
+export const getSellPageDetails = async (req, res) => {
     let page = req.query.page;
     const toSkip = (page - 1) * 5;
     const docsCount = await sellModel.countDocuments();
@@ -69,7 +69,7 @@ exports.getSellPageDetails = async (req, res) => {
     res.json({result: true, details: sellItems});
 }
 
-exports.deleteSellAll = async (req, res) => {
+export const deleteSellAll = async (req, res) => {
     await sellModel.deleteMany({});
     res.json({success: true});
 }
@@ -90,7 +90,7 @@ async function sendSellNotif(title, username, outlookEmail) {
     await sendToATopic(NotificationCategories.sell, notification, data);
 }
 
-exports.postSellDetails = async (req, res) => {
+export const postSellDetails = async (req, res) => {
     try {
         var {
             title,
@@ -206,7 +206,7 @@ exports.postSellDetails = async (req, res) => {
     }
 };
 
-exports.postSellRemoveDetails = async (req, res) => {
+export const postSellRemoveDetails = async (req, res) => {
     console.log("lkkjklj" + req.body);
     try {
         const {
@@ -239,7 +239,7 @@ exports.postSellRemoveDetails = async (req, res) => {
 
 // buy details
 
-exports.getBuyPageDetails = async (req, res) => {
+export const getBuyPageDetails = async (req, res) => {
     let page = req.query.page;
     const toSkip = (page - 1) * 5;
     const docsCount = await buyModel.countDocuments();
@@ -251,7 +251,7 @@ exports.getBuyPageDetails = async (req, res) => {
     res.json({result: true, details: buyItems});
 }
 
-exports.getBuyDetails = async (req, res) => {
+export const getBuyDetails = async (req, res) => {
     try {
         const details = await buyModel.find();
         details.sort(compare);
@@ -263,7 +263,7 @@ exports.getBuyDetails = async (req, res) => {
     }
 };
 
-exports.deleteBuyAll = async (req, res) => {
+export const deleteBuyAll = async (req, res) => {
     await buyModel.deleteMany({});
     res.json({success: true});
 }
@@ -284,7 +284,7 @@ async function sendBuyNotif(title, username, outlookEmail) {
     await sendToATopic(NotificationCategories.buy, notification, data);
 }
 
-exports.postBuyDetails = async (req, res) => {
+export const postBuyDetails = async (req, res) => {
     console.log(req.body);
     try {
         var {
@@ -396,7 +396,7 @@ exports.postBuyDetails = async (req, res) => {
     }
 };
 
-exports.postBuyRemoveDetails = async (req, res) => {
+export const postBuyRemoveDetails = async (req, res) => {
     try {
         const {
             id,
@@ -427,7 +427,7 @@ exports.postBuyRemoveDetails = async (req, res) => {
     }
 };
 
-exports.getMyAds = async (req, res) => {
+export const getMyAds = async (req, res) => {
     console.log(req.body);
     try {
         const {

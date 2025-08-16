@@ -1,43 +1,47 @@
-const LostModel = require("../models/LostModel");
-const FoundModel = require("../models/foundModel");
-const fs = require("fs");
-const path = require("path");
-const uuid = require("uuid");
-const sharp = require("sharp");
-const {sendToAll, sendToATopic} = require("./notificationController");
-const {NotificationCategories} = require("../helpers/constants");
+import LostModel from "../models/LostModel.js";
+import FoundModel from "../models/foundModel.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { v4 as uuidv4 } from "uuid";
+import sharp from "sharp";
+import { sendToAll, sendToATopic } from "./notificationController.js";
+import { NotificationCategories } from "../helpers/constants.js";
 
-exports.getAllImages = async (req, res) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const getAllImages = async (req, res) => {
     let files = fs.readdirSync("../images_folder/");
     let filenames = [];
     files.forEach((file) => {
         filenames.push(file.split(".")[0]);
     });
-    res.json({"details": filenames});
-}
+    res.json({ "details": filenames });
+};
 
 function errorFxn(res, err) {
     console.log(err);
-    return res.json({saved_successfully: false, image_safe: true, error: err});
+    return res.json({ saved_successfully: false, image_safe: true, error: err });
 }
 
-exports.getLostPageDetails = async (req, res) => {
+export const getLostPageDetails = async (req, res) => {
     let page = req.query.page;
     const toSkip = (page - 1) * 5;
     const docsCount = await LostModel.countDocuments();
     if (toSkip > docsCount) {
-        res.json({result: false, details: []});
+        res.json({ result: false, details: [] });
         return;
     }
-    const lostItems = await LostModel.find().sort({"date": -1}).skip(toSkip).limit(5);
-    res.json({result: true, details: lostItems});
-}
+    const lostItems = await LostModel.find().sort({ "date": -1 }).skip(toSkip).limit(5);
+    res.json({ result: true, details: lostItems });
+};
 
-exports.getLostDetails = async (req, res) => {
+export const getLostDetails = async (req, res) => {
     try {
         const details = await LostModel.find();
         details.sort(compare);
-        res.json({details: details});
+        res.json({ details: details });
         return;
     } catch (error) {
         console.log(error.message);
@@ -45,7 +49,6 @@ exports.getLostDetails = async (req, res) => {
 };
 
 async function sendLostNotif(title, username, outlookEmail) {
-
     let notification = {
         "title": `Lost: ${title}`,
         "body": `Added by ${username}(${outlookEmail})`
@@ -55,13 +58,12 @@ async function sendLostNotif(title, username, outlookEmail) {
         "category": NotificationCategories.lost,
         "title": `Lost: ${title}`,
         "body": `Added by ${username}(${outlookEmail})`
-    }
+    };
 
     await sendToATopic(NotificationCategories.lost, notification, data);
-
 }
 
-exports.postLostDetails = async (req, res) => {
+export const postLostDetails = async (req, res) => {
     try {
         var {
             title,
@@ -72,7 +74,7 @@ exports.postLostDetails = async (req, res) => {
             email,
             username,
         } = req.body;
-        const imageName = uuid.v4();
+        const imageName = uuidv4();
         const imagePath = path.resolve(
             __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
         );
@@ -113,7 +115,7 @@ exports.postLostDetails = async (req, res) => {
                 height: Math.floor(metadata.height / 2),
             })
             .withMetadata()
-            .toFormat("jpg", {mozjpeg: true})
+            .toFormat("jpg", { mozjpeg: true })
             .toFile(newImagePath);
         await sharp(imagePath)
             .resize({
@@ -125,7 +127,7 @@ exports.postLostDetails = async (req, res) => {
                 ),
             })
             .withMetadata()
-            .toFormat("jpg", {mozjpeg: true})
+            .toFormat("jpg", { mozjpeg: true })
             .toFile(compressedImagePath);
         await new LostModel({
             title,
@@ -143,13 +145,13 @@ exports.postLostDetails = async (req, res) => {
                 console.log(result);
             });
         await sendLostNotif(title, username, email);
-        return res.json({saved_successfully: true, image_safe: true});
+        return res.json({ saved_successfully: true, image_safe: true });
     } catch (error) {
         return errorFxn(res, error);
     }
 };
 
-exports.postLostRemoveDetails = async (req, res) => {
+export const postLostRemoveDetails = async (req, res) => {
     try {
         const {
             id,
@@ -182,7 +184,7 @@ exports.postLostRemoveDetails = async (req, res) => {
 
 // found details
 
-exports.getFoundPageDetails = async (req, res) => {
+export const getFoundPageDetails = async (req, res) => {
     let page = req.query.page;
     const toSkip = (page - 1) * 5;
     const docsCount = await FoundModel.countDocuments();
@@ -194,7 +196,7 @@ exports.getFoundPageDetails = async (req, res) => {
     res.json({result: true, details: foundItems});
 }
 
-exports.getfoundDetails = async (req, res) => {
+export const getfoundDetails = async (req, res) => {
     try {
         const details = await FoundModel.find();
         details.sort(compare);
@@ -204,7 +206,7 @@ exports.getfoundDetails = async (req, res) => {
     }
 };
 
-exports.addfoundForm = async (req, res) => {
+export const addfoundForm = async (req, res) => {
     try {
         return res.render("addfound");
     } catch (error) {
@@ -212,7 +214,7 @@ exports.addfoundForm = async (req, res) => {
     }
 };
 
-exports.claimFoundItem = async (req, res) => {
+export const claimFoundItem = async (req, res) => {
     console.log("fjkdfgh");
     try {
 
@@ -257,7 +259,7 @@ async function sendFoundNotif(title, username, outlookEmail) {
     await sendToATopic(NotificationCategories.found, notification, data);
 }
 
-exports.postfoundDetails = async (req, res) => {
+export const postfoundDetails = async (req, res) => {
     console.log(req.body);
     try {
         var {
@@ -350,7 +352,7 @@ exports.postfoundDetails = async (req, res) => {
     }
 };
 
-exports.updateFoundDetails = async (req, res) => {
+export const updateFoundDetails = async (req, res) => {
     try {
         const id = req.query.id;
         let updateData = req.body;
@@ -371,7 +373,7 @@ exports.updateFoundDetails = async (req, res) => {
     }
 }
 
-exports.postFoundRemoveDetails = async (req, res) => {
+export const postFoundRemoveDetails = async (req, res) => {
     try {
         const {
             id,
@@ -402,7 +404,7 @@ exports.postFoundRemoveDetails = async (req, res) => {
     }
 };
 
-exports.getMyAds = async (req, res) => {
+export const getMyAds = async (req, res) => {
     console.log(req.body);
     try {
         const {
@@ -432,7 +434,7 @@ exports.getMyAds = async (req, res) => {
     }
 };
 
-exports.deleteFoundAll = async (req, res) => {
+export const deleteFoundAll = async (req, res) => {
     await FoundModel.deleteMany({});
     res.json({success: true});
 }

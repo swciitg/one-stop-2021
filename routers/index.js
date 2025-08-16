@@ -1,28 +1,57 @@
 // Convenient wrapper around all controllers
 
-exports.emailRouter = require("./emailRouter");
-exports.contactRouter = require("./contactRouter");
-exports.timingRouter = require("./timingRouter");
-exports.authRouter = require("./authRouter");
-exports.roleRouter = require("./roleRouter");
-exports.foodItemsRouter = require("./foodItemsRouter");
-exports.foodOutletsRouter = require("./foodOutletsRouter");
-exports.LostAndFoundRouters = require("./lostAndFoundRouter");
-exports.messMenuRouter = require("./messMenuRouter");
-exports.updateRouter = require("./updateRouter");
-exports.buyAndSellRouter = require("./buyAndSellRouter");
-exports.imageRouter = require("./imageRouter");
-exports.newsRouter = require("./newsRouter");
-exports.campusTravelRouter = require("./campusTravel");
-exports.onestopUserRouter = require("./onsetopUser.routes");
-exports.notificationRouter = require("./notification.routes");
-exports.gcScoreboardRouter = require("./gcScoreboardRouter");
-exports.upspRouter = require("./upspRouter");
-exports.hospitalFeedbackRouter = require("./hospitalFeedbackRouter")
-exports.hospitalContactRouter = require("./hospitalContactsRouter")
-exports.hospitalTimetableRouter = require("./hospitalTimetableRouter")
-exports.habComplaintRouter = require("./habComplaintRouter");
-exports.homePage = require("./homePageRouter");
-exports.docsRouter = require("./docsRouter");
-exports.opiRouter = require("./habRoutes/opiRouter");
-exports.messmenuUploadRouter = require("./messmenuUploadRouter");
+import {emailRouter} from "./emailRouter.js";
+import {contactRouter} from "./contactRouter.js";
+import timingRouter from "./timingRouter.js";
+import authRouter from "./authRouter.js";
+import {roleRouter} from "./roleRouter.js";
+import {foodItemsRouter} from "./foodItemsRouter.js";
+import {foodOutletsRouter} from "./foodOutletsRouter.js";
+import LostAndFoundRouters from "./lostAndFoundRouter.js";
+import {messMenuRouter} from "./messMenuRouter.js";
+import {updateRouter} from "./updateRouter.js";
+import {buyAndSellRouter} from "./buyAndSellRouter.js";
+import {imageRouter} from "./imageRouter.js";
+import {newsRouter} from "./newsRouter.js";
+import {campusTravelRouter} from "./campusTravel.js";
+import onestopUserRouter from "./onsetopUser.routes.js";
+import notificationRouter from "./notification.routes.js";
+import {gcScoreboardRouter} from "./gcScoreboardRouter.js";
+import upspRouter from "./upspRouter.js";
+import hospitalFeedbackRouter from "./hospitalFeedbackRouter.js";
+import hospitalContactRouter from "./hospitalContactsRouter.js";
+import hospitalTimetableRouter from "./hospitalTimetableRouter.js";
+import habComplaintRouter from "./habComplaintRouter.js";
+import {homePageRouter} from "./homePageRouter.js";
+import {docsRouter} from "./docsRouter.js";
+import {opiRouter} from "./habRoutes/opiRouter.js";
+import messmenuUploadRouter from "./messmenuUploadRouter.js";
+
+export default {
+  emailRouter,
+  contactRouter,
+  timingRouter,
+  authRouter,
+  roleRouter,
+  foodItemsRouter,
+  foodOutletsRouter,
+  LostAndFoundRouters,
+  messMenuRouter,
+  updateRouter,
+  buyAndSellRouter,
+  imageRouter,
+  newsRouter,
+  campusTravelRouter,
+  onestopUserRouter,
+  notificationRouter,
+  gcScoreboardRouter,
+  upspRouter,
+  hospitalFeedbackRouter,
+  hospitalContactRouter,
+  hospitalTimetableRouter,
+  habComplaintRouter,
+  homePageRouter,
+  docsRouter,
+  opiRouter,
+  messmenuUploadRouter
+};

@@ -1,21 +1,24 @@
-exports.BASEURL = process.env.BASE_URL + "v3/";
+import dotenv from 'dotenv';
+dotenv.config();
 
-exports.ADMINPANELROOT = this.BASEURL + 'admin';
+export const BASEURL = process.env.BASE_URL + "v3/";
 
-exports.guestUserEmail = "guest@onestop.swc.iitg.ac.in";
-exports.guestUserName = "Guest";
-exports.guestUserRollNo = '2110000000';
+export const ADMINPANELROOT = BASEURL + 'admin';
 
-exports.adminRoles = ["super", "board", "mmc", "hmc", "club"]
+export const guestUserEmail = "guest@onestop.swc.iitg.ac.in";
+export const guestUserName = "Guest";
+export const guestUserRollNo = '2110000000';
 
-exports.allIITGHostelsGC = ["Brahmaputra", "Kameng", "Gaurang", "Dihing", "Barak", "Kapili", "Lohit", "Manas", "Married Scholars (Men)", "Married Scholars (Women)", "Siang", "Subansiri", "Umiam", "Dhansiri", "Disang (Men)", "Disang (Women)"];
+export const adminRoles = ["super", "board", "mmc", "hmc", "club"];
+
+export const allIITGHostelsGC = ["Brahmaputra", "Kameng", "Gaurang", "Dihing", "Barak", "Kapili", "Lohit", "Manas", "Married Scholars (Men)", "Married Scholars (Women)", "Siang", "Subansiri", "Umiam", "Dhansiri", "Disang (Men)", "Disang (Women)"];
 //exports.allIITGHostels = ["Brahmaputra","Kameng","Dihing","Barak","Kapili","Lohit","Manas","Married Scholars","Siang","Subansiri","Umiam","Dhansiri","Disang"];
-exports.allIITGWomenHostels = ["Married Scholars (Women)", "Subansiri", "Dhansiri", "Disang (Women)"];
-exports.allIITGTechClubs = ["Coding Club", "CnA Club", "E-Cell", "Robotics Club", "Aeromodelling Club", "Automobile Club", "Electronics Club", "IITG.AI", "Gamedev and ESports", "Equinox", "FEC", "Whitespace", "Acumen", "4i Labs"];
-exports.allIITGWelfareClubs = ["Academic Initiatives Club", "Rights and Responsibilities Club", "Red Ribbon Club", "Youth Empowerment Club", "Saathi", "Social Service Club", "Substance Abuse Awareness Club"];
-exports.allIITGHostels = ["LOHIT", "BRAHMAPUTRA", "DISANG", "KAMENG", "BARAK", "MANAS", "DIHING", "UMIAM", "SIANG", "KAPILI", "DHANSIRI", "SUBANSIRI", "MSH", "GAURANG", "DIBANG", "NON-HOSTELLER"];
-exports.allIITGMess = ["LOHIT", "BRAHMAPUTRA", "DISANG", "KAMENG", "BARAK", "MANAS", "DIHING", "UMIAM", "SIANG", "KAPILI", "DHANSIRI", "SUBANSIRI", "GAURANG", "DIBANG", "NONE"];
-exports.allIITGGymkhanaBoards = {
+export const allIITGWomenHostels = ["Married Scholars (Women)", "Subansiri", "Dhansiri", "Disang (Women)"];
+export const allIITGTechClubs = ["Coding Club", "CnA Club", "E-Cell", "Robotics Club", "Aeromodelling Club", "Automobile Club", "Electronics Club", "IITG.AI", "Gamedev and ESports", "Equinox", "FEC", "Whitespace", "Acumen", "4i Labs"];
+export const allIITGWelfareClubs = ["Academic Initiatives Club", "Rights and Responsibilities Club", "Red Ribbon Club", "Youth Empowerment Club", "Saathi", "Social Service Club", "Substance Abuse Awareness Club"];
+export const allIITGHostels = ["LOHIT", "BRAHMAPUTRA", "DISANG", "KAMENG", "BARAK", "MANAS", "DIHING", "UMIAM", "SIANG", "KAPILI", "DHANSIRI", "SUBANSIRI", "MSH", "GAURANG", "DIBANG", "NON-HOSTELLER"];
+export const allIITGMess = ["LOHIT", "BRAHMAPUTRA", "DISANG", "KAMENG", "BARAK", "MANAS", "DIHING", "UMIAM", "SIANG", "KAPILI", "DHANSIRI", "SUBANSIRI", "GAURANG", "DIBANG", "NONE"];
+export const allIITGGymkhanaBoards = {
     "Sports Board": "sportsec@iitg.ac.in",
     "Students Web Committee (SWC)": "swc@iitg.ac.in",
     "Students Academic Board (SAB)": "sab@iitg.ac.in",
@@ -24,9 +27,9 @@ exports.allIITGGymkhanaBoards = {
     "Welfare Board": "gensec_welfare@iitg.ac.in",
     "Student Alumni Interaction Linkage (SAIL)": "sail@iitg.ac.in",
     "Vice President, Students Gymkhana": "vp@iitg.ac.in"
-}
+};
 
-exports.IITGAdminDepts = {
+export const IITGAdminDepts = {
     "Maintainence": "Grp_sgc_maintenance@iitg.ac.in",
     "Services": "Grp_sgc_eug@iitg.ac.in",
     "Finance": "Grp_sgc_finance@iitg.ac.in",
@@ -34,9 +37,9 @@ exports.IITGAdminDepts = {
     "Rights and Responsiblities": "Grp_sgc_rnr@iitg.ac.in",
     "RTI (Right to Information)": "Grp_sgc_steering@iitg.ac.in",
     "Medical Related Issues": "Grp_sgc_mug@iitg.ac.in"
-}
+};
 
-exports.IITGHostelSSs = {
+export const IITGHostelSSs = {
     "BARAK" : "ss.barak@iitg.ac.in",
     "BRAHMAPUTRA" : "ss.brahmaputra@iitg.ac.in",
     "DHANSIRI" : "ss.dhansiri@iitg.ac.in",
@@ -52,9 +55,9 @@ exports.IITGHostelSSs = {
     "UMIAM" : "ss.umiam@iitg.ac.in",
 
     // "Disang Women" : "ss.disangG@iitg.ac.in"
-}
+};
 
-exports.IITGHostelGSs = {
+export const IITGHostelGSs = {
     "BARAK" : "gs.barak@iitg.ac.in",
     "BRAHMAPUTRA" : "gs.brahmaputra@iitg.ac.in",
     "DHANSIRI" : "gs.dhansiri@iitg.ac.in",
@@ -70,9 +73,9 @@ exports.IITGHostelGSs = {
     "UMIAM" : "gs.umiam@iitg.ac.in",
 
     // "Disang Women" : "gs_disang.gw@iitg.ac.in"
-}
+};
 
-exports.IITGHostelWardens = {
+export const IITGHostelWardens = {
     "BARAK" : "warden.barak@iitg.ac.in",
     "BRAHMAPUTRA" : "warden.brahmaputra@iitg.ac.in",
     "DHANSIRI" : "warden.dhansiri@iitg.ac.in",
@@ -88,9 +91,9 @@ exports.IITGHostelWardens = {
     "UMIAM" : "warden.umiam@iitg.ac.in",
 
     // "Disang Women" : "warden.disang_gw@iitg.ac.in"
-}
+};
 
-exports.IITGHostelOffices = {
+export const IITGHostelOffices = {
     "BARAK" : "barak_off@iitg.ac.in",
     "BRAHMAPUTRA" : "brahmaputra_off@iitg.ac.in",
     "DHANSIRI" : "dhansiri_off@iitg.ac.in",
@@ -106,9 +109,9 @@ exports.IITGHostelOffices = {
     "UMIAM" : "umiam_off@iitg.ac.in",
 
     // "Disang Women" : "disang.gw_off@iitg.ac.in"
-}
+};
 
-exports.IITGHostelMSs = {
+export const IITGHostelMSs = {
     "BARAK" : "ms.barak@iitg.ac.in",
     "BRAHMAPUTRA" : "ms.brahmaputra@iitg.ac.in",
     "DHANSIRI" : "ms.dhansiri@iitg.ac.in",
@@ -124,18 +127,17 @@ exports.IITGHostelMSs = {
     "UMIAM" : "ms.umiam@iitg.ac.in",
 
     // "Disang Women" : "ms.disangG@iitg.ac.in"
-}
+};
 
-exports.miscellaneousRecievers = []
+export const miscellaneousRecievers = [];
 
-exports.totalSpardhaWomenPoints = 190;
-exports.totalSpardhaMenPoints = 230;
-exports.totalKritiPoints = 9350;
-exports.totalSahyogPoints = 2850;
-exports.totalManthanPoints = 1290;
+export const totalSpardhaWomenPoints = 190;
+export const totalSpardhaMenPoints = 230;
+export const totalKritiPoints = 9350;
+export const totalSahyogPoints = 2850;
+export const totalManthanPoints = 1290;
 
-
-exports.NotificationCategories = {
+export const NotificationCategories = {
     lost: "lost",
     found: "found",
     buy: "buy",
@@ -144,14 +146,13 @@ exports.NotificationCategories = {
     announcement: "announcement"
 };
 
-exports.defaultNotifCategoriesMap = {
+export const defaultNotifCategoriesMap = {
     "lost": true,
     "found": true,
     "buy": true,
     "sell": true,
     "cabSharing": true,
     "announcement": true
-}
+};
 
-
-exports.sendToAllFirebaseTopicName = "all";
+export const sendToAllFirebaseTopicName = "all";

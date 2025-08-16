@@ -1,15 +1,19 @@
-const cron = require("node-cron");
-const { Response } = require("../../models/habModels/opiResponseModel");
-const nodemailer = require("nodemailer");
-const XLSX = require("xlsx");
-const fs = require("fs");
-const path = require("path");
-const moment = require("moment-timezone");
-const { HabAdmin } = require("../../models/habModels/habAdminModel");
+import cron from "node-cron";
+import { Response } from "../../models/habModels/opiResponseModel.js";
+import nodemailer from "nodemailer";
+import XLSX from "xlsx";
+import fs from "fs";
+import path from "path";
+import moment from "moment-timezone";
+import { HabAdmin } from "../../models/habModels/habAdminModel.js";
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+dotenv.config();
 
-const dirname = __dirname;
+// Setup __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(__filename);
 
 const transporter = nodemailer.createTransport({
   // service: 'gmail',
@@ -186,7 +190,7 @@ const sendSummaryEmail = async (startDate, endDate, recipients) => {
   }
 };
 
-const processDateList = async (startDate, endDate, recipients) => {
+export const processDateList = async (startDate, endDate, recipients) => {
   let currentDate = moment.tz(startDate, 'Asia/Kolkata');
 
   while (currentDate.isSameOrBefore(moment.tz(endDate, 'Asia/Kolkata'))) {
@@ -198,7 +202,7 @@ const processDateList = async (startDate, endDate, recipients) => {
   await sendSummaryEmail(startDate, endDate, recipients);
 };
 
-const scheduleOPIEmails = async () => {
+export const scheduleOPIEmails = async () => {
   try {
     const admin = await HabAdmin.findOne();
 
@@ -230,9 +234,4 @@ const scheduleOPIEmails = async () => {
   } catch (error) {
     console.log(`Error in scheduling OPI emails: ${error.message}`);
   }
-};
-
-module.exports = {
-  processDateList,
-  scheduleOPIEmails
 };

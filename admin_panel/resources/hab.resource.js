@@ -1,13 +1,13 @@
-const verifyRoles = require("../utils");
-const roles = require("../roles");
-const { HabAdmin } = require("../../models/habModels/habAdminModel");
-const { allIITGMess } = require("../../helpers/constants");
+import verifyRoles from "../utils.js";
+import roles from "../roles.js";
+import { HabAdmin } from "../../models/habModels/habAdminModel.js";
+import { allIITGMess } from "../../helpers/constants.js";
 
-let allowedRoles = [roles.SUPERADMIN, roles.MESS];
+const allowedRoles = [roles.SUPERADMIN, roles.MESS];
 
 const smcEmailProperties = allIITGMess.map((hostel) => `smcEmails.${hostel}`);
 
-module.exports = {
+export default {
     resource: HabAdmin,
     options: {
         listProperties: [

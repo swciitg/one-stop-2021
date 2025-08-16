@@ -1,9 +1,9 @@
-const nodemailer = require("nodemailer");
-const fs = require("fs");
-const path = require("path");
-const doctorModel = require("../models/doctorModel")
+import nodemailer from "nodemailer";
+import fs from "fs";
+import path from "path";
+import doctorModel from "../models/doctorModel.js";
 
-let mailTransporter = nodemailer.createTransport({
+const mailTransporter = nodemailer.createTransport({
     host: "smtp-mail.outlook.com",
     auth: {
         user: process.env.UPSP_EMAIL,
@@ -11,9 +11,9 @@ let mailTransporter = nodemailer.createTransport({
     }
 });
 
-//Pharmacy Feedback section
-//Tested and working
-exports.pharmacyFeedbackSubmit = async (req, res) => {
+// Pharmacy Feedback section
+// Tested and working
+export const pharmacyFeedbackSubmit = async (req, res) => {
     try {
         const {
             patientEmail, 
@@ -30,27 +30,24 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
         if (!req.body.files) {
             return res.status(400).send("No file uploaded.");
         }
-        // console.log("body se pahle...")
         console.log(req.body);
-        // console.log("body ke baad...")
         
         let selectedAttachments = [];
-        req.body.files.forEach((element,index) => {
-            let filepath = __dirname + "/../files_folder/pharmacyFeedbackForms_files/" + element;
-            if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
+        req.body.files.forEach((element, index) => {
+            let filepath = path.join(__dirname, "../files_folder/pharmacyFeedbackForms_files/", element);
+            if (fs.existsSync(filepath)) selectedAttachments.push({ path: filepath });
             else console.log("not exists");
         });
 
-        console.log(selectedAttachments)
+        console.log(selectedAttachments);
 
-        let mailDetails = {
-            from : process.env.UPSP_EMAIL ,
-            to : ["hosmed@iitg.ac.in", "medsec@iitg.ac.in"], //hospital-section and pharmacy mail to be added
-            // to : ["r.kareddy@iitg.ac.in", "m.raza@iitg.ac.in"] ,
-            cc : [patientEmail, "vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in", "ugsenate@iitg.ac.in", "adosa_2@iitg.ac.in"],
-            subject : "New Pharmacy Feedback",
+        const mailDetails = {
+            from: process.env.UPSP_EMAIL,
+            to: ["hosmed@iitg.ac.in", "medsec@iitg.ac.in"],
+            cc: [patientEmail, "vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in", "ugsenate@iitg.ac.in", "adosa_2@iitg.ac.in"],
+            subject: "New Pharmacy Feedback",
             attachments: selectedAttachments,
-            html : `
+            html: `
         <html>
         <body>
             <table border="0" cellspacing="0" cellpadding="0" style="font-family: Arial, sans-serif; width: 100%; max-width: 600px; border-collapse: collapse; border: 1px solid #dddddd; margin: 0 auto;">
@@ -100,50 +97,46 @@ exports.pharmacyFeedbackSubmit = async (req, res) => {
             </table>
         </body>
         </html>           `
-        }
+        };
 
-        mailTransporter.sendMail(mailDetails,(err,res) => {
+        mailTransporter.sendMail(mailDetails, (err, res) => {
             console.log(err);
         });
 
-        res.json({"success" : true});
+        res.json({ success: true });
 
     } catch (error) {
         console.log(error.message);
     }
-}
+};
 
-
-exports.fetchDoctorsList = async (req, res) => {
+export const fetchDoctorsList = async (req, res) => {
     try {
         const doctors = await doctorModel.find();
-        // const doctors = allContacts.filter(contact => contact.category !== 'Miscellaneous')
         res.json(doctors);
     } catch (error) {
         console.error("Error fetching doctors list:", error.message);
         res.status(500).json({ error: "Failed to fetch doctors list" });
     }
-}
+};
 
-//Doctor Feedback Section
-//Tested And working
-exports.doctorsFeedbackSubmit = async(req, res) => {
+// Doctor Feedback Section
+// Tested and working
+export const doctorsFeedbackSubmit = async (req, res) => {
     try {
-        const {doctorName, doctorDegree, remarks, patientName, patientEmail, patientHostel, mobile, rollNo} = req.body;
+        const { doctorName, doctorDegree, remarks, patientName, patientEmail, patientHostel, mobile, rollNo } = req.body;
 
-        // For sending attatchments along with mail
         let selectedAttachments = [];
-        req.body.files.forEach((element,index) => {
-            let filepath = __dirname + "/../files_folder/doctorFeedbackForms_files/" + element; 
-            if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
+        req.body.files.forEach((element, index) => {
+            let filepath = path.join(__dirname, "../files_folder/doctorFeedbackForms_files/", element);
+            if (fs.existsSync(filepath)) selectedAttachments.push({ path: filepath });
             else console.log("not exists");
         });
 
-        let mailDetails = {
+        const mailDetails = {
             from: process.env.UPSP_EMAIL,
-            to : ["hosmed@iitg.ac.in", "medsec@iitg.ac.in"], //hospital-section mail to be added  
-            // to : ["r.kareddy@iitg.ac.in", "m.raza@iitg.ac.in"] ,
-            cc : [patientEmail, "vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in", "ugsenate@iitg.ac.in", "adosa_2@iitg.ac.in"], // Send a copy to the patient
+            to: ["hosmed@iitg.ac.in", "medsec@iitg.ac.in"],
+            cc: [patientEmail, "vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in", "ugsenate@iitg.ac.in", "adosa_2@iitg.ac.in"],
             subject: "New Doctor's Feedback",
             attachments: selectedAttachments,
             html: `
@@ -195,50 +188,43 @@ exports.doctorsFeedbackSubmit = async(req, res) => {
         </body>
         </html>           
             `
-        }; 
+        };
 
-        mailTransporter.sendMail(mailDetails,(err,res) => {
+        mailTransporter.sendMail(mailDetails, (err, res) => {
             console.log(err);
         });
 
-        res.json({"success" : true});
+        res.json({ success: true });
 
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
     }
-}
+};
 
 // Services Feedback Section
 // Tested and working
-exports.servicesFeedbackSubmit = async(req, res) => {
+export const servicesFeedbackSubmit = async (req, res) => {
     try {
-        const {remarks, userEmail, userName, userHostel, mobile, rollNo} = req.body;
+        const { remarks, userEmail, userName, userHostel, mobile, rollNo } = req.body;
         console.log(req.files);
-        // if (!req.files) {
-        //     return res.status(400).send("No file uploaded.");
-        // }
-        // console.log("body se pahle..")
         console.log(req.body);
-        // console.log("body ke bad..")
 
-        // For sending attatchments along with mail
         let selectedAttachments = [];
-        req.body.files.forEach((element,index) => {
-            let filepath = __dirname + "/../files_folder/servicesFeedbackForms_files/" + element;
-            if(fs.existsSync(filepath)) selectedAttachments.push({path : filepath});
+        req.body.files.forEach((element, index) => {
+            let filepath = path.join(__dirname, "../files_folder/servicesFeedbackForms_files/", element);
+            if (fs.existsSync(filepath)) selectedAttachments.push({ path: filepath });
             else console.log("not exists");
         });
 
-        console.log(selectedAttachments)
+        console.log(selectedAttachments);
 
-        let mailDetails = {
-            from : process.env.UPSP_EMAIL ,
-            to : ["hosmed@iitg.ac.in", "medsec@iitg.ac.in"],  //hospital-section mail to be added
-            // to : ["r.kareddy@iitg.ac.in", "m.raza@iitg.ac.in"] ,
-            cc : [userEmail, "vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in", "ugsenate@iitg.ac.in", "adosa_2@iitg.ac.in"],
-            subject : "New Hospital Feedback",
+        const mailDetails = {
+            from: process.env.UPSP_EMAIL,
+            to: ["hosmed@iitg.ac.in", "medsec@iitg.ac.in"],
+            cc: [userEmail, "vp@iitg.ac.in", "gensec_welfare@iitg.ac.in", "mangal@iitg.ac.in", "ugsenate@iitg.ac.in", "adosa_2@iitg.ac.in"],
+            subject: "New Hospital Feedback",
             attachments: selectedAttachments,
-            html : `
+            html: `
         <html>
         <body>
             <table border="0" cellspacing="0" cellpadding="0" style="font-family: Arial, sans-serif; width: 100%; max-width: 600px; border-collapse: collapse; border: 1px solid #dddddd; margin: 0 auto;">
@@ -286,15 +272,15 @@ exports.servicesFeedbackSubmit = async(req, res) => {
         </body>
         </html>
             `
-        }
+        };
 
-        mailTransporter.sendMail(mailDetails,(err,res) => {
+        mailTransporter.sendMail(mailDetails, (err, res) => {
             console.log(err);
         });
 
-        res.json({"success" : true});
+        res.json({ success: true });
 
     } catch (error) {
         console.log(error.message);
     }
-}
+};

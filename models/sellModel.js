@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const BuyAndSellDetailsSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -14,4 +14,6 @@ const BuyAndSellDetailsSchema = new mongoose.Schema({
   username: { type: String, required: true },
 });
 
-module.exports = mongoose.model("sellItem", BuyAndSellDetailsSchema);
+const SellItem = mongoose.model("sellItem", BuyAndSellDetailsSchema);
+
+export default SellItem;

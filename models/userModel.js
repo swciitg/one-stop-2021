@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { allIITGHostelsGC, NotificationCategories, defaultNotifCategoriesMap, allIITGHostels, allIITGMess } = require("../helpers/constants");
+import mongoose from "mongoose";
+import { allIITGHostelsGC, NotificationCategories, defaultNotifCategoriesMap, allIITGHostels, allIITGMess } from "../helpers/constants.js";
 
 const NotifPrefSchema = new mongoose.Schema({
     "lost": {
@@ -100,4 +100,6 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("onestopUser", userSchema);
+const onestopUserModel = mongoose.model("onestopUser", userSchema);
+
+export default onestopUserModel; 

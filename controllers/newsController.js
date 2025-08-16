@@ -1,6 +1,6 @@
-const NewsModel = require("../models/newsModel");
+import * as NewsModel from "../models/newsModel.js";
 
-exports.getNewsItems = async (req, res) => {
+export const getNewsItems = async (req, res) => {
     try {
       const getevents = await NewsModel.find({}).sort({ dateCreated: 1 });
       console.log(getevents);
@@ -10,7 +10,7 @@ exports.getNewsItems = async (req, res) => {
     }
   }
 
-exports.createNewsItem = async (req,res)=>{
+export const createNewsItem = async (req,res)=>{
   try {
     if (req.body.password !== process.env.passKey) {
       res.status(400).send("Invalid Password");
@@ -24,7 +24,7 @@ exports.createNewsItem = async (req,res)=>{
   }
 }
 
-exports.updateNewsItem = async (req, res) => {
+export const updateNewsItem = async (req, res) => {
     try {
       const _id = req.params.id;
       const getevent = await NewsModel.findByIdAndUpdate(_id, req.body, {
@@ -36,7 +36,7 @@ exports.updateNewsItem = async (req, res) => {
     }
   }
 
-exports.deleteNewsItem = async (req, res) => {
+export const deleteNewsItem = async (req, res) => {
     try {
       const getevent = await NewsModel.findByIdAndDelete(req.params.id);
       res.send(getevent);
