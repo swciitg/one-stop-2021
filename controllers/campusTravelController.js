@@ -75,6 +75,7 @@ export async function getTravelPosts(req, res) {
             date = new Date(date.toISOString().split("T")[0]);
             console.log("Second Date"+date);
             req.query.travelDateTime = date.toISOString();
+            console.log("reqDateinside",req.query.travelDateTime);
             // travelDateTime = date.toISOString();
         }
         console.log("reqDate", req.query.travelDateTime);
