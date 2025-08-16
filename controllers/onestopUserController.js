@@ -3,6 +3,10 @@ import onestopUserModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import { RefreshTokenError } from "../errors/jwt.auth.error.js";
 import crypto from "crypto";
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 import {
     guestUserName,
