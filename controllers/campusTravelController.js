@@ -67,12 +67,17 @@ function getFormattedDate(travelDateTime) {
 
 export async function getTravelPosts(req, res) {
     try {
+        // let travelDateTime;
         if (req.query.travelDateTime === undefined) { // default when no filter selected
             let date = new Date();
+            console.log("First Date"+date);
             // date.toDateString();
             date = new Date(date.toISOString().split("T")[0]);
+            console.log("Second Date"+date);
             req.query.travelDateTime = date.toISOString();
+            // travelDateTime = date.toISOString();
         }
+        console.log("reqDate", req.query.travelDateTime);
         let lowerDate = new Date(req.query.travelDateTime);
         let upperDate = new Date(req.query.travelDateTime);
         console.log("here", req.query.travelDateTime);
