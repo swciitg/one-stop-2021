@@ -304,7 +304,7 @@ export const addBlockedFalseAndNotifPrefs = async (req, res) => {
 
 const GATELOG_SECRET_KEY = process.env.GATELOG_SECRET_KEY;
 if (!GATELOG_SECRET_KEY) {
-  throw new Error("GATELOG_SECRET_KEY is not set in environment.");
+  console.log("No gatelog secret key setup")
 }
 
 // HMAC-SHA256(rollNo, GATELOG_SECRET_KEY) -> hex
