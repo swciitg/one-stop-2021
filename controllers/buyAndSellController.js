@@ -7,6 +7,11 @@ import sharp from "sharp";
 import mongoose from "mongoose";
 import {NotificationCategories} from "../helpers/constants.js";
 import {sendToAll, sendToATopic} from "./notificationController.js";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 function errorFxn(res, err) {
     console.log(err);
