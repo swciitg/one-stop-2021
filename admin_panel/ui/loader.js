@@ -18,10 +18,14 @@ const __dirname = path.dirname(__filename);
 
 const componentLoader = new ComponentLoader();
 
+const isProd = process.env.NODE_ENV === "production";
+
 const Components = {
   Dashboard: componentLoader.add(
     "Dashboard",
-    path.resolve(__dirname, "./pages/dashboard.jsx") // absolute path
+    isProd
+      ? path.resolve(__dirname, "../dist/admin_panel/ui/pages/dashboard.jsx")
+      : path.resolve(__dirname, "./pages/dashboard.jsx")
   ),
 };
 
