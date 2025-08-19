@@ -92,7 +92,7 @@ async function sendSellNotif(title, username, outlookEmail) {
 
 export const postSellDetails = async (req, res) => {
     try {
-        console.log("Check1");
+        console.log(req.body);
         var {
             title,
             price,
