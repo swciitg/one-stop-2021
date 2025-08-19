@@ -92,6 +92,7 @@ async function sendSellNotif(title, username, outlookEmail) {
 
 export const postSellDetails = async (req, res) => {
     try {
+        console.log("Check1");
         var {
             title,
             price,
@@ -105,8 +106,9 @@ export const postSellDetails = async (req, res) => {
         console.log(price);
         console.log(phonenumber);
         console.log(description);
+        console.log("Check1");
         console.log(imageString);
-
+        console.log("Check1");
         const imageName = uuid.v4();
         const imagePath = path.resolve(
             __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
@@ -144,6 +146,7 @@ export const postSellDetails = async (req, res) => {
                 imageName +
                 "-ultracompressed.jpg"
             );
+            console.log("Check1");
             console.log(newImagePath);
             //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
             try {
