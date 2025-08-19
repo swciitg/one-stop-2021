@@ -198,9 +198,11 @@ export const postSellDetails = async (req, res) => {
                     image_safe: true
                 });
             } catch (error) {
+                console.log(error);
                 return errorFxn(res, error);
             }
         } catch (error) {
+            console.log(error);
             return errorFxn(res, error);
         }
     } catch (error) {
