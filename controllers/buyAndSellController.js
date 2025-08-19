@@ -107,7 +107,7 @@ export const postSellDetails = async (req, res) => {
         console.log(phonenumber);
         console.log(description);
         console.log("Check1");
-        console.log(imageString);
+        // console.log(imageString);
         console.log("Check1");
         const imageName = uuid.v4();
         const imagePath = path.resolve(
