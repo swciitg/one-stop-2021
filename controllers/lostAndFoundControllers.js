@@ -271,7 +271,7 @@ export const postfoundDetails = async (req, res) => {
             email,
             username,
         } = req.body;
-        const imageName = uuid.v4();
+        const imageName = uuidv4();
         const imagePath = path.resolve(
             __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
         );
