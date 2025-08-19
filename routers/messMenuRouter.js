@@ -10,7 +10,6 @@ const fileStorageEngine = multer.diskStorage({
         cb(null, new URL("../files_folder/", import.meta.url).pathname);
     },
     filename: (req, file, cb) => {
-        console.log(file);
         let parts = file.originalname.split(".");
         let fileExtension = parts[parts.length - 1];
         cb(null, "file." + fileExtension);

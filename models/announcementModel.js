@@ -23,7 +23,6 @@ const AnnouncementSchema = new mongoose.Schema({
 });
 
 AnnouncementSchema.pre('save', async function(next) {
-  console.log(this);
   let notification = {
     "title": this.title,
     "body": this.body

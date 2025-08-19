@@ -11,7 +11,6 @@ const mailTransporter = nodemailer.createTransport({
 });
 
 export const submitUpspForm = async (req, res) => {
-    console.log(req.body);
     let recieverEmailsForTo = [];
     let recieverEmailsForCc = ["vp@iitg.ac.in", req.body.email]; // vp receives every email
     req.body.boards.forEach((element) => {
@@ -29,8 +28,6 @@ export const submitUpspForm = async (req, res) => {
 
     recieverEmailsForTo = [...new Set(recieverEmailsForTo)]; // removing redundant items from array
     recieverEmailsForCc = [...new Set(recieverEmailsForCc)];
-
-    console.log(recieverEmailsForTo, recieverEmailsForCc, selectedAttachments);
 
     let mailDetails = {
         from: process.env.UPSP_EMAIL,

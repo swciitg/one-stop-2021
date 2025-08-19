@@ -57,11 +57,8 @@ async function UpdateUser(filePath) {
         user.hostel = row[2].toLocaleUpperCase();
         await user.save();
       } else {
-        console.log(`User with Roll Number: ${rollNumber} not found`);
       }
     }
-
-    console.log('All rows processed.');
     return { message: 'All rows processed successfully' };
   } catch (error) {
     console.error(error);
@@ -83,11 +80,9 @@ async function UpdateUserMess(filePath) {
         user.subscribedMess = row[2].toLocaleUpperCase();
         await user.save();
       } else {
-        console.log(`User with Roll Number: ${rollNumber} not found`);
       }
     }
 
-    console.log('All rows processed.');
     return { message: 'All rows processed successfully' };
   } catch (error) {
     console.error(error);
@@ -162,7 +157,6 @@ async function saveMessMenuForHostel(filePath, hostelName) {
       { upsert: true, new: true }
     );
 
-    console.log(`Menu for ${hostelName} processed successfully`, messMenu);
   } catch (error) {
     throw new Error(`Error processing menu for ${hostelName}: ${error.message}`);
   }
@@ -177,10 +171,8 @@ function wrapWithRSAKeys(data) {
 
 export const uploadmessmenu = async (req, res) => {
   try {
-    console.log('File upload request received');
 
     if (!req.files) {
-      console.log('No file uploaded');
       return res.status(400).send('No file uploaded');
     }
 
@@ -189,10 +181,8 @@ export const uploadmessmenu = async (req, res) => {
     }
 
     req.files.forEach(async(file) => {
-        console.log(file.filename)
         const filePath = path.join(__dirname, '/../files_folder/mess_menu_files', file.filename);
         const hostelName = file.filename.split('.').slice(0, -1).join('.');
-        console.log('Processing users with hostelName:', hostelName);
         try {
             await saveMessMenuForHostel(filePath, hostelName.toLocaleUpperCase());
             console.log('Mess menu saved successfully.');
@@ -215,16 +205,13 @@ export const uploaduserHostel = async (req,res) => {
   try {
 
     if(!req.file){
-      console.log('No file uploaded');
       return res.status(400).send('No file uploaded');
     }
 
     const publicKey = `${req.body.publicKey}`;
-    console.log(publicKey);
     const privateKeyModel = await PrivateKey.findOne({});
     const privateString = `${privateKeyModel.privateKey}`;
     const privateKey = wrapWithRSAKeys(privateString);
-    console.log(privateKey);
 
     const message = "This is a test message";
     // Encrypt the message using the public key
@@ -235,7 +222,6 @@ export const uploaduserHostel = async (req,res) => {
       },
       Buffer.from(message)
     );
-    console.log("Encrypted Message:", encryptedMessage.toString('base64'));
 
     // Decrypt the message using the private key
     const decryptedMessage = crypto.privateDecrypt(
@@ -252,7 +238,6 @@ export const uploaduserHostel = async (req,res) => {
 
     const filePath = path.join(__dirname, '/../files_folder/hostel_upload', req.file.filename);
     const fname = req.file.filename.split('.').slice(0, -1).join('.');
-    console.log('Processing users of file:', fname);
     try {
         await UpdateUser(filePath);
         console.log('Data saved successfully.');
@@ -271,16 +256,13 @@ export const uploaduserMess = async (req,res) => {
   try {
 
     if(!req.file){
-      console.log('No file uploaded');
       return res.status(400).send('No file uploaded');
     }
 
     const publicKey = `${req.body.publicKey}`;
-    console.log(publicKey);
     const privateKeyModel = await PrivateKey.findOne({});
     const privateString = `${privateKeyModel.privateKey}`;
     const privateKey = wrapWithRSAKeys(privateString);
-    console.log(privateKey);
 
     const message = "This is a test message";
     // Encrypt the message using the public key
@@ -291,7 +273,6 @@ export const uploaduserMess = async (req,res) => {
       },
       Buffer.from(message)
     );
-    console.log("Encrypted Message:", encryptedMessage.toString('base64'));
 
     // Decrypt the message using the private key
     const decryptedMessage = crypto.privateDecrypt(
@@ -308,7 +289,6 @@ export const uploaduserMess = async (req,res) => {
 
     const filePath = path.join(__dirname, '/../files_folder/hostel_upload', req.file.filename);
     const fname = req.file.filename.split('.').slice(0, -1).join('.');
-    console.log('Processing users of file:', fname);
     try {
         await UpdateUserMess(filePath);
         console.log('Data saved successfully.');

@@ -18,7 +18,6 @@ const fileStorageEngine = multer.diskStorage({
     cb(null, directoryPath);
   },
   filename: (req, file, cb) => {
-    console.log(file);
     let fileSaveName;
     let parts = file.originalname.split(".");
     let fileExtension = "." + parts[parts.length - 1];

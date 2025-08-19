@@ -17,7 +17,6 @@ export const postCompetitionAdmins = async (req, res) => {
             res.status(400).json({ "success": false, "message": "No such competition exists" });
             return;
         }
-        console.log(gcScoreboardStore);
         await gcScoreboardStore.save();
         res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} admin list` });
     } catch (err) {
@@ -44,7 +43,6 @@ export const postCompetitionBoardAdmins = async (req, res) => {
             res.status(400).json({ "success": false, "message": "No such competition exists" });
             return;
         }
-        console.log(gcScoreboardStore);
         await gcScoreboardStore.save();
         res.status(200).json({ "success": true, "message": `admins updated successfully to ${competition} board admin list` });
 

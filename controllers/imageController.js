@@ -3,7 +3,6 @@ import sharp from "sharp";
 import fs from "fs";
 
 export const getImage = async (req, res) => {
-    console.log("Get image par");
     const imagePath = path.resolve(
         new URL('.', import.meta.url).pathname +
         "/../" +
@@ -17,7 +16,6 @@ export const getImage = async (req, res) => {
 };
 
 export const getCompressedImage = async (req, res) => {
-    console.log("Get image par");
     const imagePath = path.resolve(
         new URL('.', import.meta.url).pathname +
         "/../" +

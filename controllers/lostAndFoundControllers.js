@@ -78,7 +78,6 @@ export const postLostDetails = async (req, res) => {
         const imagePath = path.resolve(
             __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
         );
-        console.log(imagePath);
         fs.writeFileSync(imagePath, Buffer.from(imageString, "base64"), (err) => {
             if (err) console.log(err);
             else {
@@ -86,7 +85,6 @@ export const postLostDetails = async (req, res) => {
             }
         });
         const metadata = await sharp(imagePath).metadata();
-        console.log(metadata);
         const photo_id = imageName;
         const imageURL =
             process.env.API_URL + "/v3/getImage?photo_id=" + imageName;
@@ -157,7 +155,6 @@ export const postLostRemoveDetails = async (req, res) => {
             id,
             email
         } = req.body;
-        console.log(id, email);
         const foundItem = await LostModel.findById(id);
         if (!foundItem) {
             res.json({
@@ -166,7 +163,6 @@ export const postLostRemoveDetails = async (req, res) => {
             });
             return;
         }
-        console.log(foundItem.email);
         if (foundItem.email == email) {
             await LostModel.findByIdAndDelete(id);
             res.json({
@@ -215,14 +211,10 @@ export const addfoundForm = async (req, res) => {
 };
 
 export const claimFoundItem = async (req, res) => {
-    console.log("fjkdfgh");
     try {
 
         const {id, claimerEmail, claimerName} = req.body;
-        // console.log(req.body);
         let foundItem = await FoundModel.findById(id);
-        console.log("fsdf");
-        console.log(foundItem);
         if (foundItem != null && foundItem["claimed"] === true) {
             res.json({saved: false, message: "This item already got claimed"});
             return;
@@ -260,7 +252,6 @@ async function sendFoundNotif(title, username, outlookEmail) {
 }
 
 export const postfoundDetails = async (req, res) => {
-    console.log(req.body);
     try {
         var {
             title,
@@ -275,7 +266,6 @@ export const postfoundDetails = async (req, res) => {
         const imagePath = path.resolve(
             __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
         );
-        console.log(imagePath);
 
         fs.writeFileSync(imagePath, Buffer.from(imageString, "base64"), (err) => {
             if (err) console.log(err);
@@ -284,7 +274,6 @@ export const postfoundDetails = async (req, res) => {
             }
         });
         const metadata = await sharp(imagePath).metadata();
-        console.log(metadata);
         const photo_id = imageName;
         const imageURL =
             process.env.API_URL + "/v3/getImage?photo_id=" + imageName;
@@ -328,8 +317,6 @@ export const postfoundDetails = async (req, res) => {
             .withMetadata()
             .toFormat("jpg", {mozjpeg: true})
             .toFile(compressedImagePath);
-        console.log("Here 1");
-        console.log("Here 2");
         const newFoundDetail = await new FoundModel({
             title,
             location,
@@ -379,7 +366,6 @@ export const postFoundRemoveDetails = async (req, res) => {
             id,
             email
         } = req.body;
-        console.log(id, email);
         const foundItem = await FoundModel.findById(id);
         if (!foundItem) {
             res.json({
@@ -388,7 +374,6 @@ export const postFoundRemoveDetails = async (req, res) => {
             });
             return;
         }
-        console.log(foundItem.email);
         if (foundItem.email == email) {
             await FoundModel.findByIdAndDelete(id);
             res.json({
@@ -405,12 +390,10 @@ export const postFoundRemoveDetails = async (req, res) => {
 };
 
 export const getMyAds = async (req, res) => {
-    console.log(req.body);
     try {
         const {
             email
         } = req.body;
-        console.log(email);
 
         const lostDetails = await LostModel.find({
             email: email

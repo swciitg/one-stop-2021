@@ -9,7 +9,6 @@ export const createOutlet = (req, res) => {
     csv()
       .fromFile(uploadFilePath)
       .then(async (jsonObj) => {
-        console.log("its foodOutlets model");
         console.log(jsonObj);
         jsonObj.forEach((item,index) => {
           let tagsArray = item["tags"].split(",");
@@ -38,7 +37,6 @@ export const createOutlet = (req, res) => {
   } catch (err) {
     console.log(err);
   }
-  console.log("jkjlsd");
 };
 
 export const getAllOutlets = (req, res) => {

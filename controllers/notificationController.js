@@ -75,11 +75,8 @@ export const sendNotifByEmailList = async (req, res) => {
 
 export const updateTopicSubscriptionOfUser = async (notifPref, userid) => {
   let userNotifTokens = await userNotifTokenModel.find({ userid: userid });
-  console.log(userNotifTokens);
-  console.log(notifPref);
   for (let i = 0; i < userNotifTokens.length; i++) {
     for (let category in notifPref) {
-      console.log(category);
       await firebase.messaging().unsubscribeFromTopic([userNotifTokens[i].deviceToken], category);
       if (notifPref[category] === true) {
         await firebase.messaging().subscribeToTopic([userNotifTokens[i].deviceToken], category);
@@ -177,8 +174,6 @@ export const sendToAll = async (req, res) => {
   if (inactiveDeviceTokens.length > 0) await firebase.messaging().unsubscribeFromTopic(inactiveDeviceTokens, sendToAllFirebaseTopicName);
 
   let bodyData = matchedData(req);
-  console.log(bodyData);
-  console.log(req.body);
   const payload = {
     "notification": {
       "body": req.body.body,
@@ -195,7 +190,6 @@ export const sendToAll = async (req, res) => {
     }
   };
 
-  console.log(payload);
   const options = { priority: "high" };
   await firebase.messaging().sendToTopic(sendToAllFirebaseTopicName, payload);
 };

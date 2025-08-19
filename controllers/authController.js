@@ -36,7 +36,6 @@ export const microsoftLogin = (req, res) => {
 
   // get url to sign user in and consent to scopes needed for application
   pca.getAuthCodeUrl(authCodeUrlParameters).then((response) => {
-    console.log(response);
     res.redirect(response);
   }).catch((error) => console.log(JSON.stringify(error)));
 };
@@ -63,7 +62,6 @@ export const microsoftLoginRedirect = (req, res) => {
         return res.render('authSuccessView.ejs', { userTokens: "ERROR OCCURED" });
       }
       const userInfo = JSON.parse(body);
-      console.log(userInfo);
       if(!userInfo.displayName || !userInfo.mail){
         return res.render('authSuccessView.ejs', { userTokens: "ERROR OCCURED" });
       }
@@ -73,7 +71,6 @@ export const microsoftLoginRedirect = (req, res) => {
       }
       let userid = await createOrFindOnestopUserID(userInfo.displayName, userInfo.mail, userInfo.surname);
       const userTokensString = await getUserTokens(userid);
-      console.log(userTokensString);
       
       return res.render('authSuccessView.ejs', { userTokens: userTokensString });
     });

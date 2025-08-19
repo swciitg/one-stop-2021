@@ -6,7 +6,6 @@ import asyncHandler from "../middlewares/async.controllers.handler.js";
 import { NotificationCategories } from "../helpers/constants.js";
 
 const sendMailForTravelPostReply = async (replier_name, reciever_email, reciever_name, from, to, travelDateTime) => {
-    console.log(reciever_name, replier_name, travelDateTime);
     await sendEmail({
         auth: {
             user: process.env.SWC_EMAIL,
@@ -28,7 +27,6 @@ export async function postTravel(req, res) {
         if ("phonenumber" in req.body) data["phonenumber"] = req.body.phonenumber;
         let travelModel = new TravelPostModel(data);
         await travelModel.save();
-        console.log(travelModel);
         res.json({ "success": true });
     }
     catch (err) {
@@ -40,10 +38,8 @@ export async function postTravel(req, res) {
 function getFormattedDate(travelDateTime) {
     var options = { year: 'numeric', month: 'short', day: 'numeric' };
     let date = travelDateTime.toLocaleDateString("en-US", options);
-    console.log(date);
     let d = date[5] == ',' ? parseInt(date[4]) : parseInt(date.substring(4, 6));
     let suff;
-    console.log(d % 10, date.substring(5, 7));
     if (d > 3 && d < 21) suff = 'th';
     else {
         switch (d % 10) {
@@ -70,21 +66,12 @@ export async function getTravelPosts(req, res) {
         let travelDateTime = req.query.travelDateTime;
         if (req.query.travelDateTime === undefined) { // default when no filter selected
             let date = new Date();
-            console.log("First Date"+date);
-            // date.toDateString();
             date = new Date(date.toISOString().split("T")[0]);
-            console.log("Second Date"+date);
             travelDateTime = date.toISOString();
-            // travelDateTime = date.toISOString();
         }
-        // console.log("reqDate", req.query.travelDateTime);
         let lowerDate = new Date(travelDateTime);
         let upperDate = new Date(travelDateTime);
-        // console.log("here", req.query.travelDateTime);
         upperDate.setDate(upperDate.getDate() + 1);
-        console.log(req.body);
-        console.log(lowerDate, upperDate);
-        // console.log(req.query.to===undefined);
         let travelPosts = await TravelPostModel.find(
             req.query.to === undefined ? {
                 travelDateTime: {
@@ -96,11 +83,9 @@ export async function getTravelPosts(req, res) {
                     $lt: upperDate
                 }, to: req.query.to, from: req.query.from
             }).sort({ "travelDateTime": 1 });
-        console.log(travelPosts);
         let datewiseTravelPost = {};
         travelPosts.forEach((element) => {
             let date = getFormattedDate(element["travelDateTime"]);
-            console.log(typeof (date), date);
             if (date in datewiseTravelPost) {
                 datewiseTravelPost[date].push(element);
             }
@@ -115,13 +100,8 @@ export async function getTravelPosts(req, res) {
 
 export async function deleteTravelPost(req, res) {
     try {
-        console.log("FSJDFJKSDFJK");
         const id = req.query.travelPostId;
         let travelPost = await TravelPostModel.findById(id);
-        console.log(travelPost);
-        console.log(req.body);
-        console.log(travelPost["email"]);
-        console.log("here");
         if (travelPost["email"] !== req.body.email) {
             res.json({ "success": false, "message": "Email doesn't match" });
             return;
@@ -159,7 +139,6 @@ export async function getMyAds(req, res) {
 export async function getTravelPostChatReplies(req, res) {
     try {
         const id = req.query.chatId;
-        console.log(id);
         let travelChat = await TravelChatModel.findById(id);
         res.json({ "success": true, "replies": travelChat["replies"] });
     }
@@ -177,16 +156,13 @@ async function sendPostReplyNotif(title, replier, senderOutlook, recieverOutlook
 }
 
 export const postReplyChat = asyncHandler(async (req, res) => {
-    console.log(req.body);
     const id = req.query.chatId;
     const data = req.body;
     let travelChatReply = new ReplyPostModel(data);
     let travelChat = await TravelChatModel.findById(id);
     travelChat["replies"].push(travelChatReply);
     travelChat = await travelChat.save();
-    // console.log(travelChat);
     TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
-        console.log(travelPost["travelDateTime"]);
         sendPostReplyNotif(`Cab sharing reply: ${travelChatReply.message.substr(0,1)}`, data["name"], data["email"], travelPost.email);
         //if(true){ // when other people writes a message
         //sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);

@@ -38,25 +38,20 @@ let titleCase = (str) => {
 };
 
 export const createOrFindOnestopUserID = async (name, outlookEmail, rollNo) => {
-    console.log(name, outlookEmail, rollNo);
     let onestopuser = await onestopUserModel.findOne({outlookEmail});
-    console.log(onestopuser);
     if (onestopuser !== null) return onestopuser._id.toString(); // already a user exists
     name = titleCase(name);
     onestopuser = onestopUserModel({name, outlookEmail, rollNo});
-    console.log("Created new user");
     await onestopuser.save();
     return onestopuser._id.toString();
 };
 
 export const getGuestUserID = async function () {
-    console.log(typeof createOrFindOnestopUserID);
     let id = await createOrFindOnestopUserID(
         guestUserName,
         guestUserEmail,
         guestUserRollNo
     ); // get document id for guest
-    console.log(id);
     return id;
 };
 
@@ -72,7 +67,6 @@ export const getUserTokens = async (userid) => {
 
 export const getUserInfo = async (req, res, next) => {
     let onestopuser = await onestopUserModel.findById(req.userid);
-    console.log(`User found: ${onestopuser.outlookEmail}`);
     res.json(onestopuser);
 };
 
@@ -84,22 +78,18 @@ export const regenerateUserAccessToken = asyncHandler(async (req, res, next) => 
     let refreshToken = req.headers.authorization.split(" ").slice(-1)[0];
     if (!refreshToken)
         next(new RequestValidationError("Refresh token not passed"));
-    console.log(refreshToken);
     let decoded;
     jwt.verify(refreshToken, refreshjwtsecret, (err, dec) => {
         if (err) {
-            console.log("ERROR OCCURED");
             next(new RefreshTokenError(err.message));
         }
         decoded = dec;
     });
-    console.log(decoded);
     if (await onestopUserModel.findById(decoded.userid)) {
         // if someone found JWT refresh secrets and tries to generate access token
         const accessToken = jwt.sign({userid: decoded.userid}, accessjwtsecret, {
             expiresIn: "10 days",
         });
-        console.log(accessToken);
         res.json({success: true, accessToken});
     } else next(new RequestValidationError("invalid user id found"));
 });
@@ -139,8 +129,6 @@ export const updateOnestopUserValidate = [
 export const updateOnestopUser = asyncHandler(async (req, res) => {
     let userid = req.userid;
     let data = matchedData(req, {locations: ["body"]});
-    console.log(data);
-    console.log(userid);
     await onestopUserModel.findByIdAndUpdate(userid, data, {runValidators: true});
     let deviceToken = matchedData(req, {locations: ["query"]}).deviceToken;
     if (deviceToken) {
@@ -151,7 +139,6 @@ export const updateOnestopUser = asyncHandler(async (req, res) => {
         });
         await userNotifToken.save();
         for (category in NotificationCategories) {
-            console.log(category, deviceToken);
             await firebase
                 .messaging()
                 .subscribeToTopic([deviceToken], category);
@@ -167,22 +154,17 @@ export const postOnestopUserDeviceTokenValidate = [
 export const postOnestopUserDeviceToken = asyncHandler(async (req, res) => {
     // creates new device token model or update
     let body = matchedData(req, {locations: ["body"]});
-    console.log(body);
     let userNotifTokenPrevious = await userNotifTokenModel.findOne({
         deviceToken: body.deviceToken,
     }); // deviceToken was already there
-    console.log("HERE 1");
-    console.log(userNotifTokenPrevious);
     if (userNotifTokenPrevious) {
         // attempt for login via different or same account
-        console.log("INSIDE IF");
         await userNotifTokenModel.findOneAndUpdate(
             {deviceToken: body.deviceToken},
             {userid: req.userid, createdAt: new Date()}
             , {runValidators: true}
         );
     } else {
-        console.log("INSIDE ELSE");
         let userNotifToken = new userNotifTokenModel({
             userid: req.userid,
             deviceToken: body.deviceToken,
@@ -190,7 +172,6 @@ export const postOnestopUserDeviceToken = asyncHandler(async (req, res) => {
         await userNotifToken.save();
     }
     for (category in NotificationCategories) {
-        console.log(category, body.deviceToken);
         await firebase
             .messaging()
             .subscribeToTopic([body.deviceToken], category);
@@ -214,7 +195,6 @@ export const updateOnestopUserDeviceToken = asyncHandler(async (req, res) => {
             , {runValidators: true}
         );
         for (category in NotificationCategories) {
-            console.log(category);
             await firebase
                 .messaging()
                 .unsubscribeFromTopic([body.oldToken], category);
@@ -262,16 +242,13 @@ export const updateOnestopUserNotifPrefsValidate = [
 export const updateOnestopUserNotifPrefs = async (req, res) => {
     let data = matchedData(req, {locations: ["body"]});
     await updateTopicSubscriptionOfUser(data, req.userid);
-    console.log("UPDATED SUBSCRIPTION");
     await onestopUserModel.findByIdAndUpdate(req.userid, {notifPref: data}, {runValidators: true});
-    console.log("UPDATED Notifpref");
     res.json({success: true});
 }
 
 export const addBlockedFalseAndNotifPrefs = async (req, res) => {
     try {
         const onestopusers = await onestopUserModel.find();
-        console.log(onestopusers);
         for (let i = 0; i < onestopusers.length; i++) {
             if (onestopusers[i].hostel !== undefined && onestopusers[i].hostel === "Brahma") {
                 onestopusers[i].hostel = "Brahmaputra";
@@ -281,10 +258,8 @@ export const addBlockedFalseAndNotifPrefs = async (req, res) => {
             onestopusers[i].blocked = false;
             onestopusers[i].notifPref = defaultNotifCategoriesMap;
             for (const category in NotificationCategories) {
-                console.log(category);
                 let userNotifTokens = await userNotifTokenModel.find({userid: onestopusers[i]._id});
                 for (let j = 0; j < userNotifTokens.length; j++) {
-                    console.log(category);
                     await firebase
                         .messaging()
                         .subscribeToTopic(userNotifTokens[j].deviceToken, category);

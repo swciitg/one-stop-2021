@@ -5,7 +5,6 @@ import { uploadFilePath } from "../constants.js";
 
 export const getAllMenuItems = async (req, res) => {
   let menuItems = await messMenu.find();
-  console.log(menuItems);
   res.json({details : menuItems});
 };
 
@@ -22,11 +21,8 @@ export const createMessMenu = (req, res) => {
     csv()
       .fromFile(uploadFilePath)
       .then(async (jsonObj) => {
-        console.log("its messMenu model");
-        console.log(jsonObj);
         await messMenu.deleteMany({});
         messMenu.insertMany(jsonObj, async (err, data) => {
-          // console.log(jsonObj);
           if (err) {
             console.log(err);
           } else {
@@ -47,5 +43,4 @@ export const createMessMenu = (req, res) => {
   } catch (err) {
     console.log(err);
   }
-  console.log("jkjlsd");
 };

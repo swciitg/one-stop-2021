@@ -10,7 +10,6 @@ export const gcScoreboardAuthMiddleware = (req, res, next) => {
         let decoded = jwt.verify(token, accessjwtsecret);
         if (decoded["email"] !== undefined) {
             req.body.email = decoded["email"];
-            console.log(req.body.email);
             next();
         }
         else throw new Error("Token Expired or not Valid");

@@ -28,14 +28,12 @@ export const verifyUserRequest = async (req, res, next) => {
         });
         let onestopUser = await onestopUserModel.findById(decoded.userid);
         if (onestopUser !== undefined && !onestopUser.blocked) {
-            console.log(decoded);
+
             req.userid = decoded.userid;
             if (!req.body) {
                 req.body = {};
             }
             req.body.email = onestopUser.outlookEmail;
-            console.log(req.userid);
-            console.log("Token Verified");
             next();
         }
         else if (onestopUser !== undefined && onestopUser.blocked) {

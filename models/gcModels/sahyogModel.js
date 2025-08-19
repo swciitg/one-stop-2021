@@ -77,7 +77,6 @@ const sahyogEventSchema = new mongoose.Schema({
 });
 
 sahyogEventSchema.pre('save',function(){
-    console.log("setting points");
     if(this.difficulty === 'High'){
         this.points = 500;
     }

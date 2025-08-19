@@ -67,7 +67,6 @@ import { verifyUserRequest } from "../middlewares/user.auth.js";
 
 const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 const refreshjwtsecret = process.env.REFRESH_JWT_SECRET;
-console.log(accessjwtsecret, refreshjwtsecret);
 
 const gcScoreboardRouter = express.Router();
 
@@ -98,7 +97,6 @@ async function getAuthEvents(email) {
   ) {
     authEvents.push("sahyog");
   }
-  console.log(authEvents);
   return authEvents;
 }
 
@@ -111,7 +109,6 @@ gcScoreboardRouter.post("/gc/login", async (req, res) => {
     const accessToken = jwt.sign({ email: email }, accessjwtsecret, {
       expiresIn: "1 days",
     });
-    console.log(jwt.verify(accessToken, accessjwtsecret));
     const refreshToken = jwt.sign({ email: email }, refreshjwtsecret, {
       expiresIn: "7 days",
     });

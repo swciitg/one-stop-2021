@@ -26,11 +26,9 @@ export const pharmacyFeedbackSubmit = async (req, res) => {
             rollNo,
             remarks
         } = req.body;
-        console.log(req.files);
         if (!req.body.files) {
             return res.status(400).send("No file uploaded.");
         }
-        console.log(req.body);
         
         let selectedAttachments = [];
         req.body.files.forEach((element, index) => {
@@ -38,8 +36,6 @@ export const pharmacyFeedbackSubmit = async (req, res) => {
             if (fs.existsSync(filepath)) selectedAttachments.push({ path: filepath });
             else console.log("not exists");
         });
-
-        console.log(selectedAttachments);
 
         const mailDetails = {
             from: process.env.UPSP_EMAIL,
@@ -206,8 +202,6 @@ export const doctorsFeedbackSubmit = async (req, res) => {
 export const servicesFeedbackSubmit = async (req, res) => {
     try {
         const { remarks, userEmail, userName, userHostel, mobile, rollNo } = req.body;
-        console.log(req.files);
-        console.log(req.body);
 
         let selectedAttachments = [];
         req.body.files.forEach((element, index) => {
@@ -215,8 +209,6 @@ export const servicesFeedbackSubmit = async (req, res) => {
             if (fs.existsSync(filepath)) selectedAttachments.push({ path: filepath });
             else console.log("not exists");
         });
-
-        console.log(selectedAttachments);
 
         const mailDetails = {
             from: process.env.UPSP_EMAIL,

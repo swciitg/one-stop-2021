@@ -9,7 +9,6 @@ import { manthanEventModel } from "../../models/gcModels/manthanModel.js";
 
 async function ifAuthorizedForManthanEventSchedules(eventId, email) {
   let manthanEventSchedule = await manthanEventModel.findById(eventId);
-  console.log(manthanEventSchedule);
   if (
     manthanEventSchedule["posterEmail"] !== email &&
     (await checkIfBoardAdmin(email, "manthan")) === false
@@ -110,10 +109,10 @@ export const postManthanEventSchedule = async (req, res) => {
 
 export const getManthanEventsSchdedules = async (req, res) => {
   try {
-    console.log(
+
       await checkIfAdmin(req.body.email, "manthan"),
       await checkIfBoardAdmin(req.body.email, "manthan")
-    );
+
     let filters = { resultAdded: false }; // filters for event schedules
     if (
       req.query.forAdmin === "true" &&
@@ -121,7 +120,6 @@ export const getManthanEventsSchdedules = async (req, res) => {
     ) {
       filters["posterEmail"] = req.body.email;
     }
-    console.log(filters);
     const events = await manthanEventModel.find(filters).sort({ date: 1 }); // send all event schedules if no email passed or passed email belongs to board admin in ascending order of sorting
     res.status(200).json({ success: true, details: events });
   } catch (err) {
@@ -129,12 +127,10 @@ export const getManthanEventsSchdedules = async (req, res) => {
   }
 };
 
-export const updateManthanEventSchedule = async (req, res) => {
-  console.log("here fasdfad");
+export const updateManthanEventSchedule = async (req, res) => {;
   try {
     const id = req.params.id;
     req.body.posterEmail = req.body.email;
-    console.log(req.body, id);
     if (
       (await ifAuthorizedForManthanEventSchedules(id, req.body.email)) === false
     ) {
@@ -146,7 +142,6 @@ export const updateManthanEventSchedule = async (req, res) => {
     let sameManthanEvents = await manthanEventModel.find({
       event: req.body.event,
     });
-    console.log(sameManthanEvents);
     if (
       sameManthanEvents.length !== 0 &&
       sameManthanEvents[0]["_id"].toString() !== id &&
@@ -158,7 +153,6 @@ export const updateManthanEventSchedule = async (req, res) => {
       });
       return;
     }
-    console.log(req.body);
     let manthanEventSchedule = await manthanEventModel.findById(id);
     req.body.posterEmail = manthanEventSchedule.posterEmail;
 
@@ -201,13 +195,10 @@ export const addManthanEventResult = async (req, res) => {
     req.body.results.forEach((result) => {
       result["points"] = result["primaryScore"];
     });
-    console.log(manthanEventSchedule);
     await manthanEventModel.findOneAndUpdate({ _id: id }, req.body, {
       runValidators: true,
     });
     let gcCompetitionsStore = await getGcScoreboardStore();
-    console.log(manthanEventSchedule);
-    console.log("HELLO THERE");
 
     for (let i = 0; i < manthanEventSchedule["results"].length; i++) {
       for (
@@ -271,10 +262,9 @@ export const deleteManthanEventSchedule = async (req, res) => {
 
 export const getManthanResults = async (req, res) => {
   try {
-    console.log(
+
       await checkIfAdmin(req.body.email, "manthan"),
       await checkIfBoardAdmin(req.body.email, "manthan")
-    );
     let filters = { resultAdded: true }; // filters for event schedules
     if (
       req.query.forAdmin === "true" &&
@@ -294,7 +284,6 @@ export const getManthanResults = async (req, res) => {
 export const deleteManthanEventResult = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id);
     let manthanEventSchedule = await manthanEventModel.findById(id);
 
     if (

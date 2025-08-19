@@ -34,8 +34,6 @@ export const createItem = async (req, res) => {
           });
         }
         itemsList.forEach((incomingItem) => {
-          console.log("fhhksd");
-          console.log(incomingItem);
           incomingItem["ingredients"] =
             incomingItem["ingredients"].split(",");
           if (incomingItem["veg"] === "TRUE") {
@@ -44,9 +42,7 @@ export const createItem = async (req, res) => {
             incomingItem["veg"] = false;
           }
           foodOutletsList.forEach((outlet) => {
-            console.log("jflsd", outlet, incomingItem.outletName);
             if (outlet.name === incomingItem.outletName) {
-              console.log("I am here");
               outlet.menu.push(incomingItem);
             }
           });
@@ -59,8 +55,6 @@ export const createItem = async (req, res) => {
         // console.log(foodOutletsList)
         foodOutletsList.forEach(async (newFoodOutlet) => {
           for (let i = 0; i < newFoodOutlet.menu.length; i++) {
-            console.log("fjklsd", newFoodOutlet.menu[i]["image"].length);
-            console.log(newFoodOutlet.menu[i]["image"]);
             if(newFoodOutlet.menu[i]["image"].length!=0) continue;
             const google = new Scraper({
               puppeteer: {
@@ -68,14 +62,10 @@ export const createItem = async (req, res) => {
               }
             });
             const imageResults = await google.scrape(newFoodOutlet.menu[i]["name"], 5);
-            console.log(newFoodOutlet.menu[i]["name"]);
-            console.log(imageResults);
             newFoodOutlet.menu[i]["image"] = imageResults[0]["url"];
             for(let j=0;j<imageResults.length;j++){
               let checkImage = isImage(imageResults[j]["url"]);
               if(checkImage===true){
-                console.log("here");
-                console.log(newFoodOutlet.menu[i]["name"],imageResults[j]["url"]);
                 newFoodOutlet.menu[i]["image"]=imageResults[j]["url"];
                 break;
               }

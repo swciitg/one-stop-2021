@@ -19,7 +19,6 @@ const mealSchema = new mongoose.Schema({
 });
 
 mealSchema.post('validate', async function(next) {
-    console.log(this);
     if (this.startTiming.getTime() > this.endTiming.getTime()) {
         throw new Error("Start time cannot be ahead of End time");
     } else if (this.endTiming.getTime() - this.startTiming.getTime() > 4 * 60 * 60 * 1000) { // 4 hours

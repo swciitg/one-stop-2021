@@ -32,7 +32,6 @@ const ImageUploadButton = () => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log(responseData);
                 setImageUrl(responseData.imageUrl);
                 console.log('Image uploaded successfully:', responseData);
             } else {
