@@ -17,4 +17,5 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           script: |
             cd /webapps/one-stop-2021
-            docker-compose -f docker-compose.prod.yml logs --tail=1000
+            docker-compose -f docker-compose.prod.yml logs --tail=5000
+
