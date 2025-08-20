@@ -2,4 +2,4 @@ apps:
     - name: onestop-jsapi
       script: ./app.js
       exec_mode: cluster
-      instances: 3
+      instances: 5
