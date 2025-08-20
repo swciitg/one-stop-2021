@@ -3,7 +3,6 @@ import * as NewsModel from "../models/newsModel.js";
 export const getNewsItems = async (req, res) => {
     try {
       const getevents = await NewsModel.find({}).sort({ dateCreated: 1 });
-      console.log(getevents);
       res.send(getevents);
     } catch (e) {
       res.status(400).send(e);

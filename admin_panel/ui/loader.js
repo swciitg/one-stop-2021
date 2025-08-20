@@ -8,3 +8,4 @@ const Components = {
 };
 
 export { componentLoader, Components };
+

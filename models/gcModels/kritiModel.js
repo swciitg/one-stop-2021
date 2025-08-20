@@ -82,7 +82,6 @@ const kritiEventSchema = new mongoose.Schema({
 });
 
 kritiEventSchema.pre('save',function(){
-    console.log("setting points");
     if(this.difficulty === 'High'){
         this.points = 400;
     }

@@ -7,6 +7,11 @@ import sharp from "sharp";
 import mongoose from "mongoose";
 import {NotificationCategories} from "../helpers/constants.js";
 import {sendToAll, sendToATopic} from "./notificationController.js";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 function errorFxn(res, err) {
     console.log(err);
@@ -46,7 +51,6 @@ function errorFxn(res, err) {
 
 export const getSellDetails = async (req, res) => {
     try {
-        console.log(req);
         const details = await sellModel.find();
         details.sort(compare);
         return res.json({
@@ -101,18 +105,11 @@ export const postSellDetails = async (req, res) => {
             email,
             username,
         } = req.body;
-        console.log(title);
-        console.log(price);
-        console.log(phonenumber);
-        console.log(description);
-        console.log(imageString);
-
         const imageName = uuid.v4();
         const imagePath = path.resolve(
             __dirname + "/../" + "images_folder" + "/" + imageName + ".jpg"
         );
         console.log("image path is: " + imagePath);
-        console.log(Buffer.from(imageString, "base64").toString("ascii"));
         fs.writeFileSync(imagePath, Buffer.from(imageString, "base64"), (err) => {
             if (err) console.log(err);
             else {
@@ -144,8 +141,6 @@ export const postSellDetails = async (req, res) => {
                 imageName +
                 "-ultracompressed.jpg"
             );
-            console.log(newImagePath);
-            //const imageURL = "https://femefun.com/contents/videos_screenshots/50000/50719/preview.mp4.jpg";
             try {
                 await sharp(imagePath)
                     .resize({
@@ -171,9 +166,6 @@ export const postSellDetails = async (req, res) => {
                         mozjpeg: true
                     })
                     .toFile(compressedImagePath);
-                console.log("Here 1");
-                console.log("Here 2");
-                console.log("fjklsdghjkdfhgjkdfhgjkdhgjfkdhgukjdf");
 
                 const newSellDetail = await new sellModel({
                     title,
@@ -195,9 +187,11 @@ export const postSellDetails = async (req, res) => {
                     image_safe: true
                 });
             } catch (error) {
+                console.log(error);
                 return errorFxn(res, error);
             }
         } catch (error) {
+            console.log(error);
             return errorFxn(res, error);
         }
     } catch (error) {
@@ -207,13 +201,11 @@ export const postSellDetails = async (req, res) => {
 };
 
 export const postSellRemoveDetails = async (req, res) => {
-    console.log("lkkjklj" + req.body);
     try {
         const {
             id,
             email
         } = req.body;
-        console.log(id, email);
         const foundItem = await sellModel.findById(id);
         if (!foundItem) {
             res.json({
@@ -222,7 +214,6 @@ export const postSellRemoveDetails = async (req, res) => {
             });
             return;
         }
-        console.log(foundItem);
         if (foundItem.email == email) {
             await sellModel.findByIdAndDelete(id);
             res.json({
@@ -285,7 +276,6 @@ async function sendBuyNotif(title, username, outlookEmail) {
 }
 
 export const postBuyDetails = async (req, res) => {
-    console.log(req.body);
     try {
         var {
             title,
@@ -361,10 +351,6 @@ export const postBuyDetails = async (req, res) => {
                         mozjpeg: true
                     })
                     .toFile(compressedImagePath);
-                console.log("Here 1");
-                console.log("Here 2");
-                console.log(imagePath);
-                console.log("fjklsdghjkdfhgjkdfhgjkdhgjfkdhgukjdf");
 
                 const newBuyDetail = await new buyModel({
                     title,
@@ -402,7 +388,6 @@ export const postBuyRemoveDetails = async (req, res) => {
             id,
             email
         } = req.body;
-        console.log(id, email);
         const foundItem = await buyModel.findById(id);
         if (!foundItem) {
             res.json({
@@ -411,7 +396,6 @@ export const postBuyRemoveDetails = async (req, res) => {
             });
             return;
         }
-        console.log(foundItem.email);
         if (foundItem.email == email) {
             await buyModel.findByIdAndDelete(id);
             res.json({
@@ -428,12 +412,10 @@ export const postBuyRemoveDetails = async (req, res) => {
 };
 
 export const getMyAds = async (req, res) => {
-    console.log(req.body);
     try {
         const {
             email
         } = req.body;
-        console.log(email);
 
         const buyDetails = await buyModel.find({
             email: email

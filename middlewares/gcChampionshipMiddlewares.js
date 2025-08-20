@@ -9,7 +9,6 @@ export const gcRequestsMiddleware = async (req, res, next) => {
         // console.log(req);
         // console.log(req["parsedUrl"]);
         const competition = req.originalUrl.split('/')[index];
-        console.log(email, competition);
         if (await checkIfAdmin(email, competition) || await checkIfBoardAdmin(email, competition)) { // check if he is any of admin/board_admin for the competition
             next();
         }

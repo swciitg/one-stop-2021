@@ -16,7 +16,6 @@ async function fetchGcScoreboardStore() {
 
 export const checkIfAdmin = async (email, competition) => {
     const gcScoreboardStore = await fetchGcScoreboardStore();
-    console.log(email, competition, gcScoreboardStore);
     if ((competition === 'spardha' && gcScoreboardStore.spardha_admins.includes(email)) ||
         (competition === 'manthan' && gcScoreboardStore.manthan_admins.includes(email)) ||
         (competition === 'kriti' && gcScoreboardStore.kriti_admins.includes(email)) ||
@@ -27,15 +26,12 @@ export const checkIfAdmin = async (email, competition) => {
 export const checkIfBoardAdmin = async (email, competition) => {
     const gcScoreboardStore = await fetchGcScoreboardStore();
 
-    console.log(gcScoreboardStore.spardha_board_admins);
-    console.log(competition);
-    console.log(email);
+
 
     if ((competition === 'spardha' && gcScoreboardStore.spardha_board_admins.includes(email)) ||
         (competition === 'manthan' && gcScoreboardStore.manthan_board_admins.includes(email)) ||
         (competition === 'kriti' && gcScoreboardStore.kriti_board_admins.includes(email)) ||
         (competition === 'sahyog' && gcScoreboardStore.sahyog_board_admins.includes(email))) return true;
-    console.log("RETURNING FALSE");
     return false;
 }
 

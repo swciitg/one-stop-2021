@@ -80,7 +80,6 @@ app.use(BASEURL, routers.imageRouter);
 // Validate API Call
 app.use((req, res, next) => {
     console.log(req.path);
-    console.log(req.body);
     if (req.headers["security-key"] !== process.env.SECURITY_KEY) {
         next(new UnauthorizedRequestError("You are not authorized app.js"));
     }
@@ -130,7 +129,6 @@ catch (e) {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
-    console.log(bcrypt.hashSync("123", 10));
     console.log(`\nExpress server listening on port ${PORT} see docs at /docs\n`);
     await mongoose.connect(process.env.DATABASE_URI);
     console.log("Connected to MongoDB");

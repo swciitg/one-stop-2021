@@ -65,7 +65,6 @@ foodOutletsSchema.pre('findOneAndRemove', async function () { // adminjs calls f
 
 foodOutletsSchema.pre('save', async function () {
   await updateFoodOutletInLastUpdateDocument();
-  console.log(this.menu);
   const google = new Scraper({
     puppeteer: {
       executablePath: '/usr/bin/google-chrome',
@@ -79,14 +78,9 @@ foodOutletsSchema.pre('save', async function () {
     }
   });
   for (let i = 0; i < this.menu.length; i++) {
-    console.log(this.menu[i]);
-    console.log(this.menu[i]["imageURL"]);
     if (!this.menu[i]["imageURL"] || this.menu[i]["imageURL"].length == 0) {
-      console.log("INSIDE HERE");
       const imageResults = await google.scrape(this.menu[i]["itemName"], 1);
-      console.log(imageResults);
       this.menu[i]["imageURL"] = imageResults[0]["url"];
-      console.log(imageResults);
     }
   }
 });
@@ -106,12 +100,9 @@ foodOutletsSchema.pre('findOneAndUpdate', async function () { // adminjs calls f
     }
   });
   for (let i = 0; i < this["_update"]['$set']['menu'].length; i++) {
-    console.log(this["_update"]['$set']['menu']);
-    console.log(this["_update"]['$set']['menu'][i]["imageURL"]);
     if (!this["_update"]['$set']['menu'][i]["imageURL"].length === 0 || this["_update"]['$set']['menu'][i]["imageURL"].length === 0) {
       const imageResults = await google.scrape(this["_update"]['$set']['menu'][i]["itemName"], 1);
       this["_update"]['$set']['menu'][i]["imageURL"] = imageResults[0]["url"];
-      console.log(imageResults);
     }
   }
 });

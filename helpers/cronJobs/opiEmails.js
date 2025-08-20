@@ -49,7 +49,6 @@ const convertToExcel = (data, fileName) => {
   XLSX.writeFile(wb, filePath);
 
   if (fs.existsSync(filePath)) {
-    console.log(`OPI File successfully saved at ${filePath}`);
     return filePath;
   } else {
     throw new Error("File could not be saved.");
@@ -94,8 +93,6 @@ const sendEmailForDate = async (date, recipients) => {
           filename: fileName,
           path: filePath,
         });
-
-        console.log(`File for ${mess} generated: ${filePath}`);
       }
 
       if (attachments.length > 0) {
@@ -109,7 +106,6 @@ const sendEmailForDate = async (date, recipients) => {
 
         // Send the email with all attachments
         await transporter.sendMail(mailOptions);
-        console.log(`OPI data for ${date} sent to recipients`);
 
         // Clean up files after sending email
         attachments.forEach((attachment) => {
@@ -151,8 +147,6 @@ const sendSummaryEmail = async (startDate, endDate, recipients) => {
           filename: fileName,
           path: filePath,
         });
-
-        console.log(`File for ${mess} generated: ${filePath}`);
       }
 
       if (attachments.length > 0) {
@@ -166,7 +160,6 @@ const sendSummaryEmail = async (startDate, endDate, recipients) => {
 
         // Send the email with all attachments
         await transporter.sendMail(mailOptions);
-        console.log(`Summary data from ${startDate} to ${endDate} sent to recipients`);
 
         // Clean up files after sending
         attachments.forEach((attachment) => {

@@ -27,7 +27,6 @@ homePageRouter.get("/quickLinks", homePageController.getQuickLinksData);
 homePageRouter.get("/homepage", homePageController.getHomePageData);
 
 homePageRouter.post("/homepage", upload.single('image'), async (req, res, next) => {
-    console.log("Saved Image " + JSON.stringify(req.file))
     let homePageDoc = await homePage.find();
     await homePage.findByIdAndUpdate(homePageDoc[0]._id, {path : req.file.path}, {runValidators: true});
     return res.send(req.file.path)

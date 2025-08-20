@@ -20,7 +20,6 @@ export const checkIfModeratorMiddleware = (req,res,next) => {
 export const checkSuperAdmin = async (req, res, next) => {
     try {
         const email = req.body.email;
-        console.log("email = ", email);
         const is_allowed = postAdminsMiddleware(email);
         if(is_allowed){
             next();

@@ -15,7 +15,6 @@ const infraTos = ["hostelinfra_complaints@iitg.ac.in"];
 const generalTos = ["hostel_complaints@iitg.ac.in"];
 
 export const submitHabComplaint = async (req, res) => {
-    console.log(req.body);
 
     if (req.body.problem === "") {
         res.status(400).json({ "error": "Feedback can't be empty" });
@@ -47,8 +46,6 @@ export const submitHabComplaint = async (req, res) => {
             if (fs.existsSync(filepath)) selectedAttachments.push({ path: filepath });
             else console.log("not exists");
         });
-
-        console.log(recieverEmailsForTo, recieverEmailsForCc, selectedAttachments);
 
         let mailDetails = {
             from: process.env.HAB_EMAIL,
