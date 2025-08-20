@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import firebase from "firebase-admin";
-import serviceAccount from "../config/push-notification-key.json" assert { type: "json" };
+import serviceAccount from "../config/push-notification-key.json" with { type: "json" };
 import { NotificationCategories, sendToAllFirebaseTopicName } from "../helpers/constants.js";
 import { sendToATopic } from "../controllers/notificationController.js";
 

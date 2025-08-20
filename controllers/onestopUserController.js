@@ -2,6 +2,12 @@ import { body, matchedData, query } from "express-validator";
 import onestopUserModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import { RefreshTokenError } from "../errors/jwt.auth.error.js";
+import crypto from "crypto";
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
+
 import {
     guestUserName,
     guestUserEmail,
@@ -15,7 +21,7 @@ import {
 } from "../errors/request.validation.error.js";
 import userNotifTokenModel from "../models/userNotifTokenModel.js";
 import firebase from "firebase-admin";
-import serviceAccount from "../config/push-notification-key.json" assert { type: "json" };
+import serviceAccount from "../config/push-notification-key.json" with { type: "json" };
 import asyncHandler from "../middlewares/async.controllers.handler.js";
 import userPersonalNotifModel from "../models/userPersonalNotifModel.js";
 import { updateTopicSubscriptionOfUser } from "./notificationController.js";
@@ -273,6 +279,70 @@ export const addBlockedFalseAndNotifPrefs = async (req, res) => {
         return res.status(500).json({message: "Internal server error"});
     }
 }
+
+
+const GATELOG_SECRET_KEY = process.env.GATELOG_SECRET_KEY;
+if (!GATELOG_SECRET_KEY) {
+  console.log("No gatelog secret key setup")
+}
+
+// HMAC-SHA256(rollNo, GATELOG_SECRET_KEY) -> hex
+function hmacRollNo(rollNo) {
+  return crypto
+    .createHmac("sha256", GATELOG_SECRET_KEY)
+    .update(String(rollNo), "utf8")
+    .digest("hex");
+}
+
+// constant-time comparison for hex strings
+function constantTimeEqual(a, b) {
+  const ba = Buffer.from(a, "hex");
+  const bb = Buffer.from(b, "hex");
+  if (ba.length !== bb.length) return false;
+  return crypto.timingSafeEqual(ba, bb);
+}
+
+// AES-256-GCM encrypt JSON string; returns "ivB64.tagB64.ctB64"
+function encryptWithAesGcm(plaintext) {
+  const key = crypto.createHash("sha256").update(GATELOG_SECRET_KEY, "utf8").digest(); // 32B
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+  const ciphertext = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return `${iv.toString("base64")}.${tag.toString("base64")}.${ciphertext.toString("base64")}`;
+}
+
+// validators
+export const getUserByRollSecureValidate = [
+  query("rollNo", "rollNo is required").exists().bail().isString().trim().notEmpty(),
+  query("token", "token is required").exists().bail().isString().trim().notEmpty(),
+];
+
+// controller
+export const getUserByRollSecure = asyncHandler(async (req, res) => {
+  const { rollNo, token } = matchedData(req, { locations: ["query"] });
+  console.log(`Secure GET user by rollNo: ${rollNo}, token: ${token}`);
+
+  // 1) Auth check
+  const expected = hmacRollNo(rollNo);
+  if (!constantTimeEqual(expected, token)) {
+    return res.status(401).json({ success: false, message: "Invalid token" });
+  }
+
+  // 2) Find user
+  const user = await onestopUserModel.findOne({ rollNo }).lean();
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found" });
+  }
+
+  // 3) Prepare safe payload (omit __v, etc.)
+  const { __v, ...safeUser } = user;
+
+  // 4) Encrypt and send
+  const encrypted = encryptWithAesGcm(JSON.stringify(safeUser));
+  return res.status(200).json({ success: true, data: encrypted });
+});
+
 
 // exports.logoutUserValidate = [
 //   body('deviceToken', 'device Token is required').exists(), // to remove this device id

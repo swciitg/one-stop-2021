@@ -53,6 +53,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(BASEURL, routers.messmenuUploadRouter);
 
+
 // enable CORS
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -64,6 +65,11 @@ app.use((req, res, next) => {
     );
     next();
 });
+
+
+// Gatelog Endpoint for fetching user details with roll number Secure GET by rollNo (HMAC auth + AES-GCM encrypt response)
+app.use(BASEURL, routers.gatelogRouter);
+
 
 // docs route
 app.use(BASEURL, routers.docsRouter);
