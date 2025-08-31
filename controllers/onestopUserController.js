@@ -73,7 +73,7 @@ export const getUserTokens = async (userid) => {
 };
 
 export const getUserInfo = async (req, res, next) => {
-    const key = `user:${req.userid}`;
+    const key = `user:full:${req.userid}`;
     const cached = await redis.get(key);
         if (cached) {
             console.log("User found in cache");

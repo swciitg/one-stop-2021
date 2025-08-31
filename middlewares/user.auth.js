@@ -5,6 +5,7 @@ import { AccessTokenError } from "../errors/jwt.auth.error.js";
 import { getGuestUserID } from "../controllers/onestopUserController.js";
 import { GuestAccessError } from "../errors/guest.access.error.js";
 import { UserBlockedError } from "../errors/user.blocked.error.js";
+import redis from "../utils/redisClient.js";
 
 const accessjwtsecret = process.env.ACCESS_JWT_SECRET;
 
@@ -26,20 +27,34 @@ export const verifyUserRequest = async (req, res, next) => {
             }
             decoded = dec;
         });
-        let onestopUser = await onestopUserModel.findById(decoded.userid);
-        if (onestopUser !== undefined && !onestopUser.blocked) {
 
-            req.userid = decoded.userid;
-            if (!req.body) {
-                req.body = {};
-            }
-            req.body.email = onestopUser.outlookEmail;
-            next();
+        const key = `user:block:${decoded.userid}`;
+        let userCache = await redis.get(key);
+        let userData;
+        if (userCache) {
+            console.log("User found in cache of blocked");
+            userData = JSON.parse(userCache);
+        } else {
+            const user = await onestopUserModel.findById(decoded.userid).lean();
+            if (!user) throw new RequestValidationError("Invalid user id found");
+
+            userData = {
+                blocked: user.blocked,
+                outlookEmail: user.outlookEmail
+            };
+
+            await redis.set(key, JSON.stringify(userData), "EX", 86400);
         }
-        else if (onestopUser !== undefined && onestopUser.blocked) {
-            throw new UserBlockedError("user has been blocked due to spamming");
+
+          if (userData.blocked) {
+            throw new UserBlockedError("User has been blocked due to spamming");
         }
-        else throw new RequestValidationError("invalid user id found");
+
+        req.userid = decoded.userid;
+        req.body = req.body || {};
+        req.body.email = userData.outlookEmail;
+
+        next();
     } catch (err) {
         console.log(`Unexpected error in verifyUserRequest: ${err}`);
         next(err);
