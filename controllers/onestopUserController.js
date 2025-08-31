@@ -1,5 +1,6 @@
 import { body, matchedData, query } from "express-validator";
 import onestopUserModel from "../models/userModel.js";
+import redis from "../utils/redisClient.js";
 import jwt from "jsonwebtoken";
 import { RefreshTokenError } from "../errors/jwt.auth.error.js";
 import crypto from "crypto";
@@ -72,7 +73,18 @@ export const getUserTokens = async (userid) => {
 };
 
 export const getUserInfo = async (req, res, next) => {
+    const key = `user:${req.userid}`;
+    const cached = await redis.get(key);
+        if (cached) {
+            console.log("User found in cache");
+            return res.json(JSON.parse(cached));
+    }
     let onestopuser = await onestopUserModel.findById(req.userid);
+        if (!onestopuser) {
+            return res.status(404).send("User not found");
+        }
+        await redis.set(key, JSON.stringify(onestopuser), "EX", 86400);
+
     res.json(onestopuser);
 };
 
