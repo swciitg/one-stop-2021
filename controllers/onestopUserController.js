@@ -148,6 +148,10 @@ export const updateOnestopUser = asyncHandler(async (req, res) => {
     let userid = req.userid;
     let data = matchedData(req, {locations: ["body"]});
     await onestopUserModel.findByIdAndUpdate(userid, data, {runValidators: true});
+    const key1 = `user:full:${userid}`;
+    const key2 = `user:block:${userid}`;
+    await redis.del(key1);
+    await redis.del(key2);
     let deviceToken = matchedData(req, {locations: ["query"]}).deviceToken;
     if (deviceToken) {
         let userNotifToken = new userNotifTokenModel({
