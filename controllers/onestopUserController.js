@@ -83,7 +83,7 @@ export const getUserInfo = async (req, res, next) => {
         if (!onestopuser) {
             return res.status(404).send("User not found");
         }
-        await redis.set(key, JSON.stringify(onestopuser), "EX", 86400);
+        await redis.set(key, JSON.stringify(onestopuser), "EX", 864000);
 
     res.json(onestopuser);
 };
