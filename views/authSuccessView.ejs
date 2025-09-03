@@ -61,6 +61,28 @@
         <% if(userTokens==="ERROR OCCURED"){ %> <p class="confirmText"> Oops!! Something went wrong :( </p> <% } else {%> <p class="confirmText"> Successfully signed in </p> <img src="../../confirmicon" id="confirmIcon"><%}%>
     </div>
     <p id="userTokens"><%= userTokens %></p>
+
+    <script>
+        // Wait for 0.5 seconds then redirect
+        setTimeout(function() {
+            const userTokensElement = document.getElementById('userTokens');
+            const userTokens = userTokensElement.textContent.trim();
+            
+            // Check if tokens are valid (not an error)
+            if (userTokens && userTokens !== "ERROR OCCURED") {
+                // Tokens are in format "accessToken/refreshToken"
+                const tokenParts = userTokens.split('/');
+                const accessToken = tokenParts[0] || '';
+                const refreshToken = tokenParts[1] || '';
+                
+                // Create the redirect URL
+                const redirectUrl = `onestopiitg://auth?accessToken=${encodeURIComponent(accessToken)}&refresh_token=${encodeURIComponent(refreshToken)}`;
+                
+                // Redirect
+                window.location.href = redirectUrl;
+            }
+        }, 500); // 0.5 seconds delay
+    </script>
 </body>
 
 </html>
