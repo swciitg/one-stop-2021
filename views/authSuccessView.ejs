@@ -76,7 +76,7 @@
                 const refreshToken = tokenParts[1] || '';
                 
                 // Create the redirect URL
-                const redirectUrl = `onestopiitg://auth?accessToken=${encodeURIComponent(accessToken)}&refresh_token=${encodeURIComponent(refreshToken)}`;
+                const redirectUrl = `onestopiitg://auth?accessToken=${encodeURIComponent(accessToken)}&refreshToken=${encodeURIComponent(refreshToken)}`;
                 
                 // Redirect
                 window.location.href = redirectUrl;
