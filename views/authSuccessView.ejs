@@ -47,10 +47,39 @@
             font-size: 14px;
         }
 
-        #confirmIcon{
+        .successWrap {
+            display: grid;
+            justify-items: center;
+            gap: 12px;
+        }
+
+        .iconWrap {
+            margin-top: 12px;
+            position: relative;
+            width: 64px;
+            height: 64px;
+        }
+
+        .spinnerRing {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.12);
+            border-top-color: #27ae60;
+            animation: spin 1s linear infinite;
+        }
+
+        #confirmIcon {
+            position: absolute;
+            inset: 12px;
             margin: auto;
-            width: 10vw;
-            max-width: 32px;
+            width: 40px;
+            height: 40px;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -58,7 +87,17 @@
 <body>
     <div class="mainDiv">
         <img src="../../appLogo" id="appLogo">
-        <% if(userTokens==="ERROR OCCURED"){ %> <p class="confirmText"> Oops!! Something went wrong :( </p> <% } else {%> <p class="confirmText"> Successfully signed in </p> <img src="../../confirmicon" id="confirmIcon"><%}%>
+        <% if(userTokens==="ERROR OCCURED"){ %>
+            <p class="confirmText"> Oops!! Something went wrong :( </p>
+        <% } else { %>
+            <div class="successWrap">
+                <div class="iconWrap">
+                    <div class="spinnerRing"></div>
+                    <img src="../../confirmicon" id="confirmIcon">
+                </div>
+                <p class="confirmText"> Successfully signed in </p>
+            </div>
+        <% } %>
     </div>
     <p id="userTokens"><%= userTokens %></p>
 
