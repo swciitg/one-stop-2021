@@ -12,7 +12,18 @@ export default {
         editProperties: ["cardsDataList", "quickLinks"],
         showProperties: ["cardsDataList", "quickLinks"],
         actions: {
-            list: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
+            list: {
+                isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles),
+                before: async (request) => {
+                    // Remove sort parameters to prevent sorting errors with array fields
+                    // Only one entry exists in this collection, so sorting is not needed
+                    if (request.query) {
+                        delete request.query.sortBy;
+                        delete request.query.direction;
+                    }
+                    return request;
+                }
+            },
             new: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
             filter: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
             edit: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
