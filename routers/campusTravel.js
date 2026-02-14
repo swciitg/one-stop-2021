@@ -11,5 +11,6 @@ campusTravelRouter.get("/campus-travel/chat", verifyUserRequest, campusTravelCon
 campusTravelRouter.post("/campus-travel/chat", verifyUserRequest, restrictIfGuest, campusTravelController.postReplyChat);
 campusTravelRouter.delete("/campus-travel", verifyUserRequest, restrictIfGuest, campusTravelController.deleteTravelPost);
 campusTravelRouter.delete("/campus-travel/all", verifyUserRequest, restrictIfGuest, campusTravelController.deleteAllTravelPosts);
+campusTravelRouter.patch("/campus-travel/:postId/bookings/:bookingId/accept", verifyUserRequest, restrictIfGuest, campusTravelController.acceptBookingController);
 
 export { campusTravelRouter };

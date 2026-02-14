@@ -1,4 +1,4 @@
-import { TravelPostModel, TravelChatModel, ReplyPostModel } from "../models/campusTravelModel.js";
+import { TravelPostModel, TravelChatModel, ReplyPostModel, TravelBookingModel } from "../models/campusTravelModel.js";
 import { sendEmail } from 'nodejs-nodemailer-outlook';
 import { sendToUser } from "./notificationController.js";
 import * as onestopUserModel from "../models/userModel.js";
@@ -179,3 +179,56 @@ export const postReplyChat = asyncHandler(async (req, res) => {
     });
     res.json({ "success": true });
 });
+
+
+export const acceptBookingController = async (req, res) => {
+   const { postId, bookingId } = req.body;
+   const session = await mongoose.startSession();
+    session.startTransaction();
+      try {
+
+        const post = await TravelPostModel.findById(postId).session(session);
+
+        if (!post) {
+            throw new Error("Travel post not found");
+        }
+
+        if (post.availableSeats <= 0) {
+            throw new Error("No seats available");
+        }
+
+        const booking = await TravelBookingModel.findById(bookingId).session(session);
+
+        if (!booking) {
+            throw new Error("Booking not found");
+        }
+
+        if (booking.status !== "pending") {
+            throw new Error("Booking already processed");
+        }
+
+        booking.status = "accepted";
+        await booking.save({ session });
+
+        post.availableSeats -= 1;
+        await post.save({ session });
+
+        await session.commitTransaction();
+        session.endSession();
+
+        return res.status(200).json({
+            success: true,
+            message: "Booking approved successfully"
+        });
+
+    } catch (error) {
+
+        await session.abortTransaction();
+        session.endSession();
+
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
