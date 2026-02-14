@@ -1,7 +1,7 @@
-import { TravelPostModel, TravelChatModel, ReplyPostModel } from "../models/campusTravelModel.js";
+import { TravelPostModel, TravelChatModel, ReplyPostModel, TravelBookingModel } from "../models/campusTravelModel.js";
 import { sendEmail } from 'nodejs-nodemailer-outlook';
 import { sendToUser } from "./notificationController.js";
-import * as onestopUserModel from "../models/userModel.js";
+import onestopUserModel from "../models/userModel.js";
 import asyncHandler from "../middlewares/async.controllers.handler.js";
 import { NotificationCategories } from "../helpers/constants.js";
 
@@ -23,7 +23,7 @@ export async function postTravel(req, res) {
         let travelDateTime = new Date(req.body.travelDateTime);
         let chatModel = new TravelChatModel();
         chatModel = await chatModel.save();
-        let data = { "email": req.body.email, "name": req.body.name, "travelDateTime": travelDateTime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id };
+        let data = { "email": req.body.email, "name": req.body.name, "travelDateTime": travelDateTime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id, "totalSeats": req.body.totalSeats, "availableSeats": req.body.totalSeats };
         if ("phonenumber" in req.body) data["phonenumber"] = req.body.phonenumber;
         let travelModel = new TravelPostModel(data);
         await travelModel.save();
@@ -31,6 +31,50 @@ export async function postTravel(req, res) {
     }
     catch (err) {
         res.json({ "success": false, "message": err.toString() });
+    }
+}
+
+export async function requesttoJoin(req, res) {
+    try {
+        const travelPostId = req.query.travelPostId;
+        const { email, name, phonenumber } = req.body;
+
+        if (!travelPostId || !email || !name) {
+            return res.status(400).json({ success: false, message: "Missing required fields." });
+        }
+
+        const travelPost = await TravelPostModel.findById(travelPostId);
+        if (!travelPost) {
+            return res.status(404).json({ success: false, message: "Travel post not found." });
+        }
+
+        const existingBooking = await TravelBookingModel.findOne({ travelPost: travelPostId, email: email });
+        if (existingBooking) {
+            return res.status(400).json({ success: false, message: "You have already requested to join this post." });
+        }
+
+        const newBooking = new TravelBookingModel({
+            travelPost: travelPostId,
+            email,
+            name,
+            phoneNumber: phonenumber,
+            status: "pending"
+        });
+
+        await newBooking.save();
+
+        travelPost.bookings.push(newBooking._id);
+        await travelPost.save();
+
+        const user = await onestopUserModel.findOne({ outlookEmail: travelPost.email });
+        if (user) {
+            await sendToUser(user._id, NotificationCategories.cabSharing, "New Request to Join", `${name} requested to join your travel post.`);
+        }
+
+        res.json({ success: true, message: "Request to join sent." });
+
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.toString() });
     }
 }
 
@@ -149,9 +193,9 @@ export async function getTravelPostChatReplies(req, res) {
 
 
 async function sendPostReplyNotif(title, replier, senderOutlook, recieverOutlook) {
-    if (senderOutlook !== recieverOutlook){
-        let user = await onestopUserModel.findOne({ outlookEmail: recieverOutlook});
-        await sendToUser(user._id,NotificationCategories.cabSharing,title,`${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`);
+    if (senderOutlook !== recieverOutlook) {
+        let user = await onestopUserModel.findOne({ outlookEmail: recieverOutlook });
+        await sendToUser(user._id, NotificationCategories.cabSharing, title, `${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`);
     }
 }
 
@@ -163,7 +207,7 @@ export const postReplyChat = asyncHandler(async (req, res) => {
     travelChat["replies"].push(travelChatReply);
     travelChat = await travelChat.save();
     TravelPostModel.findOne({ chatId: id }).then((travelPost) => {
-        sendPostReplyNotif(`Cab sharing reply: ${travelChatReply.message.substr(0,1)}`, data["name"], data["email"], travelPost.email);
+        sendPostReplyNotif(`Cab sharing reply: ${travelChatReply.message.substr(0, 1)}`, data["name"], data["email"], travelPost.email);
         //if(true){ // when other people writes a message
         //sendMailForTravelPostReply(data["name"],travelPost["email"],travelPost["name"],travelPost["from"],travelPost["to"],travelPost["travelDateTime"]);
         // req.body.notif={};
