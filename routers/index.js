@@ -27,6 +27,7 @@ import {docsRouter} from "./docsRouter.js";
 import {opiRouter} from "./habRoutes/opiRouter.js";
 import messmenuUploadRouter from "./messmenuUploadRouter.js";
 import gatelogRouter from "./gatelogRouter.js";
+import {travelGuideRouter} from "./travelGuideRouter.js";
 export default {
   emailRouter,
   contactRouter,
@@ -54,5 +55,6 @@ export default {
   docsRouter,
   opiRouter,
   messmenuUploadRouter,
-  gatelogRouter
+  gatelogRouter,
+  travelGuideRouter
 };

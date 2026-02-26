@@ -26,6 +26,7 @@ import hospitalTimetableResource from "./resources/hospitalTimeTable.resource.js
 import doctorResource from "./resources/doctor.resource.js";
 import habAdminResource from "./resources/hab.resource.js";
 import privatekeyResource from "./resources/privateKey.resource.js";
+import travelGuideResource from "./resources/travelGuide.resource.js";
 
 // Create MongoDB session store
 const SessionStore = MongoDBStore(session);
@@ -45,7 +46,7 @@ var sessiontStore = new SessionStore(
 });
 
 const adminjs = new AdminJs({
-    resources: [announcementResource, messMenuResouce, foodOutletResource, adminResource, userResource, timingResource, contactsResource, cabSharingResource, lostItemResource, foundItemResource, buyItemResource, sellItemResource, homePageResource,  habAdminResource, doctorResource, hospitalContactResource, hospitalTimetableResource , privatekeyResource],
+    resources: [announcementResource, messMenuResouce, foodOutletResource, adminResource, userResource, timingResource, contactsResource, cabSharingResource, lostItemResource, foundItemResource, buyItemResource, sellItemResource, homePageResource,  habAdminResource, doctorResource, hospitalContactResource, hospitalTimetableResource , privatekeyResource, travelGuideResource],
     assets: {
         styles: styleAssets
     },
