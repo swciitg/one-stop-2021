@@ -109,6 +109,7 @@ app.use(BASEURL, routers.hospitalTimetableRouter);
 app.use(BASEURL, routers.habComplaintRouter);
 app.use(BASEURL, routers.gcScoreboardRouter);
 app.use(BASEURL, routers.opiRouter);
+app.use(BASEURL, routers.travelGuideRouter);
 
 
 console.log("Admin Panel running at", ADMINPANELROOT);
