@@ -10,12 +10,12 @@ const TravelPostSchema = new mongoose.Schema({
     "note" : {type: String, required: true},
     "phonenumber" : {type: String},
     "chatId" : {type: String, required: true},
-     "totalSeats": { type: Number, required: true }, 
+    "totalSeats": { type: Number, required: true },
     "availableSeats": { type: Number, required: true },
-      "bookings": [{
+    "bookings": [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "TravelBooking"
-    }], 
+    }],
 });
 
 const ReplyPostSchema = new mongoose.Schema({
@@ -53,4 +53,4 @@ const TravelPostModel = mongoose.model("TravelPost", TravelPostSchema);
 const TravelChatModel = mongoose.model("TravelChat", ChatSchema);
 const ReplyPostModel = mongoose.model("TravelChatReply", ReplyPostSchema);
 
-export { TravelPostModel, TravelChatModel, ReplyPostModel };
+export { TravelPostModel, TravelChatModel, ReplyPostModel, TravelBookingModel };
