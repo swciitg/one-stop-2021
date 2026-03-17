@@ -442,3 +442,176 @@ export const getMyAds = async (req, res) => {
 const compare = (a, b) => {
     return b.date - a.date;
 };
+
+export const searchSellItems = async (req, res) => {
+    try {
+        const { query, price, page = 1 } = req.query;
+        const limit = 10;
+        const skip = (page - 1) * limit;
+
+        const searchFilter = {};
+
+        if (query && query.trim()) {
+            searchFilter.$or = [
+                { title: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } }
+            ];
+        }
+
+        if (price) {
+            const priceValue = parseFloat(price);
+            if (!isNaN(priceValue)) {
+                searchFilter.price = { $lte: priceValue };
+            }
+        }
+
+        const totalCount = await sellModel.countDocuments(searchFilter);
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const results = await sellModel
+            .find(searchFilter)
+            .sort({ date: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.json({
+            success: true,
+            query: query || "",
+            price: price || "",
+            results: results,
+            pagination: {
+                currentPage: parseInt(page),
+                totalPages: totalPages,
+                totalResults: totalCount,
+                resultsPerPage: limit
+            }
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export const searchBuyItems = async (req, res) => {
+    try {
+        const { query, price, page = 1 } = req.query;
+        const limit = 10;
+        const skip = (page - 1) * limit;
+
+        const searchFilter = {};
+
+        if (query && query.trim()) {
+            searchFilter.$or = [
+                { title: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } }
+            ];
+        }
+
+        if (price) {
+            const priceValue = parseFloat(price);
+            if (!isNaN(priceValue)) {
+                searchFilter.price = { $gte: priceValue };
+            }
+        }
+
+        const totalCount = await buyModel.countDocuments(searchFilter);
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const results = await buyModel
+            .find(searchFilter)
+            .sort({ date: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.json({
+            success: true,
+            query: query || "",
+            price: price || "",
+            results: results,
+            pagination: {
+                currentPage: parseInt(page),
+                totalPages: totalPages,
+                totalResults: totalCount,
+                resultsPerPage: limit
+            }
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export const searchBuyAndSell = async (req, res) => {
+    try {
+        const { query, price, page = 1 } = req.query;
+        const limit = 10;
+        const skip = (page - 1) * limit;
+
+        const searchFilter = {};
+
+        if (query && query.trim()) {
+            searchFilter.$or = [
+                { title: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } }
+            ];
+        }
+
+        const sellFilter = { ...searchFilter };
+        const buyFilter = { ...searchFilter };
+
+        if (price) {
+            const priceValue = parseFloat(price);
+            if (!isNaN(priceValue)) {
+                sellFilter.price = { $lte: priceValue };
+                buyFilter.price = { $gte: priceValue };
+            }
+        }
+
+        const [sellResults, buyResults] = await Promise.all([
+            sellModel.find(sellFilter)
+                .sort({ date: -1 })
+                .skip(skip)
+                .limit(limit),
+            buyModel.find(buyFilter)
+                .sort({ date: -1 })
+                .skip(skip)
+                .limit(limit)
+        ]);
+
+        const [sellTotalCount, buyTotalCount] = await Promise.all([
+            sellModel.countDocuments(sellFilter),
+            buyModel.countDocuments(buyFilter)
+        ]);
+
+        const totalCount = sellTotalCount + buyTotalCount;
+        const totalPages = Math.ceil(totalCount / limit);
+
+        res.json({
+            success: true,
+            query: query || "",
+            price: price || "",
+            sellResults: sellResults,
+            buyResults: buyResults,
+            pagination: {
+                currentPage: parseInt(page),
+                totalPages: totalPages,
+                totalResults: totalCount,
+                sellCount: sellTotalCount,
+                buyCount: buyTotalCount,
+                resultsPerPage: limit
+            }
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
