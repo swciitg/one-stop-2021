@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { TravelPostModel, TravelChatModel, ReplyPostModel, TravelBookingModel } from "../models/campusTravelModel.js";
 import { sendEmail } from 'nodejs-nodemailer-outlook';
 import { sendToUser } from "./notificationController.js";
@@ -228,7 +229,7 @@ export const postReplyChat = asyncHandler(async (req, res) => {
 export const acceptBookingController = async (req, res) => {
    const { postId, bookingId } = req.params;
    const session = await mongoose.startSession();
-    session.startTransaction();
+   session.startTransaction();
       try {
 
         const post = await TravelPostModel.findById(postId).session(session);
@@ -266,7 +267,7 @@ export const acceptBookingController = async (req, res) => {
         });
 
     } catch (error) {
-
+        
         await session.abortTransaction();
         session.endSession();
 
