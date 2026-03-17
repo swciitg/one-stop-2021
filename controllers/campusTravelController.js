@@ -126,7 +126,7 @@ export async function getTravelPosts(req, res) {
                     $gte: lowerDate,
                     $lt: upperDate
                 }, to: req.query.to, from: req.query.from
-            }).sort({ "travelDateTime": 1 });
+            }).populate("bookings").sort({ "travelDateTime": 1 });
         let datewiseTravelPost = {};
         travelPosts.forEach((element) => {
             let date = getFormattedDate(element["travelDateTime"]);
@@ -172,7 +172,7 @@ export async function deleteAllTravelPosts(req, res) {
 export async function getMyAds(req, res) {
     try {
         const email = req.query.email;
-        let myTravelPosts = await TravelPostModel.find({ "email": email });
+        let myTravelPosts = await TravelPostModel.find({ "email": email }).populate("bookings");
         res.json({ "success": true, "details": myTravelPosts });
     }
     catch (err) {
@@ -251,7 +251,7 @@ export const acceptBookingController = async (req, res) => {
             throw new Error("Booking already processed");
         }
 
-        booking.status = "accepted";
+        booking.status = "approved";
         await booking.save({ session });
 
         post.availableSeats -= 1;
