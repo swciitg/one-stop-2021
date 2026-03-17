@@ -228,11 +228,9 @@ export const postReplyChat = asyncHandler(async (req, res) => {
 
 export const acceptBookingController = async (req, res) => {
    const { postId, bookingId } = req.params;
-   const session = await mongoose.startSession();
-   session.startTransaction();
       try {
 
-        const post = await TravelPostModel.findById(postId).session(session);
+        const post = await TravelPostModel.findById(postId);
 
         if (!post) {
             throw new Error("Travel post not found");
@@ -242,7 +240,7 @@ export const acceptBookingController = async (req, res) => {
             throw new Error("No seats available");
         }
 
-        const booking = await TravelBookingModel.findById(bookingId).session(session);
+        const booking = await TravelBookingModel.findById(bookingId);
 
         if (!booking) {
             throw new Error("Booking not found");
@@ -253,13 +251,10 @@ export const acceptBookingController = async (req, res) => {
         }
 
         booking.status = "approved";
-        await booking.save({ session });
+        await booking.save();
 
         post.availableSeats -= 1;
-        await post.save({ session });
-
-        await session.commitTransaction();
-        session.endSession();
+        await post.save();
 
         return res.status(200).json({
             success: true,
@@ -267,9 +262,6 @@ export const acceptBookingController = async (req, res) => {
         });
 
     } catch (error) {
-        
-        await session.abortTransaction();
-        session.endSession();
 
         return res.status(400).json({
             success: false,
