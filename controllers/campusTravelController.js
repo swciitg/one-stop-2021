@@ -227,8 +227,8 @@ export const postReplyChat = asyncHandler(async (req, res) => {
 
 
 export const acceptBookingController = async (req, res) => {
-   const { postId, bookingId } = req.params;
-      try {
+    const { postId, bookingId } = req.params;
+    try {
 
         const post = await TravelPostModel.findById(postId);
 
