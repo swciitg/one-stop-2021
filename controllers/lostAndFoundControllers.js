@@ -425,3 +425,163 @@ export const deleteFoundAll = async (req, res) => {
 const compare = (a, b) => {
     return b.date - a.date;
 };
+
+export const searchLostItems = async (req, res) => {
+    try {
+        const { query, location, page = 1 } = req.query;
+        const limit = 10;
+        const skip = (page - 1) * limit;
+
+        const searchFilter = {};
+
+        if (query && query.trim()) {
+            searchFilter.$or = [
+                { title: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } }
+            ];
+        }
+
+        if (location && location.trim()) {
+            searchFilter.location = { $regex: location, $options: "i" };
+        }
+
+        const totalCount = await LostModel.countDocuments(searchFilter);
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const results = await LostModel
+            .find(searchFilter)
+            .sort({ date: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.json({
+            success: true,
+            query: query || "",
+            location: location || "",
+            results: results,
+            pagination: {
+                currentPage: parseInt(page),
+                totalPages: totalPages,
+                totalResults: totalCount,
+                resultsPerPage: limit
+            }
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export const searchFoundItems = async (req, res) => {
+    try {
+        const { query, location, page = 1 } = req.query;
+        const limit = 10;
+        const skip = (page - 1) * limit;
+
+        const searchFilter = {};
+
+        if (query && query.trim()) {
+            searchFilter.$or = [
+                { title: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } }
+            ];
+        }
+
+        if (location && location.trim()) {
+            searchFilter.location = { $regex: location, $options: "i" };
+        }
+
+        const totalCount = await FoundModel.countDocuments(searchFilter);
+        const totalPages = Math.ceil(totalCount / limit);
+
+        const results = await FoundModel
+            .find(searchFilter)
+            .sort({ date: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.json({
+            success: true,
+            query: query || "",
+            location: location || "",
+            results: results,
+            pagination: {
+                currentPage: parseInt(page),
+                totalPages: totalPages,
+                totalResults: totalCount,
+                resultsPerPage: limit
+            }
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+export const searchLostAndFound = async (req, res) => {
+    try {
+        const { query, location, page = 1 } = req.query;
+        const limit = 10;
+        const skip = (page - 1) * limit;
+
+        const searchFilter = {};
+
+        if (query && query.trim()) {
+            searchFilter.$or = [
+                { title: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } }
+            ];
+        }
+
+        if (location && location.trim()) {
+            searchFilter.location = { $regex: location, $options: "i" };
+        }
+
+        const [lostResults, foundResults] = await Promise.all([
+            LostModel.find(searchFilter)
+                .sort({ date: -1 })
+                .skip(skip)
+                .limit(limit),
+            FoundModel.find(searchFilter)
+                .sort({ date: -1 })
+                .skip(skip)
+                .limit(limit)
+        ]);
+
+        const [lostTotalCount, foundTotalCount] = await Promise.all([
+            LostModel.countDocuments(searchFilter),
+            FoundModel.countDocuments(searchFilter)
+        ]);
+
+        const totalCount = lostTotalCount + foundTotalCount;
+        const totalPages = Math.ceil(totalCount / limit);
+
+        res.json({
+            success: true,
+            query: query || "",
+            location: location || "",
+            lostResults: lostResults,
+            foundResults: foundResults,
+            pagination: {
+                currentPage: parseInt(page),
+                totalPages: totalPages,
+                totalResults: totalCount,
+                lostCount: lostTotalCount,
+                foundCount: foundTotalCount,
+                resultsPerPage: limit
+            }
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.json({
+            success: false,
+            message: error.message
+        });
+    }
+};
