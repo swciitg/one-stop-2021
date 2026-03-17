@@ -226,7 +226,7 @@ export const postReplyChat = asyncHandler(async (req, res) => {
 
 
 export const acceptBookingController = async (req, res) => {
-   const { postId, bookingId } = req.body;
+   const { postId, bookingId } = req.params;
    const session = await mongoose.startSession();
     session.startTransaction();
       try {
