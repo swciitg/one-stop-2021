@@ -12,5 +12,6 @@ campusTravelRouter.post("/campus-travel/chat", verifyUserRequest, restrictIfGues
 campusTravelRouter.delete("/campus-travel", verifyUserRequest, restrictIfGuest, campusTravelController.deleteTravelPost);
 campusTravelRouter.delete("/campus-travel/all", verifyUserRequest, restrictIfGuest, campusTravelController.deleteAllTravelPosts);
 campusTravelRouter.patch("/campus-travel/:postId/bookings/:bookingId/accept", verifyUserRequest, restrictIfGuest, campusTravelController.acceptBookingController);
+campusTravelRouter.delete("/campus-travel/:postId/bookings/:bookingId", verifyUserRequest, restrictIfGuest, campusTravelController.cancelBookingController);
 campusTravelRouter.post("/campus-travel/request-to-join", verifyUserRequest, restrictIfGuest, campusTravelController.requesttoJoin);
 export { campusTravelRouter };

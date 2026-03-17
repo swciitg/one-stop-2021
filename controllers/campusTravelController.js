@@ -269,3 +269,36 @@ export const acceptBookingController = async (req, res) => {
         });
     }
 };
+
+export const cancelBookingController = async (req, res) => {
+    const { postId, bookingId } = req.params;
+    try {
+        const post = await TravelPostModel.findById(postId);
+        if (!post) {
+            return res.status(404).json({ success: false, message: "Travel post not found" });
+        }
+
+        const booking = await TravelBookingModel.findById(bookingId);
+        if (!booking) {
+            return res.status(404).json({ success: false, message: "Booking not found" });
+        }
+
+        if (booking.email !== req.body.email) {
+            return res.status(403).json({ success: false, message: "Unauthorized to cancel this booking" });
+        }
+
+        if (booking.status === "approved") {
+            post.availableSeats += 1;
+            await post.save();
+        }
+
+        post.bookings.pull(booking._id);
+        await post.save();
+
+        await TravelBookingModel.findByIdAndDelete(bookingId);
+
+        return res.status(200).json({ success: true, message: "Booking cancelled successfully" });
+    } catch (error) {
+        return res.status(400).json({ success: false, message: error.message });
+    }
+};
