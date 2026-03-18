@@ -11,6 +11,7 @@ export default {
         filterProperties: ["hostel", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
         editProperties: ["hostel", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
         showProperties: ["hostel", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+        listProperties: ["hostel"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },

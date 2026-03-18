@@ -11,6 +11,7 @@ export default {
         filterProperties: ["email", "name", "travelDateTime", "to", "from", "margin", "note", "phonenumber", "chatId"],
         editProperties: ["email", "name", "travelDateTime", "to", "from", "margin", "note", "phonenumber", "chatId"],
         showProperties: ["email", "name", "travelDateTime", "to", "from", "margin", "note", "phonenumber", "chatId"],
+        listProperties: ["name", "email", "travelDateTime"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => false }, // don't let admin create travel post

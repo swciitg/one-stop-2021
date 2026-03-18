@@ -11,6 +11,7 @@ export default {
         filterProperties: ["place", "iconType"],
         editProperties: ["place", "iconType", "description", "transportMethods"],
         showProperties: ["place", "iconType", "description", "transportMethods"],
+        listProperties: ["place"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },

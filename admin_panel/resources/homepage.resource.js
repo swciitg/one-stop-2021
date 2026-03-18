@@ -7,25 +7,17 @@ const allowedRoles = [roles.SUPERADMIN]; // Only super admin allowed to change h
 export default {
     resource: homePage,
     options: {
-        listProperties: ["cardsDataList"],
-        filterProperties: ["cardsDataList"],
+        listProperties: ["_id"],
+        filterProperties: [],
         editProperties: ["cardsDataList", "quickLinks"],
-        showProperties: ["cardsDataList", "quickLinks"],
+        showProperties: ["_id", "cardsDataList", "quickLinks"],
+        properties: {
+            _id: { isVisible: { list: true, filter: false, show: true, edit: false } }
+        },
         actions: {
-            list: {
-                isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles),
-                before: async (request) => {
-                    // Remove sort parameters to prevent sorting errors with array fields
-                    // Only one entry exists in this collection, so sorting is not needed
-                    if (request.query) {
-                        delete request.query.sortBy;
-                        delete request.query.direction;
-                    }
-                    return request;
-                }
-            },
+            list: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
             new: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
-            filter: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
+            filter: {isAccessible: false},
             edit: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)},
             delete: {isAccessible: ({currentAdmin}) => verifyRoles(currentAdmin, allowedRoles)}
         },
