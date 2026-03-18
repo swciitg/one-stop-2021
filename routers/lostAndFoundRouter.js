@@ -14,6 +14,8 @@ LostAndFoundRouter.post(
     "/lost/remove", verifyUserRequest, restrictIfGuest, LostAndFoundControllers.postLostRemoveDetails
 );
 
+LostAndFoundRouter.get("/lost/search", verifyUserRequest, LostAndFoundControllers.searchLostItems);
+
 LostAndFoundRouter.get("/found", verifyUserRequest, LostAndFoundControllers.getfoundDetails);
 
 LostAndFoundRouter.get("/foundPage", verifyUserRequest, LostAndFoundControllers.getFoundPageDetails);
@@ -28,8 +30,12 @@ LostAndFoundRouter.post(
 
 LostAndFoundRouter.post("/found/claim", verifyUserRequest, restrictIfGuest, LostAndFoundControllers.claimFoundItem);
 
+LostAndFoundRouter.get("/found/search", verifyUserRequest, LostAndFoundControllers.searchFoundItems);
+
 LostAndFoundRouter.delete("/found", verifyUserRequest, restrictIfGuest, LostAndFoundControllers.deleteFoundAll);
 
 LostAndFoundRouter.post("/lnf/myads", verifyUserRequest, restrictIfGuest, LostAndFoundControllers.getMyAds);
+
+LostAndFoundRouter.get("/lostAndFound/search", verifyUserRequest, LostAndFoundControllers.searchLostAndFound);
 
 export default LostAndFoundRouter;

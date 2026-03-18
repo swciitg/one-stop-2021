@@ -14,6 +14,9 @@ buyAndSellRouter.get("/sell", verifyUserRequest, buyAndSellControllers.getSellDe
 buyAndSellRouter.get("/sellPage", verifyUserRequest, buyAndSellControllers.getSellPageDetails);
 
 buyAndSellRouter.post("/sell", verifyUserRequest, restrictIfGuest, buyAndSellControllers.postSellDetails);
+
+buyAndSellRouter.get("/sell/search", verifyUserRequest, buyAndSellControllers.searchSellItems);
+
 buyAndSellRouter.delete("/sell", verifyUserRequest, restrictIfGuest, buyAndSellControllers.deleteSellAll);
 
 buyAndSellRouter.post(
@@ -23,10 +26,15 @@ buyAndSellRouter.get("/buy", verifyUserRequest, buyAndSellControllers.getBuyDeta
 buyAndSellRouter.get("/buyPage", verifyUserRequest, buyAndSellControllers.getBuyPageDetails);
 
 buyAndSellRouter.post("/buy", verifyUserRequest, restrictIfGuest, buyAndSellControllers.postBuyDetails);
+
+buyAndSellRouter.get("/buy/search", verifyUserRequest, buyAndSellControllers.searchBuyItems);
+
 buyAndSellRouter.delete("/buy", verifyUserRequest, restrictIfGuest, buyAndSellControllers.deleteBuyAll);
 
 buyAndSellRouter.post("/myads", verifyUserRequest, restrictIfGuest, buyAndSellControllers.getMyAds);
 
 buyAndSellRouter.post("/bns/myads", verifyUserRequest, restrictIfGuest, buyAndSellControllers.getMyAds);
+
+buyAndSellRouter.get("/buyAndSell/search", verifyUserRequest, buyAndSellControllers.searchBuyAndSell);
 
 export { buyAndSellRouter };
