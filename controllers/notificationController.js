@@ -139,8 +139,26 @@ export const sendToATopic = async (topic, notification, data) => {
 };
 
 export const getAllTopicNotifs = async (req, res) => {
-  let topicNotifs = await topicNotifModel.find().sort({ createdAt: -1 });
-  res.json({ "allTopicNotifs": topicNotifs });
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const skip = (page - 1) * limit;
+
+  const total = await topicNotifModel.countDocuments();
+  const topicNotifs = await topicNotifModel.find()
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  res.json({
+    allTopicNotifs: topicNotifs,
+    pagination: {
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+      hasNextPage: page < Math.ceil(total / limit),
+      hasPrevPage: page > 1,
+    }
+  });
 };
 
 export const sendToAllValidate = [

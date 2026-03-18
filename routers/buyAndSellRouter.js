@@ -35,6 +35,6 @@ buyAndSellRouter.post("/myads", verifyUserRequest, restrictIfGuest, buyAndSellCo
 
 buyAndSellRouter.post("/bns/myads", verifyUserRequest, restrictIfGuest, buyAndSellControllers.getMyAds);
 
-buyAndSellRouter.get("/search", verifyUserRequest, buyAndSellControllers.searchBuyAndSell);
+buyAndSellRouter.get("/buyAndSell/search", verifyUserRequest, buyAndSellControllers.searchBuyAndSell);
 
 export { buyAndSellRouter };

@@ -36,6 +36,6 @@ LostAndFoundRouter.delete("/found", verifyUserRequest, restrictIfGuest, LostAndF
 
 LostAndFoundRouter.post("/lnf/myads", verifyUserRequest, restrictIfGuest, LostAndFoundControllers.getMyAds);
 
-LostAndFoundRouter.get("/search", verifyUserRequest, LostAndFoundControllers.searchLostAndFound);
+LostAndFoundRouter.get("/lostAndFound/search", verifyUserRequest, LostAndFoundControllers.searchLostAndFound);
 
 export default LostAndFoundRouter;
