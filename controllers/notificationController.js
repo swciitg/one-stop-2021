@@ -86,40 +86,36 @@ export const updateTopicSubscriptionOfUser = async (notifPref, userid) => {
 };
 
 export const sendToUser = async (userid, category, title, body) => {
-  // const options = { priority: "high" };
+  let userNotifTokens = await userNotifTokenModel.find({ userid: userid });
 
-  // let userNotifTokens = await userNotifTokenModel.find({ userid: userid });
-  // console.log(userNotifTokens);
+  let userPersonalNotif = userPersonalNotifModel({ userid, category, title, body });
+  await userPersonalNotif.save();
 
-  // let userPersonalNotif = userPersonalNotifModel({userid,category,title,body});
-  // await userPersonalNotif.save();
+  for (let i = 0; i < userNotifTokens.length; i++) {
+    let message = {
+      notification: {
+        title: title,
+        body: body,
+      },
+      data: {
+        category: category,
+        title: title,
+        body: body,
+      },
+      token: userNotifTokens[i].deviceToken,
+    };
 
-  // for (let i = 0; i < userNotifTokens.length; i++) {
-  //     let message = {
-  //       "notification": {
-  //           "title": title,
-  //           "body": body,
-  //       },
-  //       "data": {
-  //           "category": category,
-  //           "title": title,
-  //           "body": body
-  //       },
-  //       "token": userNotifTokens[i].deviceToken,
-  //   };
-
-  //  try {
-  //       await firebase.messaging().send(message);
-  //       console.log("Successfully sent message");
-  //     } catch (error) {
-  //       console.error("Error sending message:", error);
-
-  //       if (error.code === "messaging/registration-token-not-registered") {
-  //         console.log(`Invalid token found: ${userNotifTokens[i].deviceToken}`);
-  //         await userNotifTokenModel.deleteOne({ _id: userNotifTokens[i]._id });
-  //       }
-  //     }
-  // }
+    try {
+      await firebase.messaging().send(message);
+      console.log(`Notification sent to user ${userid}`);
+    } catch (error) {
+      console.error("Error sending notification:", error);
+      if (error.code === "messaging/registration-token-not-registered") {
+        console.log(`Removing stale token: ${userNotifTokens[i].deviceToken}`);
+        await userNotifTokenModel.deleteOne({ _id: userNotifTokens[i]._id });
+      }
+    }
+  }
 };
 
 export const sendToATopic = async (topic, notification, data) => {

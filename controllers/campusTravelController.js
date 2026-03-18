@@ -256,6 +256,17 @@ export const acceptBookingController = async (req, res) => {
         post.availableSeats -= 1;
         await post.save();
 
+        // Notify the requester that their booking was accepted
+        const requester = await onestopUserModel.findOne({ outlookEmail: booking.email });
+        if (requester) {
+            await sendToUser(
+                requester._id,
+                NotificationCategories.cabSharing,
+                "Cab Request Accepted 🎉",
+                `Your request to join the cab from ${post.from} to ${post.to} has been accepted!`
+            );
+        }
+
         return res.status(200).json({
             success: true,
             message: "Booking approved successfully"
