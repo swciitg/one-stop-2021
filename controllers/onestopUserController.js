@@ -160,7 +160,7 @@ export const updateOnestopUser = asyncHandler(async (req, res) => {
             createdAt,
         });
         await userNotifToken.save();
-        for (category in NotificationCategories) {
+        for (let category in NotificationCategories) {
             await firebase
                 .messaging()
                 .subscribeToTopic([deviceToken], category);
@@ -193,7 +193,7 @@ export const postOnestopUserDeviceToken = asyncHandler(async (req, res) => {
         });
         await userNotifToken.save();
     }
-    for (category in NotificationCategories) {
+    for (let category in NotificationCategories) {
         await firebase
             .messaging()
             .subscribeToTopic([body.deviceToken], category);
@@ -216,7 +216,7 @@ export const updateOnestopUserDeviceToken = asyncHandler(async (req, res) => {
             {deviceToken: body.newToken, createdAt: new Date()}
             , {runValidators: true}
         );
-        for (category in NotificationCategories) {
+        for (let category in NotificationCategories) {
             await firebase
                 .messaging()
                 .unsubscribeFromTopic([body.oldToken], category);
