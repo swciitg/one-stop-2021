@@ -45,17 +45,17 @@ export const sendTestNotifToDevice = async (req, res) => {
 };
 
 export const sendNotifByEmail = async (outlookEmail, category, title, body) => {
-  let onestopUser = await onestopUserModel.findOne({ outlookEmail: outlookEmail });
+  // let onestopUser = await onestopUserModel.findOne({ outlookEmail: outlookEmail });
 
-  if (!onestopUser) {
-    return false;
-  }
+  // if (!onestopUser) {
+  //   return false;
+  // }
 
-  if (category === NotificationCategories.cabSharing) {
-    await sendToUser(onestopUser._id, category, title, body);
-  }
+  // if (category === NotificationCategories.cabSharing) {
+  //   await sendToUser(onestopUser._id, category, title, body);
+  // }
 
-  return true;
+  // return true;
 };
 
 export const sendNotifByEmailList = async (req, res) => {
@@ -88,7 +88,7 @@ export const updateTopicSubscriptionOfUser = async (notifPref, userid) => {
 };
 
 export const sendToUser = async (userid, category, title, body) => {
-  let userNotifTokens = await userNotifTokenModel.find({ userid: userid });
+  let userNotifTokens = await userNotifTokenModel.findOne({ userid: userid });
 
   let userPersonalNotif = userPersonalNotifModel({ userid, category, title, body });
   await userPersonalNotif.save();

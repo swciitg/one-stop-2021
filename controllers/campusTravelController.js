@@ -5,7 +5,7 @@ import { sendToUser } from "./notificationController.js";
 import onestopUserModel from "../models/userModel.js";
 import asyncHandler from "../middlewares/async.controllers.handler.js";
 import { NotificationCategories } from "../helpers/constants.js";
-import { sendNotifByEmail } from "./notificationController.js";
+import { sendNotifByEmail, sendToATopic } from "./notificationController.js";
 
 const sendMailForTravelPostReply = async (replier_name, reciever_email, reciever_name, from, to, travelDateTime) => {
     await sendEmail({
@@ -28,8 +28,8 @@ export async function postTravel(req, res) {
         let data = { "email": req.body.email, "name": req.body.name, "travelDateTime": travelDateTime, "to": req.body.to, "from": req.body.from, "margin": req.body.margin, "note": req.body.note, "chatId": chatModel.id, "totalSeats": req.body.totalSeats, "availableSeats": req.body.totalSeats };
         if ("phonenumber" in req.body) data["phonenumber"] = req.body.phonenumber;
         let travelModel = new TravelPostModel(data);
-        await travelModel.save();
-        res.json({ "success": true });
+        const savedPost = await travelModel.save();
+        res.json({ "success": true, "travelPostId": savedPost._id });
     }
     catch (err) {
         res.json({ "success": false, "message": err.toString() });
@@ -71,8 +71,20 @@ export async function requesttoJoin(req, res) {
         const user = await onestopUserModel.findOne({ outlookEmail: travelPost.email });
         if (user) {
             await sendToUser(user._id, NotificationCategories.cabSharing, "New Request to Join", `${name} requested to join your travel post.`);
-            await sendNotifByEmail(travelPost.email, NotificationCategories.cabSharing, "New Request to Join", `${name} requested to join your travel post.`);
+            // await sendNotifByEmail(travelPost.email, NotificationCategories.cabSharing, "New Request to Join", `${name} requested to join your travel post.`);
         }
+
+        await sendToATopic(
+            travelPostId,
+            {
+                title: "New Request to Join",
+                body: `${name} requested to join the cab from ${travelPost.from} to ${travelPost.to}.`
+            },
+            {
+                category: NotificationCategories.cabSharing,
+                type: "join_request"
+            }
+        );
 
         res.json({ success: true, message: "Request to join sent." });
 
@@ -267,13 +279,25 @@ export const acceptBookingController = async (req, res) => {
                 "Cab Request Accepted 🎉",
                 `Your request to join the cab from ${post.from} to ${post.to} has been accepted!`
             );
-            await sendNotifByEmail(
-                booking.email,
-                NotificationCategories.cabSharing,
-                "Cab Request Accepted 🎉",
-                `Your request to join the cab from ${post.from} to ${post.to} has been accepted!`
-            );
+            // await sendNotifByEmail(
+            //     booking.email,
+            //     NotificationCategories.cabSharing,
+            //     "Cab Request Accepted 🎉",
+            //     `Your request to join the cab from ${post.from} to ${post.to} has been accepted!`
+            // );
         }
+
+        // await sendToATopic(
+        //     postId,
+        //     {
+        //         title: "Cab Request Accepted 🎉",
+        //         body: `Your request to join the cab from ${post.from} to ${post.to} has been accepted!`
+        //     },
+        //     {
+        //         category: NotificationCategories.cabSharing,
+        //         type: "request_accepted"
+        //     }
+        // );
 
         return res.status(200).json({
             success: true,
@@ -315,8 +339,10 @@ export const cancelBookingController = async (req, res) => {
         await post.save();
 
         await TravelBookingModel.findByIdAndDelete(bookingId);
+        await sendToUser(user._id, NotificationCategories.cabSharing, title, `${replier} replied to your recent Travel Post on OneStop 🙌. Click to see!!`);
 
         return res.status(200).json({ success: true, message: "Booking cancelled successfully" });
+
     } catch (error) {
         return res.status(400).json({ success: false, message: error.message });
     }

@@ -60,7 +60,7 @@ async function sendLostNotif(title, username, outlookEmail) {
         "body": `Added by ${username}(${outlookEmail})`
     };
 
-    await sendToATopic(NotificationCategories.lost, notification, data);
+    // await sendToATopic(NotificationCategories.lost, notification, data);
 }
 
 export const postLostDetails = async (req, res) => {
@@ -142,7 +142,7 @@ export const postLostDetails = async (req, res) => {
             .then((result) => {
                 console.log(result);
             });
-        await sendLostNotif(title, username, email);
+        // await sendLostNotif(title, username, email);
         return res.json({ saved_successfully: true, image_safe: true });
     } catch (error) {
         return errorFxn(res, error);
@@ -332,7 +332,7 @@ export const postfoundDetails = async (req, res) => {
             .then((result) => {
                 console.log(result);
             });
-        await sendFoundNotif(title, username, email);
+        // // await sendFoundNotif(title, username, email);
         return res.json({saved_successfully: true, image_safe: true});
     } catch (error) {
         return errorFxn(res, error);
