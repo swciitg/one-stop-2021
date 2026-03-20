@@ -5,6 +5,7 @@ import { sendToUser } from "./notificationController.js";
 import onestopUserModel from "../models/userModel.js";
 import asyncHandler from "../middlewares/async.controllers.handler.js";
 import { NotificationCategories } from "../helpers/constants.js";
+import { sendNotifByEmail } from "./notificationController.js";
 
 const sendMailForTravelPostReply = async (replier_name, reciever_email, reciever_name, from, to, travelDateTime) => {
     await sendEmail({
@@ -70,6 +71,7 @@ export async function requesttoJoin(req, res) {
         const user = await onestopUserModel.findOne({ outlookEmail: travelPost.email });
         if (user) {
             await sendToUser(user._id, NotificationCategories.cabSharing, "New Request to Join", `${name} requested to join your travel post.`);
+            await sendNotifByEmail(travelPost.email, NotificationCategories.cabSharing, "New Request to Join", `${name} requested to join your travel post.`);
         }
 
         res.json({ success: true, message: "Request to join sent." });
@@ -261,6 +263,12 @@ export const acceptBookingController = async (req, res) => {
         if (requester) {
             await sendToUser(
                 requester._id,
+                NotificationCategories.cabSharing,
+                "Cab Request Accepted 🎉",
+                `Your request to join the cab from ${post.from} to ${post.to} has been accepted!`
+            );
+            await sendNotifByEmail(
+                booking.email,
                 NotificationCategories.cabSharing,
                 "Cab Request Accepted 🎉",
                 `Your request to join the cab from ${post.from} to ${post.to} has been accepted!`
