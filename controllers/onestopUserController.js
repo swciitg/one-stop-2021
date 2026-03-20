@@ -174,25 +174,21 @@ export const postOnestopUserDeviceTokenValidate = [
 ];
 
 export const postOnestopUserDeviceToken = asyncHandler(async (req, res) => {
-    // creates new device token model or update
+    // Upsert by userid — ensures one token per user, handles device switches
     let body = matchedData(req, {locations: ["body"]});
-    let userNotifTokenPrevious = await userNotifTokenModel.findOne({
+
+    // If another user had this same deviceToken, remove it first
+    await userNotifTokenModel.deleteMany({
         deviceToken: body.deviceToken,
-    }); // deviceToken was already there
-    if (userNotifTokenPrevious) {
-        // attempt for login via different or same account
-        await userNotifTokenModel.findOneAndUpdate(
-            {deviceToken: body.deviceToken},
-            {userid: req.userid, createdAt: new Date()}
-            , {runValidators: true}
-        );
-    } else {
-        let userNotifToken = new userNotifTokenModel({
-            userid: req.userid,
-            deviceToken: body.deviceToken,
-        });
-        await userNotifToken.save();
-    }
+        userid: {$ne: req.userid},
+    });
+
+    await userNotifTokenModel.findOneAndUpdate(
+        {userid: req.userid},
+        {deviceToken: body.deviceToken, createdAt: new Date()},
+        {upsert: true, runValidators: true}
+    );
+
     for (let category in NotificationCategories) {
         await firebase
             .messaging()

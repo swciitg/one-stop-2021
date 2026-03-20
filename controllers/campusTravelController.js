@@ -69,6 +69,7 @@ export async function requesttoJoin(req, res) {
         await travelPost.save();
 
         const user = await onestopUserModel.findOne({ outlookEmail: travelPost.email });
+        console.log("User in campusTravelController", user);
         if (user) {
             await sendToUser(user._id, NotificationCategories.cabSharing, "New Request to Join", `${name} requested to join your travel post.`);
             // await sendNotifByEmail(travelPost.email, NotificationCategories.cabSharing, "New Request to Join", `${name} requested to join your travel post.`);

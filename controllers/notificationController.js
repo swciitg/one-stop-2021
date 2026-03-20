@@ -76,25 +76,22 @@ export const sendNotifByEmailList = async (req, res) => {
 };
 
 export const updateTopicSubscriptionOfUser = async (notifPref, userid) => {
-  let userNotifTokens = await userNotifTokenModel.find({ userid: userid });
-  for (let i = 0; i < userNotifTokens.length; i++) {
-    for (let category in notifPref) {
-      await firebase.messaging().unsubscribeFromTopic([userNotifTokens[i].deviceToken], category);
-      if (notifPref[category] === true) {
-        await firebase.messaging().subscribeToTopic([userNotifTokens[i].deviceToken], category);
-      }
+  let userNotifTokens = await userNotifTokenModel.findOne({ userid: userid });
+  for (let category in notifPref) {
+    await firebase.messaging().unsubscribeFromTopic([userNotifTokens.deviceToken], category);
+    if (notifPref[category] === true) {
+      await firebase.messaging().subscribeToTopic([userNotifTokens.deviceToken], category);
     }
   }
 };
 
 export const sendToUser = async (userid, category, title, body) => {
-  let userNotifTokens = await userNotifTokenModel.findOne({ userid: userid });
+  let userNotifToken = await userNotifTokenModel.findOne({ userid: userid });
 
   let userPersonalNotif = userPersonalNotifModel({ userid, category, title, body });
   await userPersonalNotif.save();
-
-  for (let i = 0; i < userNotifTokens.length; i++) {
-    let message = {
+  console.log("sendToUser ", userNotifToken);
+  let message = {
       notification: {
         title: title,
         body: body,
@@ -104,7 +101,7 @@ export const sendToUser = async (userid, category, title, body) => {
         title: title,
         body: body,
       },
-      token: userNotifTokens[i].deviceToken,
+      token: userNotifToken.deviceToken,
     };
 
     try {
@@ -113,11 +110,10 @@ export const sendToUser = async (userid, category, title, body) => {
     } catch (error) {
       console.error("Error sending notification:", error);
       if (error.code === "messaging/registration-token-not-registered") {
-        console.log(`Removing stale token: ${userNotifTokens[i].deviceToken}`);
-        await userNotifTokenModel.deleteOne({ _id: userNotifTokens[i]._id });
+        console.log(`Removing stale token: ${userNotifToken.deviceToken}`);
+        await userNotifTokenModel.deleteOne({ _id: userNotifToken._id });
       }
     }
-  }
 };
 
 export const sendToATopic = async (topic, notification, data) => {
