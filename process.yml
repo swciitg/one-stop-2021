@@ -3,3 +3,7 @@ apps:
       script: ./app.js
       exec_mode: cluster
       instances: 5
+      merge_logs: true
+      log_file: ./logs/combined.log
+      error_file: ./logs/error.log
+      out_file: ./logs/out.log
