@@ -6,6 +6,8 @@ import { sendToAllFirebaseTopicName } from "../helpers/constants.js";
 import { RequestValidationError } from "../errors/request.validation.error.js";
 import userPersonalNotifModel from "../models/userPersonalNotifModel.js";
 import topicNotifModel from "../models/topicNotifModel.js";
+import onestopUserModel from "../models/userModel.js";
+import { NotificationCategories } from "../helpers/constants.js";
 
 if (!firebase.apps.length)
   firebase.initializeApp({
@@ -42,18 +44,18 @@ export const sendTestNotifToDevice = async (req, res) => {
   // }
 };
 
-export const sendNotifByEmail = async (req, res) => {
-  // let outlookEmail=req.body.outlookEmail;
-  // let onestopUser=await userModel.findOne({outlookEmail: outlookEmail});
+export const sendNotifByEmail = async (outlookEmail, category, title, body) => {
+  // let onestopUser = await onestopUserModel.findOne({ outlookEmail: outlookEmail });
 
-  // if(!onestopUser){
-  //   res.json({success: false});
-  //   return;
+  // if (!onestopUser) {
+  //   return false;
   // }
 
-  // if(onestopUser) await this.sendToUser(onestopUser._id,req.body.category,req.body.title,req.body.body);
-  // console.log("SENT TO EMAIL NOTIFS");
-  // res.json({success: true});
+  // if (category === NotificationCategories.cabSharing) {
+  //   await sendToUser(onestopUser._id, category, title, body);
+  // }
+
+  // return true;
 };
 
 export const sendNotifByEmailList = async (req, res) => {
@@ -86,7 +88,7 @@ export const updateTopicSubscriptionOfUser = async (notifPref, userid) => {
 };
 
 export const sendToUser = async (userid, category, title, body) => {
-  let userNotifTokens = await userNotifTokenModel.find({ userid: userid });
+  let userNotifTokens = await userNotifTokenModel.findOne({ userid: userid });
 
   let userPersonalNotif = userPersonalNotifModel({ userid, category, title, body });
   await userPersonalNotif.save();

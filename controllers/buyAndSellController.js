@@ -91,7 +91,7 @@ async function sendSellNotif(title, username, outlookEmail) {
         "body": `Added by ${username}(${outlookEmail})`
     }
 
-    await sendToATopic(NotificationCategories.sell, notification, data);
+    // await sendToATopic(NotificationCategories.sell, notification, data);
 }
 
 export const postSellDetails = async (req, res) => {
@@ -181,7 +181,7 @@ export const postSellDetails = async (req, res) => {
                     .then((result) => {
                         console.log(result);
                     });
-                await sendSellNotif(title, username, email);
+                // await sendSellNotif(title, username, email);
                 return res.json({
                     saved_successfully: true,
                     image_safe: true
@@ -272,7 +272,7 @@ async function sendBuyNotif(title, username, outlookEmail) {
         "body": `Added by ${username}(${outlookEmail})`
     }
 
-    await sendToATopic(NotificationCategories.buy, notification, data);
+    // await sendToATopic(NotificationCategories.buy, notification, data);
 }
 
 export const postBuyDetails = async (req, res) => {
@@ -366,7 +366,7 @@ export const postBuyDetails = async (req, res) => {
                     .then((result) => {
                         console.log(result);
                     });
-                await sendBuyNotif(title, username, email);
+                // await sendBuyNotif(title, username, email);
                 return res.json({
                     saved_successfully: true,
                     image_safe: true
