@@ -16,6 +16,7 @@ export default {
         filterProperties: ["sectionName", "contacts"],
         editProperties: ["sectionName", "contacts"],
         showProperties: ["sectionName", "contacts"],
+        listProperties: ["sectionName"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },

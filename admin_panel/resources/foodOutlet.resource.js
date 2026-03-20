@@ -11,6 +11,7 @@ export default {
         filterProperties: ["outletName","caption","closingTime","phoneNumber","location","latitude","longitude","tags","menu","imageURL"],
         editProperties: ["outletName","caption","closingTime","phoneNumber","location","latitude","longitude","tags","menu","imageURL"],
         showProperties: ["outletName","caption","closingTime","phoneNumber","location","latitude","longitude","tags","menu","imageURL"],
+        listProperties: ["outletName","caption","closingTime"],
         actions: {
             list: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
             new: { isAccessible: ({ currentAdmin }) => verifyRoles(currentAdmin, allowedRoles) },
