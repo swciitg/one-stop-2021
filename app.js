@@ -14,6 +14,8 @@ import { scheduleOPIEmails } from './helpers/cronJobs/opiEmails.js';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import client from 'prom-client';
+import { metricsMiddleware } from './middlewares/metricsMiddleware.js';
 
 // Setup __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -73,6 +75,12 @@ app.use(BASEURL, routers.gatelogRouter);
 
 // docs route
 app.use(BASEURL, routers.docsRouter);
+
+app.use(metricsMiddleware);
+app.get((process.env.BASE_URL ) + "/metrics", async (req, res) => {
+    res.set("Content-Type", client.register.contentType);
+    res.end(await client.register.metrics());
+})
 
 app.use(BASEURL, routers.authRouter);
 app.use(BASEURL, routers.imageRouter);
