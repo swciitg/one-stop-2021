@@ -15,7 +15,7 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import client from 'prom-client';
-import { metricsMiddleware } from './middlewares/metricsMiddleware.js';
+import { metricsMiddleware } from './middlewares/metrics.js';
 
 // Setup __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -69,7 +69,8 @@ app.use((req, res, next) => {
 });
 
 //Health checkpoint for monitoring
-app.get(BASEURL + '/health', (req, res) => {
+app.get(BASEURL + 'health', (req, res) => {
+  console.log("/health");
   res.status(200).json({
     status: 'ok',
     service:  'OneStop APIs',
@@ -86,7 +87,8 @@ app.use(BASEURL, routers.gatelogRouter);
 app.use(BASEURL, routers.docsRouter);
 
 app.use(metricsMiddleware);
-app.get(BASEURL + "/metrics", async (req, res) => {
+app.get(BASEURL + "metrics", async (req, res) => {
+    console.log("/metrics");
     res.set("Content-Type", client.register.contentType);
     res.end(await client.register.metrics());
 })
