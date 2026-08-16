@@ -68,6 +68,15 @@ app.use((req, res, next) => {
     next();
 });
 
+//Health checkpoint for monitoring
+app.get(BASEURL + '/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    service:  'OneStop APIs',
+    timestamp: new Date().toISOString(),
+    version: '2.0.0'
+  });
+});
 
 // Gatelog Endpoint for fetching user details with roll number Secure GET by rollNo (HMAC auth + AES-GCM encrypt response)
 app.use(BASEURL, routers.gatelogRouter);
@@ -77,7 +86,7 @@ app.use(BASEURL, routers.gatelogRouter);
 app.use(BASEURL, routers.docsRouter);
 
 app.use(metricsMiddleware);
-app.get((process.env.BASE_URL ) + "/metrics", async (req, res) => {
+app.get(BASEURL + "/metrics", async (req, res) => {
     res.set("Content-Type", client.register.contentType);
     res.end(await client.register.metrics());
 })
